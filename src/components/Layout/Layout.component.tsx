@@ -4,7 +4,6 @@ import { useQuery } from '@apollo/client';
 
 // Components
 import Header from '@/components/Header/Header.component';
-import PageTitle from './PageTitle.component';
 import Footer from '@/components/Footer/Footer.component';
 import Stickynav from '@/components/Footer/Stickynav.component';
 
@@ -16,10 +15,12 @@ import { getFormattedCart } from '@/utils/functions/functions';
 
 // GraphQL
 import { GET_CART } from '@/utils/gql/GQL_QUERIES';
+import Meta, { IMeta } from './Meta';
 
 interface ILayoutProps {
   children?: ReactNode;
-  title: string;
+  meta: IMeta;
+  uri?: string;
 }
 
 /**
@@ -30,7 +31,7 @@ interface ILayoutProps {
  * @returns {JSX.Element} - Rendered component
  */
 
-const Layout = ({ children, title }: ILayoutProps) => {
+const Layout = ({ children, meta, uri }: ILayoutProps) => {
   const { setCart } = useContext(CartContext);
 
   const { data, refetch } = useQuery(GET_CART, {
@@ -56,15 +57,17 @@ const Layout = ({ children, title }: ILayoutProps) => {
   }, [refetch]);
 
   return (
-    <div className="flex flex-col min-h-screen w-full mx-auto">
-      <div className="container min-w-[140vw] sm:min-w-[95vw] md:px-4 lg:px-6 py-2 lg:max-w-[1600px] mx-auto">
-        <Header title={title} />
-        <PageTitle title={title} />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <Stickynav />
+    <>
+      <Meta meta={meta} uri={uri} />
+      <div className="flex flex-col min-h-screen w-full mx-auto">
+        <div className="container min-w-[140vw] sm:min-w-[95vw] md:px-4 lg:px-6 py-2 lg:max-w-[1600px] mx-auto">
+          <Header />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+          <Stickynav />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

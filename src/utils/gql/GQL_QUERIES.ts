@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { seoFields } from './SEO';
 
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
@@ -338,4 +339,21 @@ export const GET_CART = gql`
       discountTotal
     }
   }
+`;
+
+export const GET_SINGLE_PAGE = gql` 
+  query GET_SINGLE_PAGE($id: ID!) {
+    page(id: $id, idType: URI ) {
+        ${seoFields}
+        id
+        uri
+        title(format: RENDERED)
+        status
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+      }
+    }
 `;

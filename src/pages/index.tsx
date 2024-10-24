@@ -10,7 +10,10 @@ import client from '@/utils/apollo/ApolloClient';
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next';
 
 // GraphQL
-import { FETCH_ALL_PRODUCTS_QUERY } from '@/utils/gql/GQL_QUERIES';
+import {
+  FETCH_ALL_PRODUCTS_QUERY,
+  GET_SINGLE_PAGE,
+} from '@/utils/gql/GQL_QUERIES';
 
 /**
  * Main index page
@@ -20,9 +23,10 @@ import { FETCH_ALL_PRODUCTS_QUERY } from '@/utils/gql/GQL_QUERIES';
  */
 
 const Index: NextPage = ({
+  page,
   products,
 }: InferGetStaticPropsType<typeof getStaticProps>) => (
-  <Layout title="Accueil">
+  <Layout meta={page?.seo} uri="">
     <Hero />
     {products && <DisplayProducts products={products} />}
   </Layout>
@@ -31,15 +35,24 @@ const Index: NextPage = ({
 export default Index;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data, loading, networkStatus } = await client.query({
+  const { data } = await client.query({
     query: FETCH_ALL_PRODUCTS_QUERY,
   });
 
+  const products = data?.products?.nodes;
+
+  const homePageSlug = 'accueil';
+  const pageData = await client.query({
+    query: GET_SINGLE_PAGE,
+    variables: { id: homePageSlug },
+  });
+
+  const { page } = pageData.data;
+
   return {
     props: {
-      products: data.products.nodes,
-      loading,
-      networkStatus,
+      page,
+      products,
     },
     revalidate: 60,
   };
