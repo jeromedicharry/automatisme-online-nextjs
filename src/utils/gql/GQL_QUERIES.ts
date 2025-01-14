@@ -357,3 +357,24 @@ export const GET_SINGLE_PAGE = gql`
       }
     }
 `;
+
+export const GET_CUSTOMER = gql`
+  query GetCustomer {
+    customer {
+      id
+      firstName
+      lastName
+      email
+      shipping {
+        address1
+        city
+        postcode
+      }
+      billing {
+        address1
+        city
+        postcode
+      }
+    }
+  }
+`;

@@ -28,6 +28,7 @@ const CartContents = () => {
     notifyOnNetworkStatusChange: true,
     onCompleted: () => {
       const updatedCart = getFormattedCart(data);
+      console.log({ updateCart });
       if (!updatedCart && !data.cart.contents.nodes.length) {
         localStorage.removeItem('woocommerce-cart');
         setCart(null);
@@ -84,6 +85,8 @@ const CartContents = () => {
       : (numericSubtotal / quantity).toFixed(2);
   };
 
+  console.log({ data });
+
   return (
     <div className="container mx-auto px-4 py-8">
       {data?.cart?.contents?.nodes?.length ? (
@@ -97,7 +100,7 @@ const CartContents = () => {
                 <div className="flex-shrink-0 w-24 h-24 relative hidden md:block">
                   <Image
                     src={
-                      item.product.node.image?.sourceUrl || '/placeholder.png'
+                      item.product?.node.image?.sourceUrl || '/placeholder.png'
                     }
                     alt={item.product.node.name}
                     layout="fill"
@@ -139,7 +142,7 @@ const CartContents = () => {
                     color="red"
                     buttonDisabled={updateCartProcessing}
                   >
-                    Passer la commande
+                    Supprimer
                   </Button>
                 </div>
                 <div className="ml-4">

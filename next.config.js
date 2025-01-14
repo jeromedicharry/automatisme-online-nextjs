@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'swewoocommerce.dfweb.no',
+        hostname: 'admin-preprod.automatisme-online.fr',
         pathname: '**',
       },
       {

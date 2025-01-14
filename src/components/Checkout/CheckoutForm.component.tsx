@@ -2,6 +2,7 @@
 // Imports
 import { useState, useContext, useEffect } from 'react';
 import { useQuery, useMutation, ApolloError } from '@apollo/client';
+// import { AdyenCheckout } from '@adyen/adyen-web';
 
 // Components
 import Billing from './Billing.component';
@@ -52,6 +53,7 @@ export interface ICheckoutData {
 
 const CheckoutForm = () => {
   const { cart, setCart } = useContext(CartContext);
+
   const [orderData, setOrderData] = useState<ICheckoutData | null>(null);
   const [requestError, setRequestError] = useState<ApolloError | null>(null);
   const [orderCompleted, setorderCompleted] = useState<boolean>(false);
@@ -126,7 +128,11 @@ const CheckoutForm = () => {
           {/*	Order*/}
           <CartContents />
           {/*Payment Details*/}
-          <Billing handleFormSubmit={handleFormSubmit} />
+          <Billing
+            handleFormSubmit={handleFormSubmit}
+            onPaymentCompleted={() => {}}
+            onPaymentError={() => {}}
+          />
           {/*Error display*/}
           {requestError && (
             <div className="h-32 text-xl text-center text-red-600">
