@@ -1,5 +1,4 @@
 // Components
-import Hero from '@/components/Index/Hero.component';
 import DisplayProducts from '@/components/Product/DisplayProducts.component';
 import Layout from '@/components/Layout/Layout.component';
 
@@ -27,7 +26,6 @@ const Index: NextPage = ({
   products,
 }: InferGetStaticPropsType<typeof getStaticProps>) => (
   <Layout meta={page?.seo} uri="">
-    <Hero />
     {products && <DisplayProducts products={products} />}
   </Layout>
 );
@@ -35,6 +33,7 @@ const Index: NextPage = ({
 export default Index;
 
 export const getStaticProps: GetStaticProps = async () => {
+  // todo create getProducts separate functions
   const { data } = await client.query({
     query: FETCH_ALL_PRODUCTS_QUERY,
   });

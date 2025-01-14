@@ -3,9 +3,8 @@ import { ReactNode, useContext, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 
 // Components
-import Header from '@/components/Header/Header.component';
-import Footer from '@/components/Footer/Footer.component';
-import Stickynav from '@/components/Footer/Stickynav.component';
+import Header from '@/components/sections/Header/Header.component';
+import Footer from '@/components/sections/Footer/Footer.component';
 
 // State
 import { CartContext } from '@/stores/CartProvider';
@@ -21,6 +20,7 @@ interface ILayoutProps {
   children?: ReactNode;
   meta: IMeta;
   uri?: string;
+  title?: string;
 }
 
 /**
@@ -31,7 +31,7 @@ interface ILayoutProps {
  * @returns {JSX.Element} - Rendered component
  */
 
-const Layout = ({ children, meta, uri }: ILayoutProps) => {
+const Layout = ({ children, meta, uri, title }: ILayoutProps) => {
   const { setCart } = useContext(CartContext);
 
   const { data, refetch } = useQuery(GET_CART, {
@@ -62,9 +62,9 @@ const Layout = ({ children, meta, uri }: ILayoutProps) => {
       <div className="flex flex-col min-h-screen w-full mx-auto">
         <div className="container min-w-[140vw] sm:min-w-[95vw] md:px-4 lg:px-6 py-2 lg:max-w-[1600px] mx-auto">
           <Header />
+          <h1>{title}</h1>
           <main className="flex-grow">{children}</main>
           <Footer />
-          <Stickynav />
         </div>
       </div>
     </>

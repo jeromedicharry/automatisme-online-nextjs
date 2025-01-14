@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Cart from '@/components/Header/Cart.component';
+import Cart from '@/components/sections/Header/Cart.component';
 import Search from '@/components/AlgoliaSearch/AlgoliaSearchBox.component';
 import SVGMobileSearchIcon from '@/components/SVG/SVGMobileSearchIcon.component';
 
