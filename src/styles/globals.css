@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* todo: clean + add helvetica font styles + files */
+
+
 #cart-div {
   width: 300px;
 }
