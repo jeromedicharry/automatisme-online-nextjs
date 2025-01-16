@@ -1,6 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { BlocType, ReassuranceItemProps } from '@/types/blocTypes';
+import BlocFeaturedCategories from './blocs/BlocFeaturedCategories';
 const BlocWysiwyg = dynamic(() => import('./blocs/BlocWysiwyg'));
 const BlocSpacer = dynamic(() => import('./blocs/BlocSpacer'));
 const BlocReassurance = dynamic(() => import('./blocs/BlocReassurance'));
@@ -30,6 +31,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
             reassuranceItems={reassuranceItems}
           />
         );
+      case 'AcfPageBlocsBlocFeaturedCategoriesLayout':
+        return <BlocFeaturedCategories key={key} bloc={bloc} />;
 
       default:
         return null;

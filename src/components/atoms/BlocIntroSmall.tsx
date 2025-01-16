@@ -9,9 +9,13 @@ const BlocIntroSmall = ({
 }) => {
   if (!title && !subtitle) return null;
   return (
-    <div className="border-left-wdith-[3px] border-secondary pl-2 flex flex-col gap-2">
-      {title && <h2 className="text-xl font-medium">{title}</h2>}
-      {subtitle && <p className="text-[0.6875rem] text-dargrey">{subtitle}</p>}
+    <div className="border-l-[3px] border-secondary pl-2 flex flex-col gap-2 mb-4 md:mb-6">
+      {title && (
+        <h2 className="text-xl font-medium leading-general">{title}</h2>
+      )}
+      {subtitle && (
+        <p className="text-[0.6875rem] text-dark-grey">{subtitle}</p>
+      )}
     </div>
   );
 };

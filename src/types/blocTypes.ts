@@ -20,6 +20,15 @@ export interface BlocFeaturedCategoriesProps {
   __typename: 'AcfPageBlocsBlocFeaturedCategoriesLayout';
   title: string;
   subtitle: string;
+  categories: {
+    nodes: {
+      name: string;
+      slug: string;
+      image?: {
+        sourceUrl: string;
+      };
+    }[];
+  };
 }
 export interface BlocFeaturedProductsProps {
   __typename: 'AcfPageBlocsBlocFeaturedProductsLayout';

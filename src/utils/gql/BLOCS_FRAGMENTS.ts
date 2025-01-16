@@ -22,6 +22,17 @@ export const blocsFields = `
         __typename
         title
         subtitle
+        categories {
+            nodes {
+                name
+                slug
+                ... on ProductCategory {
+                    image {
+                        sourceUrl
+                    }
+                }
+            }
+        }
     }
     ... on AcfPageBlocsBlocFeaturedProductsLayout {
         __typename
