@@ -6,7 +6,7 @@ import CheckoutForm from '@/components/Checkout/CheckoutForm.component';
 import type { NextPage } from 'next';
 
 const Caisse: NextPage = () => (
-  <Layout title="Caisse">
+  <Layout title="Caisse" uri="/checkout">
     <CheckoutForm />
   </Layout>
 );

@@ -12,7 +12,8 @@ import type { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next';
 import {
   FETCH_ALL_PRODUCTS_QUERY,
   GET_SINGLE_PAGE,
-} from '@/utils/gql/GQL_QUERIES';
+} from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import FlexibleContent from '@/components/sections/FlexibleContent';
 
 /**
  * Main index page
@@ -23,10 +24,9 @@ import {
 
 const Index: NextPage = ({
   page,
-  products,
 }: InferGetStaticPropsType<typeof getStaticProps>) => (
   <Layout meta={page?.seo} uri="">
-    {products && <DisplayProducts products={products} />}
+    <FlexibleContent blocs={page?.acfPage?.blocs} />
   </Layout>
 );
 

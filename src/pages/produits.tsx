@@ -3,7 +3,7 @@ import DisplayProducts from '@/components/Product/DisplayProducts.component';
 import Layout from '@/components/Layout/Layout.component';
 
 // GraphQL
-import { FETCH_ALL_PRODUCTS_QUERY } from '@/utils/gql/GQL_QUERIES';
+import { FETCH_ALL_PRODUCTS_QUERY } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
 // Utilities
 import client from '@/utils/apollo/ApolloClient';

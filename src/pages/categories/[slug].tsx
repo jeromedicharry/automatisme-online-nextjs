@@ -6,7 +6,7 @@ import DisplayProducts from '@/components/Product/DisplayProducts.component';
 
 import client from '@/utils/apollo/ApolloClient';
 
-import { GET_PRODUCTS_FROM_CATEGORY } from '@/utils/gql/GQL_QUERIES';
+import { GET_PRODUCTS_FROM_CATEGORY } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 /**

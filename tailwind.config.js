@@ -10,6 +10,7 @@ module.exports = {
         'primary-light': '#F7F8FD',
         'primary-light-alt': '#E9F6FF',
         'secondary-light': '#FFECDB',
+        'dark-grey': '#6F6F6F',
       },
       fontFamily: {
         primary: ['Helvetica Neue', 'sans-serif'],
@@ -32,6 +33,12 @@ module.exports = {
         'card-post-mobile': '345 / 144',
         'card-post-featured': '519 / 320',
         'card-post-related': '393 / 144',
+      },
+      fontSize: {
+        '5xl': ['3rem', { lineHeight: '1.2' }],
+      },
+      lineHeight: {
+        general: '1.2',
       },
     },
   },

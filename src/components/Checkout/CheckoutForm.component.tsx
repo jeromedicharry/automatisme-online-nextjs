@@ -10,7 +10,7 @@ import CartContents from '../Cart/CartContents.component';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.component';
 
 // GraphQL
-import { GET_CART } from '@/utils/gql/GQL_QUERIES';
+import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { CHECKOUT_MUTATION } from '@/utils/gql/GQL_MUTATIONS';
 import { CartContext } from '@/stores/CartProvider';
 

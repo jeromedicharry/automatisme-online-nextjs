@@ -13,7 +13,7 @@ import { CartContext } from '@/stores/CartProvider';
 import { getFormattedCart } from '@/utils/functions/functions';
 
 // GraphQL
-import { GET_CART } from '@/utils/gql/GQL_QUERIES';
+import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
 
 interface IImage {
