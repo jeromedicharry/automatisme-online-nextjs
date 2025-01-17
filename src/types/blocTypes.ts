@@ -30,6 +30,25 @@ export interface BlocFeaturedCategoriesProps {
     }[];
   };
 }
+
+export interface CardProductProps {
+  name: string;
+  onSale: boolean;
+  featured: boolean;
+  slug: string;
+  featuredImage: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+
+  price: string;
+  salePrice: string;
+  isProProduct: boolean;
+  hasProDiscount: boolean;
+  regularPrice: string;
+  sku: string;
+}
 export interface BlocFeaturedProductsProps {
   __typename: 'AcfPageBlocsBlocFeaturedProductsLayout';
   title: string;
@@ -40,10 +59,7 @@ export interface BlocFeaturedProductsProps {
     };
   };
   products: {
-    nodes: {
-      slug: string;
-      uri: string;
-    }[];
+    nodes: CardProductProps[];
   };
 }
 export interface BlocConseilsFaqProps {

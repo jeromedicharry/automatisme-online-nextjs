@@ -46,10 +46,37 @@ export const blocsFields = `
         products {
             nodes {
                 slug
-                uri
                 ... on SimpleProduct {
-                    id
                     name
+                    onSale
+                    featured
+                    featuredImage {
+                        node {
+                            sourceUrl(size: MEDIUM)
+                        }
+                    }
+                    price(format: RAW)
+                    salePrice(format: RAW)
+                    isProProduct
+                    hasProDiscount
+                    regularPrice
+                    sku
+                }
+                ... on VariableProduct {
+                    name
+                    onSale
+                    featured
+                    featuredImage {
+                        node {
+                            sourceUrl(size: MEDIUM)
+                        }
+                    }
+                    price(format: RAW)
+                    salePrice(format: RAW)
+                    isProProduct
+                    hasProDiscount
+                    regularPrice
+                    sku
                 }
             }
         }

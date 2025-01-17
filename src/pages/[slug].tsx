@@ -24,7 +24,6 @@ const Page = ({ page, themeSettings }: { page: any; themeSettings: any }) => {
 
   const hero = page?.acfPage?.hero || null;
   const pageBlocs: BlocType[] = page?.acfPage?.blocs || null;
-  console.log('toto', themeSettings);
   return (
     <Layout meta={page?.seo} uri={page?.uri}>
       <SimpleHero title={hero?.title || page?.title} subtitle={hero?.text} />

@@ -17,6 +17,7 @@ module.exports = {
       },
       boxShadow: {
         card: '0px 0px 10px -3px rgba(0, 0, 0, 0.25)',
+        cardhover: '0px 0px 10px -3px rgba(0, 0, 0, 0.45)',
       },
       container: {
         screens: {
@@ -29,10 +30,9 @@ module.exports = {
         },
       },
       aspectRatio: {
-        'card-post': '184 / 144',
-        'card-post-mobile': '345 / 144',
-        'card-post-featured': '519 / 320',
-        'card-post-related': '393 / 144',
+        'card-featured-mobile': '350 / 204',
+        'card-featured-laptop': '380 / 579',
+        'card-faq': '345 / 144',
       },
       fontSize: {
         '5xl': ['3rem', { lineHeight: '1.2' }],
