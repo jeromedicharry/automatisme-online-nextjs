@@ -31,7 +31,7 @@ const BlocConseilFAQ = ({
             modules={[Navigation, Pagination]}
             autoHeight={false}
             navigation={{ nextEl: '.next', prevEl: '.prev' }}
-            pagination={{ clickable: true, dynamicBullets: true }}
+            pagination={{ clickable: true }}
             wrapperClass="flex align-stretch"
           >
             {advices.map((item, key) => (

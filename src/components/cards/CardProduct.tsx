@@ -3,12 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { Heart } from '../SVG/Icons';
+import Cta from '../atoms/Cta';
 
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
   return (
     <Link
       href={`/nos-produits/${product.slug}`}
-      className="block h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden bg-white group hover hover:shadow-cardhover"
+      className="flex flex-col h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden bg-white group hover:shadow-cardhover"
     >
       <div className="relative min-h-[239px]">
         <div className="absolute inset-0 w-full flex items-center justify-center">
@@ -43,9 +44,20 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
         <div className="absolute text-sm font-bold right-0 top-0">TTC</div>
         <span className="text-base leading-general pr-1">{product.price}</span>€
       </div>
-      <small className="text-dark-grey line-through">
+      <small className="text-dark-grey line-through mb-4">
         {product.regularPrice}
       </small>
+      <div className="lg:opacity-0 group-hover:opacity-100 duration-300 mt-auto">
+        <Cta
+          label={'Ajouter au panier'}
+          slug={product.slug}
+          size="large"
+          variant="primary"
+          additionalClass="uppercase"
+        >
+          Ajouter au panier
+        </Cta>
+      </div>
     </Link>
   );
 };
