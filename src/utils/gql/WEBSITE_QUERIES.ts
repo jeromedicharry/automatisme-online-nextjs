@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { blocsFields } from './BLOCS_FRAGMENTS';
+import { blocsFields, sliderAdvicesFields } from './BLOCS_FRAGMENTS';
 import { seoFields } from './SEO';
 
 // Elements globaux
@@ -35,6 +35,7 @@ export const GET_OPTIONS = gql`
             }
           }
         }
+          ${sliderAdvicesFields}
       }
     }
   }

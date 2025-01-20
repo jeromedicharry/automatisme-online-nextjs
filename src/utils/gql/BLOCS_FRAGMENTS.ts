@@ -1,3 +1,20 @@
+export const sliderAdvicesFields = `
+sliderAdvices {
+    bgColor
+    title
+    subtitle
+    cta {
+        label
+        slug
+    }
+    isImageLeft
+    image {
+        node {
+            sourceUrl
+        }
+    }
+}`;
+
 export const blocsFields = `
   blocs {
 
@@ -83,8 +100,11 @@ export const blocsFields = `
     }
     ... on AcfPageBlocsBlocConseilsFaqLayout {
         __typename
-        title
+         title
         text
+        isSpecificContent
+        ${sliderAdvicesFields}
+        
     }
     ... on AcfPageBlocsBlocAccordionLayout {
         __typename

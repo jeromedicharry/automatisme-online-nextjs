@@ -11,6 +11,8 @@ const BlocReassurance = ({
   bloc: BlocReassuranceProps;
   reassuranceItems: ReassuranceItemProps[];
 }) => {
+  if (!bloc || !reassuranceItems || reassuranceItems.length === 0) return null;
+
   const items = bloc.isAvis ? reassuranceItems.slice(0, 3) : reassuranceItems;
   const mobileBgColor =
     bloc.type === 'Fond bleu clair'

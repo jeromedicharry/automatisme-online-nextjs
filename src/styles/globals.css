@@ -9,24 +9,10 @@ body {
   line-height: 1.2;
 }
 
-.swiper-slide {
+.featured-products-slider .swiper-slide {
   max-width: 257px !important;
   height: unset !important;
 }
-
-.featured-products-slider  .arrow {
-  position: absolute;
-  bottom: 25px;
-}
-
-@media screen and (min-width: 1024px) {
-  .featured-products-slider  .arrow {
-    bottom: 20px;
-  }
-}
-.featured-products-slider .arrow.arrow-left {
-  left: 0;
-}
-.featured-products-slider .arrow.arrow-right {
-  right: 0;
+.advice-slider .swiper-slide {
+  height: unset !important;
 }

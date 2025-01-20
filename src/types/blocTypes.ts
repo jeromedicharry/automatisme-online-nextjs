@@ -62,10 +62,28 @@ export interface BlocFeaturedProductsProps {
     nodes: CardProductProps[];
   };
 }
+
+export interface CardConseilProps {
+  bgColor: 'Bleu clair' | 'Orange clair';
+  title: string;
+  subtitle: string;
+  isImageLeft: boolean;
+  cta: {
+    label: string;
+    slug: string;
+  };
+  image: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+}
 export interface BlocConseilsFaqProps {
   __typename: 'AcfPageBlocsBlocConseilsFaqLayout';
   title: string;
   text: string;
+  isSpecificContent: boolean;
+  sliderAdvices: CardConseilProps[];
 }
 export interface BlocAccordionFaqProps {
   __typename: 'AcfPageBlocsBlocAccordionLayout';

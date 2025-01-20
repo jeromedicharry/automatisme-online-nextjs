@@ -3,6 +3,7 @@ import Container from '../../container';
 // import { Fade } from "react-awesome-reveal";
 
 const BlocWysiwyg = ({ bloc }: { bloc: BlocWysiWygProps }) => {
+  if (!bloc) return null;
   // todo internal style wysiwyg
   return (
     <section className=" mb-16 md:mb-[104px]">

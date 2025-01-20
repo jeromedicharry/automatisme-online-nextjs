@@ -17,6 +17,7 @@ import SimpleHero from '@/components/sections/blocs/SimpleHero';
 // todo typer une page
 
 const Page = ({ page, themeSettings }: { page: any; themeSettings: any }) => {
+  //todo typer theme settings et page
   const router = useRouter();
   if (!router.isFallback && !page?.title) {
     return <ErrorPage statusCode={404} />;
@@ -30,6 +31,7 @@ const Page = ({ page, themeSettings }: { page: any; themeSettings: any }) => {
       <FlexibleContent
         blocs={pageBlocs}
         reassuranceItems={themeSettings?.reassurance}
+        genericAdvices={themeSettings?.sliderAdvices}
       />
     </Layout>
   );

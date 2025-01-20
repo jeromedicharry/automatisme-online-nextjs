@@ -9,8 +9,11 @@ module.exports = {
         secondary: '#E94E1B',
         'primary-light': '#F7F8FD',
         'primary-light-alt': '#E9F6FF',
+        'primary-dark': '#021835',
         'secondary-light': '#FFECDB',
+        'secondary-dark': '#BA3E16',
         'dark-grey': '#6F6F6F',
+        greyhover: '#F2F2F2',
       },
       fontFamily: {
         primary: ['Helvetica Neue', 'sans-serif'],
