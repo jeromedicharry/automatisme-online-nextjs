@@ -2,19 +2,21 @@ import Link from 'next/link';
 import React from 'react';
 
 const Cta = ({
+  handleButtonClick,
   children,
   label,
   slug,
-  size,
-  variant,
+  size = 'default',
+  variant = 'primary',
   isFull,
   additionalClass,
 }: {
   children?: React.ReactNode;
+  handleButtonClick?: (e: React.MouseEvent) => void;
   label: string;
   slug: string;
-  size: 'default' | 'large' | 'small';
-  variant:
+  size?: 'default' | 'large' | 'small';
+  variant?:
     | 'primary'
     | 'secondary'
     | 'primaryHollow'
@@ -50,6 +52,7 @@ const Cta = ({
       href={slug}
       title={label}
       className={`${buttonClass} ${sizeClass} ${variantClasses[variant]} ${additionalClass} ${isFull ? 'w-full' : ''}`}
+      onClick={handleButtonClick}
     >
       {children}
     </Link>

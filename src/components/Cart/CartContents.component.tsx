@@ -1,13 +1,12 @@
 import { useContext, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CartContext } from '@/stores/CartProvider';
-import Button from '@/components/UI/Button.component';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.component';
+import Cta from '../atoms/Cta';
 
 import {
   getFormattedCart,
@@ -132,18 +131,25 @@ const CartContents = () => {
                     }}
                     className="w-16 px-2 py-1 text-center border border-gray-300 rounded mr-2"
                   />
-                  <Button
+                  <Cta
+                    slug="#"
+                    label="Supprimer"
                     handleButtonClick={() =>
                       handleRemoveProductClick(
                         item.key,
                         data.cart.contents.nodes,
                       )
                     }
-                    color="red"
-                    buttonDisabled={updateCartProcessing}
+                    variant="secondary"
+                    size="default"
+                    additionalClass={
+                      updateCartProcessing
+                        ? 'opacity-50 pointer-events-none'
+                        : ''
+                    }
                   >
                     Supprimer
-                  </Button>
+                  </Cta>
                 </div>
                 <div className="ml-4">
                   <p className="text-lg font-semibold">{item.subtotal}</p>
@@ -158,9 +164,14 @@ const CartContents = () => {
             </div>
             {!isCheckoutPage && (
               <div className="flex justify-center mb-4">
-                <Link href="/caisse" passHref>
-                  <Button fullWidth>ALLER À LA CAISSE</Button>
-                </Link>
+                <Cta
+                  slug="/caisse"
+                  variant="primary"
+                  size="large"
+                  label="ALLER À LA CAISSE"
+                >
+                  ALLER À LA CAISSE
+                </Cta>
               </div>
             )}
           </div>
@@ -170,9 +181,9 @@ const CartContents = () => {
           <h2 className="text-2xl font-bold mb-4">
             Aucun produit dans le panier
           </h2>
-          <Link href="/produits" passHref>
-            <Button>Continuez vos achats</Button>
-          </Link>
+          <Cta slug="/produits" label="Continuez vos achats">
+            Continuez vos achats
+          </Cta>
         </div>
       )}
       {updateCartProcessing && (

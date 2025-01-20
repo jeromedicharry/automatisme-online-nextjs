@@ -64,6 +64,7 @@ export const blocsFields = `
             nodes {
                 slug
                 ... on SimpleProduct {
+                    databaseId
                     name
                     onSale
                     featured

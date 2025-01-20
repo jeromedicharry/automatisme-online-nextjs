@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { Heart } from '../SVG/Icons';
-import Cta from '../atoms/Cta';
+import AddToCart from '../Product/AddToCart.component';
 
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
   return (
@@ -48,15 +48,7 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
         {product.regularPrice}
       </small>
       <div className="lg:opacity-0 group-hover:opacity-100 duration-300 mt-auto">
-        <Cta
-          label={'Ajouter au panier'}
-          slug={product.slug}
-          size="large"
-          variant="primary"
-          additionalClass="uppercase"
-        >
-          Ajouter au panier
-        </Cta>
+        <AddToCart product={product} />
       </div>
     </Link>
   );
