@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import {
   BlocType,
   CardConseilProps,
+  FeaturedFaqProps,
   ReassuranceItemProps,
 } from '@/types/blocTypes';
 import BlocFeaturedCategories from './blocs/BlocFeaturedCategories';
@@ -16,12 +17,14 @@ interface FlexibleContentProps {
   blocs: BlocType[];
   reassuranceItems: ReassuranceItemProps[];
   genericAdvices: CardConseilProps[];
+  featuredFaq: FeaturedFaqProps;
 }
 
 const FlexibleContent: React.FC<FlexibleContentProps> = ({
   blocs,
   reassuranceItems,
   genericAdvices,
+  featuredFaq,
 }) => {
   if (blocs === null || blocs?.length === 0 || blocs === undefined) return null;
 
@@ -49,6 +52,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
             key={key}
             bloc={bloc}
             genericAdvices={genericAdvices}
+            featuredFaq={featuredFaq}
           />
         );
 

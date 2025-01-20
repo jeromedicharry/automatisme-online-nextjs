@@ -78,12 +78,34 @@ export interface CardConseilProps {
     };
   };
 }
+
+export interface CardFaqProps {
+  title: string;
+  faqItem: {
+    nodes: {
+      id: string;
+      featuredImage: {
+        node: {
+          sourceUrl: string;
+        };
+      };
+    }[];
+  };
+}
+
+export interface FeaturedFaqProps {
+  title: string;
+  ctaLabel: string;
+  ctaSlug: string;
+  items: CardFaqProps[];
+}
 export interface BlocConseilsFaqProps {
   __typename: 'AcfPageBlocsBlocConseilsFaqLayout';
   title: string;
   text: string;
   isSpecificContent: boolean;
   sliderAdvices: CardConseilProps[];
+  featuredFaq: FeaturedFaqProps;
 }
 export interface BlocAccordionFaqProps {
   __typename: 'AcfPageBlocsBlocAccordionLayout';

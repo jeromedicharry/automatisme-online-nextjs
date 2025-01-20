@@ -4,6 +4,30 @@ import { seoFields } from './SEO';
 
 // Elements globaux
 
+export const FEATURED_FAQ = `
+  featuredFaq {
+    title
+    ctaLabel
+    ctaSlug
+    items {
+      title
+      faqItem {
+        nodes {
+          slug
+          ... on FaqItem {
+            id
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_OPTIONS = gql`
   query GET_OPTIONS {
     themeSettings {
@@ -35,7 +59,8 @@ export const GET_OPTIONS = gql`
             }
           }
         }
-          ${sliderAdvicesFields}
+        ${sliderAdvicesFields}
+        ${FEATURED_FAQ}
       }
     }
   }

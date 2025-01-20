@@ -10,13 +10,21 @@ import {
   GET_OPTIONS,
   GET_SINGLE_PAGE,
 } from '@/utils/gql/WEBSITE_QUERIES';
-import { BlocType } from '@/types/blocTypes';
+import { BlocType, FeaturedFaqProps } from '@/types/blocTypes';
 import FlexibleContent from '@/components/sections/FlexibleContent';
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
 
 // todo typer une page
 
-const Page = ({ page, themeSettings }: { page: any; themeSettings: any }) => {
+const Page = ({
+  page,
+  themeSettings,
+  featuredFaq,
+}: {
+  page: any;
+  themeSettings: any;
+  featuredFaq: FeaturedFaqProps;
+}) => {
   //todo typer theme settings et page
   const router = useRouter();
   if (!router.isFallback && !page?.title) {
@@ -25,6 +33,7 @@ const Page = ({ page, themeSettings }: { page: any; themeSettings: any }) => {
 
   const hero = page?.acfPage?.hero || null;
   const pageBlocs: BlocType[] = page?.acfPage?.blocs || null;
+
   return (
     <Layout meta={page?.seo} uri={page?.uri}>
       <SimpleHero title={hero?.title || page?.title} subtitle={hero?.text} />
@@ -32,6 +41,7 @@ const Page = ({ page, themeSettings }: { page: any; themeSettings: any }) => {
         blocs={pageBlocs}
         reassuranceItems={themeSettings?.reassurance}
         genericAdvices={themeSettings?.sliderAdvices}
+        featuredFaq={featuredFaq}
       />
     </Layout>
   );
@@ -60,10 +70,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const themeSettings = options?.data?.themeSettings?.optionsFields;
 
+  const featuredFaq = page?.data?.page?.acfPage?.blocs?.some(
+    (bloc: BlocType) => bloc.__typename === 'AcfPageBlocsBlocConseilsFaqLayout',
+  )
+    ? themeSettings?.featuredFaq
+    : null;
+
   return {
     props: {
       page: page?.data?.page,
       themeSettings,
+      featuredFaq,
     },
     revalidate: 60,
   };

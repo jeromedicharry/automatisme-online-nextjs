@@ -33,7 +33,6 @@ export const HeartFilled = () => {
 
 export const Wifi = ({ variant }: { variant: 'bleu' | 'orange' }) => {
   const color = variant === 'orange' ? '#f8d6b5' : '#dfeffd';
-  console.log({ variant });
   return (
     <svg
       id="Calque_1"
