@@ -15,9 +15,6 @@ module.exports = {
         'dark-grey': '#6F6F6F',
         greyhover: '#F2F2F2',
       },
-      fontFamily: {
-        primary: ['Helvetica Neue', 'sans-serif'],
-      },
       boxShadow: {
         card: '0px 0px 10px -3px rgba(0, 0, 0, 0.25)',
         cardhover: '0px 0px 10px -3px rgba(0, 0, 0, 0.45)',

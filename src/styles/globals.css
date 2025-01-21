@@ -3,9 +3,40 @@
 @tailwind utilities;
 
 /* todo: clean + add helvetica font styles + files */
+/* Fonts */
+@font-face {
+  font-family: 'HelveticaNeue';
+  src: url('./fonts/HelveticaNeue.woff2') format('woff2'),
+      url('./fonts/HelveticaNeue.woff') format('woff'),
+      url('./fonts/HelveticaNeue.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'HelveticaNeue';
+  src: url('./fonts/HelveticaNeue-Medium.woff2') format('woff2'),
+      url('./fonts/HelveticaNeue-Medium.woff') format('woff'),
+      url('./fonts/HelveticaNeue-Medium.ttf') format('ttf');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
 
-body {
+@font-face {
+  font-family: 'HelveticaNeue';
+  src: url('./fonts/HelveticaNeue-Bold.woff2') format('woff2'),
+      url('./fonts/HelveticaNeue-Bold.woff') format('woff'),
+      url('./fonts/HelveticaNeue-Bold.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+body {  
+  font-family: 'HelveticaNeue';
   line-height: 1.2;
 }
 
