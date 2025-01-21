@@ -102,3 +102,53 @@ export const GET_ALL_PAGE_SLUGS = gql`
     }
   }
 `;
+
+export const GET_FOOTER_MENU_1 = gql`
+  query GET_FOOTER_MENU_1 {
+    menu(id: "menu-footer-1", idType: SLUG) {
+      menuItems(first: 100) {
+        nodes {
+          label
+          uri
+        }
+      }
+      submenu {
+        label
+      }
+    }
+  }
+`;
+export const GET_FOOTER_MENU_2 = gql`
+  query GET_FOOTER_MENU_2 {
+    menu(id: "menu-footer-2", idType: SLUG) {
+      menuItems(first: 100) {
+        nodes {
+          label
+          uri
+        }
+      }
+      submenu {
+        label
+      }
+    }
+  }
+`;
+export const GET_FOOTER_MENU_3 = gql`
+  query GET_FOOTER_MENU_3 {
+    menu(id: "menu-footer-3", idType: SLUG) {
+      menuItems(where: { parentId: null }) {
+        nodes {
+          label
+          uri
+          parentId
+          childItems {
+            nodes {
+              label
+              uri
+            }
+          }
+        }
+      }
+    }
+  }
+`;

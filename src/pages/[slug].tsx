@@ -7,12 +7,16 @@ import Layout from '@/components/Layout/Layout.component';
 import client from '@/utils/apollo/ApolloClient';
 import {
   GET_ALL_PAGE_SLUGS,
+  GET_FOOTER_MENU_1,
+  GET_FOOTER_MENU_2,
+  // GET_FOOTER_MENU_3,
   GET_OPTIONS,
   GET_SINGLE_PAGE,
 } from '@/utils/gql/WEBSITE_QUERIES';
 import { BlocType, FeaturedFaqProps } from '@/types/blocTypes';
 import FlexibleContent from '@/components/sections/FlexibleContent';
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
+import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 
 // todo typer une page
 
@@ -20,10 +24,14 @@ const Page = ({
   page,
   themeSettings,
   featuredFaq,
+  footerMenu1,
+  footerMenu2,
 }: {
   page: any;
   themeSettings: any;
   featuredFaq: FeaturedFaqProps;
+  footerMenu1: SimpleFooterMenuProps;
+  footerMenu2: SimpleFooterMenuProps;
 }) => {
   //todo typer theme settings et page
   const router = useRouter();
@@ -35,7 +43,13 @@ const Page = ({
   const pageBlocs: BlocType[] = page?.acfPage?.blocs || null;
 
   return (
-    <Layout meta={page?.seo} uri={page?.uri}>
+    <Layout
+      meta={page?.seo}
+      uri={page?.uri}
+      footerMenu1={footerMenu1}
+      footerMenu2={footerMenu2}
+      themeSettings={themeSettings}
+    >
       <SimpleHero title={hero?.title || page?.title} subtitle={hero?.text} />
       <FlexibleContent
         blocs={pageBlocs}
@@ -68,6 +82,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     query: GET_OPTIONS,
   });
 
+  const footerMenu1 = await client.query({
+    query: GET_FOOTER_MENU_1,
+  });
+  const footerMenu2 = await client.query({
+    query: GET_FOOTER_MENU_2,
+  });
+
   const themeSettings = options?.data?.themeSettings?.optionsFields;
 
   const featuredFaq = page?.data?.page?.acfPage?.blocs?.some(
@@ -81,6 +102,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       page: page?.data?.page,
       themeSettings,
       featuredFaq,
+      footerMenu1: footerMenu1?.data?.menu,
+      footerMenu2: footerMenu2?.data?.menu,
     },
     revalidate: 60,
   };

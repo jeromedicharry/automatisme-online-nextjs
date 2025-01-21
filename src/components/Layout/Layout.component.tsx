@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 
 // Components
 import Header from '@/components/sections/Header/Header.component';
-import Footer from '@/components/sections/Footer/Footer.component';
+import Footer from '@/components/sections/Footer/Footer';
 
 // State
 import { CartContext } from '@/stores/CartProvider';
@@ -15,12 +15,16 @@ import { getFormattedCart } from '@/utils/functions/functions';
 // GraphQL
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import Meta, { IMeta } from './Meta';
+import { SimpleFooterMenuProps } from '../sections/Footer/SimpleFooterMenu';
 
 interface ILayoutProps {
   children?: ReactNode;
   meta: IMeta;
   uri?: string;
   title?: string;
+  footerMenu1?: SimpleFooterMenuProps | undefined;
+  footerMenu2?: SimpleFooterMenuProps | undefined;
+  themeSettings?: any;
 }
 
 /**
@@ -31,7 +35,14 @@ interface ILayoutProps {
  * @returns {JSX.Element} - Rendered component
  */
 
-const Layout = ({ children, meta, uri }: ILayoutProps) => {
+const Layout = ({
+  children,
+  meta,
+  uri,
+  footerMenu1,
+  footerMenu2,
+  themeSettings,
+}: ILayoutProps) => {
   const { setCart } = useContext(CartContext);
 
   const { data, refetch } = useQuery(GET_CART, {
@@ -66,7 +77,11 @@ const Layout = ({ children, meta, uri }: ILayoutProps) => {
         <main className="grow shrink-0 text-primary font-primary">
           {children}
         </main>
-        <Footer />
+        <Footer
+          menu1={footerMenu1}
+          menu2={footerMenu2}
+          themeSettings={themeSettings}
+        />
       </div>
     </>
   );
