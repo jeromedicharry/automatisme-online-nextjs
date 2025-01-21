@@ -3,7 +3,7 @@ import { seoFields } from './SEO';
 
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
-    product(id: $id, idType: DATABASE_ID) {
+    product(id: $id, idType: SLUG) {
       id
       ${seoFields}
       databaseId
@@ -46,78 +46,6 @@ export const GET_SINGLE_PRODUCT = gql`
     }
   }
 `;
-// export const GET_VARIABLE_PRODUCT = gql`
-//   query Product($id: ID!) {
-//     product(id: $id, idType: DATABASE_ID) {
-//       id
-//       databaseId
-//       averageRating
-//       slug
-//       description
-//       onSale
-//       image {
-//         id
-//         uri
-//         title
-//         srcSet
-//         sourceUrl
-//       }
-//       name
-//       ... on SimpleProduct {
-//         salePrice
-//         regularPrice
-//         price
-//         id
-//         stockQuantity
-//       }
-//       ... on VariableProduct {
-//         salePrice
-//         regularPrice
-//         price
-//         id
-//         allPaColors {
-//           nodes {
-//             name
-//           }
-//         }
-//         allPaSizes {
-//           nodes {
-//             name
-//           }
-//         }
-//         variations {
-//           nodes {
-//             id
-//             databaseId
-//             name
-//             stockStatus
-//             stockQuantity
-//             purchasable
-//             onSale
-//             salePrice
-//             regularPrice
-//           }
-//         }
-//       }
-//       ... on ExternalProduct {
-//         price
-//         id
-//         externalUrl
-//       }
-//       ... on GroupProduct {
-//         products {
-//           nodes {
-//             ... on SimpleProduct {
-//               id
-//               price
-//             }
-//           }
-//         }
-//         id
-//       }
-//     }
-//   }
-// `;
 
 /**
  * Fetch first 4 products from a specific category
@@ -154,7 +82,7 @@ export const FETCH_FIRST_PRODUCTS_FROM_HOODIES_QUERY = `
  */
 export const FETCH_ALL_PRODUCTS_QUERY = gql`
   query MyQuery {
-    products(first: 50) {
+    products(first: 10) {
       nodes {
         databaseId
         name
@@ -166,21 +94,9 @@ export const FETCH_ALL_PRODUCTS_QUERY = gql`
         ... on SimpleProduct {
           databaseId
           price
+          uri
           regularPrice
           salePrice
-        }
-        ... on VariableProduct {
-          databaseId
-          price
-          regularPrice
-          salePrice
-          variations {
-            nodes {
-              price
-              regularPrice
-              salePrice
-            }
-          }
         }
       }
     }
