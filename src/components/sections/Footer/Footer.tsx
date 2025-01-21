@@ -29,6 +29,7 @@ const Footer = ({
           type: 'Fond bleu clair',
         }}
         reassuranceItems={themeSettings?.reassurance}
+        isFooter={true}
       />
     </div>
     <footer className="bg-primary py-10">

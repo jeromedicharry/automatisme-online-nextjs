@@ -26,7 +26,7 @@ const BlocReassurance = ({
   return (
     <Container>
       <section
-        className={`w-full md:rounded-[13px] md:p-[10px] ${bgColor} ${isFooter ? 'mb-12 md:mb-16' : ''}`}
+        className={`w-full md:rounded-[13px] md:p-[10px] ${bgColor} ${isFooter ? '' : 'mb-12 md:mb-16'}`}
       >
         <div className="grid grid-cols-2 gap-4 max-md:max-w-md mx-auto md:flex justify-around">
           {items.map((item, index) => (
