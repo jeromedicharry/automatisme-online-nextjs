@@ -18,7 +18,7 @@ const BlocFeaturedCategories = ({
   return (
     <Container>
       <section className="mb-12 md:mb-16">
-        <div className="w-fit mx-auto xl:w-full">
+        <div className="w-fit mx-auto lg:w-full">
           <BlocIntroSmall title={bloc.title} subtitle={bloc.subtitle} />
           <div className="grid grid-cols-2 lg:grid-cols-4 items-top justify-center gap-x-3 gap-y-4 lg:gap-5">
             {bloc.categories.nodes.map((category, key) => (
