@@ -2,6 +2,7 @@ import AvisVerifiesReassurance from '@/components/atoms/AvisVerifiesReassurance'
 import Container from '@/components/container';
 import { BlocReassuranceProps, ReassuranceItemProps } from '@/types/blocTypes';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 const BlocReassurance = ({
@@ -30,7 +31,11 @@ const BlocReassurance = ({
       >
         <div className="grid grid-cols-2 gap-4 max-md:max-w-md mx-auto md:flex justify-around">
           {items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
+            <Link
+              href={item?.link || ''}
+              key={index}
+              className="flex items-center gap-2 text-primary hover:text-primary-dark duration-300"
+            >
               {item.picto.node.sourceUrl ? (
                 <div
                   className={`flex rounded-[3px] ${mobileBgColor} px-[6px] py-[5px]`}
@@ -48,7 +53,7 @@ const BlocReassurance = ({
               <span className="text-[0.6875rem] underline text-balance">
                 {item.label}
               </span>
-            </div>
+            </Link>
           ))}
           {bloc.isAvis && (
             <AvisVerifiesReassurance mobileBgColor={mobileBgColor} />

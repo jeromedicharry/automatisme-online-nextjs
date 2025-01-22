@@ -156,6 +156,7 @@ export interface ReassuranceItemProps {
       sourceUrl: string;
     };
   };
+  link: string;
 }
 
 export type BlocType =

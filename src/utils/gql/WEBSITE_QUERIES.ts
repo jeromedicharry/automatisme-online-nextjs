@@ -58,6 +58,7 @@ export const GET_OPTIONS = gql`
               sourceUrl
             }
           }
+          link
         }
         ${sliderAdvicesFields}
         ${FEATURED_FAQ}
