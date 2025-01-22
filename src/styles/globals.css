@@ -54,12 +54,6 @@ body {
   height: unset !important;
 }
 
-@media screen and (min-width: 940px) {
-  .secondaryPromoSlider .swiper-slide {
-    /* width: 315px !important; */
-  }
-}
-
 .featured-products-slider .swiper-slide {
   max-width: 257px !important;
   height: unset !important;

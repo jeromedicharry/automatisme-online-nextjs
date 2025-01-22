@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 
 // Components
 import Meta, { IMeta } from './Meta';
-import Header from '@/components/sections/Header/Header.component';
+import Header from '../sections/Header/Header';
 import Footer from '@/components/sections/Footer/Footer';
 
 // State

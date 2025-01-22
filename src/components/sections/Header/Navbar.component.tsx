@@ -2,7 +2,7 @@
 import Link from 'next/link';
 
 // Components
-import Cart from './Cart.component';
+import Cart from './Cart';
 import AlgoliaSearchBox from '../../AlgoliaSearch/AlgoliaSearchBox.component';
 import MobileSearch from '../../AlgoliaSearch/MobileSearch.component';
 
