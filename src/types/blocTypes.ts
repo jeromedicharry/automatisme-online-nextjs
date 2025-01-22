@@ -5,6 +5,11 @@ export interface PromotionSlideProps {
       sourceUrl: string;
     };
   };
+  imageLaptop: {
+    node: {
+      sourceUrl: string;
+    };
+  };
 }
 
 export interface HomeAcfProps {

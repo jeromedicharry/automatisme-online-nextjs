@@ -33,6 +33,11 @@ module.exports = {
         'card-featured-mobile': '350 / 204',
         'card-featured-laptop': '380 / 579',
         'card-faq': '345 / 144',
+        'promo-slide-main-mobile': '350 / 228',
+        'promo-slide-main-laptop': '736 / 330',
+        'promo-slide-secondary-mobile': '282 / 98',
+        'promo-slide-secondary-laptop': '315 / 161',
+        'promo-slide-secondary-unique': '315 / 330',
       },
       fontSize: {
         '5xl': ['3rem', { lineHeight: '1.2' }],

@@ -16,7 +16,7 @@ export default function Container({
   return (
     <div
       className={`w-full mx-auto ${mobileFull ? '' : 'px-5'} md:px-6 ${
-        large ? '' : small ? 'lg:max-w-[840px]' : 'xl:max-w-[1108px]'
+        large ? '' : small ? 'max-w-[840px]' : 'lg:max-w-[1108px]'
       }`}
     >
       {children}

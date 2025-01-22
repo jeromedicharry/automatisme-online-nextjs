@@ -34,16 +34,6 @@ export const GET_OPTIONS = gql`
       optionsFields {
         contactPhone
         hours
-        logoFooter {
-          node {
-            sourceUrl
-          }
-        }
-        logoHeader {
-          node {
-            sourceUrl
-          }
-        }
         paymentPictos {
           picto {
             node {

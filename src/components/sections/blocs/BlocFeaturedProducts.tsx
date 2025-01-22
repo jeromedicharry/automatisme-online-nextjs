@@ -2,7 +2,6 @@ import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
 import Container from '@/components/container';
 import { BlocFeaturedProductsProps } from '@/types/blocTypes';
 import Image from 'next/image';
-import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';

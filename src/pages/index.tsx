@@ -21,6 +21,7 @@ import {
 // Blocs
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import FlexibleContent from '@/components/sections/FlexibleContent';
+import HomePromoSection from '@/components/sections/Home/HomePromoSection';
 
 const HomePage = ({
   page,
@@ -35,10 +36,10 @@ const HomePage = ({
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
 }) => {
+  const promoSection = page?.acfHome;
   const hero = page?.acfPage?.hero || null;
   const pageBlocs: BlocType[] = page?.acfPage?.blocs || null;
 
-  console.log('pageBlocs', pageBlocs);
   return (
     <Layout
       meta={page?.seo}
@@ -47,6 +48,14 @@ const HomePage = ({
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
     >
+      {promoSection?.isShown ? (
+        <>
+          <HomePromoSection
+            mainSlider={promoSection?.mainSlider}
+            secondarySlider={promoSection?.secondarySlider}
+          />
+        </>
+      ) : null}
       <SimpleHero title={hero?.title || page?.title} subtitle={hero?.text} />
       <FlexibleContent
         blocs={pageBlocs}
