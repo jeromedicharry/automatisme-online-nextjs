@@ -31,24 +31,23 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
             </span>
           </div>
         </div>
-        <h3 className="mt-4 mb-1 font-bold text-[0.9375rem] md:text-base leading-general group-hover:text-secondary duration-300">
+        <h3 className="mt-4 mb-1 font-bold text-[0.9375rem] md:text-base leading-general duration-300">
           {product?.name}
         </h3>
-        <p className="text-dark-grey uppercase text-[0.6875rem] mb-[10px]">
-          {product?.sku}
-        </p>
-        <p className="mb-[10px]">Widget Avis vérifiés</p>
-        <div className="font-bold text-2xl leading-general pr-7 relative w-fit mb-1">
-          <div className="absolute text-sm font-bold right-0 top-0">TTC</div>
-          <span className="text-base leading-general pr-1">
-            {product?.price}
-          </span>
-          €
-        </div>
-        <small className="text-dark-grey line-through mb-4">
-          {product?.regularPrice}
-        </small>
       </Link>
+
+      <p className="text-dark-grey uppercase text-[0.6875rem] mb-[10px]">
+        {product?.sku}
+      </p>
+      <p className="mb-[10px]">Widget Avis vérifiés</p>
+      <div className="font-bold text-2xl leading-general pr-7 relative w-fit mb-1">
+        <div className="absolute text-sm font-bold right-0 top-0">TTC</div>
+        <span className="text-base leading-general pr-1">{product?.price}</span>
+        €
+      </div>
+      <small className="text-dark-grey line-through mb-4">
+        {product?.regularPrice}
+      </small>
       <div className="lg:opacity-0 group-hover:opacity-100 duration-300 mt-auto">
         <AddToCart product={product} />
       </div>

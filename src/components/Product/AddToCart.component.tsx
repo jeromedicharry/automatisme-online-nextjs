@@ -30,7 +30,6 @@ const AddToCart = ({ product }: { product: CardProductProps }) => {
   const [requestError, setRequestError] = useState<boolean>(false);
 
   const productId = product?.databaseId;
-  console.log('productId', productId);
 
   const productQueryInput = {
     clientMutationId: uuidv4(), // Generate a unique id.
@@ -85,7 +84,7 @@ const AddToCart = ({ product }: { product: CardProductProps }) => {
       <Cta
         handleButtonClick={(e) => handleAddToCart(e)}
         label="Ajouter au panier"
-        variant="secondary"
+        variant="primaryHollow"
         size="large"
         slug="#"
         additionalClass={`w-full ${addToCartLoading || requestError ? 'opacity-50 pointer-events-none' : ''}`}

@@ -31,6 +31,20 @@ export const HeartFilled = () => {
   );
 };
 
+export const Chevron = () => (
+  <svg
+    width="8"
+    height="10"
+    viewBox="0 0 8 10"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4.6248 0.91996L0.99763 3.98583C0.334123 4.54666 0.334123 5.44399 0.99763 6.00482L4.6248 9.08004C5.68641 9.97737 7.5 9.34176 7.5 8.07055L7.5 1.92945C7.5 0.658239 5.68641 0.0226316 4.6248 0.91996Z"
+      fill="currentColor"
+    />
+  </svg>
+);
 export const Wifi = ({ variant }: { variant: 'bleu' | 'orange' }) => {
   const color = variant === 'orange' ? '#f8d6b5' : '#dfeffd';
   return (

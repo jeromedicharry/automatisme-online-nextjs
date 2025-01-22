@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 
 import Cardproduct from '@/components/cards/CardProduct';
+import SliderPrevNextButton from '@/components/atoms/SliderPrevNextButton';
 
 const BlocFeaturedProducts = ({
   bloc,
@@ -31,7 +32,7 @@ const BlocFeaturedProducts = ({
                 alt={bloc.title}
                 width={380}
                 height={579}
-                className="max-md:hidden aspect-card-featured-laptop object-cover"
+                className="max-md:hidden aspect-card-featured-laptop h-full object-cover"
               ></Image>
               <Image
                 src={bloc.image?.node?.sourceUrl}
@@ -63,19 +64,19 @@ const BlocFeaturedProducts = ({
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <nav className="navigation flex gap-4 absolute right-0 bottom-5">
-                <button
-                  className="prev rounded-full arrow bg-primary w-10 h-10 text-white"
-                  aria-label="Eléments précédents"
-                >
-                  Prev
-                </button>
-                <button
-                  className="next rounded-full bg-primary w-10 h-10 text-white"
-                  aria-label="Eléments suivants"
-                >
-                  Next
-                </button>
+              <nav className="navigation flex gap-3 absolute right-4 md:right-6 bottom-5">
+                <SliderPrevNextButton
+                  type="prev"
+                  variant="white"
+                  ariaLabel="Produits précédents"
+                  classSelector="prev"
+                />
+                <SliderPrevNextButton
+                  type="next"
+                  variant="primary"
+                  ariaLabel="Produits suivants"
+                  classSelector="next"
+                />
               </nav>
             </div>
           </div>

@@ -15,6 +15,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import Container from '@/components/container';
 import CardFeaturedFaq from '@/components/cards/CardFeaturedFaq';
 import Cta from '@/components/atoms/Cta';
+import SliderPrevNextButton from '@/components/atoms/SliderPrevNextButton';
 
 const BlocConseilFAQ = ({
   bloc,
@@ -49,19 +50,21 @@ const BlocConseilFAQ = ({
               </SwiperSlide>
             ))}
           </Swiper>
-          <nav className="navigation flex gap-4 absolute z-10 right-5 bottom-2">
-            <button
-              className="prevService rounded-full arrow bg-primary w-6 h-6 text-white"
-              aria-label="Eléments précédents"
-            >
-              Prev
-            </button>
-            <button
-              className="nextService rounded-full bg-primary w-6 h-6 text-white"
-              aria-label="Eléments suivants"
-            >
-              Next
-            </button>
+          <nav className="navigation flex gap-3 absolute z-10 right-2 bottom-2">
+            <SliderPrevNextButton
+              type="prev"
+              classSelector="prevService"
+              size="small"
+              variant="white"
+              ariaLabel="Questions précédentes"
+            />
+            <SliderPrevNextButton
+              type="next"
+              classSelector="nextService"
+              size="small"
+              variant="primary"
+              ariaLabel="Questions suivantes"
+            />
           </nav>
         </section>
       </Container>
@@ -94,19 +97,19 @@ const BlocConseilFAQ = ({
             >
               {featuredFaq.ctaLabel}
             </Cta>
-            <nav className="navigation flex gap-4 z-10 right-5 md:absolute md:bottom-[70px]">
-              <button
-                className="prevFaq rounded-full arrow bg-primary w-6 h-6 text-white"
-                aria-label="Eléments précédents"
-              >
-                Prev
-              </button>
-              <button
-                className="nextFaq rounded-full bg-primary w-6 h-6 text-white"
-                aria-label="Eléments suivants"
-              >
-                Next
-              </button>
+            <nav className="navigation flex gap-4 z-10 right-5 md:absolute md:bottom-0">
+              <SliderPrevNextButton
+                type="prev"
+                classSelector="prevFaq"
+                variant="white"
+                ariaLabel="Questions précédentes"
+              />
+              <SliderPrevNextButton
+                type="next"
+                classSelector="nextFaq"
+                variant="primary"
+                ariaLabel="Questions suivantes"
+              />
             </nav>
           </div>
         </section>

@@ -81,6 +81,11 @@ body {
   height: unset !important;
 }
 
+.swiper-button-disabled {
+  pointer-events: none;
+  opacity: 0.7 !important;
+}
+
 .faq-title strong {
   color: #E94E1B;
   font-style: italic;
