@@ -1,7 +1,7 @@
 import { NextPage, InferGetStaticPropsType, GetStaticProps } from 'next';
 
 import Categories from '@/components/Category/Categories.component';
-import Layout from '@/components/Layout/Layout.component';
+import Layout from '@/components/Layout/Layout';
 
 import client from '@/utils/apollo/ApolloClient';
 

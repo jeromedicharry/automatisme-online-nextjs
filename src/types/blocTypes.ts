@@ -1,3 +1,18 @@
+export interface PromotionSlideProps {
+  slug: string;
+  imageMobile: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+}
+
+export interface HomeAcfProps {
+  isShown: boolean;
+  mainSlider: PromotionSlideProps[];
+  secondarySlider: PromotionSlideProps[];
+}
+
 export interface BlocWysiWygProps {
   __typename: 'AcfPageBlocsBlocWysiwygLayout';
   title: string;

@@ -1,5 +1,5 @@
 // Components
-import Layout from '@/components/Layout/Layout.component';
+import Layout from '@/components/Layout/Layout';
 import CheckoutForm from '@/components/Checkout/CheckoutForm.component';
 
 // Types

@@ -1,10 +1,9 @@
-import React from 'react';
+import client from '@/utils/apollo/ApolloClient';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 
-import Layout from '@/components/Layout/Layout.component';
-import client from '@/utils/apollo/ApolloClient';
+import Layout from '@/components/Layout/Layout';
 import {
   GET_ALL_PAGE_SLUGS,
   GET_FOOTER_MENU_1,

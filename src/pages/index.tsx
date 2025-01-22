@@ -1,57 +1,98 @@
 // Components
-import DisplayProducts from '@/components/Product/DisplayProducts.component';
-import Layout from '@/components/Layout/Layout.component';
+import Layout from '@/components/Layout/Layout';
 
 // Utilities
 import client from '@/utils/apollo/ApolloClient';
 
 // Types
-import type { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next';
+import type { GetStaticProps } from 'next';
+import { BlocType, FeaturedFaqProps } from '@/types/blocTypes';
+import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 
 // GraphQL
+
 import {
-  FETCH_ALL_PRODUCTS_QUERY,
-  GET_SINGLE_PAGE,
-} from '@/utils/gql/WOOCOMMERCE_QUERIES';
+  GET_FOOTER_MENU_1,
+  GET_FOOTER_MENU_2,
+  GET_HOME_PAGE,
+  GET_OPTIONS,
+} from '@/utils/gql/WEBSITE_QUERIES';
+
+// Blocs
+import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import FlexibleContent from '@/components/sections/FlexibleContent';
 
-/**
- * Main index page
- * @function Index
- * @param {InferGetStaticPropsType<typeof getStaticProps>} products
- * @returns {JSX.Element} - Rendered component
- */
-
-const Index: NextPage = ({
+const HomePage = ({
   page,
-}: InferGetStaticPropsType<typeof getStaticProps>) => (
-  <Layout meta={page?.seo} uri="">
-    <FlexibleContent blocs={page?.acfPage?.blocs} />
-  </Layout>
-);
+  themeSettings,
+  featuredFaq,
+  footerMenu1,
+  footerMenu2,
+}: {
+  page: any;
+  themeSettings: any;
+  featuredFaq: FeaturedFaqProps;
+  footerMenu1: SimpleFooterMenuProps;
+  footerMenu2: SimpleFooterMenuProps;
+}) => {
+  const hero = page?.acfPage?.hero || null;
+  const pageBlocs: BlocType[] = page?.acfPage?.blocs || null;
 
-export default Index;
+  console.log('pageBlocs', pageBlocs);
+  return (
+    <Layout
+      meta={page?.seo}
+      uri={page?.uri}
+      footerMenu1={footerMenu1}
+      footerMenu2={footerMenu2}
+      themeSettings={themeSettings}
+    >
+      <SimpleHero title={hero?.title || page?.title} subtitle={hero?.text} />
+      <FlexibleContent
+        blocs={pageBlocs}
+        reassuranceItems={themeSettings?.reassurance}
+        genericAdvices={themeSettings?.sliderAdvices}
+        featuredFaq={featuredFaq}
+      />
+    </Layout>
+  );
+};
+
+export default HomePage;
 
 export const getStaticProps: GetStaticProps = async () => {
-  // todo create getProducts separate functions
-  const { data } = await client.query({
-    query: FETCH_ALL_PRODUCTS_QUERY,
-  });
-
-  const products = data?.products?.nodes;
-
-  const homePageSlug = 'accueil';
   const pageData = await client.query({
-    query: GET_SINGLE_PAGE,
-    variables: { id: homePageSlug },
+    query: GET_HOME_PAGE,
   });
 
-  const { page } = pageData.data;
+  const options = await client.query({
+    query: GET_OPTIONS,
+  });
+
+  const footerMenu1 = await client.query({
+    query: GET_FOOTER_MENU_1,
+  });
+  const footerMenu2 = await client.query({
+    query: GET_FOOTER_MENU_2,
+  });
+
+  const themeSettings = options?.data?.themeSettings?.optionsFields;
+
+  const page = pageData?.data?.page;
+
+  const featuredFaq = page?.acfPage?.blocs?.some(
+    (bloc: BlocType) => bloc.__typename === 'AcfPageBlocsBlocConseilsFaqLayout',
+  )
+    ? themeSettings?.featuredFaq
+    : null;
 
   return {
     props: {
       page,
-      products,
+      themeSettings,
+      featuredFaq,
+      footerMenu1: footerMenu1?.data?.menu,
+      footerMenu2: footerMenu2?.data?.menu,
     },
     revalidate: 60,
   };

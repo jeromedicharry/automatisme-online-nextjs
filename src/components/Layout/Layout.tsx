@@ -3,6 +3,7 @@ import { ReactNode, useContext, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 
 // Components
+import Meta, { IMeta } from './Meta';
 import Header from '@/components/sections/Header/Header.component';
 import Footer from '@/components/sections/Footer/Footer';
 
@@ -14,10 +15,11 @@ import { getFormattedCart } from '@/utils/functions/functions';
 
 // GraphQL
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import Meta, { IMeta } from './Meta';
+
+// Types
 import { SimpleFooterMenuProps } from '../sections/Footer/SimpleFooterMenu';
 
-interface ILayoutProps {
+interface LayoutProps {
   children?: ReactNode;
   meta: IMeta;
   uri?: string;
@@ -42,7 +44,7 @@ const Layout = ({
   footerMenu1,
   footerMenu2,
   themeSettings,
-}: ILayoutProps) => {
+}: LayoutProps) => {
   const { setCart } = useContext(CartContext);
 
   const { data, refetch } = useQuery(GET_CART, {

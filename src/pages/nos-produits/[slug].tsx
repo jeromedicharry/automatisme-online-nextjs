@@ -10,7 +10,7 @@ import {
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import client from '@/utils/apollo/ApolloClient';
 import SingleProduct from '@/components/Product/SingleProduct';
-import Layout from '@/components/Layout/Layout.component';
+import Layout from '@/components/Layout/Layout';
 
 const Product: NextPage = ({
   product,

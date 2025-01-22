@@ -43,10 +43,9 @@ const BlocReassurance = ({
                   <Image
                     src={item.picto.node.sourceUrl}
                     alt={item.label || 'Picto'}
-                    width={24}
-                    height={24}
+                    width={100}
+                    height={100}
                     className="w-6 max-w-6"
-                    style={{ width: '24px', height: '24px' }}
                   />
                 </div>
               ) : null}

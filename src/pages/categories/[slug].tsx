@@ -1,7 +1,7 @@
 import { withRouter } from 'next/router';
 
 // Components
-import Layout from '@/components/Layout/Layout.component';
+import Layout from '@/components/Layout/Layout';
 import DisplayProducts from '@/components/Product/DisplayProducts.component';
 
 import client from '@/utils/apollo/ApolloClient';

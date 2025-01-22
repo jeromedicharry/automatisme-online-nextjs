@@ -67,43 +67,7 @@ export const GET_OPTIONS = gql`
   }
 `;
 
-// pages
-
-export const GET_SINGLE_PAGE = gql` 
-  query GET_SINGLE_PAGE($id: ID!) {
-    page(id: $id, idType: URI ) {
-        ${seoFields}
-        id
-        uri
-        title(format: RENDERED)
-        status
-        featuredImage {
-          node {
-            sourceUrl
-          }
-        }
-        acfPage {
-          hero {
-            title
-            text
-          }
-          ${blocsFields}
-        }
-      }
-    }
-`;
-
-export const GET_ALL_PAGE_SLUGS = gql`
-  query GET_ALL_PAGE_SLUGS {
-    pages(first: 100, where: { status: PUBLISH }) {
-      nodes {
-        slug
-        isFrontPage
-      }
-    }
-  }
-`;
-
+// Elements de menu
 export const GET_FOOTER_MENU_1 = gql`
   query GET_FOOTER_MENU_1 {
     menu(id: "menu-footer-1", idType: SLUG) {
@@ -148,6 +112,91 @@ export const GET_FOOTER_MENU_3 = gql`
               uri
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+// pages
+export const GET_SINGLE_PAGE = gql` 
+  query GET_SINGLE_PAGE($id: ID!) {
+    page(id: $id, idType: URI ) {
+        ${seoFields}
+        id
+        uri
+        title(format: RENDERED)
+        status
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        acfPage {
+          hero {
+            title
+            text
+          }
+          ${blocsFields}
+        }
+      }
+    }
+`;
+
+export const GET_ALL_PAGE_SLUGS = gql`
+  query GET_ALL_PAGE_SLUGS {
+    pages(first: 100, where: { status: PUBLISH }) {
+      nodes {
+        slug
+        isFrontPage
+      }
+    }
+  }
+`;
+
+// spécifique à la page d'accueil
+
+export const PromotionSlide = `
+  slug
+  imageMobile {
+    node {
+      sourceUrl(size: MEDIUM_LARGE)
+    }
+  }
+  imageLaptop {
+    node {
+      sourceUrl(size: LARGE)
+    }
+  }
+`;
+
+export const GET_HOME_PAGE = gql`
+  query GET_HOME_PAGE {
+    page(id: "/", idType: URI) {
+      ${seoFields}
+      id
+      uri
+      title(format: RENDERED)
+      status
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
+      acfPage {
+        hero {
+          title
+          text
+        }
+        ${blocsFields}
+      }
+      acfHome {
+        isShown
+        mainSlider {
+          ${PromotionSlide}
+        }
+        secondarySlider {
+          ${PromotionSlide}
         }
       }
     }

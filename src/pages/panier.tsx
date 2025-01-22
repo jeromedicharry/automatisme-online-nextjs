@@ -1,5 +1,5 @@
 // Components
-import Layout from '@/components/Layout/Layout.component';
+import Layout from '@/components/Layout/Layout';
 import CartContents from '@/components/Cart/CartContents.component';
 
 // Types

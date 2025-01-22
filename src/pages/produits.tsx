@@ -1,6 +1,6 @@
 // Components
 import DisplayProducts from '@/components/Product/DisplayProducts.component';
-import Layout from '@/components/Layout/Layout.component';
+import Layout from '@/components/Layout/Layout';
 
 // GraphQL
 import { FETCH_ALL_PRODUCTS_QUERY } from '@/utils/gql/WOOCOMMERCE_QUERIES';
