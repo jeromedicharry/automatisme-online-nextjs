@@ -1,6 +1,24 @@
 import { gql } from '@apollo/client';
 import { seoFields } from './SEO';
 
+export const PRODUCT_CARD_FRAGMENT = `
+  databaseId
+  name
+  onSale
+  featured
+  featuredImage {
+      node {
+          sourceUrl(size: MEDIUM)
+      }
+  }
+  price(format: RAW)
+  salePrice(format: RAW)
+  isProProduct
+  hasProDiscount
+  regularPrice
+  sku
+`;
+
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
     product(id: $id, idType: SLUG) {
@@ -48,56 +66,13 @@ export const GET_SINGLE_PRODUCT = gql`
 `;
 
 /**
- * Fetch first 4 products from a specific category
- */
-
-export const FETCH_FIRST_PRODUCTS_FROM_HOODIES_QUERY = `
- query MyQuery {
-  products(first: 4, where: {category: "Hoodies"}) {
-    nodes {
-      productId
-      name
-      onSale
-      slug
-      image {
-        sourceUrl
-      }
-      ... on SimpleProduct {
-        price
-        regularPrice
-        salePrice
-      }
-      ... on VariableProduct {
-        price
-        regularPrice
-        salePrice
-      }
-    }
-  }
-}
- `;
-
-/**
  * Fetch first 200 Woocommerce products from GraphQL
  */
 export const FETCH_ALL_PRODUCTS_QUERY = gql`
   query MyQuery {
     products(first: 10) {
       nodes {
-        databaseId
-        name
-        onSale
-        slug
-        image {
-          sourceUrl
-        }
-        ... on SimpleProduct {
-          databaseId
-          price
-          uri
-          regularPrice
-          salePrice
-        }
+        uri
       }
     }
   }
@@ -106,69 +81,68 @@ export const FETCH_ALL_PRODUCTS_QUERY = gql`
 /**
  * Fetch first 20 categories from GraphQL
  */
-export const FETCH_ALL_CATEGORIES_QUERY = gql`
-  query Categories {
-    productCategories(first: 20) {
+export const GET_ALL_CATEGORIES_QUERY = gql`
+  query GET_ALL_CATEGORIES_QUERY($first: Int!, $after: String) {
+    productCategories(first: $first, after: $after) {
       nodes {
-        id
-        name
-        slug
+        uri
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
 `;
 
-export const GET_PRODUCTS_FROM_CATEGORY = gql`
-  query ProductsFromCategory($id: ID!) {
-    productCategory(id: $id) {
+export const GET_SINGLE_CATEGORY = gql`
+  query GET_PRODUCTS_FROM_CATEGORY($id: ID!) {
+    singleCategory: productCategory(id: $id, idType: URI) {
       id
+      uri
       name
-      products(first: 50) {
+      ${seoFields}
+    }
+  }
+`;
+
+export const GET_PRODUCTS_FROM_CATEGORY = gql`
+  query GET_PRODUCTS_FROM_CATEGORY(
+    $after: String
+    $id: ID!
+    $first: Int = 20
+    $filters: [ProductTaxonomyFilterInput]
+  ) {
+    productCategory(id: $id, idType: URI) {
+      products(
+        first: $first
+        after: $after
+        where: { taxonomyFilter: { filters: $filters } }
+      ) {
         nodes {
-          id
           databaseId
-          onSale
-          averageRating
-          slug
-          description
-          image {
-            id
-            uri
-            title
-            srcSet
-            sourceUrl
-          }
           name
-          ... on SimpleProduct {
-            salePrice
-            regularPrice
-            onSale
-            price
-            id
-          }
-          ... on VariableProduct {
-            salePrice
-            regularPrice
-            onSale
-            price
-            id
-          }
-          ... on ExternalProduct {
-            price
-            id
-            externalUrl
-          }
-          ... on GroupProduct {
-            products {
-              nodes {
-                ... on SimpleProduct {
-                  id
-                  price
-                }
-              }
+          onSale
+          featured
+          featuredImage {
+            node {
+              sourceUrl(size: MEDIUM)
             }
-            id
           }
+          isProProduct
+          hasProDiscount
+          ... on SimpleProduct {
+            salePrice(format: RAW)
+            regularPrice(format: RAW)
+            onSale
+            price(format: RAW)
+            id
+            taxClass
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }

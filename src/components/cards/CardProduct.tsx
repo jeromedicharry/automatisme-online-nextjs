@@ -19,7 +19,7 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
               alt={product?.name}
               width={248}
               height={257}
-              className="block h-full object-contain"
+              className="block h-full object-contain w-full"
             />
           </div>
           <div className="bg-white flex justify-between items-center relative">

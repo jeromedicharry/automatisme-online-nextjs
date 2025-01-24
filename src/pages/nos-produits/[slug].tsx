@@ -25,7 +25,6 @@ const Product: NextPage = ({
 export default Product;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  console.log('params', params);
   const { data } = await client.query({
     query: GET_SINGLE_PRODUCT,
     variables: { id: params?.slug },
@@ -43,8 +42,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const res = await client.query({ query: FETCH_ALL_PRODUCTS_QUERY });
   const allProducts = res?.data?.products?.nodes;
   const paths = allProducts.map((product: any) => `${product?.uri}`) || [];
-
-  console.log('paths', paths);
 
   return {
     paths,

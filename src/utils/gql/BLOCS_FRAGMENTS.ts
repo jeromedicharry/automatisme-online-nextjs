@@ -1,3 +1,5 @@
+import { PRODUCT_CARD_FRAGMENT } from './WOOCOMMERCE_QUERIES';
+
 export const sliderAdvicesFields = `
 sliderAdvices {
     bgColor
@@ -64,21 +66,7 @@ export const blocsFields = `
             nodes {
                 slug
                 ... on SimpleProduct {
-                    databaseId
-                    name
-                    onSale
-                    featured
-                    featuredImage {
-                        node {
-                            sourceUrl(size: MEDIUM)
-                        }
-                    }
-                    price(format: RAW)
-                    salePrice(format: RAW)
-                    isProProduct
-                    hasProDiscount
-                    regularPrice
-                    sku
+                    ${PRODUCT_CARD_FRAGMENT}
                 }
                 ... on VariableProduct {
                     name
