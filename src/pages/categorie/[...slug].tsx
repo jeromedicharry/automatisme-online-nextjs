@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { CardProductProps } from '@/types/blocTypes';
 import Cta from '@/components/atoms/Cta';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.component';
+import { CategoryPageProps } from '@/types/Categories';
 
 const CategoryPage = ({ products, category, pageInfo }: any) => {
   const router = useRouter();
@@ -40,7 +41,9 @@ const CategoryPage = ({ products, category, pageInfo }: any) => {
         first: 3,
       });
 
-    setProductSelection((prevProducts) => prevProducts.concat(newProducts));
+    setProductSelection((prevProducts: CardProductProps[]) =>
+      prevProducts.concat(newProducts),
+    );
 
     setCurrentPageInfo(newPageInfo);
     setIsLoading(false);
@@ -51,27 +54,31 @@ const CategoryPage = ({ products, category, pageInfo }: any) => {
       <Container>
         <h1 className="my-10">Produits de la catégorie : {category?.name}</h1>
         <p>{productSelection?.length} produits trouvés</p>
-        <div className="grid grid-cols-3 gap-4">
-          {productSelection?.map((product: CardProductProps) => (
-            <Cardproduct key={product?.databaseId} product={product} />
-          ))}
+        <div className="md:flex gap-4">
+          <aside className="md:w-[250px] shrink-0">FILTRES</aside>
+          <section>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {productSelection?.map((product: CardProductProps) => (
+                <Cardproduct key={product?.databaseId} product={product} />
+              ))}
+            </div>
+            {isLoading && <LoadingSpinner />}
+
+            {currentPageInfo?.hasNextPage ? (
+              <Cta
+                label="Voir plus de produits"
+                slug="#"
+                variant="primary"
+                additionalClass="w-fit mx-auto mt-10"
+                handleButtonClick={() => handleLoadMore()}
+              >
+                Voir plus de produits
+              </Cta>
+            ) : (
+              <p>{"Pas d'autres produits à montrer"}</p>
+            )}
+          </section>
         </div>
-
-        {isLoading && <LoadingSpinner />}
-
-        {currentPageInfo?.hasNextPage ? (
-          <Cta
-            label="Voir plus de produits"
-            slug="#"
-            variant="primary"
-            additionalClass="w-fit mx-auto mt-10"
-            handleButtonClick={() => handleLoadMore()}
-          >
-            Voir plus de produits
-          </Cta>
-        ) : (
-          <p>{"Pas d'autres produits à montrer"}</p>
-        )}
       </Container>
     </Layout>
   );
@@ -136,7 +143,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   // Récupérer toutes les catégories paginées
   while (hasNextPage) {
-    const { data } = await client.query({
+    const { data }: any = await client.query({
       query: GET_ALL_CATEGORIES_QUERY,
       variables: {
         first: 50, // Récupérer 100 catégories par page (limité par l'API)
@@ -145,7 +152,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     });
 
     paths.push(
-      ...data.productCategories.nodes.map((category) => ({
+      ...data.productCategories.nodes.map((category: CategoryPageProps) => ({
         params: {
           slug: category.uri.replace(/^\//, '').split('/'), // Convertir l'URI en tableau
         },
