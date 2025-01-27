@@ -104,3 +104,23 @@ html {
 .wysiwyg a:hover {
   color: #BA3E16;
 }
+
+.wysiwyg p {
+  margin-bottom: 1rem;
+}
+
+.wysiwyg p:last-child {
+  margin-bottom: 0;
+}
+
+.wysiwyg li {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  background-image: url('/images/bullet.svg');
+  background-position: left center;
+  background-size: 9px;
+  background-repeat: no-repeat;
+}
+.wysiwyg li:last-child {
+  margin-bottom: 1rem;
+}

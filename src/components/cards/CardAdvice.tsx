@@ -7,7 +7,7 @@ import Cta from '../atoms/Cta';
 const CardAdvice = ({ item }: { item: CardConseilProps }) => {
   return (
     <article
-      className={`h-full relative overflow-hidden pt-6 pb-20 px-6 md:pb-12 md:rounded-[13px] w-full md:gap-10 md:mx-auto md:px-10 lg:px-[110px] xl:max-w-[1108px] flex flex-col gap-4 items-center justify-center md:justify-between md:items-stretch ${item.bgColor === 'Orange clair' ? 'bg-secondary-light' : 'bg-primary-light'} ${item.isImageLeft ? 'md:flex-row-reverse' : 'md:flex-row'}`}
+      className={`h-full relative overflow-hidden pt-6 pb-20 px-6 md:pb-12 md:rounded-[13px] w-full md:gap-10 md:mx-auto md:px-10 lg:px-[110px] xl:max-w-[1108px] flex flex-col gap-4 items-center justify-center md:justify-between md:items-stretch ${item.bgColor === 'Orange clair' ? 'bg-secondary-light' : 'bg-primary-light-alt'} ${item.isImageLeft ? 'md:flex-row-reverse' : 'md:flex-row'}`}
     >
       <div
         className={`absolute bottom-[-20px] right-[-20px] lg:top-10 ${item.isImageLeft ? 'md:left-[-20px] md:right-auto md:rotate-90' : ''}`}

@@ -11,7 +11,7 @@ const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
   // todo mobile version
   return (
     <Container>
-      <section className="bg-primary-light px-2 pt-9 pb-4 relative rounded-2xl overflow-hidden mb-12 md:mb-16">
+      <section className="bg-primary-light-alt px-2 pt-9 pb-4 relative rounded-2xl overflow-hidden mb-12 md:mb-16">
         <div className="absolute left-[-20px] bottom-[-20px] w-40 rotate-90">
           <Wifi variant="bleu" />
         </div>

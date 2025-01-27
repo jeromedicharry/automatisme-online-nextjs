@@ -196,5 +196,19 @@ export const blocsFields = `
             phone
         }
     }
+
+     ... on AcfPageBlocsBlocArticleLayout {
+        __typename
+        anchorId
+        image {
+            node {
+                sourceUrl
+            }
+        }
+        title
+        text
+        isImageLeft
+        bgColor
+    }
   }
   `;

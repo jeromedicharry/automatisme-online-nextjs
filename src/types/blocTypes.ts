@@ -236,6 +236,19 @@ export interface BlocQuestionsProps {
   __typename: 'AcfPageBlocsBlocDoubleCtaLayout';
   ctas: QuestionCtaCardProps[];
 }
+export interface BlocArticleProps {
+  __typename: 'AcfPageBlocsBlocArticleLayout';
+  anchorId: string;
+  image: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+  title: string;
+  text: string;
+  isImageLeft: boolean;
+  bgColor?: 'Bleu clair' | 'Orange clair';
+}
 
 export type BlocType =
   | BlocWysiWygProps
