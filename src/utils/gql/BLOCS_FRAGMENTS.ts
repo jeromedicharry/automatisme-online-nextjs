@@ -179,5 +179,22 @@ export const blocsFields = `
         }
         infoText
     }
+
+    ... on AcfPageBlocsBlocDoubleCtaLayout {
+        __typename
+        ctas {
+            image {
+                node {
+                sourceUrl(size: MEDIUM_LARGE)
+                }
+            }
+            title
+            subtitle
+            isPhone
+            label
+            slug
+            phone
+        }
+    }
   }
   `;

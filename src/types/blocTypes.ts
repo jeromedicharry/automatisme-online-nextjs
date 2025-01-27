@@ -218,6 +218,25 @@ export interface BlocAnchorsPictosProps {
   infoText: string;
 }
 
+export interface QuestionCtaCardProps {
+  image: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+  title: string;
+  subtitle: string;
+  isPhone: boolean;
+  label: string;
+  slug: string;
+  phone: string;
+}
+
+export interface BlocQuestionsProps {
+  __typename: 'AcfPageBlocsBlocDoubleCtaLayout';
+  ctas: QuestionCtaCardProps[];
+}
+
 export type BlocType =
   | BlocWysiWygProps
   | SpacerProps
@@ -228,4 +247,5 @@ export type BlocType =
   | BlocAccordionFaqProps
   | BlocSeoProps
   | BlocAvisVerifiesProps
-  | BlocAnchorsPictosProps;
+  | BlocAnchorsPictosProps
+  | BlocQuestionsProps;
