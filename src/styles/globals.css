@@ -40,6 +40,10 @@ body {
   line-height: 1.2;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Swiper slider override */
 
 .mainPromoSlider .swiper-slide {
@@ -92,3 +96,11 @@ body {
   font-weight: 500;
 }
 
+.wysiwyg a {
+  color: #E94E1B;
+  transition: all 0.3s ease-in-out;
+  text-decoration: underline;
+}
+.wysiwyg a:hover {
+  color: #BA3E16;
+}

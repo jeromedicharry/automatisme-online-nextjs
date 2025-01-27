@@ -179,6 +179,45 @@ export interface ReassuranceItemProps {
   link: string;
 }
 
+export interface PictoAnchorBlocProps {
+  picto: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+  text: string;
+  targetSection: {
+    title: string;
+    subTitle: string;
+    image: {
+      node: {
+        sourceUrl: string;
+      };
+    };
+    advantages: {
+      title: string;
+      text: string;
+    }[];
+  };
+}
+export interface BlocAnchorsPictosProps {
+  __typename: 'AcfPageBlocsBlocPictosAnchorLinksLayout';
+  items: PictoAnchorBlocProps[];
+  cta: {
+    label: string;
+    slug: string;
+  };
+  infoBloc: {
+    picto: {
+      node: {
+        sourceUrl: string;
+      };
+    };
+    text: string;
+  };
+  infoText: string;
+}
+
 export type BlocType =
   | BlocWysiWygProps
   | SpacerProps
@@ -188,4 +227,5 @@ export type BlocType =
   | BlocConseilsFaqProps
   | BlocAccordionFaqProps
   | BlocSeoProps
-  | BlocAvisVerifiesProps;
+  | BlocAvisVerifiesProps
+  | BlocAnchorsPictosProps;

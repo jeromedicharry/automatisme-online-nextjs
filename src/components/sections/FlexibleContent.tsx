@@ -9,6 +9,7 @@ import {
 import BlocFeaturedCategories from './blocs/BlocFeaturedCategories';
 import BlocFeaturedProducts from './blocs/BlocFeaturedProducts';
 import BlocConseilFAQ from './blocs/BlocConseilFAQ';
+import BlocAnchorsPicto from './blocs/BlocAnchorsPicto';
 const BlocWysiwyg = dynamic(() => import('./blocs/BlocWysiwyg'));
 const BlocSpacer = dynamic(() => import('./blocs/BlocSpacer'));
 const BlocReassurance = dynamic(() => import('./blocs/BlocReassurance'));
@@ -55,6 +56,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
             featuredFaq={featuredFaq}
           />
         );
+      case 'AcfPageBlocsBlocPictosAnchorLinksLayout':
+        return <BlocAnchorsPicto key={key} bloc={bloc} />;
 
       default:
         return null;

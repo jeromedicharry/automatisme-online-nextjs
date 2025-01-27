@@ -142,5 +142,42 @@ export const blocsFields = `
         title
         subtitle
     }
+    ... on AcfPageBlocsBlocPictosAnchorLinksLayout {
+        __typename
+        items {
+            picto {
+              node {
+                sourceUrl
+              }
+            }
+            text
+            targetSection {
+              title
+              subTitle
+              image {
+                node {
+                  sourceUrl
+                }
+              }
+              advantages {
+                title
+                text
+              }
+            }
+        }
+        cta {
+            label
+            slug
+        }
+        infoBloc {
+            picto {
+                node {
+                sourceUrl
+                }
+            }
+            text
+        }
+        infoText
+    }
   }
   `;

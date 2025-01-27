@@ -15,11 +15,11 @@ const BlocIntroLarge = ({
     <Container>
       <div className="flex flex-col items-center justify-center gap-4 mb-12 md:mb-10">
         {title && isH1 ? (
-          <h1 className="text-4xl md:text-5xl font-bold leading-general">
+          <h1 className="text-4xl md:text-5xl font-bold leading-general text-center text-balance">
             {title}
           </h1>
         ) : (
-          <h2 className="text-4xl md:text-5xl font-bold leading-general">
+          <h2 className="text-4xl md:text-5xl font-bold leading-general text-center text-balance">
             {title}
           </h2>
         )}
