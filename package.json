@@ -1,6 +1,6 @@
 {
   "name": "nextjs-woocommerce",
-  "version": "1.2.1",
+  "version": "1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,10 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{js,ts,tsx,json}\"",
-    "playwright": "npx playwright test",
-    "playwright:ui": "npx playwright test --ui",
-    "playwright:debug": "npx playwright test --debug",
-    "playwright:codegen": "playwright codegen",
     "refresh": "rm -rf node_modules && rm package-lock.json && npm i && npm run format"
   },
   "keywords": [
@@ -42,7 +38,6 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.1",
     "@types/lodash": "^4.17.12",
     "@types/node": "22.7.7",
     "@types/nprogress": "^0.2.3",
