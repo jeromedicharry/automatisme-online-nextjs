@@ -197,7 +197,7 @@ export const blocsFields = `
         }
     }
 
-     ... on AcfPageBlocsBlocArticleLayout {
+    ... on AcfPageBlocsBlocArticleLayout {
         __typename
         anchorId
         image {
@@ -209,6 +209,10 @@ export const blocsFields = `
         text
         isImageLeft
         bgColor
+    }
+    ... on AcfPageBlocsBlocFaqLayout {
+        __typename
+        isFaq
     }
   }
   `;

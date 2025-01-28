@@ -12,6 +12,8 @@ import BlocConseilFAQ from './blocs/BlocConseilFAQ';
 import BlocAnchorsPicto from './blocs/BlocAnchorsPicto';
 import BlocQuestions from './blocs/BlocQuestions';
 import BlocArticle from './blocs/BlocArticle';
+import BlocFaq from './blocs/BlocFaq';
+import { FaqItemProps } from '@/types/Faq';
 const BlocWysiwyg = dynamic(() => import('./blocs/BlocWysiwyg'));
 const BlocSpacer = dynamic(() => import('./blocs/BlocSpacer'));
 const BlocReassurance = dynamic(() => import('./blocs/BlocReassurance'));
@@ -21,6 +23,7 @@ interface FlexibleContentProps {
   reassuranceItems: ReassuranceItemProps[];
   genericAdvices: CardConseilProps[];
   featuredFaq: FeaturedFaqProps;
+  faqItems: FaqItemProps[];
 }
 
 const FlexibleContent: React.FC<FlexibleContentProps> = ({
@@ -28,6 +31,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
   reassuranceItems,
   genericAdvices,
   featuredFaq,
+  faqItems,
 }) => {
   if (blocs === null || blocs?.length === 0 || blocs === undefined) return null;
 
@@ -64,6 +68,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
         return <BlocQuestions key={key} bloc={bloc} />;
       case 'AcfPageBlocsBlocArticleLayout':
         return <BlocArticle key={key} bloc={bloc} />;
+      case 'AcfPageBlocsBlocFaqLayout':
+        return <BlocFaq key={key} bloc={bloc} faqItems={faqItems} />;
 
       default:
         return null;

@@ -105,6 +105,7 @@ export interface CardFaqProps {
   faqItem: {
     nodes: {
       id: string;
+      databaseId: number;
       featuredImage: {
         node: {
           sourceUrl: string;
@@ -128,7 +129,7 @@ export interface BlocConseilsFaqProps {
   sliderAdvices: CardConseilProps[];
   featuredFaq: FeaturedFaqProps;
 }
-export interface BlocAccordionFaqProps {
+export interface BlocAccordionProps {
   __typename: 'AcfPageBlocsBlocAccordionLayout';
   title: string;
   subtitle: string;
@@ -249,6 +250,10 @@ export interface BlocArticleProps {
   isImageLeft: boolean;
   bgColor?: 'Bleu clair' | 'Orange clair';
 }
+export interface BlocFaqProps {
+  __typename: 'AcfPageBlocsBlocFaqLayout';
+  isFaq: boolean;
+}
 
 export type BlocType =
   | BlocWysiWygProps
@@ -257,8 +262,10 @@ export type BlocType =
   | BlocFeaturedCategoriesProps
   | BlocFeaturedProductsProps
   | BlocConseilsFaqProps
-  | BlocAccordionFaqProps
+  | BlocAccordionProps
   | BlocSeoProps
   | BlocAvisVerifiesProps
   | BlocAnchorsPictosProps
-  | BlocQuestionsProps;
+  | BlocQuestionsProps
+  | BlocArticleProps
+  | BlocFaqProps;

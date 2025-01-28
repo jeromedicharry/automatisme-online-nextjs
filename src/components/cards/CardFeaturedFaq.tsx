@@ -28,7 +28,7 @@ const CardFeaturedFaq = ({
   };
   return (
     <Link
-      href={`/questions-les-plus-frequentes/#${item?.faqItem?.nodes[0]?.id}`}
+      href={`/questions-les-plus-frequentes/#${item?.faqItem?.nodes[0]?.databaseId}`}
       className="bg-secondary-light rounded-2xl overflow-hidden h-full flex flex-col justify-between"
     >
       <div className="h-[163px] w-full flex items-center justify-between overflow-hidden">

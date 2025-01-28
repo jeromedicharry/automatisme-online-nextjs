@@ -16,6 +16,7 @@ export const FEATURED_FAQ = `
           slug
           ... on FaqItem {
             id
+            databaseId
             featuredImage {
               node {
                 sourceUrl
@@ -188,6 +189,20 @@ export const GET_HOME_PAGE = gql`
         secondarySlider {
           ${PromotionSlide}
         }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_FAQ_ITEMS = gql`
+  query GET_ALL_FAQ_ITEMS {
+    faqItems(
+      where: { status: PUBLISH, orderby: { field: MENU_ORDER, order: ASC } }
+    ) {
+      nodes {
+        title(format: RENDERED)
+        databaseId
+        content(format: RENDERED)
       }
     }
   }

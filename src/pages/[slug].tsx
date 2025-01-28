@@ -5,6 +5,7 @@ import ErrorPage from 'next/error';
 
 import Layout from '@/components/Layout/Layout';
 import {
+  GET_ALL_FAQ_ITEMS,
   GET_ALL_PAGE_SLUGS,
   GET_FOOTER_MENU_1,
   GET_FOOTER_MENU_2,
@@ -16,6 +17,7 @@ import { BlocType, FeaturedFaqProps } from '@/types/blocTypes';
 import FlexibleContent from '@/components/sections/FlexibleContent';
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
+import { FaqItemProps } from '@/types/Faq';
 
 // todo typer une page
 
@@ -25,12 +27,14 @@ const Page = ({
   featuredFaq,
   footerMenu1,
   footerMenu2,
+  faqItems,
 }: {
   page: any;
   themeSettings: any;
   featuredFaq: FeaturedFaqProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  faqItems: FaqItemProps[];
 }) => {
   //todo typer theme settings et page
   const router = useRouter();
@@ -55,6 +59,7 @@ const Page = ({
         reassuranceItems={themeSettings?.reassurance}
         genericAdvices={themeSettings?.sliderAdvices}
         featuredFaq={featuredFaq}
+        faqItems={faqItems}
       />
     </Layout>
   );
@@ -96,6 +101,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ? themeSettings?.featuredFaq
     : null;
 
+  let faqItems = [];
+
+  if (
+    page?.data?.page?.acfPage?.blocs?.some(
+      (bloc: BlocType) => bloc.__typename === 'AcfPageBlocsBlocFaqLayout',
+    )
+  ) {
+    const faqRes = await client.query({
+      query: GET_ALL_FAQ_ITEMS,
+    });
+
+    faqItems = faqRes?.data?.faqItems?.nodes || [];
+  }
+
   return {
     props: {
       page: page?.data?.page,
@@ -103,6 +122,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       featuredFaq,
       footerMenu1: footerMenu1?.data?.menu,
       footerMenu2: footerMenu2?.data?.menu,
+      faqItems,
     },
     revalidate: 60,
   };

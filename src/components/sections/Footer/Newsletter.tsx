@@ -13,7 +13,7 @@ const Newsletter = () => {
           id="newsletter"
           name="newsletter"
           placeholder="Votre adresse email"
-          className="py-2 px-4 h-12 bg-white border border-gray-300 rounded-full text-sm"
+          className="py-2 px-4 h-12 bg-white border border-gray-300 rounded-full text-sm placeholder:text-placeholder-grey"
         />
         <button
           type="submit"
