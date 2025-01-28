@@ -27,7 +27,7 @@ const SimpleFooterMenu = ({ menu }: { menu?: SimpleFooterMenuProps }) => {
             <li key={key} className="flex">
               <Link
                 href={item?.uri}
-                className="font-normal text-[0.6875rem] leading-general hover:text-secondary duration-300"
+                className="font-normal md:text-xs leading-general hover:text-secondary duration-300"
               >
                 {item?.label}
               </Link>

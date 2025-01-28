@@ -13,9 +13,7 @@ const BlocIntroSmall = ({
       {title && (
         <h2 className="text-xl font-medium leading-general">{title}</h2>
       )}
-      {subtitle && (
-        <p className="text-[0.6875rem] text-dark-grey">{subtitle}</p>
-      )}
+      {subtitle && <p className="text-dark-grey">{subtitle}</p>}
     </div>
   );
 };

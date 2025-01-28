@@ -7,7 +7,7 @@ const ContactMenu = ({ themeSettings }: { themeSettings: any }) => {
         Contactez-nous
       </p>
       <div className="flex flex-col gap-2 max-md:items-center">
-        <p className="font-normal text-[0.6875rem] leading-general">
+        <p className="font-normal md:text-xs leading-general">
           Par téléphone au
         </p>
         {themeSettings?.contactPhone && (
@@ -20,7 +20,7 @@ const ContactMenu = ({ themeSettings }: { themeSettings: any }) => {
         )}
         {themeSettings?.hours && (
           <div
-            className="font-normal text-[0.6875rem] leading-general flex flex-col gap-2 max-md:text-center"
+            className="font-normal md:text-xs leading-general flex flex-col gap-2 max-md:text-center"
             dangerouslySetInnerHTML={{ __html: themeSettings.hours }}
           />
         )}

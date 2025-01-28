@@ -15,7 +15,7 @@ export const PRODUCT_CARD_FRAGMENT = `
   salePrice(format: RAW)
   isProProduct
   hasProDiscount
-  regularPrice
+  regularPrice(format: RAW)
   sku
 `;
 

@@ -29,10 +29,10 @@ const Cta = ({
     'flex items-center justify-center  font-bold transition duration-300 ease-in-out rounded-[5px] min-w-[170px] border';
   const sizeClass =
     size === 'large'
-      ? 'text-xs leading-general px-12 py-3 gap-2'
+      ? 'text-base leading-general px-12 py-3 gap-4 whitespace-nowrap'
       : size === 'small'
-        ? 'text-[0.5rem] leading-general px-2 py-[3px] gap-[2px]'
-        : 'text-xs leading-general px-4 py-2 gap-[2px]';
+        ? 'text-xs leading-general px-2 py-1 gap-[2px]'
+        : 'text-base leading-general px-4 py-2 gap-2';
 
   const variantClasses = {
     primary:

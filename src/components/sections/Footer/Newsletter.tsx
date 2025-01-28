@@ -4,7 +4,10 @@ import { SubmitSvg } from './Footer';
 const Newsletter = () => {
   return (
     <form>
-      <label htmlFor="newsletter" className="text-white text-sm font-bold">
+      <label
+        htmlFor="newsletter"
+        className="text-white text-sm md:text-base leading-general font-bold"
+      >
         Recevez notre newsletter
       </label>
       <div className="relative mt-2">
@@ -13,7 +16,7 @@ const Newsletter = () => {
           id="newsletter"
           name="newsletter"
           placeholder="Votre adresse email"
-          className="py-2 px-4 h-12 bg-white border border-gray-300 rounded-full text-sm placeholder:text-placeholder-grey"
+          className="py-2 px-4 h-12 bg-white border border-gray-300 rounded-full text-sm placeholder:text-placeholder-grey placeholder:text-base"
         />
         <button
           type="submit"

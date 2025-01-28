@@ -23,7 +23,7 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
             />
           </div>
           <div className="bg-white flex justify-between items-center relative">
-            <span className="px-[6px] rounded-[2px] h-[15px] flex items-center justify-center bg-primary-light text-[0.5rem] font-bold">
+            <span className="px-[6px] rounded-[2px] h-[21px] flex items-center justify-center bg-primary-light text-xs leading-general font-bold">
               Choix AO
             </span>
             <span>
@@ -31,12 +31,12 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
             </span>
           </div>
         </div>
-        <h3 className="mt-4 mb-1 font-bold text-[0.9375rem] md:text-base leading-general duration-300">
+        <h3 className="mt-4 mb-1 font-bold text-base leading-general duration-300">
           {product?.name}
         </h3>
       </Link>
 
-      <p className="text-dark-grey uppercase text-[0.6875rem] mb-[10px]">
+      <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
         {product?.sku}
       </p>
       <p className="mb-[10px]">Widget Avis vérifiés</p>
@@ -46,9 +46,9 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
         €
       </div>
       <small className="text-dark-grey line-through mb-4">
-        {product?.regularPrice}
+        {product?.regularPrice}€
       </small>
-      <div className="lg:opacity-0 group-hover:opacity-100 duration-300 mt-auto">
+      <div className="mt-auto">
         <AddToCart product={product} />
       </div>
     </article>
