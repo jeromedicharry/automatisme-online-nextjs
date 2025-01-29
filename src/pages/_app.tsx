@@ -13,6 +13,7 @@ import type { AppProps } from 'next/app';
 // Styles
 import '@/styles/globals.css';
 import 'nprogress/nprogress.css';
+import { AuthProvider } from '@/hooks/useAuth';
 
 // NProgress
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -22,9 +23,11 @@ Router.events.on('routeChangeError', () => NProgress.done());
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <CartProvider>
-        <Component {...pageProps} />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Component {...pageProps} />
+        </CartProvider>
+      </AuthProvider>
     </ApolloProvider>
   );
 }

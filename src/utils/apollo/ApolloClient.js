@@ -86,6 +86,7 @@ const client = new ApolloClient({
     afterware.concat(
       createHttpLink({
         uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+        credentials: 'include',
         fetch,
       }),
     ),

@@ -124,3 +124,37 @@ html {
 .wysiwyg li:last-child {
   margin-bottom: 1rem;
 }
+
+/* Gestion des modales */
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(400px);
+  }
+}
+
+
+.modal-content {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  animation-fill-mode: both;
+}
+
+.modal-content-open {
+  animation-name: slideIn;
+}
+
+.modal-content-closed {
+  animation-name: slideOut;
+}
