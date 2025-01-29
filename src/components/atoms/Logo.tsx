@@ -8,10 +8,10 @@ const Logo = ({ isFooter = false }) => {
     : '/images/logo-automatisme-online.png';
 
   return (
-    <Link href="/" className="block relative z-10" title="Home page">
+    <Link href="/" className="block z-10" title="Home page">
       <div className={`transition duration-300}`}>
         <div
-          className={`${isFooter ? 'max-w-[240px]' : 'max-w-[100px]'} md:max-w-[138px]`}
+          className={`${isFooter ? 'max-w-[240px]' : 'max-w-[121px] md:max-w-[138px]'}`}
         >
           <Image
             src={src}

@@ -27,6 +27,7 @@ interface LayoutProps {
   footerMenu1?: SimpleFooterMenuProps | undefined;
   footerMenu2?: SimpleFooterMenuProps | undefined;
   themeSettings?: any;
+  isHome?: boolean;
 }
 
 /**
@@ -44,6 +45,7 @@ const Layout = ({
   footerMenu1,
   footerMenu2,
   themeSettings,
+  isHome = false,
 }: LayoutProps) => {
   const { setCart } = useContext(CartContext);
 
@@ -75,7 +77,9 @@ const Layout = ({
       <div id="to-top"></div>
 
       <Header />
-      <div className="min-h-screen flex flex-col font-primary">
+      <div
+        className={`min-h-screen flex flex-col font-primary ${isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'}`}
+      >
         <main className="grow shrink-0 text-primary font-primary">
           {children}
         </main>
