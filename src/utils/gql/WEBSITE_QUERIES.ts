@@ -207,3 +207,29 @@ export const GET_ALL_FAQ_ITEMS = gql`
     }
   }
 `;
+
+export const GET_ALL_LEVEL_1_CATEGORIES = gql`
+  query GET_ALL_LEVEL_1_CATEGORIES {
+    productCategories(
+      where: { parent: null, exclude: "dGVybToxNQ==" }
+      first: 100
+    ) {
+      nodes {
+        name
+        uri
+        children {
+          nodes {
+            name
+            uri
+            children {
+              nodes {
+                uri
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

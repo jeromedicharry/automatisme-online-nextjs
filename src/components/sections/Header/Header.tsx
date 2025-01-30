@@ -1,52 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Menu,
-  X,
-  ChevronRight,
-  ChevronDown,
-  User,
-  ShoppingCart,
-  Search,
-  ArrowRight,
-  Triangle,
-} from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Logo from '@/components/atoms/Logo';
 import { SearchSvg } from '../blocs/BlocFaq';
 import { PinPointSvg, UserSvg } from '@/components/SVG/Icons';
-import CartContents from '@/components/Cart/CartContents.component';
 import Cart from './Cart';
 import Container from '@/components/container';
+import { CategoryMenuProps } from '@/types/Categories';
+import { BulletSvg } from '../blocs/BlocAnchorsPicto';
 
-interface MenuItem {
-  label: string;
-  href: string;
-  subItems?: MenuItem[];
-}
-
-const menuItems: MenuItem[] = [
-  {
-    label: 'Produits',
-    href: '/produits',
-    subItems: [
-      {
-        label: 'Catégorie 1',
-        href: '/cat1',
-        subItems: [
-          { label: 'Sous-cat 1.1', href: '/subcat1' },
-          { label: 'Sous-cat 1.2', href: '/subcat2' },
-        ],
-      },
-      // Ajoutez d'autres catégories ici
-    ],
-  },
-  { label: 'Solutions', href: '/solutions' },
-  { label: 'Services', href: '/services' },
-  { label: 'À propos', href: '/about' },
-  // Ajoutez d'autres éléments de menu ici
-];
-
-export default function Header() {
+export default function Header({
+  categoriesMenu,
+}: {
+  categoriesMenu?: CategoryMenuProps[];
+}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isVisible, setIsVisible] = useState(true);
@@ -66,12 +33,9 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
-
-  const toggleSubMenu = (label: string) => {
+  const toggleSubMenu = (key: string) => {
     setExpandedItems((prev) =>
-      prev.includes(label)
-        ? prev.filter((item) => item !== label)
-        : [...prev, label],
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key],
     );
   };
 
@@ -83,17 +47,21 @@ export default function Header() {
       <div className="hidden lg:flex w-full">
         <Link
           href="/espace-pro"
-          className="w-1/2 bg-primary py-1 text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
+          className="w-1/2 bg-primary py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
         >
           Mon espace professionel
-          <ChevronRight className="w-3" />
+          <div className="max-w-1">
+            <BulletSvg />
+          </div>
         </Link>
         <Link
           href="/bibliotheque"
-          className="w-1/2 bg-primary-ter py-1 text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
+          className="w-1/2 bg-primary-ter py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
         >
           Bibliothèque de contenu
-          <ChevronRight className="w-3" />
+          <div className="max-w-1">
+            <BulletSvg />
+          </div>
         </Link>
       </div>
 
@@ -143,7 +111,7 @@ export default function Header() {
 
         {/* Desktop header */}
         <div className="hidden lg:block">
-          <Container>
+          <Container large>
             <div className="flex items-center justify-between py-6">
               <div className="flex-shrink-0">
                 <Logo />
@@ -195,41 +163,53 @@ export default function Header() {
             </div>
 
             {/* Desktop menu */}
-            <nav className="">
-              <ul className="flex justify-between pb-6">
-                {menuItems.map((item) => (
-                  <li key={item.label} className="relative group">
+            <nav className="pb-6">
+              <ul className="flex justify-evenly relative gap-5">
+                {categoriesMenu?.map((item) => (
+                  <li key={item.name} className="group">
                     <Link
-                      href={item.href}
-                      className="text-primary hover:text-primary-dark font-bold text-xs leading-general"
+                      href={item.uri}
+                      className="text-primary hover:text-primary-dark duration-300 font-bold text-xs leading-general flex items-center gap-1"
                     >
-                      {item.label}
+                      {item.name}
+                      {item.children?.nodes?.length > 0 && (
+                        <div className="text-secondary w-[6px] duration-300 -rotate-90 group-hover:rotate-90">
+                          <BulletSvg />
+                        </div>
+                      )}
                     </Link>
-                    {item.subItems && (
-                      <div className="absolute hidden group-hover:block w-64 bg-white shadow-lg mt-2 p-4">
-                        {item.subItems.map((subItem) => (
-                          <div key={subItem.label}>
-                            <Link
-                              href={subItem.href}
-                              className="block py-2 hover:text-blue-600"
-                            >
-                              {subItem.label}
-                            </Link>
-                            {subItem.subItems && (
-                              <div className="pl-4">
-                                {subItem.subItems.map((subSubItem) => (
-                                  <Link
-                                    key={subSubItem.label}
-                                    href={subSubItem.href}
-                                    className="block py-1 text-sm hover:text-blue-600"
-                                  >
-                                    {subSubItem.label}
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                    {item.children?.nodes?.length > 0 && (
+                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 shadow-lg duration-300">
+                        <Container large>
+                          <ul className="flex flex-wrap gap-6 w-full max-w-7xl mx-auto border-t border-t-primary pt-6">
+                            {item.children.nodes.map((subItem) => (
+                              <li key={subItem.name}>
+                                <Link
+                                  href={subItem.uri}
+                                  className="block font-bold text-primary hover:text-secondary"
+                                >
+                                  {subItem.name}
+                                </Link>
+                                {subItem.children?.nodes?.length > 0 && (
+                                  <ul className="mt-2 space-y-1">
+                                    {subItem.children.nodes.map(
+                                      (subSubItem) => (
+                                        <li key={subSubItem.name}>
+                                          <Link
+                                            href={subSubItem.uri}
+                                            className="block text-sm text-gray-600 hover:text-secondary"
+                                          >
+                                            {subSubItem.name}
+                                          </Link>
+                                        </li>
+                                      ),
+                                    )}
+                                  </ul>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </Container>
                       </div>
                     )}
                   </li>
@@ -255,53 +235,53 @@ export default function Header() {
               </div>
 
               <nav className="py-4">
-                {menuItems.map((item) => (
-                  <div key={item.label} className="mb-4">
+                {categoriesMenu?.map((item) => (
+                  <div key={item.name} className="">
                     <div
                       className="flex justify-between items-center py-4 border-b border-primary"
-                      onClick={() => item.subItems && toggleSubMenu(item.label)}
+                      onClick={() =>
+                        item.children?.nodes?.length > 0 &&
+                        toggleSubMenu(item.name)
+                      }
                     >
-                      <Link href={item.href} className="font-bold text-primary">
-                        {item.label}
+                      <Link href={item.uri} className="font-bold text-primary">
+                        {item.name}
                       </Link>
-                      {item.subItems && (
-                        <div className="text-secondary">
-                          <Triangle
-                            size={10}
-                            fill="currentColor"
-                            className={`transform transition-transform ${
-                              expandedItems.includes(item.label)
-                                ? '-rotate-90'
-                                : 'rotate-90'
-                            }`}
-                          />
+                      {item.children?.nodes?.length > 0 && (
+                        <div className={`text-secondary`}>
+                          <div
+                            className={`duration-300 ${expandedItems.includes(item.name) ? 'rotate-90' : ''}`}
+                          >
+                            <BulletSvg />
+                          </div>
                         </div>
                       )}
                     </div>
-                    {item.subItems && expandedItems.includes(item.label) && (
-                      <div className="pl-4 py-2 text-primary">
-                        {item.subItems.map((subItem) => (
-                          <div key={subItem.label}>
-                            <Link href={subItem.href} className="block py-2">
-                              {subItem.label}
-                            </Link>
-                            {subItem.subItems && (
-                              <div className="pl-4">
-                                {subItem.subItems.map((subSubItem) => (
-                                  <Link
-                                    key={subSubItem.label}
-                                    href={subSubItem.href}
-                                    className="block py-2 text-sm"
-                                  >
-                                    {subSubItem.label}
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    {item.children?.nodes?.length > 0 &&
+                      expandedItems.includes(item.name) && (
+                        <div className="pl-4 py-2 text-primary">
+                          {item.children.nodes.map((subItem) => (
+                            <div key={subItem.uri}>
+                              <Link href={subItem.uri} className="block py-2">
+                                {subItem.name}
+                              </Link>
+                              {subItem.children?.nodes?.length > 0 && (
+                                <div className="pl-4">
+                                  {subItem.children.nodes.map((subSubItem) => (
+                                    <Link
+                                      key={subSubItem.uri}
+                                      href={subSubItem.uri}
+                                      className="block py-2 text-sm"
+                                    >
+                                      {subSubItem.name}
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                   </div>
                 ))}
               </nav>

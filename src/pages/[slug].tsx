@@ -7,10 +7,6 @@ import Layout from '@/components/Layout/Layout';
 import {
   GET_ALL_FAQ_ITEMS,
   GET_ALL_PAGE_SLUGS,
-  GET_FOOTER_MENU_1,
-  GET_FOOTER_MENU_2,
-  // GET_FOOTER_MENU_3,
-  GET_OPTIONS,
   GET_SINGLE_PAGE,
 } from '@/utils/gql/WEBSITE_QUERIES';
 import { BlocType, FeaturedFaqProps } from '@/types/blocTypes';
@@ -18,6 +14,7 @@ import FlexibleContent from '@/components/sections/FlexibleContent';
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { FaqItemProps } from '@/types/Faq';
+import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 
 // todo typer une page
 
@@ -80,25 +77,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  // const templateName = (await page?.acfPage?.template) || null;
-
-  const options = await client.query({
-    query: GET_OPTIONS,
-  });
-
-  const footerMenu1 = await client.query({
-    query: GET_FOOTER_MENU_1,
-  });
-  const footerMenu2 = await client.query({
-    query: GET_FOOTER_MENU_2,
-  });
-
-  const themeSettings = options?.data?.themeSettings?.optionsFields;
+  const commonData = await fetchCommonData();
 
   const featuredFaq = page?.data?.page?.acfPage?.blocs?.some(
     (bloc: BlocType) => bloc.__typename === 'AcfPageBlocsBlocConseilsFaqLayout',
   )
-    ? themeSettings?.featuredFaq
+    ? commonData.themeSettings?.featuredFaq
     : null;
 
   let faqItems = [];
@@ -118,10 +102,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       page: page?.data?.page,
-      themeSettings,
+      ...commonData, // <- On passe toutes les valeurs retournées par `fetchCommonData`
       featuredFaq,
-      footerMenu1: footerMenu1?.data?.menu,
-      footerMenu2: footerMenu2?.data?.menu,
       faqItems,
     },
     revalidate: 60,

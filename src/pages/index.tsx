@@ -8,22 +8,18 @@ import client from '@/utils/apollo/ApolloClient';
 import type { GetStaticProps } from 'next';
 import { BlocType, FeaturedFaqProps } from '@/types/blocTypes';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
+import { FaqItemProps } from '@/types/Faq';
+import { CategoryMenuProps } from '@/types/Categories';
 
 // GraphQL
 
-import {
-  GET_ALL_FAQ_ITEMS,
-  GET_FOOTER_MENU_1,
-  GET_FOOTER_MENU_2,
-  GET_HOME_PAGE,
-  GET_OPTIONS,
-} from '@/utils/gql/WEBSITE_QUERIES';
+import { GET_ALL_FAQ_ITEMS, GET_HOME_PAGE } from '@/utils/gql/WEBSITE_QUERIES';
+import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 
 // Blocs
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import FlexibleContent from '@/components/sections/FlexibleContent';
 import HomePromoSection from '@/components/sections/Home/HomePromoSection';
-import { FaqItemProps } from '@/types/Faq';
 
 const HomePage = ({
   page,
@@ -32,6 +28,7 @@ const HomePage = ({
   footerMenu1,
   footerMenu2,
   faqItems,
+  categoriesMenu,
 }: {
   page: any;
   themeSettings: any;
@@ -39,6 +36,7 @@ const HomePage = ({
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   faqItems: FaqItemProps[];
+  categoriesMenu?: CategoryMenuProps[];
 }) => {
   const promoSection = page?.acfHome;
   const hero = page?.acfPage?.hero || null;
@@ -51,6 +49,7 @@ const HomePage = ({
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
+      categoriesMenu={categoriesMenu}
       isHome
     >
       {promoSection?.isShown ? (
@@ -80,31 +79,20 @@ export const getStaticProps: GetStaticProps = async () => {
     query: GET_HOME_PAGE,
   });
 
-  const options = await client.query({
-    query: GET_OPTIONS,
-  });
-
-  const footerMenu1 = await client.query({
-    query: GET_FOOTER_MENU_1,
-  });
-  const footerMenu2 = await client.query({
-    query: GET_FOOTER_MENU_2,
-  });
-
-  const themeSettings = options?.data?.themeSettings?.optionsFields;
+  const commonData = await fetchCommonData();
 
   const page = pageData?.data?.page;
 
   const featuredFaq = page?.acfPage?.blocs?.some(
     (bloc: BlocType) => bloc.__typename === 'AcfPageBlocsBlocConseilsFaqLayout',
   )
-    ? themeSettings?.featuredFaq
+    ? commonData.themeSettings?.featuredFaq
     : null;
 
   let faqItems = [];
 
   if (
-    page?.data?.page?.acfPage?.blocs?.some(
+    page?.acfPage?.blocs?.some(
       (bloc: BlocType) => bloc.__typename === 'AcfPageBlocsBlocFaqLayout',
     )
   ) {
@@ -118,10 +106,8 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       page,
-      themeSettings,
+      ...commonData, // <- On passe toutes les valeurs retournées par `fetchCommonData`
       featuredFaq,
-      footerMenu1: footerMenu1?.data?.menu,
-      footerMenu2: footerMenu2?.data?.menu,
       faqItems,
     },
     revalidate: 60,

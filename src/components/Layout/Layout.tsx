@@ -18,6 +18,7 @@ import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
 // Types
 import { SimpleFooterMenuProps } from '../sections/Footer/SimpleFooterMenu';
+import { CategoryMenuProps } from '@/types/Categories';
 
 interface LayoutProps {
   children?: ReactNode;
@@ -28,6 +29,7 @@ interface LayoutProps {
   footerMenu2?: SimpleFooterMenuProps | undefined;
   themeSettings?: any;
   isHome?: boolean;
+  categoriesMenu?: CategoryMenuProps[];
 }
 
 /**
@@ -46,6 +48,7 @@ const Layout = ({
   footerMenu2,
   themeSettings,
   isHome = false,
+  categoriesMenu,
 }: LayoutProps) => {
   const { setCart } = useContext(CartContext);
 
@@ -76,7 +79,7 @@ const Layout = ({
       <Meta meta={meta} uri={uri} />
       <div id="to-top"></div>
 
-      <Header />
+      <Header categoriesMenu={categoriesMenu} />
       <div
         className={`min-h-screen flex flex-col font-primary ${isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'}`}
       >

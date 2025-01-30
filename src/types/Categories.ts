@@ -8,3 +8,9 @@ export interface CategoryPageProps {
     fullHead: string;
   };
 }
+
+export interface CategoryMenuProps {
+  name: string;
+  uri: string;
+  children: { nodes: CategoryMenuProps[] };
+}

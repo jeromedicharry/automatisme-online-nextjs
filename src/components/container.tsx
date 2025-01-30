@@ -16,7 +16,11 @@ export default function Container({
   return (
     <div
       className={`w-full mx-auto ${mobileFull ? '' : 'px-5'} md:px-6 ${
-        large ? '' : small ? 'max-w-[840px]' : 'lg:max-w-[1108px]'
+        large
+          ? 'lg:max-w-[1260px]'
+          : small
+            ? 'max-w-[840px]'
+            : 'lg:max-w-[1108px]'
       }`}
     >
       {children}
