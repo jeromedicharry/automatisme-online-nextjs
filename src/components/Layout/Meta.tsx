@@ -2,13 +2,13 @@ import Head from 'next/head';
 import parse from 'html-react-parser';
 
 export interface IMeta {
-  breadcrumbs: Array<{
+  metaDesc?: string;
+  title?: string;
+  fullHead?: string;
+  breadcrumbs?: {
     text: string;
     url: string;
-  }>;
-  metaDesc: string | ''; // null pour gérer les valeurs facultatives
-  title: string | '';
-  fullHead: string | '';
+  }[];
 }
 
 export default function Meta({

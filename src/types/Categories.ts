@@ -1,12 +1,10 @@
+import { IMeta } from '@/components/Layout/Meta';
+
 export interface CategoryPageProps {
   id: string;
   uri: string;
   name: string;
-  seo: {
-    metaDesc: string;
-    title: string;
-    fullHead: string;
-  };
+  seo: IMeta;
 }
 
 export interface CategoryMenuProps {

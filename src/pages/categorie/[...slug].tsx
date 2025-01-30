@@ -9,19 +9,33 @@ import {
 import Cardproduct from '@/components/cards/CardProduct';
 import client from '@/utils/apollo/ApolloClient';
 import Layout from '@/components/Layout/Layout';
-import {
-  GET_FOOTER_MENU_1,
-  GET_FOOTER_MENU_2,
-  GET_OPTIONS,
-} from '@/utils/gql/WEBSITE_QUERIES';
+
 import Container from '@/components/container';
 import { useState } from 'react';
 import { CardProductProps } from '@/types/blocTypes';
 import Cta from '@/components/atoms/Cta';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.component';
-import { CategoryPageProps } from '@/types/Categories';
+import { CategoryMenuProps, CategoryPageProps } from '@/types/Categories';
+import { fetchCommonData } from '@/utils/functions/fetchCommonData';
+import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 
-const CategoryPage = ({ products, category, pageInfo }: any) => {
+const CategoryPage = ({
+  products,
+  category,
+  pageInfo,
+  themeSettings,
+  footerMenu1,
+  footerMenu2,
+  categoriesMenu,
+}: {
+  products: CardProductProps[];
+  category: CategoryPageProps;
+  pageInfo: any;
+  themeSettings: any;
+  footerMenu1: SimpleFooterMenuProps;
+  footerMenu2: SimpleFooterMenuProps;
+  categoriesMenu?: CategoryMenuProps[];
+}) => {
   const router = useRouter();
   const [productSelection, setProductSelection] = useState(products || []);
   const [currentPageInfo, setCurrentPageInfo] = useState(pageInfo || null);
@@ -50,7 +64,14 @@ const CategoryPage = ({ products, category, pageInfo }: any) => {
   };
 
   return (
-    <Layout meta={category?.seo}>
+    <Layout
+      meta={category?.seo}
+      categoriesMenu={categoriesMenu}
+      uri={category?.uri}
+      footerMenu1={footerMenu1}
+      footerMenu2={footerMenu2}
+      themeSettings={themeSettings}
+    >
       <Container>
         <h1 className="my-10">Produits de la catégorie : {category?.name}</h1>
         <p>{productSelection?.length} produits trouvés</p>
@@ -103,18 +124,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const options = await client.query({
-    query: GET_OPTIONS,
-  });
-
-  const footerMenu1 = await client.query({
-    query: GET_FOOTER_MENU_1,
-  });
-  const footerMenu2 = await client.query({
-    query: GET_FOOTER_MENU_2,
-  });
-
-  const themeSettings = options?.data?.themeSettings?.optionsFields;
+  const commonData = await fetchCommonData();
 
   const { products, pageInfo } =
     (await getProductsSelection({
@@ -128,9 +138,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       category: categoryData.data.singleCategory,
       products,
       pageInfo,
-      themeSettings,
-      footerMenu1: footerMenu1?.data?.menu,
-      footerMenu2: footerMenu2?.data?.menu,
+      ...commonData,
     },
     revalidate: 60,
   };

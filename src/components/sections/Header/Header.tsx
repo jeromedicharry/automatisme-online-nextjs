@@ -173,7 +173,7 @@ export default function Header({
                     >
                       {item.name}
                       {item.children?.nodes?.length > 0 && (
-                        <div className="text-secondary w-[6px] duration-300 -rotate-90 group-hover:rotate-90">
+                        <div className="text-secondary w-[6px] duration-300 rotate-90 group-hover:-rotate-90">
                           <BulletSvg />
                         </div>
                       )}

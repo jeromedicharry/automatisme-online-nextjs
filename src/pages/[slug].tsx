@@ -15,6 +15,7 @@ import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { FaqItemProps } from '@/types/Faq';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
+import { CategoryMenuProps } from '@/types/Categories';
 
 // todo typer une page
 
@@ -25,6 +26,7 @@ const Page = ({
   footerMenu1,
   footerMenu2,
   faqItems,
+  categoriesMenu,
 }: {
   page: any;
   themeSettings: any;
@@ -32,6 +34,7 @@ const Page = ({
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   faqItems: FaqItemProps[];
+  categoriesMenu?: CategoryMenuProps[];
 }) => {
   //todo typer theme settings et page
   const router = useRouter();
@@ -49,6 +52,7 @@ const Page = ({
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
+      categoriesMenu={categoriesMenu}
     >
       <SimpleHero title={hero?.title || page?.title} subtitle={hero?.text} />
       <FlexibleContent
