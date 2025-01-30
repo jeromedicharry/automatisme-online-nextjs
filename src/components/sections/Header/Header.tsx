@@ -112,12 +112,12 @@ export default function Header({
         {/* Desktop header */}
         <div className="hidden lg:block">
           <Container large>
-            <div className="flex items-center justify-between py-6">
+            <div className="flex items-center justify-between py-6 gap-10">
               <div className="flex-shrink-0">
                 <Logo />
               </div>
 
-              <div className="w-1/3">
+              <div className="shrink-1 lg:w-[670px]">
                 <div className="relative">
                   <input
                     type="text"
@@ -130,7 +130,7 @@ export default function Header({
                 </div>
               </div>
 
-              <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-8 shrink-0">
                 <div className="flex flex-col justify-center items-center text-xs leading-general text-primary">
                   <div>
                     <span className="text-secondary">4743</span>
@@ -164,16 +164,16 @@ export default function Header({
 
             {/* Desktop menu */}
             <nav className="pb-6">
-              <ul className="flex justify-evenly relative gap-5">
+              <ul className="flex justify-between xl:justify-evenly relative xl:gap-5">
                 {categoriesMenu?.map((item) => (
                   <li key={item.name} className="group">
                     <Link
                       href={item.uri}
-                      className="text-primary hover:text-primary-dark duration-300 font-bold text-xs leading-general flex items-center gap-1"
+                      className="whitespace-nowrap text-primary hover:text-primary-dark duration-300 font-bold text-xs leading-general flex items-center gap-1"
                     >
                       {item.name}
                       {item.children?.nodes?.length > 0 && (
-                        <div className="text-secondary w-[6px] duration-300 rotate-90 group-hover:-rotate-90">
+                        <div className="text-secondary w-[6px] duration-300 rotate-90 group-hover:-rotate-90 hidden xl:block">
                           <BulletSvg />
                         </div>
                       )}
