@@ -3,11 +3,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { Heart } from '../SVG/Icons';
-import AddToCart from '../Product/AddToCart.component';
+import AddToCart from '../Product/AddToCart';
 
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
   return (
-    <article className="flex flex-col h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover">
+    <article className="flex flex-col h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary">
       <Link href={`/nos-produits/${product?.slug}`} className="group">
         <div className="relative min-h-[239px]">
           <div className="absolute inset-0 w-full flex items-center justify-center">

@@ -233,3 +233,22 @@ export const GET_ALL_LEVEL_1_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_INSTALLATION_CTA = gql`
+  query GET_INSTALLATION_CTA {
+    themeSettings {
+      optionsFields {
+        installationCtaCard {
+          title
+          image {
+            node {
+              sourceUrl
+            }
+          }
+          ctaLabel
+          ctaSlug
+        }
+      }
+    }
+  }
+`;

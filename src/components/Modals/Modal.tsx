@@ -76,7 +76,7 @@ const Modal: React.FC<ModalProps> = ({
     >
       <div
         ref={contentRef}
-        className={`fixed right-0 top-0 h-full  w-full ${size === 'half-screen' ? 'md:w-1/2' : 'md:w-1/2 lg:w-[480px]'} bg-white transform modal-content ${isOpen ? 'modal-content-open' : 'modal-content-closed'}`}
+        className={`fixed right-0 top-0 h-full overflow-y-auto max-h-screen w-full ${size === 'half-screen' ? 'md:max-w-[735px] lg:w-1/2 xl:max-w-[735px]' : 'lg:w-[480px]'} bg-white transform modal-content ${isOpen ? 'modal-content-open' : 'modal-content-closed'}`}
       >
         {React.cloneElement(children, { onClose })}
       </div>

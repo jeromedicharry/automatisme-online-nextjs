@@ -62,7 +62,7 @@ export interface CardProductProps {
       sourceUrl: string;
     };
   };
-
+  isKit?: boolean;
   price: string;
   salePrice: string;
   isProProduct: boolean;
@@ -70,6 +70,7 @@ export interface CardProductProps {
   regularPrice: string;
   sku: string;
 }
+
 export interface BlocFeaturedProductsProps {
   __typename: 'AcfPageBlocsBlocFeaturedProductsLayout';
   title: string;

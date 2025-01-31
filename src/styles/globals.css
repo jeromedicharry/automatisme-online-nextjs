@@ -82,6 +82,11 @@ html {
 
 .faq-slider .swiper-slide {
   max-width: 250px !important;
+  height: 467px !important;
+}
+
+.intermediate-cart-products-slider .swiper-slide {
+  max-width: 250px !important;
   height: unset !important;
 }
 

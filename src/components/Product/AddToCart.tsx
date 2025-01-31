@@ -8,6 +8,7 @@ import Cta from '../atoms/Cta';
 
 // State
 import { CartContext } from '@/stores/CartProvider';
+import { useIntermediateCart } from '@/stores/IntermediateCartContext';
 
 // Utils
 import { getFormattedCart } from '@/utils/functions/functions';
@@ -17,30 +18,21 @@ import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
 import { CardProductProps } from '@/types/blocTypes';
 
-/**
- * Handles the Add to cart functionality.
- * Uses GraphQL for product data
- * @param {IAddToCartProps} product // Product data
- * @param {number} variationId // Variation ID
- * @param {boolean} fullWidth // Whether the button should be full-width
- */
-
 const AddToCart = ({ product }: { product: CardProductProps }) => {
   const { setCart } = useContext(CartContext);
+  const { openCartModal } = useIntermediateCart();
   const [requestError, setRequestError] = useState<boolean>(false);
 
   const productId = product?.databaseId;
 
   const productQueryInput = {
-    clientMutationId: uuidv4(), // Generate a unique id.
+    clientMutationId: uuidv4(),
     productId,
   };
 
-  // Get cart data query
   const { data, refetch } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
     onCompleted: () => {
-      // Update cart in the localStorage.
       const updatedCart = getFormattedCart(data);
 
       if (!updatedCart) {
@@ -48,50 +40,46 @@ const AddToCart = ({ product }: { product: CardProductProps }) => {
       }
 
       localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
-
-      // Update cart data in React Context.
       setCart(updatedCart);
     },
   });
 
-  // Add to cart mutation
   const [addToCart, { loading: addToCartLoading }] = useMutation(ADD_TO_CART, {
     variables: {
       input: productQueryInput,
     },
-
     onCompleted: () => {
-      // Update the cart with new values in React context.
       refetch();
+      // Ouvrir la modale intermédiaire après l'ajout réussi
+      openCartModal(product);
     },
-
     onError: () => {
       setRequestError(true);
     },
   });
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCart();
-    // Refetch cart after 2 seconds
+    await addToCart();
+    // Refetch cart après 2 secondes
     setTimeout(() => {
       refetch();
     }, 2000);
   };
 
   return (
-    <>
-      <Cta
-        handleButtonClick={(e) => handleAddToCart(e)}
-        label="Ajouter au panier"
-        variant="primaryHollow"
-        size="large"
-        slug="#"
-        additionalClass={`w-full ${addToCartLoading || requestError ? 'opacity-50 pointer-events-none' : ''}`}
-      >
-        AJOUTER AU PANIER
-      </Cta>
-    </>
+    <Cta
+      handleButtonClick={(e) => handleAddToCart(e)}
+      label="Ajouter au panier"
+      variant="primaryHollow"
+      size="large"
+      slug="#"
+      additionalClass={`w-full ${
+        addToCartLoading || requestError ? 'opacity-50 pointer-events-none' : ''
+      }`}
+    >
+      AJOUTER AU PANIER
+    </Cta>
   );
 };
 

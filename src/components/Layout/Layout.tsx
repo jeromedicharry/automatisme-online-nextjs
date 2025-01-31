@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client';
 import Meta, { IMeta } from './Meta';
 import Header from '../sections/Header/Header';
 import Footer from '@/components/sections/Footer/Footer';
+import CartModal from '../Modals/CartModal';
 
 // State
 import { CartContext } from '@/stores/CartProvider';
@@ -91,6 +92,7 @@ const Layout = ({
           menu2={footerMenu2}
           themeSettings={themeSettings}
         />
+        <CartModal />
       </div>
     </>
   );

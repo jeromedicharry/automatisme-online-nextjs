@@ -7,9 +7,9 @@ export const PRODUCT_CARD_FRAGMENT = `
   onSale
   featured
   featuredImage {
-      node {
-          sourceUrl(size: MEDIUM)
-      }
+    node {
+        sourceUrl(size: MEDIUM)
+    }
   }
   price(format: RAW)
   salePrice(format: RAW)
@@ -17,6 +17,7 @@ export const PRODUCT_CARD_FRAGMENT = `
   hasProDiscount
   regularPrice(format: RAW)
   sku
+  isKit
 `;
 
 export const GET_SINGLE_PRODUCT = gql`
@@ -43,24 +44,11 @@ export const GET_SINGLE_PRODUCT = gql`
         price
         id
         stockQuantity
+        sku
+        isKit
       }
 
-      ... on ExternalProduct {
-        price
-        id
-        externalUrl
-      }
-      ... on GroupProduct {
-        products {
-          nodes {
-            ... on SimpleProduct {
-              id
-              price
-            }
-          }
-        }
-        id
-      }
+      
     }
   }
 `;
@@ -138,6 +126,8 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
             price(format: RAW)
             id
             taxClass
+            sku
+            isKit
           }
         }
         pageInfo {
@@ -248,6 +238,40 @@ export const GET_CUSTOMER = gql`
         address1
         city
         postcode
+      }
+    }
+  }
+`;
+
+export const GET_RELATED_PRODUCT_SIDE_DATA = gql`
+  query GET_PRODUCT_SIDE_DATA ($id: ID!, $idType: ProductIdTypeEnum = DATABASE_ID) {
+    product(id: $id, idType: $idType) {
+      ... on SimpleProduct {
+        upsell {
+          nodes {
+            ... on SimpleProduct {
+              isKit
+              ${PRODUCT_CARD_FRAGMENT}
+            } 
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CROSSSELL_PRODUCT_SIDE_DATA = gql`
+  query GET_PRODUCT_SIDE_DATA ($id: ID!, $idType: ProductIdTypeEnum = DATABASE_ID) {
+    product(id: $id, idType: $idType) {
+      ... on SimpleProduct {
+        crossSell {
+          nodes {
+            ... on SimpleProduct {
+              isKit
+              ${PRODUCT_CARD_FRAGMENT}
+            } 
+          }
+        }
       }
     }
   }

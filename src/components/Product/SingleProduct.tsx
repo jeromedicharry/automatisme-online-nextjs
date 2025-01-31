@@ -4,7 +4,7 @@
 import { paddedPrice } from '@/utils/functions/functions';
 
 // Components
-import AddToCart from './AddToCart.component';
+import AddToCart from './AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
 import Image from 'next/image';
 

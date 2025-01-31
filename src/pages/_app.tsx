@@ -14,6 +14,7 @@ import type { AppProps } from 'next/app';
 import '@/styles/globals.css';
 import 'nprogress/nprogress.css';
 import { AuthProvider } from '@/hooks/useAuth';
+import { InterMediateCartProvider } from '@/stores/IntermediateCartContext';
 
 // NProgress
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -25,7 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ApolloProvider client={client}>
       <AuthProvider>
         <CartProvider>
-          <Component {...pageProps} />
+          <InterMediateCartProvider>
+            <Component {...pageProps} />
+          </InterMediateCartProvider>
         </CartProvider>
       </AuthProvider>
     </ApolloProvider>
