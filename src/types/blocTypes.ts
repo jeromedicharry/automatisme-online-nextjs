@@ -69,6 +69,7 @@ export interface CardProductProps {
   hasProDiscount: boolean;
   regularPrice: string;
   sku: string;
+  uri: string;
 }
 
 export interface BlocFeaturedProductsProps {

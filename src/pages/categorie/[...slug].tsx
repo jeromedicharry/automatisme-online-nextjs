@@ -18,6 +18,7 @@ import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.component
 import { CategoryMenuProps, CategoryPageProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
+import BreadCrumbs from '@/components/atoms/BreadCrumbs';
 
 const CategoryPage = ({
   products,
@@ -71,8 +72,10 @@ const CategoryPage = ({
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
+      isBg
     >
       <Container>
+        <BreadCrumbs breadCrumbs={category?.seo?.breadcrumbs} />
         <h1 className="my-10">Produits de la catégorie : {category?.name}</h1>
         <p>{productSelection?.length} produits trouvés</p>
         <div className="md:flex gap-4">

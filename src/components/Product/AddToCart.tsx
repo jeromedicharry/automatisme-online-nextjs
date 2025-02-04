@@ -18,7 +18,18 @@ import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
 import { CardProductProps } from '@/types/blocTypes';
 
-const AddToCart = ({ product }: { product: CardProductProps }) => {
+const AddToCart = ({
+  product,
+  variant = 'primaryHollow',
+}: {
+  product: CardProductProps;
+  variant?:
+    | 'primary'
+    | 'primaryHollow'
+    | 'primaryWhite'
+    | 'secondary'
+    | 'secondaryHollow';
+}) => {
   const { setCart } = useContext(CartContext);
   const { openCartModal } = useIntermediateCart();
   const [requestError, setRequestError] = useState<boolean>(false);
@@ -71,7 +82,7 @@ const AddToCart = ({ product }: { product: CardProductProps }) => {
     <Cta
       handleButtonClick={(e) => handleAddToCart(e)}
       label="Ajouter au panier"
-      variant="primaryHollow"
+      variant={variant}
       size="large"
       slug="#"
       additionalClass={`w-full ${

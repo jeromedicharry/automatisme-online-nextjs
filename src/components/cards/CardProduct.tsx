@@ -4,8 +4,10 @@ import Link from 'next/link';
 import React from 'react';
 import { Heart } from '../SVG/Icons';
 import AddToCart from '../Product/AddToCart';
+import ProductPrice from '../Product/ProductPrice';
 
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
+  // todo ajout aux favoris
   return (
     <article className="flex flex-col h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary">
       <Link href={`/nos-produits/${product?.slug}`} className="group">
@@ -40,14 +42,11 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
         {product?.sku}
       </p>
       <p className="mb-[10px]">Widget Avis vérifiés</p>
-      <div className="font-bold text-2xl leading-general pr-7 relative w-fit mb-1">
-        <div className="absolute text-sm font-bold right-0 top-0">TTC</div>
-        <span className="text-base leading-general pr-1">{product?.price}</span>
-        €
-      </div>
-      <small className="text-dark-grey line-through mb-4">
-        {product?.regularPrice}€
-      </small>
+      <ProductPrice
+        price={product?.price}
+        regularPrice={product?.regularPrice}
+        variant="card"
+      />
       <div className="mt-auto">
         <AddToCart product={product} />
       </div>

@@ -15,6 +15,7 @@ module.exports = {
         'secondary-dark': '#BA3E16',
         'dark-grey': '#6F6F6F',
         'placeholder-grey': '#B8B8B8',
+        'breadcrumb-grey': '#D9D9D9',
         greyhover: '#F2F2F2',
       },
       boxShadow: {

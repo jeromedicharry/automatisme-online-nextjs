@@ -30,25 +30,44 @@ export const GET_SINGLE_PRODUCT = gql`
       slug
       description
       onSale
-      image {
-        id
-        uri
-        title
-        srcSet
-        sourceUrl
-      }
+      
       name
       ... on SimpleProduct {
-        salePrice
-        regularPrice
-        price
+        salePrice(format: RAW)
+        regularPrice(format: RAW)
+        price(format: RAW)
         id
         stockQuantity
         sku
         isKit
-      }
+        galleryImages {
+          nodes {
+            sourceUrl
+          }
+        }
+        brands(first: 1) {
+          nodes {
+            name
+          }
+        }
 
-      
+        upsell {
+          nodes {
+            ... on SimpleProduct {
+              isKit
+              ${PRODUCT_CARD_FRAGMENT}
+            } 
+          }
+        }
+        crossSell {
+          nodes {
+            ... on SimpleProduct {
+              isKit
+              ${PRODUCT_CARD_FRAGMENT}
+            } 
+          }
+        }
+      }
     }
   }
 `;
@@ -60,7 +79,9 @@ export const FETCH_ALL_PRODUCTS_QUERY = gql`
   query MyQuery {
     products(first: 10) {
       nodes {
-        uri
+        ... on SimpleProduct {
+          uri
+        }
       }
     }
   }
@@ -128,6 +149,8 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
             taxClass
             sku
             isKit
+            uri
+            slug
           }
         }
         pageInfo {
@@ -272,6 +295,17 @@ export const GET_CROSSSELL_PRODUCT_SIDE_DATA = gql`
             } 
           }
         }
+      }
+    }
+  }
+`;
+
+export const GET_TAX_RATES = gql`
+  query GET_TAX_RATES {
+    taxRates {
+      nodes {
+        rate
+        country
       }
     }
   }

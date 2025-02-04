@@ -5,7 +5,7 @@ const BlocIntroSmall = ({
   subtitle,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }) => {
   if (!title && !subtitle) return null;
   return (

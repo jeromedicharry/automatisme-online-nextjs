@@ -31,6 +31,7 @@ interface LayoutProps {
   themeSettings?: any;
   isHome?: boolean;
   categoriesMenu?: CategoryMenuProps[];
+  isBg?: boolean;
 }
 
 /**
@@ -50,6 +51,7 @@ const Layout = ({
   themeSettings,
   isHome = false,
   categoriesMenu,
+  isBg = false,
 }: LayoutProps) => {
   const { setCart } = useContext(CartContext);
 
@@ -82,7 +84,7 @@ const Layout = ({
 
       <Header categoriesMenu={categoriesMenu} />
       <div
-        className={`min-h-screen flex flex-col font-primary ${isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'}`}
+        className={`min-h-screen flex flex-col font-primary ${isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'} ${isBg ? 'bg-primary-light' : ''}`}
       >
         <main className="grow shrink-0 text-primary font-primary">
           {children}
