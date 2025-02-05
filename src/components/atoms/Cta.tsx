@@ -51,7 +51,7 @@ const Cta = ({
     <Link
       href={slug}
       title={label}
-      className={`${buttonClass} ${sizeClass} ${variantClasses[variant]} ${additionalClass} ${isFull ? 'w-full' : ''}`}
+      className={`${buttonClass} ${sizeClass} ${variantClasses[variant]} ${additionalClass} ${isFull ? 'w-full' : 'w-fit mx-auto'}`}
       onClick={handleButtonClick}
     >
       {children}

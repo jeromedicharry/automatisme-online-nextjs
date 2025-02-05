@@ -1,4 +1,4 @@
-// Gère le panier intermédiaire quand on ajoute un produit au panier
+// Gère la modale du panier intermédiaire quand on ajoute un produit au panier
 import React from 'react';
 import Modal from './Modal';
 import { useIntermediateCart } from '@/stores/IntermediateCartContext';
@@ -119,7 +119,13 @@ const CartModal: React.FC = () => {
             >
               Continuer mes recherches
             </Cta>
-            <Cta label="Voir le panier" slug="/panier" variant="primary" isFull>
+            <Cta
+              handleButtonClick={closeCartModal}
+              label="Voir le panier"
+              slug="/panier"
+              variant="primary"
+              isFull
+            >
               Voir le panier
             </Cta>
           </div>

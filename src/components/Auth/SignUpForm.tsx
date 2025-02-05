@@ -60,7 +60,7 @@ export default function SignUpForm({ setFormStatus, handleCloseModal }) {
   if (wasSignUpSuccessful) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-        <div className="bg-white p-12 rounded-xl shadow-lg max-w-md w-full text-center">
+        <div className="bg-white p-12 rounded-xl shadow-card max-w-md w-full text-center">
           <h2 className="text-2xl font-semibold mb-4">Merci !</h2>
           <p>Un lien de confirmation vous a été envoyé par email.</p>
           <Cta

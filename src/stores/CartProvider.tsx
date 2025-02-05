@@ -1,3 +1,4 @@
+import { CardProductProps } from '@/types/blocTypes';
 import React, {
   useState,
   useEffect,
@@ -34,6 +35,7 @@ export interface Product {
   totalPrice: string;
   image: Image;
   productId: number;
+  upsell: { nodes: CardProductProps[] };
 }
 
 export interface RootObject {

@@ -112,9 +112,9 @@ export const UPDATE_CART = gql`
             description
             type
             onSale
-            price
-            regularPrice
-            salePrice
+            price(format: RAW)
+            regularPrice(format: RAW)
+            salePrice(format: RAW)
             image {
               id
               sourceUrl

@@ -17,6 +17,7 @@ module.exports = {
         'placeholder-grey': '#B8B8B8',
         'breadcrumb-grey': '#D9D9D9',
         greyhover: '#F2F2F2',
+        greyseparator: '#E3E3E3',
       },
       boxShadow: {
         card: '0px 0px 10px -3px rgba(0, 0, 0, 0.25)',

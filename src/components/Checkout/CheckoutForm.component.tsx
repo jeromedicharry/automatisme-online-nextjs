@@ -6,7 +6,7 @@ import { useQuery, useMutation, ApolloError } from '@apollo/client';
 
 // Components
 import Billing from './Billing.component';
-import CartContents from '../Cart/CartContents.component';
+import CartContents from '../Cart/CartContents';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.component';
 
 // GraphQL

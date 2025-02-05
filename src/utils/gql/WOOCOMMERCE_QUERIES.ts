@@ -195,6 +195,13 @@ export const GET_CART = gql`
                   title
                 }
               }
+              upsell {
+                nodes {
+                  ... on SimpleProduct {
+                    ${PRODUCT_CARD_FRAGMENT}
+                  } 
+                }
+              }
             }
           }
           variation {

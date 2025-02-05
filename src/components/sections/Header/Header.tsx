@@ -66,7 +66,7 @@ export default function Header({
       </div>
 
       {/* Main header section */}
-      <div className="bg-white shadow-md relative">
+      <div className="bg-white shadow-card relative">
         {/* Mobile header */}
         <div className="lg:hidden">
           <div className="flex items-center justify-between p-4">
@@ -179,7 +179,7 @@ export default function Header({
                       )}
                     </Link>
                     {item.children?.nodes?.length > 0 && (
-                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 shadow-md duration-300">
+                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 shadow-card duration-300">
                         <Container large>
                           <ul className="flex flex-wrap gap-6 w-full max-w-7xl mx-auto border-t border-t-primary pt-6">
                             {item.children.nodes.map((subItem) => (
