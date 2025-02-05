@@ -258,6 +258,29 @@ export interface BlocFaqProps {
   isFaq: boolean;
 }
 
+export interface BlocVideoProps {
+  __typename: 'AcfPageBlocsBlocVideoLayout';
+  title: string;
+  videoId: string;
+  image: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+}
+export interface BlocMosaiqueProps {
+  __typename: 'AcfPageBlocsBlocMosaique3ImagesLayout';
+  title: string;
+  mosaique: {
+    title: string;
+    image: {
+      node: {
+        sourceUrl: string;
+      };
+    };
+  }[];
+}
+
 export type BlocType =
   | BlocWysiWygProps
   | SpacerProps
@@ -271,4 +294,6 @@ export type BlocType =
   | BlocAnchorsPictosProps
   | BlocQuestionsProps
   | BlocArticleProps
-  | BlocFaqProps;
+  | BlocFaqProps
+  | BlocVideoProps
+  | BlocMosaiqueProps;

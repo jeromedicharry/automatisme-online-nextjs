@@ -167,3 +167,8 @@ html {
 svg {
   max-width: 100%;
 }
+
+.playButton svg {
+  width: 16px;
+  height: auto;
+}

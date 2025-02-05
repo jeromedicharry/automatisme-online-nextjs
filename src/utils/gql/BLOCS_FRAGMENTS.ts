@@ -201,5 +201,28 @@ export const blocsFields = `
         __typename
         isFaq
     }
+
+    ... on AcfPageBlocsBlocVideoLayout {
+        __typename
+        title
+        videoId
+        image {
+            node {
+            sourceUrl
+            }
+        }
+    }
+    ... on AcfPageBlocsBlocMosaique3ImagesLayout {
+        __typename
+        title
+        mosaique {
+            title
+            image {
+                node {
+                    sourceUrl
+                }
+            }
+        }
+    }
   }
   `;

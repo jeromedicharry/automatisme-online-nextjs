@@ -14,6 +14,8 @@ import BlocQuestions from './blocs/BlocQuestions';
 import BlocArticle from './blocs/BlocArticle';
 import BlocFaq from './blocs/BlocFaq';
 import { FaqItemProps } from '@/types/Faq';
+import BlocVideo from './blocs/BlocVideo';
+import BlocMosaique from './blocs/BlocMosaique';
 const BlocWysiwyg = dynamic(() => import('./blocs/BlocWysiwyg'));
 const BlocSpacer = dynamic(() => import('./blocs/BlocSpacer'));
 const BlocReassurance = dynamic(() => import('./blocs/BlocReassurance'));
@@ -70,6 +72,10 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
         return <BlocArticle key={key} bloc={bloc} />;
       case 'AcfPageBlocsBlocFaqLayout':
         return <BlocFaq key={key} bloc={bloc} faqItems={faqItems} />;
+      case 'AcfPageBlocsBlocVideoLayout':
+        return <BlocVideo key={key} bloc={bloc} />;
+      case 'AcfPageBlocsBlocMosaique3ImagesLayout':
+        return <BlocMosaique key={key} bloc={bloc} />;
 
       default:
         return null;
