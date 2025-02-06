@@ -5,7 +5,7 @@ import {
   NextPage,
 } from 'next';
 import {
-  FETCH_ALL_PRODUCTS_QUERY,
+  FETCH_ALL_PRODUCTS_WITH_PAGINATION,
   GET_SINGLE_PRODUCT,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import client from '@/utils/apollo/ApolloClient';
@@ -16,6 +16,7 @@ import BreadCrumbs from '@/components/atoms/BreadCrumbs';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import ProductUpsells from '@/components/Product/ProductUpsells';
 import ProductCrossSells from '@/components/Product/ProductCrossSells';
+import { PageInfoProps } from '@/types/CptTypes';
 
 const Product: NextPage = ({
   product,
@@ -81,9 +82,32 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await client.query({ query: FETCH_ALL_PRODUCTS_QUERY });
-  const allProducts = res?.data?.products?.nodes;
-  const paths = allProducts.map((product: any) => `${product?.uri}`) || [];
+  let allProducts: any[] = [];
+  let hasNextPage = true;
+  let endCursor: string | undefined | null = null;
+
+  while (hasNextPage) {
+    const {
+      data,
+    }: {
+      data: { products: { nodes: { uri: string }[]; pageInfo: PageInfoProps } };
+    } = await client.query({
+      query: FETCH_ALL_PRODUCTS_WITH_PAGINATION,
+      variables: {
+        first: 50, // Nombre d'éléments à récupérer par page (ajuste selon ton besoin)
+        after: endCursor,
+      },
+    });
+
+    if (data?.products?.nodes) {
+      allProducts = [...allProducts, ...data.products.nodes];
+    }
+
+    hasNextPage = data?.products?.pageInfo?.hasNextPage;
+    endCursor = data?.products?.pageInfo?.endCursor;
+  }
+
+  const paths = allProducts.map((product) => product.uri) || [];
 
   return {
     paths,

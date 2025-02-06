@@ -8,7 +8,7 @@ import {
 
 export interface PageInfoProps {
   hasNextPage: boolean;
-  endCursor: string | null | undefined;
+  endCursor?: string | null | undefined;
 }
 
 export interface ThemeSettingsProps {

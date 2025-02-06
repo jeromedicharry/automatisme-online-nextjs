@@ -75,14 +75,18 @@ export const GET_SINGLE_PRODUCT = gql`
 /**
  * Fetch first 200 Woocommerce products from GraphQL
  */
-export const FETCH_ALL_PRODUCTS_QUERY = gql`
-  query MyQuery {
-    products(first: 10) {
+export const FETCH_ALL_PRODUCTS_WITH_PAGINATION = gql`
+  query FETCH_ALL_PRODUCTS_WITH_PAGINATION($first: Int!, $after: String) {
+    products(first: $first, after: $after) {
       nodes {
         ... on SimpleProduct {
           uri
         }
       }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
     }
   }
 `;
