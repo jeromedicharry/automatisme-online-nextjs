@@ -1,6 +1,6 @@
 // Components
 import Layout from '@/components/Layout/Layout';
-// import CheckoutForm from '@/components/Checkout/CheckoutForm.component';
+// import CheckoutForm from '@/components/Checkout/CheckoutForm';
 
 // Types
 import type { NextPage } from 'next';
@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import Modal from '@/components/Modals/Modal';
 import useAuth from '@/hooks/useAuth';
 import LogInForm from '@/components/Auth/LoginForm';
-import SignUpForm from '@/components/Auth/SignupForm';
+import SignUpForm from '@/components/Auth/SignUpForm';
 import SendPasswordResetEmailForm from '@/components/Auth/SendPasswordResetEmailForm';
 
 type FormStatusProps = 'login' | 'register' | 'reset';

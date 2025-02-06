@@ -1,7 +1,6 @@
 import React from 'react';
 import { SubmitHandler, useForm, FormProvider } from 'react-hook-form';
-import { InputField } from '@/components/Input/InputField.component';
-import Button from '../atoms/Button';
+import { InputField } from '@/components/atoms/InputField';
 import { INPUT_FIELDS } from '@/utils/constants/INPUT_FIELDS';
 import { ICheckoutDataProps } from '@/utils/functions/functions';
 import AdyenComponent from './AdyenComponent';
@@ -29,7 +28,9 @@ const Billing = ({ handleFormSubmit }: IBillingProps) => {
                 />
               ))}
               <div className="mt-4 flex justify-center">
-                <Button>COMMANDER</Button>
+                <button className="bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark duration-300">
+                  COMMANDER
+                </button>
               </div>
             </div>
           </form>

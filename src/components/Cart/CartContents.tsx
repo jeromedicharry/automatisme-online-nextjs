@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CartContext } from '@/stores/CartProvider';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.component';
+import LoadingSpinner from '../atoms/LoadingSpinner';
 import Cta from '../atoms/Cta';
 
 import {
@@ -156,9 +156,11 @@ const CartContents = () => {
       </section>
 
       {updateCartProcessing && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded-lg">
-            <p className="text-lg mb-2">Mise à jour du panier ...</p>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 shadow-card">
+          <div className="bg-white p-4 md:p-10 lg:p-12 rounded-lg">
+            <p className="text-lg md:text-2xl font-primary font-bold mb-6 md:mb-10">
+              Mise à jour du panier ...
+            </p>
             <LoadingSpinner />
           </div>
         </div>

@@ -1,6 +1,6 @@
 // Components
 import Layout from '@/components/Layout/Layout';
-import CheckoutForm from '@/components/Checkout/CheckoutForm.component';
+import CheckoutForm from '@/components/Checkout/CheckoutForm';
 
 // Types
 import type { NextPage } from 'next';

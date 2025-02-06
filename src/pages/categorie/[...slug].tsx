@@ -14,7 +14,7 @@ import Container from '@/components/container';
 import { useState } from 'react';
 import { CardProductProps } from '@/types/blocTypes';
 import Cta from '@/components/atoms/Cta';
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.component';
+import LoadingSpinner from '@/components/atoms/LoadingSpinner';
 import { CategoryMenuProps, CategoryPageProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';

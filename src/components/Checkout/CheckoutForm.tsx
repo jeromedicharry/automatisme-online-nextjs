@@ -1,13 +1,12 @@
-/*eslint complexity: ["error", 20]*/
 // Imports
 import { useState, useContext, useEffect } from 'react';
 import { useQuery, useMutation, ApolloError } from '@apollo/client';
 // import { AdyenCheckout } from '@adyen/adyen-web';
 
 // Components
-import Billing from './Billing.component';
+import Billing from './Billing';
 import CartContents from '../Cart/CartContents';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.component';
+import LoadingSpinner from '../atoms/LoadingSpinner';
 
 // GraphQL
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
