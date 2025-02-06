@@ -83,10 +83,10 @@ export const FETCH_ALL_PRODUCTS_WITH_PAGINATION = gql`
           uri
         }
       }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
 `;
