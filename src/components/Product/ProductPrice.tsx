@@ -1,6 +1,6 @@
-import useAuth from '@/hooks/useAuth';
-import { calculerPrix } from '@/utils/functions/prices';
-import React, { useEffect, useState } from 'react';
+// import useAuth from '@/hooks/useAuth';
+// import { calculerPrix } from '@/utils/functions/prices';
+import React, { useState } from 'react';
 
 interface ProductPriceProps {
   onSale?: boolean;
@@ -17,28 +17,28 @@ const ProductPrice = ({
   regularPrice,
   variant = 'card',
   isProSession = false,
-  isProProduct = false,
+  // isProProduct = false,
 }: ProductPriceProps) => {
-  const [priceWithVAT, setPriceWithVAT] = useState(price);
-  const [regularPriceWithVAT, setRegularPriceWithVAT] = useState(regularPrice);
-  const user = useAuth();
+  const [priceWithVAT] = useState(price);
+  const [regularPriceWithVAT] = useState(regularPrice);
+  // const user = useAuth();
 
-  useEffect(() => {
-    async function calculateVAT() {
-      try {
-        const calculatedPrice = await calculerPrix(price, false, 'FR');
-        const calculatedRegularPrice = await calculerPrix(
-          regularPrice,
-          false,
-          'FR',
-        );
-        setPriceWithVAT(calculatedPrice);
-        setRegularPriceWithVAT(calculatedRegularPrice);
-      } catch (error) {
-        console.error('Error calculating VAT:', error);
-      }
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   async function calculateVAT() {
+  //     try {
+  //       const calculatedPrice = await calculerPrix(price, false, 'FR');
+  //       const calculatedRegularPrice = await calculerPrix(
+  //         regularPrice,
+  //         false,
+  //         'FR',
+  //       );
+  //       setPriceWithVAT(calculatedPrice);
+  //       setRegularPriceWithVAT(calculatedRegularPrice);
+  //     } catch (error) {
+  //       console.error('Error calculating VAT:', error);
+  //     }
+  //   }
+  // }, [user]);
   return (
     <div className="flex items-center gap-4">
       <div

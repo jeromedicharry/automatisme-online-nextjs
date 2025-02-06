@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { GET_USER } from '@/hooks/useAuth';
 import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
+import { AuthFormProps } from '@/types/auth';
 
 const LOG_IN = gql`
   mutation logIn($login: String!, $password: String!) {
@@ -12,7 +13,10 @@ const LOG_IN = gql`
   }
 `;
 
-export default function LogInForm({ setFormStatus, handleCloseModal }) {
+export default function LogInForm({
+  setFormStatus,
+  handleCloseModal,
+}: AuthFormProps) {
   const router = useRouter();
   const [logIn, { loading, error }] = useMutation(LOG_IN, {
     refetchQueries: [{ query: GET_USER }],

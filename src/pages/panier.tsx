@@ -15,6 +15,7 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 import CartUpsellProducts from '@/components/Cart/CartUpsellProducts';
 import Separator from '@/components/atoms/Separator';
+// import { CardProductProps } from '@/types/blocTypes';
 
 const Panier = ({
   themeSettings,
@@ -28,7 +29,7 @@ const Panier = ({
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   const { cart } = useContext(CartContext);
-  const upsellProducts = [];
+  // const upsellProducts: CardProductProps[] = [];
   //todo revoir quels prix on affiche + logique des produits upsell + logique des livraison + regrouper ici la logique d'update du panier
   return (
     <Layout
@@ -60,7 +61,7 @@ const Panier = ({
               </aside>
             </div>
             <div className="py-6 md:py-10 xl:py-16">
-              <CartUpsellProducts upsellProducts={upsellProducts} />
+              <CartUpsellProducts />
             </div>
           </>
         )}

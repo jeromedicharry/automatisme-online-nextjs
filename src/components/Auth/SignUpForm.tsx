@@ -2,6 +2,7 @@ import { useMutation, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
+import { AuthFormProps } from '@/types/auth';
 
 const REGISTER_USER = gql`
   mutation registerUser(
@@ -24,9 +25,12 @@ const REGISTER_USER = gql`
   }
 `;
 
-export default function SignUpForm({ setFormStatus, handleCloseModal }) {
+export default function SignUpForm({
+  setFormStatus,
+  handleCloseModal,
+}: AuthFormProps) {
   const router = useRouter();
-  const [register, { data, loading, error }] = useMutation(REGISTER_USER);
+  const [register, { data, error }] = useMutation(REGISTER_USER);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

@@ -1,12 +1,9 @@
-import { CardProductProps } from '@/types/blocTypes';
+// import { CardProductProps } from '@/types/blocTypes';
 import React from 'react';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 
-const CartUpsellProducts = ({
-  upsellProducts,
-}: {
-  upsellProducts: CardProductProps[];
-}) => {
+const CartUpsellProducts = () => {
+  console.log();
   return (
     <section>
       <BlocIntroSmall title="Complétez votre panier" />

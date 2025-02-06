@@ -1,10 +1,10 @@
-import client from '../apollo/ApolloClient';
-import { GET_TAX_RATES } from '../gql/WOOCOMMERCE_QUERIES';
+// import client from '../apollo/ApolloClient';
+// import { GET_TAX_RATES } from '../gql/WOOCOMMERCE_QUERIES';
 
 export async function calculerPrix(
   prixHT: number,
   isProSession: boolean,
-  codePaysUtilisateur: string,
+  // codePaysUtilisateur: string,
 ) {
   if (isProSession) {
     return prixHT; // Pas de TVA pour les sessions pro
@@ -20,22 +20,22 @@ export async function calculerPrix(
   }
 }
 
-async function getTauxTVA(codePays: string) {
-  try {
-    const response = await client.query({ query: GET_TAX_RATES });
+// async function getTauxTVA(codePays: string) {
+//   try {
+//     const response = await client.query({ query: GET_TAX_RATES });
 
-    const taxRates = response.data.taxRates.nodes;
+//     const taxRates = response.data.taxRates.nodes;
 
-    const tauxPourPays = taxRates.find(
-      (rate: { country: string; rate: string }) => rate.country === codePays,
-    );
-    if (tauxPourPays) {
-      return parseFloat(tauxPourPays.rate);
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error('Erreur lors de la récupération des taux de TVA :', error);
-    return null;
-  }
-}
+//     const tauxPourPays = taxRates.find(
+//       (rate: { country: string; rate: string }) => rate.country === codePays,
+//     );
+//     if (tauxPourPays) {
+//       return parseFloat(tauxPourPays.rate);
+//     } else {
+//       return null;
+//     }
+//   } catch (error) {
+//     console.error('Erreur lors de la récupération des taux de TVA :', error);
+//     return null;
+//   }
+// }

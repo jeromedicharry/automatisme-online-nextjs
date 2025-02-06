@@ -27,16 +27,16 @@ const Caisse: NextPage = () => {
 
   if (loading) return <div>Loading...</div>;
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  // const handleOpenModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
   return (
-    <Layout meta={null} title="Caisse" uri="/checkout">
+    <Layout meta={{ title: 'Caisse' }} title="Caisse" uri="/checkout">
       <div>
         <h1 className="text-4xl md:text-5xl font-bold leading-general text-center text-balance">
           Page de caisse

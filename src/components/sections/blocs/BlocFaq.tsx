@@ -19,18 +19,15 @@ const BlocFaq = ({
   const router = useRouter();
 
   useEffect(() => {
-    // Get the hash from the URL
     const hash = router.asPath.split('#')[1];
 
     if (hash) {
-      // If an ID exists in the hash
-      const initialOpenItems = {
-        ...openItems,
+      setOpenItems((prev) => ({
+        ...prev,
         [hash]: true,
-      };
-      setOpenItems(initialOpenItems);
+      }));
     }
-  }, [router.asPath, faqItems]);
+  }, [router.asPath]); // Supprimer faqItems et openItems des dépendances
 
   // Configurer Fuse.js pour la recherche floue
   const fuse = useMemo(() => {
