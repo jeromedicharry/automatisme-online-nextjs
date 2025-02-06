@@ -2,6 +2,7 @@ import Cta from '@/components/atoms/Cta';
 import Container from '@/components/container';
 import { Wifi } from '@/components/SVG/Icons';
 import { BlocAnchorsPictosProps } from '@/types/blocTypes';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -23,10 +24,7 @@ const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
             >
               <div className="bg-white rounded-[3px] w-[72px] h-[72px] flex items-center justify-center relative">
                 <Image
-                  src={
-                    item.picto?.node?.sourceUrl ||
-                    '/images/logo-automatisme-online.png'
-                  }
+                  src={item.picto?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
                   alt={item.text}
                   width={72}
                   height={72}
@@ -94,7 +92,7 @@ const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
             <Image
               src={
                 item.targetSection?.image?.node?.sourceUrl ||
-                '/images/logo-automatisme-online.png'
+                PRODUCT_IMAGE_PLACEHOLDER
               }
               alt={item.targetSection?.title}
               width={431}

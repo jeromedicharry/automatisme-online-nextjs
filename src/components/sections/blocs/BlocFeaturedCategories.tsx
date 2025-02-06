@@ -1,6 +1,7 @@
 import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
 import Container from '@/components/container';
 import { BlocFeaturedCategoriesProps } from '@/types/blocTypes';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -29,10 +30,7 @@ const BlocFeaturedCategories = ({
               >
                 <div className="px-3 py-2 bg-secondary-light rounded-[9px] group-hover:shadow-card duration-300 w-full h-[168px] md:h-[160px] flex items-center justify-center">
                   <Image
-                    src={
-                      category.image?.sourceUrl ||
-                      '/images/logo-automatisme-online.png'
-                    }
+                    src={category.image?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
                     alt={category.name}
                     width={160}
                     height={190}

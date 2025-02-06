@@ -2,6 +2,7 @@ import { installationData } from '@/stores/IntermediateCartContext';
 import Image from 'next/image';
 import { Wifi } from '../SVG/Icons';
 import Cta from '../atoms/Cta';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 const CardInstallation = ({
   installation,
@@ -13,8 +14,7 @@ const CardInstallation = ({
       <div className="h-[250px] w-full flex items-center justify-between overflow-hidden">
         <Image
           src={
-            installation?.image?.node?.sourceUrl ||
-            '/images/logo-automatisme-online.png'
+            installation?.image?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER
           }
           alt={installation?.title}
           width={300}

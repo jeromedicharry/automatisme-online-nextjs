@@ -3,16 +3,14 @@ import Image from 'next/image';
 import React from 'react';
 import { Wifi } from '../SVG/Icons';
 import Cta from '../atoms/Cta';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 const CardQuestionCta = ({ question }: { question: QuestionCtaCardProps }) => {
   // todo mobile
   return (
     <div className="flex rounded-2xl overflow-hidden max-w-[520px]">
       <Image
-        src={
-          question?.image?.node?.sourceUrl ||
-          '/images/logo-automatisme-online.png'
-        }
+        src={question?.image?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
         alt={question.subtitle}
         width={520}
         height={480}

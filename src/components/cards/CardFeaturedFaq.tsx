@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { Wifi } from '../SVG/Icons';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 const CardFeaturedFaq = ({
   title,
@@ -35,7 +36,7 @@ const CardFeaturedFaq = ({
         <Image
           src={
             item?.faqItem?.nodes[0]?.featuredImage?.node?.sourceUrl ||
-            '/images/logo-automatisme-online.png'
+            PRODUCT_IMAGE_PLACEHOLDER
           }
           alt={item?.title}
           width={250}

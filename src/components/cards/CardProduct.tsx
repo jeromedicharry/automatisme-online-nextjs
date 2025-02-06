@@ -5,6 +5,7 @@ import React from 'react';
 import { Heart } from '../SVG/Icons';
 import AddToCart from '../Product/AddToCart';
 import ProductPrice from '../Product/ProductPrice';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
   // todo ajout aux favoris
@@ -16,7 +17,7 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
             <Image
               src={
                 product?.featuredImage?.node?.sourceUrl ||
-                '/images/logo-automatisme-online.png'
+                PRODUCT_IMAGE_PLACEHOLDER
               }
               alt={product?.name}
               width={248}

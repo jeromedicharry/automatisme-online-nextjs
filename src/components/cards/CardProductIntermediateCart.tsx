@@ -1,4 +1,5 @@
 import { CardProductProps } from '@/types/blocTypes';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -18,7 +19,7 @@ const CardproductIntermediateCart = ({
           <Image
             src={
               product?.featuredImage?.node?.sourceUrl ||
-              '/images/logo-automatisme-online.png'
+              PRODUCT_IMAGE_PLACEHOLDER
             }
             alt={product?.name}
             width={248}
