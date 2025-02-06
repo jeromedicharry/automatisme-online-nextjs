@@ -29,7 +29,6 @@ const Panier = ({
 }) => {
   const { cart } = useContext(CartContext);
   const upsellProducts = [];
-  console.log({ cart });
   //todo revoir quels prix on affiche + logique des produits upsell + logique des livraison + regrouper ici la logique d'update du panier
   return (
     <Layout

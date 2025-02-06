@@ -37,9 +37,6 @@ const Page = ({
   faqItems: FaqItemProps[];
   categoriesMenu?: CategoryMenuProps[];
 }) => {
-  //todo typer theme settings et page
-
-  console.log({ themeSettings });
   const router = useRouter();
   if (!router.isFallback && !page?.title) {
     return <ErrorPage statusCode={404} />;

@@ -6,7 +6,6 @@ import { BlocMosaiqueProps } from '@/types/blocTypes';
 
 const BlocMosaique = ({ bloc }: { bloc: BlocMosaiqueProps }) => {
   if (!bloc || !bloc.mosaique) return null;
-  console.log('bloc', bloc);
   return (
     <Container>
       <section className="mb-12 md:mb-16 max-md:max-w-md mx-auto">

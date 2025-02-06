@@ -8,7 +8,6 @@ import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
 const BlocVideo = ({ bloc }: { bloc: BlocVideoProps }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   if (!bloc || !bloc.videoId) return null;
-  console.log('bloc', bloc);
   return (
     <Container>
       <section>

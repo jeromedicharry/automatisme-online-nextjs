@@ -22,7 +22,6 @@ const ProductPrice = ({
   const [priceWithVAT, setPriceWithVAT] = useState(price);
   const [regularPriceWithVAT, setRegularPriceWithVAT] = useState(regularPrice);
   const user = useAuth();
-  console.log({ price, regularPrice });
 
   useEffect(() => {
     async function calculateVAT() {

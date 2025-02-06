@@ -51,7 +51,6 @@ export const InterMediateCartProvider: React.FC<{
       },
     });
     const related = sideData?.data?.product?.upsell?.nodes || [];
-    console.log({ related });
     const isKit = sideData?.data?.product?.isKit || false;
     if (isKit) {
       const installationDataRes = await client.query({

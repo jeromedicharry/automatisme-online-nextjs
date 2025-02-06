@@ -25,7 +25,6 @@ const CartSummary = () => {
     },
   });
 
-  console.log({ data });
   useEffect(() => {
     refetch();
   }, [refetch]);

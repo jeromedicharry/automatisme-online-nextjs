@@ -41,7 +41,6 @@ const ProductContent = ({
 }) => {
   // todo ajout aux favoris + mettre sur mobile ajout favioris + ajout au panier
   // todo mettre les bons pictos de paiement voir à les mettre en dur
-  console.log({ paymentPictos });
   return (
     <article className="my-12 md:my-16">
       <div className="flex flex-col md:grid md:grid-cols-2 items-start justify-between gap-5 max-md:max-w-md mx-auto">

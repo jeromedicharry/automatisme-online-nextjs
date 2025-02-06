@@ -9,7 +9,6 @@ const ProductUpsells = ({
 }: {
   upsellProducts: CardProductProps[];
 }) => {
-  console.log('upsellProducts', upsellProducts);
   // todo revoir la logique avec isKit + confirmer le fonctinnement
   if (!upsellProducts || upsellProducts.length === 0) return null;
   return (
