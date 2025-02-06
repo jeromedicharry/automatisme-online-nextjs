@@ -16,6 +16,7 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { FaqItemProps } from '@/types/Faq';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { CategoryMenuProps } from '@/types/Categories';
+import { PageProps, ThemeSettingsProps } from '@/types/CptTypes';
 
 // todo typer une page
 
@@ -28,8 +29,8 @@ const Page = ({
   faqItems,
   categoriesMenu,
 }: {
-  page: any;
-  themeSettings: any;
+  page: PageProps;
+  themeSettings: ThemeSettingsProps;
   featuredFaq: FeaturedFaqProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
@@ -37,6 +38,8 @@ const Page = ({
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   //todo typer theme settings et page
+
+  console.log({ themeSettings });
   const router = useRouter();
   if (!router.isFallback && !page?.title) {
     return <ErrorPage statusCode={404} />;

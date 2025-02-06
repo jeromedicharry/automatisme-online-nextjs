@@ -19,6 +19,7 @@ import { CategoryMenuProps, CategoryPageProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import BreadCrumbs from '@/components/atoms/BreadCrumbs';
+import { PageInfoProps, ThemeSettingsProps } from '@/types/CptTypes';
 
 const CategoryPage = ({
   products,
@@ -31,8 +32,8 @@ const CategoryPage = ({
 }: {
   products: CardProductProps[];
   category: CategoryPageProps;
-  pageInfo: any;
-  themeSettings: any;
+  pageInfo: PageInfoProps;
+  themeSettings: ThemeSettingsProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -188,6 +189,11 @@ export const getProductsSelection = async ({
   filters = [],
   first = 36,
   after = null,
+}: {
+  categoryId: string;
+  filters?: any[];
+  first: number;
+  after: string | null | undefined;
 }) => {
   try {
     const { data, loading, error } = await client.query({

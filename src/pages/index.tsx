@@ -20,6 +20,7 @@ import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import FlexibleContent from '@/components/sections/FlexibleContent';
 import HomePromoSection from '@/components/sections/Home/HomePromoSection';
+import { HomePageProps } from '@/types/CptTypes';
 
 const HomePage = ({
   page,
@@ -30,7 +31,7 @@ const HomePage = ({
   faqItems,
   categoriesMenu,
 }: {
-  page: any;
+  page: HomePageProps;
   themeSettings: any;
   featuredFaq: FeaturedFaqProps;
   footerMenu1: SimpleFooterMenuProps;

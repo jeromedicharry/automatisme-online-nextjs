@@ -20,9 +20,9 @@ const BlocMosaique = ({ bloc }: { bloc: BlocMosaiqueProps }) => {
               alt={bloc.mosaique[0]?.title}
               className="h-full w-full object-cover"
             />
-            <caption className="absolute p-4 left-0 bottom-0 right-0 text-white text-left">
+            <figcaption className="absolute p-4 left-0 bottom-0 right-0 text-white text-left">
               {bloc?.mosaique[0]?.title}
-            </caption>
+            </figcaption>
           </figure>
           <figure className="relative rounded-2xl overflow-hidden md:col-start-1 md:row-start-2">
             <Image
@@ -32,11 +32,11 @@ const BlocMosaique = ({ bloc }: { bloc: BlocMosaiqueProps }) => {
               alt={bloc.mosaique[1]?.title}
               className="h-full w-full object-cover"
             />
-            <caption className="absolute p-4 left-0 bottom-0 right-0 text-white text-left">
+            <figcaption className="absolute p-4 left-0 bottom-0 right-0 text-white text-left">
               {bloc?.mosaique[1]?.title}
-            </caption>
+            </figcaption>
           </figure>
-          <figure className="relative rounded-2xl overflow-hidden md:row-span-2 mdcol-start-2 md:row-start-1">
+          <figure className="relative rounded-2xl overflow-hidden md:row-span-2 md:col-start-2 md:row-start-1">
             <Image
               src={bloc.mosaique[2]?.image?.node?.sourceUrl}
               width={780}
@@ -44,9 +44,9 @@ const BlocMosaique = ({ bloc }: { bloc: BlocMosaiqueProps }) => {
               alt={bloc.mosaique[2]?.title}
               className="h-full w-full object-cover"
             />
-            <caption className="absolute p-4 left-0 bottom-0 right-0 text-white text-left">
+            <figcaption className="absolute p-4 left-0 bottom-0 right-0 text-white text-left">
               {bloc?.mosaique[2]?.title}
-            </caption>
+            </figcaption>
           </figure>
         </div>
       </section>

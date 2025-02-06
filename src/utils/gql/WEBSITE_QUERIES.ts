@@ -109,27 +109,31 @@ export const GET_FOOTER_MENU_3 = gql`
   }
 `;
 
+const PAGE_STANDARD_FIELDS = `
+  ${seoFields}
+  id
+  uri
+  title(format: RENDERED)
+  status
+  featuredImage {
+    node {
+      sourceUrl
+    }
+  }
+  acfPage {
+    hero {
+      title
+      text
+    }
+    ${blocsFields}
+  }
+`;
+
 // pages
 export const GET_SINGLE_PAGE = gql` 
   query GET_SINGLE_PAGE($id: ID!) {
     page(id: $id, idType: URI ) {
-        ${seoFields}
-        id
-        uri
-        title(format: RENDERED)
-        status
-        featuredImage {
-          node {
-            sourceUrl
-          }
-        }
-        acfPage {
-          hero {
-            title
-            text
-          }
-          ${blocsFields}
-        }
+        ${PAGE_STANDARD_FIELDS}
       }
     }
 `;
@@ -164,23 +168,7 @@ export const PromotionSlide = `
 export const GET_HOME_PAGE = gql`
   query GET_HOME_PAGE {
     page(id: "/", idType: URI) {
-      ${seoFields}
-      id
-      uri
-      title(format: RENDERED)
-      status
-      featuredImage {
-        node {
-          sourceUrl
-        }
-      }
-      acfPage {
-        hero {
-          title
-          text
-        }
-        ${blocsFields}
-      }
+      ${PAGE_STANDARD_FIELDS}
       acfHome {
         isShown
         mainSlider {
