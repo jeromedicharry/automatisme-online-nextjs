@@ -7,9 +7,10 @@ module.exports = {
     policies: [
       {
         userAgent: '*',
-        allow: '/',
+        // allow: '/',
         // Pages à ne pas indexer
-        disallow: ['/panier', '/caisse'],
+        disallow: '/',
+        // disallow: ['/panier', '/caisse'],
       },
     ],
   },
