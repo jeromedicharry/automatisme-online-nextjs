@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /panier
+Disallow: /caisse
+
+# Host
+Host: https://exemple.com
+
+# Sitemaps
+Sitemap: https://exemple.com/sitemap.xml

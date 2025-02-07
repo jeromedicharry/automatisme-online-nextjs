@@ -36,7 +36,12 @@ const Caisse: NextPage = () => {
   };
 
   return (
-    <Layout meta={{ title: 'Caisse' }} title="Caisse" uri="/checkout">
+    <Layout
+      meta={{ title: 'Caisse' }}
+      title="Caisse"
+      uri="/checkout"
+      excludeSeo
+    >
       <div>
         <h1 className="text-4xl md:text-5xl font-bold leading-general text-center text-balance">
           Page de caisse

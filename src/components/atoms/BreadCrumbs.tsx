@@ -1,3 +1,4 @@
+import { makeRelativeLink } from '@/utils/functions/functions';
 import Link from 'next/link';
 
 const BreadCrumbs = ({ breadCrumbs }: any) => {
@@ -16,7 +17,10 @@ const BreadCrumbs = ({ breadCrumbs }: any) => {
             key={key}
             className="flex gap-3 items-center text-breadcrumb-grey"
           >
-            <Link className="hover:text-primary duration-300" href={crumb.url}>
+            <Link
+              className="hover:text-primary duration-300"
+              href={makeRelativeLink(crumb.url)}
+            >
               {crumb.text}
             </Link>
             <BreadCrumbArrow />

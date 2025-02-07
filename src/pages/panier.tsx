@@ -40,6 +40,7 @@ const Panier = ({
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       isBg
+      excludeSeo
     >
       <Container>
         {!cart || cart.totalProductsCount === 0 ? (

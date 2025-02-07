@@ -328,3 +328,14 @@ export const slugify = (text: string) =>
     .replace(/--+/g, '-')
     .replace(/^-+/, '')
     .replace(/-+$/, '');
+
+export const makeRelativeLink = (url: string): string => {
+  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL;
+
+  if (!adminUrl) {
+    console.warn("NEXT_PUBLIC_ADMIN_URL n'est pas défini.");
+    return url;
+  }
+
+  return url.startsWith(adminUrl) ? url.replace(adminUrl, '') : url;
+};

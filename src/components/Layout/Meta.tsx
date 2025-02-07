@@ -14,9 +14,11 @@ export interface IMeta {
 export default function Meta({
   meta,
   uri = '',
+  excludeSeo = false,
 }: {
   meta: IMeta;
   uri?: string;
+  excludeSeo?: boolean;
 }) {
   // Ensure meta.fullHead is a string
   const rawFullHead = meta?.fullHead || '';
@@ -32,6 +34,7 @@ export default function Meta({
         name="viewport"
         content="width=device-width, initial-scale=1.0"
       ></meta>
+      {excludeSeo && <meta name="robots" content="noindex, nofollow" />}
       {/* Favicon and icons */}
       <link
         rel="apple-touch-icon"
@@ -113,7 +116,7 @@ export default function Meta({
       <title>{meta?.title}</title>
       <meta name="description" content={meta?.metaDesc} />
       {parsedCleanHead}
-      <link rel="canonical" href={canonical}></link>
+      {uri && <link rel="canonical" href={canonical}></link>}
     </Head>
   );
 }

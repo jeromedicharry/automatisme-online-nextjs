@@ -32,6 +32,7 @@ interface LayoutProps {
   isHome?: boolean;
   categoriesMenu?: CategoryMenuProps[];
   isBg?: boolean;
+  excludeSeo?: boolean;
 }
 
 /**
@@ -52,6 +53,7 @@ const Layout = ({
   isHome = false,
   categoriesMenu,
   isBg = false,
+  excludeSeo = false,
 }: LayoutProps) => {
   const { setCart } = useContext(CartContext);
 
@@ -79,7 +81,7 @@ const Layout = ({
 
   return (
     <>
-      <Meta meta={meta} uri={uri} />
+      <Meta meta={meta} uri={uri} excludeSeo={excludeSeo} />
       <div id="to-top"></div>
 
       <Header categoriesMenu={categoriesMenu} />

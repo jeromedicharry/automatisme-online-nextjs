@@ -24,6 +24,7 @@ export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
     product(id: $id, idType: SLUG) {
       id
+      uri
       ${seoFields}
       databaseId
       averageRating
@@ -92,7 +93,7 @@ export const FETCH_ALL_PRODUCTS_WITH_PAGINATION = gql`
 `;
 
 /**
- * Fetch first 20 categories from GraphQL
+ * Fetch all categories from GraphQL
  */
 export const GET_ALL_CATEGORIES_QUERY = gql`
   query GET_ALL_CATEGORIES_QUERY($first: Int!, $after: String) {

@@ -21,6 +21,9 @@ const ProductPrice = ({
 }: ProductPriceProps) => {
   const [priceWithVAT] = useState(price);
   const [regularPriceWithVAT] = useState(regularPrice);
+
+  // Todo gérer la logique du calcul des prixs en fonction du user (isPro et sa TVA)
+
   // const user = useAuth();
 
   // useEffect(() => {
