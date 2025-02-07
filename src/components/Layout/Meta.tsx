@@ -29,6 +29,12 @@ export default function Meta({
 
   return (
     <Head>
+      {process.env.NEXT_PUBLIC_WEBSITE_URL !==
+        'https://automatisme-online.fr/' &&
+        process.env.NEXT_PUBLIC_WEBSITE_URL !==
+          'https://www.automatisme-online.fr/' && (
+          <meta name="robots" content="noindex, nofollow" />
+        )}
       <meta httpEquiv="x-ua-compatible" content="ie=edge"></meta>
       <meta
         name="viewport"
