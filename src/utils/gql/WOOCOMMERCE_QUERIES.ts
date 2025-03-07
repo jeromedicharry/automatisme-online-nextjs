@@ -13,12 +13,19 @@ export const PRODUCT_CARD_FRAGMENT = `
   }
   price(format: RAW)
   salePrice(format: RAW)
-  isProProduct
-  hasProDiscount
+  isPro
+  hasPose
   regularPrice(format: RAW)
   sku
   isKit
 `;
+
+// todo gérer les brands
+// brands(first: 1) {
+//   nodes {
+//     name
+//   }
+// }
 
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
@@ -44,11 +51,6 @@ export const GET_SINGLE_PRODUCT = gql`
         galleryImages {
           nodes {
             sourceUrl
-          }
-        }
-        brands(first: 1) {
-          nodes {
-            name
           }
         }
 
@@ -143,8 +145,8 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
               sourceUrl(size: MEDIUM)
             }
           }
-          isProProduct
-          hasProDiscount
+          isPro
+          hasPose
           ... on SimpleProduct {
             salePrice(format: RAW)
             regularPrice(format: RAW)

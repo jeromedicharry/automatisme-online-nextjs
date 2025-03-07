@@ -1,3 +1,4 @@
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import Image from 'next/image';
 import React from 'react';
 
@@ -11,7 +12,7 @@ const PaymentMethods = ({ themeSettings }: { themeSettings: any }) => {
         {themeSettings?.paymentPictos?.map((picto: any, index: number) => (
           <Image
             key={index}
-            src={picto?.picto?.node?.sourceUrl}
+            src={picto?.picto?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
             width={100}
             height={25}
             alt="Moyen de paiement"

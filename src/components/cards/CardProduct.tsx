@@ -10,7 +10,7 @@ import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
   // todo ajout aux favoris
   return (
-    <article className="flex flex-col h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary">
+    <article className="flex flex-col max-w-[250px] h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <Link href={`/nos-produits/${product?.slug}`} className="group">
         <div className="relative min-h-[239px]">
           <div className="absolute inset-0 w-full flex items-center justify-center">

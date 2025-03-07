@@ -26,7 +26,7 @@ const SimpleFooterMenu = ({ menu }: { menu?: SimpleFooterMenuProps }) => {
             {key > 0 && <span className="sm:hidden">•</span>}
             <li key={key} className="flex">
               <Link
-                href={item?.uri}
+                href={item?.uri || '/'}
                 className="font-normal md:text-xs leading-general hover:text-secondary duration-300"
               >
                 {item?.label}

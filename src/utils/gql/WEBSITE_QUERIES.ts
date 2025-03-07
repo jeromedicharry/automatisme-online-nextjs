@@ -195,6 +195,7 @@ export const GET_ALL_FAQ_ITEMS = gql`
     }
   }
 `;
+//todo gérer les catégories à exclure
 
 export const GET_ALL_LEVEL_1_CATEGORIES = gql`
   query GET_ALL_LEVEL_1_CATEGORIES {

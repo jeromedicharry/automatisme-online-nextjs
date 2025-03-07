@@ -7,6 +7,7 @@ import { Heart } from 'lucide-react';
 import AddToCart from './AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
 import Image from 'next/image';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 export interface BrandStickerProps {
   name: string;
@@ -17,8 +18,8 @@ export interface BrandStickerProps {
 
 export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
-  isProProduct: boolean;
-  hasProDiscount: boolean;
+  isPro: boolean;
+  hasPose: boolean;
   uri: string;
   seo: SeoProps;
   slug: string;
@@ -29,7 +30,7 @@ export interface ProductContentProps extends CardProductProps {
       sourceUrl: string;
     }[];
   };
-  brands: { nodes: BrandStickerProps[] };
+  brands?: { nodes?: BrandStickerProps[] };
 }
 
 const ProductContent = ({
@@ -54,7 +55,7 @@ const ProductContent = ({
           <div className="titre order-2 md:order-1">
             <ProductHeader
               title={product?.name}
-              brand={product?.brands.nodes[0]}
+              // brand={product?.brands?.nodes[0] || null}
             />
           </div>
           <section className="prix order-3 md:order-2">
@@ -79,7 +80,7 @@ const ProductContent = ({
             <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
               Payer en 3 versements sans frais.
             </p>
-            {!product?.isKit && (
+            {product?.hasPose && (
               <div className="mt-8 md:mt-6">
                 <p className="mb-4 font-bold">{"Choix de l'option"}</p>
                 <div className="flex w-full md:w-fit gap-4 items-stretch">
@@ -117,7 +118,7 @@ const ProductContent = ({
           </section>
           <section className="description order-4 md:hidden">
             <ProductDescription description={product?.description} />
-          </section>{' '}
+          </section>
           <section className="reassurance order-5 md:order-3">
             Réassurance
           </section>
@@ -130,7 +131,9 @@ const ProductContent = ({
                 {paymentPictos?.map((picto: any, index: number) => (
                   <Image
                     key={index}
-                    src={picto?.picto?.node?.sourceUrl}
+                    src={
+                      picto?.picto?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER
+                    }
                     width={100}
                     height={25}
                     alt="Moyen de paiement"

@@ -38,7 +38,7 @@ export default function LogInForm({
     event.preventDefault();
     try {
       await logIn({ variables: { login: email, password } });
-      router.push('/');
+      // router.push('/');
     } catch (err) {
       console.error(err);
     }
@@ -47,6 +47,11 @@ export default function LogInForm({
   function handleClose() {
     if (router.pathname === '/caisse') {
       router.push('/panier');
+      return;
+    }
+    if (router.pathname === '/compte') {
+      router.push('/');
+      return;
     }
     handleCloseModal();
   }
