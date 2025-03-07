@@ -23,6 +23,9 @@ module.exports = {
         card: '0px 0px 10px -3px rgba(0, 0, 0, 0.25)',
         cardhover: '0px 0px 10px -3px rgba(0, 0, 0, 0.45)',
       },
+      screens: {
+        xxl: '1420px', // Ajout ici pour que Tailwind le reconnaisse
+      },
       container: {
         screens: {
           xs: '380px',
@@ -30,7 +33,6 @@ module.exports = {
           md: '940px',
           lg: '1140px',
           xl: '1300px',
-          xxl: '1580px',
         },
       },
       aspectRatio: {
