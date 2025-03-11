@@ -11,11 +11,9 @@ import { useState } from 'react';
 // import SendPasswordResetEmailForm from '@/components/Auth/SendPasswordResetEmailForm';
 import Container from '@/components/container';
 import {
-  Chevron,
   Heart,
   HouseSvg,
   InfoSvg,
-  LogoutSvg,
   OrderSvg,
   ProCustomerSvg,
   UserSvg,
@@ -26,6 +24,7 @@ import Favorites from '@/components/Account/Favorites';
 import Addresses from '@/components/Account/addresses';
 import Profile from '@/components/Account/Profile';
 import Help from '@/components/Account/Help';
+import LogOut from '@/components/Auth/Logout';
 
 // type FormStatusProps = 'login' | 'register' | 'reset';
 
@@ -97,10 +96,6 @@ const Compte: NextPage = () => {
     },
   ];
 
-  const handleLogout = () => {
-    console.log('lgout');
-  };
-
   return (
     <Layout
       meta={{ title: 'Caisse' }}
@@ -129,19 +124,7 @@ const Compte: NextPage = () => {
                     />
                   ))}
                   <li className="min-w-[230px]">
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                      }}
-                      className={`w-full gap-3 font-bold flex items-center duration-300 justify-between`}
-                    >
-                      <div className="flex gap-[10px] items-center">
-                        <LogoutSvg /> Déconnexion
-                      </div>
-                      <div className="rotate-180">
-                        <Chevron />
-                      </div>
-                    </button>
+                    <LogOut />
                   </li>
                 </ul>
               </nav>

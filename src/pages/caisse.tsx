@@ -11,7 +11,7 @@ import LogInForm from '@/components/Auth/LoginForm';
 import SignUpForm from '@/components/Auth/SignUpForm';
 import SendPasswordResetEmailForm from '@/components/Auth/SendPasswordResetEmailForm';
 
-type FormStatusProps = 'login' | 'register' | 'reset';
+export type FormStatusProps = 'login' | 'register' | 'reset';
 
 const Caisse: NextPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -67,7 +67,7 @@ const Caisse: NextPage = () => {
           ) : formStatus === 'reset' ? (
             <SendPasswordResetEmailForm />
           ) : (
-            <>TOTO</>
+            <></>
           )}
         </Modal>
       </div>

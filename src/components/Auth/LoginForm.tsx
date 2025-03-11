@@ -4,6 +4,7 @@ import { GET_USER } from '@/hooks/useAuth';
 import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
 import { AuthFormProps } from '@/types/auth';
+import { CheckMedalSvg } from '../SVG/Icons';
 
 const LOG_IN = gql`
   mutation logIn($login: String!, $password: String!) {
@@ -57,16 +58,15 @@ export default function LogInForm({
   }
 
   return (
-    <div className="flex h-full items-center justify-center ">
-      <div className="relative">
-        {/* Bouton de fermeture */}
+    <div className="flex h-full items-center justify-center relative p-6 md:px-12">
+      {/* Bouton de fermeture */}
+      <div className="relative flex flex-col justify-center h-full">
         <button
           onClick={handleClose}
-          className="absolute top-[-80px] left-0 text-gray-500 hover:text-black text-xl"
+          className="absolute top-0 left-0 text-gray-500 hover:text-black text-xl"
         >
           X
         </button>
-
         <h2 className="text-2xl font-semibold text-center mb-6">
           Se connecter
         </h2>
@@ -113,15 +113,14 @@ export default function LogInForm({
                 Mot de passe incorrect.
               </p>
             )}
+            <button
+              type="button"
+              onClick={() => setFormStatus('reset')}
+              className="text-sm text-blue-link hover:underline leading-general block text-right mt-1 ml-auto"
+            >
+              Mot de passe oublié ?
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setFormStatus('reset')}
-            className="text-sm text-gray-500 hover:underline"
-          >
-            Mot de passe oublié ?
-          </button>
 
           <button
             type="submit"
@@ -133,8 +132,8 @@ export default function LogInForm({
         </form>
 
         {/* Lien de création de compte */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
+        <div className="text-center mt-10">
+          <p className="text-primary font-bold mb-2">
             Pas de compte ? Créez-en un en quelques clics !
           </p>
           <Cta
@@ -150,18 +149,23 @@ export default function LogInForm({
           </Cta>
         </div>
 
-        {/* Bullet points */}
         <ul className="mt-6 space-y-2 text-sm text-gray-700">
           <li className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-black rounded-full"></span>
+            <span className="w-6 h-6 flex items-center text-primary">
+              <CheckMedalSvg />
+            </span>
             Des conseils personnalisés pour vos projets
           </li>
           <li className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-black rounded-full"></span>
+            <span className="w-6 h-6 flex items-center text-primary">
+              <CheckMedalSvg />
+            </span>
             Sauvegarder vos envies en un clic
           </li>
           <li className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-black rounded-full"></span>
+            <span className="w-6 h-6 flex items-center text-primary">
+              <CheckMedalSvg />
+            </span>
             Suivez facilement vos commandes
           </li>
         </ul>
