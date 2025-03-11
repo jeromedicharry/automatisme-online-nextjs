@@ -15,7 +15,7 @@ export default function Container({
 }: ContainerProps) {
   return (
     <div
-      className={`w-full mx-auto ${mobileFull ? '' : 'px-5'} md:px-6 lg:px-0 ${
+      className={`w-full mx-auto ${mobileFull ? '' : 'px-5'} md:px-6 xl:px-0 ${
         large
           ? 'lg:max-w-[1260px]'
           : small

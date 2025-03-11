@@ -172,3 +172,8 @@ svg {
   width: 16px;
   height: auto;
 }
+
+.large-svg svg {
+  width: 90px;
+  height: auto;
+}

@@ -9,12 +9,13 @@ import DeliveryChoices from '@/components/Cart/DeliveryChoices';
 import Container from '@/components/container';
 import { useContext } from 'react';
 import { CartContext } from '@/stores/CartProvider';
-import EmptyCart from '@/components/Cart/EmptyCart';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
 import CartUpsellProducts from '@/components/Cart/CartUpsellProducts';
 import Separator from '@/components/atoms/Separator';
+import EmptyElement from '@/components/EmptyElement';
+import { LargeCartSvg } from '@/components/SVG/Icons';
 // import { CardProductProps } from '@/types/blocTypes';
 
 const Panier = ({
@@ -44,7 +45,14 @@ const Panier = ({
     >
       <Container>
         {!cart || cart.totalProductsCount === 0 ? (
-          <EmptyCart />
+          <EmptyElement
+            picto={<LargeCartSvg />}
+            title={'Votre panier est vide'}
+            subtitle={'Aucun produit dans votre panier'}
+            ctaLabel={'Voir nos produits'}
+            ctaSlug={'/'}
+            ctaType={'primary'}
+          />
         ) : (
           <>
             <div className="relative flex flex-col md:flex-row md:items-start gap-6 md:gap-10 xl:gap-16 max-md:max-w-md mx-auto mt-6 md:mt-12">
