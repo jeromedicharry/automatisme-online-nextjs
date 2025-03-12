@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
 import { AuthFormProps } from '@/types/auth';
 import { CheckMedalSvg } from '../SVG/Icons';
+import ToggleSwitch from '../atoms/ToggleSwitch';
 
 const REGISTER_USER = gql`
   mutation registerUser(
@@ -30,10 +31,11 @@ const REGISTER_USER = gql`
 export default function SignUpForm({
   setFormStatus,
   handleCloseModal,
+  registerType,
+  setRegisterType,
 }: AuthFormProps) {
   const router = useRouter();
   const [register, { data, error }] = useMutation(REGISTER_USER);
-  const [registerType, setRegisterType] = useState('customer');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -153,12 +155,12 @@ export default function SignUpForm({
         {/* Bouton de fermeture */}
         <button
           onClick={handleClose}
-          className="absolute top-0 left-0 text-gray-500 hover:text-black text-xl"
+          className="absolute top-0 left-0 text-primary hover:text-black text-xl"
         >
           X
         </button>
 
-        <h2 className="text-2xl font-semibold mb-1 text-primary">
+        <h2 className="text-2xl font-bold mb-1 text-primary">
           Vous êtes nouveau ?!
         </h2>
         <strong className="text-secondary font-bold mb-6">
@@ -170,7 +172,7 @@ export default function SignUpForm({
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-primary"
             >
               Email
             </label>
@@ -187,7 +189,7 @@ export default function SignUpForm({
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-primary"
             >
               Mot de passe
             </label>
@@ -202,22 +204,14 @@ export default function SignUpForm({
             />
           </div>
           <div className="flex items-center gap-2">
-            <input
+            <ToggleSwitch
               id="isPro"
-              type="checkbox"
-              name="isPro"
               checked={registerType === 'pro_customer'}
-              onChange={(e) =>
-                setRegisterType(e.target.checked ? 'pro_customer' : 'customer')
+              onChange={(checked) =>
+                setRegisterType(checked ? 'pro_customer' : 'customer')
               }
-              className=""
+              label="Compte pro ?"
             />
-            <label
-              htmlFor="isPro"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Compte pro ?
-            </label>
           </div>
 
           {/* Affichage des erreurs de validation du formulaire */}
@@ -244,6 +238,21 @@ export default function SignUpForm({
             </div>
           )}
 
+          <ul className="mt-6 text-xs text-primary">
+            <li className="flex items-center gap-2">
+              <span className="w-6 h-6 flex items-center text-primary">
+                <CheckMedalSvg />
+              </span>
+              8 caractères minimum
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="w-6 h-6 flex items-center text-primary">
+                <CheckMedalSvg />
+              </span>
+              1 caractère spécial
+            </li>
+          </ul>
+
           <button
             type="submit"
             className="w-full py-2 text-white bg-secondary rounded-md hover:bg-secondary-dark duration-300"
@@ -267,27 +276,6 @@ export default function SignUpForm({
             Me connecter
           </Cta>
         </div>
-
-        <ul className="mt-6 space-y-2 text-sm text-gray-700">
-          <li className="flex items-center gap-2">
-            <span className="w-6 h-6 flex items-center text-primary">
-              <CheckMedalSvg />
-            </span>
-            Des conseils personnalisés pour vos projets
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="w-6 h-6 flex items-center text-primary">
-              <CheckMedalSvg />
-            </span>
-            Sauvegarder vos envies en un clic
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="w-6 h-6 flex items-center text-primary">
-              <CheckMedalSvg />
-            </span>
-            Suivez facilement vos commandes
-          </li>
-        </ul>
       </div>
     </div>
   );

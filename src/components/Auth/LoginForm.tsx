@@ -4,7 +4,7 @@ import { GET_USER } from '@/hooks/useAuth';
 import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
 import { AuthFormProps } from '@/types/auth';
-import { CheckMedalSvg } from '../SVG/Icons';
+import { CheckMedalSvg, Chevron } from '../SVG/Icons';
 
 const LOG_IN = gql`
   mutation logIn($login: String!, $password: String!) {
@@ -17,6 +17,7 @@ const LOG_IN = gql`
 export default function LogInForm({
   setFormStatus,
   handleCloseModal,
+  setRegisterType,
 }: AuthFormProps) {
   const router = useRouter();
   const [logIn, { loading }] = useMutation(LOG_IN, {
@@ -128,14 +129,12 @@ export default function LogInForm({
       <div className="relative flex flex-col justify-center h-full">
         <button
           onClick={handleClose}
-          className="absolute top-0 left-0 text-gray-500 hover:text-black text-xl"
+          className="absolute top-0 left-0 text-primary hover:text-black text-xl"
           type="button"
         >
           X
         </button>
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Se connecter
-        </h2>
+        <h2 className="text-2xl font-bold text-center mb-6">Se connecter</h2>
 
         {/* Erreur générale */}
         {formErrors.general && (
@@ -147,16 +146,14 @@ export default function LogInForm({
         {/* Formulaire */}
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block text-sm font-bold">
               Email
             </label>
             <input
               id="email"
               type="email"
               value={email}
+              placeholder="Adresse email"
               onChange={handleEmailChange}
               className={`mt-1 block w-full p-2 border rounded-md ${
                 formErrors.email ? 'border-red-500' : ''
@@ -168,16 +165,14 @@ export default function LogInForm({
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-bold">
               Mot de passe
             </label>
             <input
               id="password"
               type="password"
               value={password}
+              placeholder="Mot de passe"
               onChange={handlePasswordChange}
               className={`mt-1 block w-full p-2 border rounded-md ${
                 formErrors.password ? 'border-red-500' : ''
@@ -205,7 +200,7 @@ export default function LogInForm({
         </form>
 
         {/* Lien de création de compte */}
-        <div className="text-center mt-10">
+        <div className="text-center mt-10 md:mt-16">
           <p className="text-primary font-bold mb-2">
             Pas de compte ? Créez-en un en quelques clics !
           </p>
@@ -215,6 +210,7 @@ export default function LogInForm({
             variant="secondary"
             handleButtonClick={(e) => {
               e.preventDefault();
+              setRegisterType('customer');
               setFormStatus('register');
             }}
           >
@@ -222,7 +218,7 @@ export default function LogInForm({
           </Cta>
         </div>
 
-        <ul className="mt-6 space-y-2 text-sm text-gray-700">
+        <ul className="mt-6 space-y-2 text-sm text-primary">
           <li className="flex items-center gap-2">
             <span className="w-6 h-6 flex items-center text-primary">
               <CheckMedalSvg />
@@ -242,6 +238,22 @@ export default function LogInForm({
             Suivez facilement vos commandes
           </li>
         </ul>
+
+        <div className="text-center mt-10 md:mt-16">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setRegisterType('pro_customer');
+              setFormStatus('register');
+            }}
+            className="flex gap-2 items-center justify-start text-secondary"
+          >
+            <span className="underline">Je crée un compte professionnel</span>{' '}
+            <div className="w-[6px] h-[6px] flex items-center rotate-180">
+              <Chevron />
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   );

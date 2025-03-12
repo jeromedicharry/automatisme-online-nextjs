@@ -7,6 +7,7 @@ export type FormStatusProps = 'login' | 'register' | 'reset';
 export default function useAuthModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<FormStatusProps>('login');
+
   const { loggedIn, loading, user } = useAuth();
 
   useEffect(() => {

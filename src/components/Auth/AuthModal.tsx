@@ -1,5 +1,5 @@
 // components/Auth/AuthModal.tsx
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import Modal from '@/components/Modals/Modal';
 import LogInForm from '@/components/Auth/LoginForm';
 import SignUpForm from '@/components/Auth/SignUpForm';
@@ -15,6 +15,7 @@ interface AuthModalProps {
   setFormStatus: Dispatch<SetStateAction<FormStatusProps>>;
   isNotClosable?: boolean;
 }
+export type RegisterTypeProps = 'customer' | 'pro_customer';
 
 const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
@@ -23,6 +24,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
   setFormStatus,
   isNotClosable = false,
 }) => {
+  const [registerType, setRegisterType] =
+    useState<RegisterTypeProps>('customer'); // ✅ Typage explicite
   return (
     <Modal
       isOpen={isOpen}
@@ -31,9 +34,18 @@ const AuthModal: React.FC<AuthModalProps> = ({
       size="small"
     >
       {formStatus === 'register' ? (
-        <SignUpForm setFormStatus={setFormStatus} handleCloseModal={onClose} />
+        <SignUpForm
+          setFormStatus={setFormStatus}
+          handleCloseModal={onClose}
+          registerType={registerType}
+          setRegisterType={setRegisterType}
+        />
       ) : formStatus === 'login' ? (
-        <LogInForm setFormStatus={setFormStatus} handleCloseModal={onClose} />
+        <LogInForm
+          setFormStatus={setFormStatus}
+          handleCloseModal={onClose}
+          setRegisterType={setRegisterType}
+        />
       ) : formStatus === 'reset' ? (
         <SendPasswordResetEmailForm
         //   setFormStatus={setFormStatus}
