@@ -142,6 +142,9 @@ export default function SignUpForm({
     }
     handleCloseModal();
   }
+  function handleCloseAfterSuccess() {
+    setFormStatus('login');
+  }
 
   if (wasSignUpSuccessful) {
     return (
@@ -166,10 +169,10 @@ export default function SignUpForm({
             <Cta
               slug="#"
               label="Fermer"
-              handleButtonClick={() => handleClose()}
+              handleButtonClick={() => handleCloseAfterSuccess()}
               variant="primaryHollow"
             >
-              Fermer
+              je me connecte
             </Cta>
           </div>
         </div>

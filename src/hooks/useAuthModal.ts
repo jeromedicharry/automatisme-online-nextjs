@@ -2,7 +2,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import useAuth from '@/hooks/useAuth';
 
-export type FormStatusProps = 'login' | 'register' | 'reset';
+export type FormStatusProps =
+  | 'login'
+  | 'register'
+  | 'forgot-password'
+  | 'reset';
 
 export default function useAuthModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);

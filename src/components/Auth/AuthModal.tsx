@@ -46,10 +46,10 @@ const AuthModal: React.FC<AuthModalProps> = ({
           handleCloseModal={onClose}
           setRegisterType={setRegisterType}
         />
-      ) : formStatus === 'reset' ? (
+      ) : formStatus === 'forgot-password' ? (
         <SendPasswordResetEmailForm
-        //   setFormStatus={setFormStatus}
-        //   handleCloseModal={onClose}
+          setFormStatus={setFormStatus}
+          handleCloseModal={onClose}
         />
       ) : (
         <></>

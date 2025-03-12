@@ -3,7 +3,7 @@ import React from 'react';
 
 export type AuthFormProps = {
   setFormStatus: React.Dispatch<
-    React.SetStateAction<'login' | 'register' | 'reset'>
+    React.SetStateAction<'login' | 'register' | 'forgot-password' | 'reset'>
   >;
   registerType?: RegisterTypeProps;
   setRegisterType: React.Dispatch<

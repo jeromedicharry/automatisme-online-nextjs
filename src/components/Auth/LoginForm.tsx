@@ -195,7 +195,7 @@ export default function LogInForm({
             )}
             <button
               type="button"
-              onClick={() => setFormStatus('reset')}
+              onClick={() => setFormStatus('forgot-password')}
               className="text-sm text-blue-link hover:underline leading-general block text-right mt-1 ml-auto"
             >
               Mot de passe oublié ?
@@ -204,7 +204,7 @@ export default function LogInForm({
 
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-md"
+            className="w-full bg-primary duration-300 hover:bg-primary-dark text-white py-2 rounded-md"
             disabled={loading}
           >
             {loading ? 'Connexion...' : 'Me connecter'}
