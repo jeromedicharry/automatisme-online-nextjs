@@ -1,39 +1,29 @@
-// Components
+// pages/checkout.tsx
 import Layout from '@/components/Layout/Layout';
-// import CheckoutForm from '@/components/Checkout/CheckoutForm';
-
-// Types
 import type { NextPage } from 'next';
-import { useEffect, useState } from 'react';
-import Modal from '@/components/Modals/Modal';
-import useAuth from '@/hooks/useAuth';
-import LogInForm from '@/components/Auth/LoginForm';
-import SignUpForm from '@/components/Auth/SignUpForm';
-import SendPasswordResetEmailForm from '@/components/Auth/SendPasswordResetEmailForm';
-
-export type FormStatusProps = 'login' | 'register' | 'reset';
+import { useEffect } from 'react';
+import AuthModal from '@/components/Auth/AuthModal';
+import useAuthModal from '@/hooks/useAuthModal';
 
 const Caisse: NextPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const {
+    isModalOpen,
+    formStatus,
+    setFormStatus,
+    openModal,
+    closeModal,
+    loading,
+    user,
+  } = useAuthModal();
 
-  const [formStatus, setFormStatus] = useState<FormStatusProps>('login');
-
-  const { loggedIn, loading, user } = useAuth();
+  // Ouvrir automatiquement la modale si l'utilisateur n'est pas connecté
   useEffect(() => {
-    if (loggedIn) {
-      setIsModalOpen(false);
+    if (!loading && !user) {
+      openModal('login');
     }
-  }, [loggedIn]);
+  }, [loading, user, openModal]);
 
   if (loading) return <div>Loading...</div>;
-
-  // const handleOpenModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <Layout
@@ -48,28 +38,13 @@ const Caisse: NextPage = () => {
         </h1>
         <pre>{JSON.stringify(user, null, 2)}</pre>
 
-        <Modal
+        <AuthModal
           isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          isNotClosable
-          size="small"
-        >
-          {formStatus === 'register' ? (
-            <SignUpForm
-              setFormStatus={setFormStatus}
-              handleCloseModal={handleCloseModal}
-            />
-          ) : formStatus === 'login' ? (
-            <LogInForm
-              setFormStatus={setFormStatus}
-              handleCloseModal={handleCloseModal}
-            />
-          ) : formStatus === 'reset' ? (
-            <SendPasswordResetEmailForm />
-          ) : (
-            <></>
-          )}
-        </Modal>
+          onClose={closeModal}
+          formStatus={formStatus}
+          setFormStatus={setFormStatus}
+          isNotClosable={true}
+        />
       </div>
       {/* <CheckoutForm /> */}
     </Layout>

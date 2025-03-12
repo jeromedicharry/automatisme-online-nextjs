@@ -254,7 +254,9 @@ export default function SignUpForm({
 
         {/* Lien vers connexion */}
         <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">Déjà un compte ?</p>
+          <p className="text-primary font-bold mb-1">
+            {"J'ai déjà un compte ?"}
+          </p>
           <Cta
             label="Se connecter"
             slug="#"

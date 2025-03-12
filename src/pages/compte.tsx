@@ -3,7 +3,7 @@ import Layout from '@/components/Layout/Layout';
 
 // Types
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import Modal from '@/components/Modals/Modal';
 // import useAuth from '@/hooks/useAuth';
 // import LogInForm from '@/components/Auth/LoginForm';
@@ -21,36 +21,35 @@ import {
 import TabLink, { TabType } from '@/components/Account/TabLink';
 import Orders from '@/components/Account/Orders';
 import Favorites from '@/components/Account/Favorites';
-import Addresses from '@/components/Account/addresses';
 import Profile from '@/components/Account/Profile';
 import Help from '@/components/Account/Help';
 import LogOut from '@/components/Auth/Logout';
-
-// type FormStatusProps = 'login' | 'register' | 'reset';
+import Addresses from '@/components/Account/Addresses';
+import AuthModal from '@/components/Auth/AuthModal';
+import useAuthModal from '@/hooks/useAuthModal';
 
 const Compte: NextPage = () => {
+  const {
+    isModalOpen,
+    formStatus,
+    setFormStatus,
+    openModal,
+    closeModal,
+    loading,
+    user,
+  } = useAuthModal();
+
   const [mobileNavClosed, setMobileNavClosed] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabType>('orders');
-  // const [isModalOpen, setIsModalOpen] = useState(true);
 
-  // const [formStatus, setFormStatus] = useState<FormStatusProps>('login');
+  // Ouvrir automatiquement la modale si l'utilisateur n'est pas connecté
+  useEffect(() => {
+    if (!loading && !user) {
+      openModal('login');
+    }
+  }, [loading, user, openModal]);
 
-  // const { loggedIn, loading, user } = useAuth();
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     setIsModalOpen(false);
-  //   }
-  // }, [loggedIn]);
-
-  // if (loading) return <div>Loading...</div>;
-
-  // const handleOpenModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  // const handleCloseModal = () => {
-  //   setIsModalOpen(false);
-  // };
+  if (loading) return <div>Loading...</div>;
 
   const navigation: {
     linkName: string;
@@ -154,30 +153,13 @@ const Compte: NextPage = () => {
             </section>
           </div>
         </Container>
-        {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
-
-        {/* <Modal
+        <AuthModal
           isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          isNotClosable
-          size="small"
-        >
-          {formStatus === 'register' ? (
-            <SignUpForm
-              setFormStatus={setFormStatus}
-              handleCloseModal={handleCloseModal}
-            />
-          ) : formStatus === 'login' ? (
-            <LogInForm
-              setFormStatus={setFormStatus}
-              handleCloseModal={handleCloseModal}
-            />
-          ) : formStatus === 'reset' ? (
-            <SendPasswordResetEmailForm />
-          ) : (
-            <>TOTO</>
-          )}
-        </Modal> */}
+          onClose={closeModal}
+          formStatus={formStatus}
+          setFormStatus={setFormStatus}
+          isNotClosable={true}
+        />
       </div>
     </Layout>
   );
