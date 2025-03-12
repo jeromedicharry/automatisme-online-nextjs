@@ -204,7 +204,7 @@ export default function LogInForm({
 
           <button
             type="submit"
-            className="w-full bg-primary duration-300 hover:bg-primary-dark text-white py-2 rounded-md"
+            className="w-full bg-primary duration-300 hover:bg-primary-dark text-white min-h-[43px] rounded-[5px] min-w-[170px] text-base leading-general px-4 py-2 gap-2"
             disabled={loading}
           >
             {loading ? 'Connexion...' : 'Me connecter'}

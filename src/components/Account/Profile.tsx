@@ -1,6 +1,7 @@
 import React from 'react';
 // import BreadCrumbs from '../atoms/BreadCrumbs';
 import BackToAccountNav from './BackToAccountNav';
+import useAuth from '@/hooks/useAuth';
 
 const Profile = ({
   setMobileNavClosed,
@@ -8,6 +9,10 @@ const Profile = ({
   setMobileNavClosed: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   // todo gérer la mise à jour des infos à la volée
+  const { user } = useAuth();
+
+  console.log({ user });
+
   return (
     <>
       <div className="md:hidden">
@@ -20,6 +25,7 @@ const Profile = ({
         <h2 className="font-medium text-xl leading-general mb-6">
           Informations du compte
         </h2>
+        <pre>{JSON.stringify(user, null, 2)}</pre>
       </div>
     </>
   );

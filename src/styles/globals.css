@@ -194,10 +194,11 @@ form textarea {
 }
 
 
-form input, form button {
+form input, form button, form textarea, form select {
   border-color: #042B60;
   outline-color: #E94E1B;
 }
+
 
 form ::placeholder {
   color: #6F6F6F;

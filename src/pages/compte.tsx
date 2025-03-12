@@ -24,7 +24,7 @@ import Favorites from '@/components/Account/Favorites';
 import Profile from '@/components/Account/Profile';
 import Help from '@/components/Account/Help';
 import LogOut from '@/components/Auth/Logout';
-import Addresses from '@/components/Account/Addresses';
+import Addresses from '@/components/Account/addresses';
 import AuthModal from '@/components/Auth/AuthModal';
 import useAuthModal from '@/hooks/useAuthModal';
 
@@ -40,11 +40,11 @@ const Compte: NextPage = () => {
   } = useAuthModal();
 
   const [mobileNavClosed, setMobileNavClosed] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<TabType>('addresses');
+  const [activeTab, setActiveTab] = useState<TabType>('orders');
 
   // Ouvrir automatiquement la modale si l'utilisateur n'est pas connecté
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && (!user || !user?.id)) {
       openModal('login');
     }
   }, [loading, user, openModal]);
@@ -105,7 +105,7 @@ const Compte: NextPage = () => {
     >
       <div>
         <Container>
-          <div className="flex gap-10">
+          <div className="flex gap-10 items-start mb-10 md:mb-16">
             <aside
               className={`max-md:mx-auto max-md:mb-10 md:mt-10 pb-3 pt-5 px-6 w-fit shadow-card rounded-lg bg-white sticky top-20 ${mobileNavClosed ? 'max-md:hidden' : ''}`}
             >
