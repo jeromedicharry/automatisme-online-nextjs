@@ -19,29 +19,94 @@ export default function LogInForm({
   handleCloseModal,
 }: AuthFormProps) {
   const router = useRouter();
-  const [logIn, { loading, error }] = useMutation(LOG_IN, {
+  const [logIn, { loading }] = useMutation(LOG_IN, {
     refetchQueries: [{ query: GET_USER }],
   });
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [formErrors, setFormErrors] = useState<{
+    email?: string;
+    password?: string;
+    general?: string;
+  }>({});
 
-  const errorMessage = error?.message || '';
-  const isEmailValid =
-    !errorMessage.includes('empty_email') &&
-    !errorMessage.includes('empty_username') &&
-    !errorMessage.includes('invalid_email') &&
-    !errorMessage.includes('invalid_username');
-  const isPasswordValid =
-    !errorMessage.includes('empty_password') &&
-    !errorMessage.includes('incorrect_password');
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    // Nettoyer l'erreur d'email quand l'utilisateur tape
+    setFormErrors((prev) => ({
+      ...prev,
+      email: undefined,
+      general: undefined,
+    }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    // Nettoyer l'erreur de mot de passe quand l'utilisateur tape
+    setFormErrors((prev) => ({
+      ...prev,
+      password: undefined,
+      general: undefined,
+    }));
+  };
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // Réinitialiser les erreurs
+    setFormErrors({});
+
+    // Validation côté client
+    if (!email) {
+      setFormErrors((prev) => ({ ...prev, email: 'Email requis' }));
+      return;
+    }
+
+    if (!password) {
+      setFormErrors((prev) => ({ ...prev, password: 'Mot de passe requis' }));
+      return;
+    }
+
     try {
-      await logIn({ variables: { login: email, password } });
-      // router.push('/');
-    } catch (err) {
-      console.error(err);
+      const result = await logIn({
+        variables: { login: email, password },
+      });
+
+      if (result.data?.loginWithCookies?.status === 'SUCCESS') {
+        // Connexion réussie
+        if (handleCloseModal) handleCloseModal();
+      }
+    } catch (err: any) {
+      console.log('Erreur de connexion:', err);
+
+      // Afficher le message d'erreur
+      const errorMessage = err.message || '';
+
+      // Gérer les différents types d'erreurs
+      if (
+        errorMessage.includes('empty_email') ||
+        errorMessage.includes('invalid_email') ||
+        errorMessage.includes('empty_username') ||
+        errorMessage.includes('invalid_username')
+      ) {
+        setFormErrors((prev) => ({ ...prev, email: 'Email invalide' }));
+      } else if (errorMessage.includes('empty_password')) {
+        setFormErrors((prev) => ({ ...prev, password: 'Mot de passe requis' }));
+      } else if (errorMessage.includes('incorrect_password')) {
+        setFormErrors((prev) => ({
+          ...prev,
+          password: 'Mot de passe incorrect',
+        }));
+      }
+      // Ajouter cette condition pour capturer les erreurs génériques
+      else {
+        setFormErrors((prev) => ({
+          ...prev,
+          general:
+            'Identifiants invalides. Veuillez vérifier votre email et mot de passe.',
+        }));
+      }
     }
   }
 
@@ -54,7 +119,7 @@ export default function LogInForm({
       router.push('/');
       return;
     }
-    handleCloseModal();
+    if (handleCloseModal) handleCloseModal();
   }
 
   return (
@@ -64,12 +129,20 @@ export default function LogInForm({
         <button
           onClick={handleClose}
           className="absolute top-0 left-0 text-gray-500 hover:text-black text-xl"
+          type="button"
         >
           X
         </button>
         <h2 className="text-2xl font-semibold text-center mb-6">
           Se connecter
         </h2>
+
+        {/* Erreur générale */}
+        {formErrors.general && (
+          <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {formErrors.general}
+          </div>
+        )}
 
         {/* Formulaire */}
         <form className="space-y-4" onSubmit={handleSubmit}>
@@ -84,12 +157,13 @@ export default function LogInForm({
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full p-2 border rounded-md"
-              required
+              onChange={handleEmailChange}
+              className={`mt-1 block w-full p-2 border rounded-md ${
+                formErrors.email ? 'border-red-500' : ''
+              }`}
             />
-            {!isEmailValid && (
-              <p className="text-red-500 text-sm mt-1">Email invalide.</p>
+            {formErrors.email && (
+              <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
             )}
           </div>
 
@@ -104,14 +178,13 @@ export default function LogInForm({
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full p-2 border rounded-md"
-              required
+              onChange={handlePasswordChange}
+              className={`mt-1 block w-full p-2 border rounded-md ${
+                formErrors.password ? 'border-red-500' : ''
+              }`}
             />
-            {!isPasswordValid && (
-              <p className="text-red-500 text-sm mt-1">
-                Mot de passe incorrect.
-              </p>
+            {formErrors.password && (
+              <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>
             )}
             <button
               type="button"
@@ -125,9 +198,9 @@ export default function LogInForm({
           <button
             type="submit"
             className="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-md"
-            disabled={loading || !isEmailValid || !isPasswordValid}
+            disabled={loading}
           >
-            Me connecter
+            {loading ? 'Connexion...' : 'Me connecter'}
           </button>
         </form>
 
