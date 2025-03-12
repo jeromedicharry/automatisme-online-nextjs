@@ -40,7 +40,7 @@ const Compte: NextPage = () => {
   } = useAuthModal();
 
   const [mobileNavClosed, setMobileNavClosed] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<TabType>('orders');
+  const [activeTab, setActiveTab] = useState<TabType>('addresses');
 
   // Ouvrir automatiquement la modale si l'utilisateur n'est pas connecté
   useEffect(() => {

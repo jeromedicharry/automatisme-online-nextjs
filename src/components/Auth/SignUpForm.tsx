@@ -110,7 +110,7 @@ export default function SignUpForm({
     }
 
     // Vérifier qu'il contient au moins un caractère spécial
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>-]/;
     if (!specialCharRegex.test(formData.password)) {
       setValidationError(
         'Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*...).',
@@ -145,18 +145,33 @@ export default function SignUpForm({
 
   if (wasSignUpSuccessful) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-        <div className="bg-white p-12 rounded-xl shadow-card max-w-md w-full text-center">
-          <h2 className="text-2xl font-semibold mb-4">Merci !</h2>
-          <p>Un lien de confirmation vous a été envoyé par email.</p>
-          <Cta
-            slug="#"
-            label="Fermer"
-            handleButtonClick={() => handleClose()}
-            variant="primaryHollow"
+      <div className="flex h-full w-full items-center justify-center relative p-6 md:p-12">
+        <div className="relative flex flex-col justify-center h-full w-full">
+          <button
+            onClick={handleClose}
+            className="absolute top-0 left-0 text-primary hover:text-black text-xl"
           >
-            Fermer
-          </Cta>
+            X
+          </button>
+          <div className="bg-white rounded-xl max-w-md w-full flex flex-col gap-4">
+            <h2 className="text-2xl font-semibold mb-4 text-primary text-center">
+              Votre inscription a bien été prise en compte !
+            </h2>
+            <p>Un lien de confirmation vous a été envoyé par email.</p>
+            <strong className="text-secondary mb-10">
+              {
+                "Pensez à bien renseigner vos adresses de livraison sur l'onglet 'Gérer mes adresses'."
+              }
+            </strong>
+            <Cta
+              slug="#"
+              label="Fermer"
+              handleButtonClick={() => handleClose()}
+              variant="primaryHollow"
+            >
+              Fermer
+            </Cta>
+          </div>
         </div>
       </div>
     );
@@ -306,7 +321,7 @@ export default function SignUpForm({
 
           <div>
             <div className="text-xs mb-2">
-              En cliquant sur ”Créer monte compte”, vous acceptez nos{' '}
+              {'En cliquant sur ”Créer monte compte”, vous acceptez nos '}
               <Link
                 href="/conditions-generales-de-vente"
                 className="underline duration-300 hover:text-secondary"
