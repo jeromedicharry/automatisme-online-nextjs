@@ -5,6 +5,7 @@ import Cta from '../atoms/Cta';
 import { AuthFormProps } from '@/types/auth';
 import { CheckMedalSvg } from '../SVG/Icons';
 import ToggleSwitch from '../atoms/ToggleSwitch';
+import { Eye, EyeOff } from 'lucide-react';
 
 const REGISTER_USER = gql`
   mutation registerUser(
@@ -40,6 +41,8 @@ export default function SignUpForm({
     email: '',
     password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
+
   const [validationError, setValidationError] = useState('');
 
   const wasSignUpSuccessful = Boolean(data?.registerUser?.user?.databaseId);
@@ -180,9 +183,10 @@ export default function SignUpForm({
               id="email"
               type="email"
               name="email"
+              placeholder="Adresse email"
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="mt-1 block w-full border"
               required
             />
           </div>
@@ -193,15 +197,26 @@ export default function SignUpForm({
             >
               Mot de passe
             </label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
-              required
-            />
+
+            <div className="relative">
+              <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Mot de passe"
+                value={formData.password}
+                onChange={handleChange}
+                className="mt-1 block w-full border"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-[50%] transform -translate-y-1/2 duration-300 text-breadcrumb-grey hover:text-primary"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <ToggleSwitch
@@ -255,7 +270,7 @@ export default function SignUpForm({
 
           <button
             type="submit"
-            className="w-full py-2 text-white bg-secondary rounded-md hover:bg-secondary-dark duration-300"
+            className="w-full py-2 text-white bg-secondary hover:bg-secondary-dark duration-300"
           >
             Créer mon compte {registerType === 'pro_customer' && 'pro'}
           </button>

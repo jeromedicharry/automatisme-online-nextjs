@@ -182,6 +182,18 @@ form label {
   color: #042B60;
 }
 
+form input {
+  color: #042B60;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+form textarea {
+  color: #042B60;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+
 form input, form button {
   border-color: #042B60;
   outline-color: #E94E1B;

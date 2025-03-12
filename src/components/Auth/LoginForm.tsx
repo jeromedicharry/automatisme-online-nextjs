@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
 import { AuthFormProps } from '@/types/auth';
 import { CheckMedalSvg, Chevron } from '../SVG/Icons';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LOG_IN = gql`
   mutation logIn($login: String!, $password: String!) {
@@ -26,6 +27,8 @@ export default function LogInForm({
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const [formErrors, setFormErrors] = useState<{
     email?: string;
     password?: string;
@@ -155,7 +158,7 @@ export default function LogInForm({
               value={email}
               placeholder="Adresse email"
               onChange={handleEmailChange}
-              className={`mt-1 block w-full p-2 border rounded-md ${
+              className={`mt-1 block w-full border rounded-md ${
                 formErrors.email ? 'border-red-500' : ''
               }`}
             />
@@ -168,16 +171,25 @@ export default function LogInForm({
             <label htmlFor="password" className="block text-sm font-bold">
               Mot de passe
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              placeholder="Mot de passe"
-              onChange={handlePasswordChange}
-              className={`mt-1 block w-full p-2 border rounded-md ${
-                formErrors.password ? 'border-red-500' : ''
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                placeholder="Mot de passe"
+                onChange={handlePasswordChange}
+                className={`mt-1 block w-full border rounded-md pr-10 ${
+                  formErrors?.password ? 'border-red-500' : ''
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-[50%] transform -translate-y-1/2 duration-300 text-breadcrumb-grey hover:text-primary"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {formErrors.password && (
               <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>
             )}
