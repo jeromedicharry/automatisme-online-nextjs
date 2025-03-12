@@ -26,7 +26,7 @@ const Cta = ({
   additionalClass?: string;
 }) => {
   const buttonClass =
-    'flex items-center justify-center  font-bold transition duration-300 ease-in-out rounded-[5px] min-w-[170px] border';
+    'flex items-center justify-center min-h-[43px] font-bold transition duration-300 ease-in-out rounded-[5px] min-w-[170px] border';
   const sizeClass =
     size === 'large'
       ? 'text-base leading-general px-12 py-3 gap-4 whitespace-nowrap'

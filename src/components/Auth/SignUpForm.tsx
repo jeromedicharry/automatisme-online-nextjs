@@ -6,6 +6,7 @@ import { AuthFormProps } from '@/types/auth';
 import { CheckMedalSvg } from '../SVG/Icons';
 import ToggleSwitch from '../atoms/ToggleSwitch';
 import { Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
 
 const REGISTER_USER = gql`
   mutation registerUser(
@@ -108,6 +109,15 @@ export default function SignUpForm({
       return;
     }
 
+    // Vérifier qu'il contient au moins un caractère spécial
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!specialCharRegex.test(formData.password)) {
+      setValidationError(
+        'Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*...).',
+      );
+      return;
+    }
+
     try {
       // Générer le username à partir de l'email
       const username = generateUsername(formData.email);
@@ -153,8 +163,8 @@ export default function SignUpForm({
   }
 
   return (
-    <div className="flex h-full items-center justify-center relative p-6 md:p-12">
-      <div className="relative flex flex-col justify-center h-full">
+    <div className="flex h-full w-full items-center justify-center relative p-6 md:p-12">
+      <div className="relative flex flex-col justify-center h-full w-full">
         {/* Bouton de fermeture */}
         <button
           onClick={handleClose}
@@ -268,17 +278,56 @@ export default function SignUpForm({
             </li>
           </ul>
 
-          <button
-            type="submit"
-            className="w-full py-2 text-white bg-secondary hover:bg-secondary-dark duration-300"
-          >
-            Créer mon compte {registerType === 'pro_customer' && 'pro'}
-          </button>
+          <div className="mt-8 space-y-1">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="stayLogged"
+                className="accent-primary w-5 h-5 rounded-[3px]"
+              />
+              <label htmlFor="stayLogged">
+                <span className=" text-primary">Restez connecté(e)</span>
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="newsletter"
+                className="accent-primary w-5 h-5 rounded-[3px]"
+              />
+              <label htmlFor="newsletter">
+                Recevez des{' '}
+                <span className=" font-bold">
+                  bons conseils et des promotions{' '}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <div className="text-xs mb-2">
+              En cliquant sur ”Créer monte compte”, vous acceptez nos{' '}
+              <Link
+                href="/conditions-generales-de-vente"
+                className="underline duration-300 hover:text-secondary"
+              >
+                {'Conditions générales d’utilisation'}
+              </Link>
+              .
+            </div>
+
+            <button
+              type="submit"
+              className="w-full font-bold min-h-[43px] flex justify-center items-center py-2 text-white bg-secondary hover:bg-secondary-dark duration-300 rounded-lg"
+            >
+              Créer mon compte {registerType === 'pro_customer' && 'pro'}
+            </button>
+          </div>
         </form>
 
         {/* Lien vers connexion */}
-        <div className="text-center mt-6">
-          <p className="text-primary font-bold mb-1">
+        <div className="text-center mt-10 md:mt-16">
+          <p className="text-primary font-bold mb-2">
             {"J'ai déjà un compte ?"}
           </p>
           <Cta

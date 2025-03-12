@@ -127,9 +127,9 @@ export default function LogInForm({
   }
 
   return (
-    <div className="flex h-full items-center justify-center relative p-6 md:px-12">
+    <div className="flex w-full h-full items-center justify-center relative p-6 md:p-12">
       {/* Bouton de fermeture */}
-      <div className="relative flex flex-col justify-center h-full">
+      <div className="relative flex flex-col justify-center h-full w-full">
         <button
           onClick={handleClose}
           className="absolute top-0 left-0 text-primary hover:text-black text-xl"
