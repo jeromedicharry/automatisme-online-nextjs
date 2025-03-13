@@ -31,6 +31,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
     lastName: '',
     phone: '',
     postcode: '',
+    email: '',
   });
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         lastName: initialData.lastName || '',
         phone: initialData.phone || '',
         postcode: initialData.postcode || '',
+        email: initialData.email || '',
       });
     }
   }, [initialData]);
@@ -220,6 +222,24 @@ const AddressForm: React.FC<AddressFormProps> = ({
             />
           </div>
         </div>
+
+        {addressType === 'billing' && (
+          <div>
+            <label htmlFor="email" className="block mb-1">
+              Email de facturation
+            </label>
+            <input
+              id="email"
+              value={addressData.email || ''}
+              onChange={(e) =>
+                setAddressData({ ...addressData, email: e.target.value })
+              }
+              required
+              type="email"
+              className="w-full p-2 border rounded"
+            />
+          </div>
+        )}
 
         {addressType === 'shipping' && (
           <div className="flex items-center gap-2 mt-4">

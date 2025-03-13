@@ -21,6 +21,7 @@ export type AddressData = {
   lastName: string;
   phone: string;
   postcode: string;
+  email?: string;
 };
 
 const Addresses = ({
@@ -64,17 +65,21 @@ const Addresses = ({
         id: user.id,
       };
 
-      if (
-        selectedAddress === 'billing' ||
-        (selectedAddress === 'shipping' && isBillingSameAsShipping)
-      ) {
+      if (selectedAddress === 'billing') {
         variables.billing = addressData;
       }
 
       if (selectedAddress === 'shipping') {
         variables.shipping = addressData;
-      }
 
+        if (isBillingSameAsShipping) {
+          // Si billing est mis à jour aussi, on s'assure de garder l'email existant
+          variables.billing = {
+            ...addressData,
+            email: billing?.email || addressData.email, // Préserve l'email
+          };
+        }
+      }
       await updateAddress({
         variables,
       });

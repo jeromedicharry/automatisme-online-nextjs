@@ -39,6 +39,12 @@ const AddressCard: React.FC<AddressCardProps> = ({ address, type, onEdit }) => {
       {address.phone && (
         <p className="mt-4">{formatPhoneNumber(address.phone)}</p>
       )}
+      {address.email && (
+        <div className="mt-4">
+          <h3 className="font-semibold mb-4">Email de facturation</h3>
+          <p>{address.email}</p>
+        </div>
+      )}
     </div>
   );
 };
