@@ -39,3 +39,13 @@ export const UPDATE_ADDRESS = gql`
     }
   }
 `;
+export const UPDATE_USER_EMAIL = gql`
+  mutation UPDATE_USER_EMAIL($id: ID!, $email: String!) {
+    updateUser(input: { id: $id, email: $email }) {
+      user {
+        id
+        email
+      }
+    }
+  }
+`;

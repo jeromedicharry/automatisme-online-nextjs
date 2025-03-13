@@ -21,7 +21,7 @@ import {
 import TabLink, { TabType } from '@/components/Account/TabLink';
 import Orders from '@/components/Account/Orders';
 import Favorites from '@/components/Account/Favorites';
-import Profile from '@/components/Account/Profile';
+import Profile from '@/components/Account/addresses/profile';
 import Help from '@/components/Account/Help';
 import LogOut from '@/components/Auth/Logout';
 import Addresses from '@/components/Account/addresses';
@@ -97,9 +97,9 @@ const Compte: NextPage = () => {
 
   return (
     <Layout
-      meta={{ title: 'Caisse' }}
-      title="Caisse"
-      uri="/checkout"
+      meta={{ title: 'Mon compte' }}
+      title="Mon compte"
+      uri="/compte"
       isBg
       excludeSeo
     >
