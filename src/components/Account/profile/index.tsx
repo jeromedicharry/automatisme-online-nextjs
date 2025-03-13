@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import BackToAccountNav from '../../BackToAccountNav';
+import BackToAccountNav from '../BackToAccountNav';
 import useAuth from '@/hooks/useAuth';
 import { UPDATE_USER_EMAIL } from '@/utils/gql/CUSTOMER_QUERIES';
 import EditableField from './EditableField';

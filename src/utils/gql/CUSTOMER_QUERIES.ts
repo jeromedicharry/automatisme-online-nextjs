@@ -20,6 +20,7 @@ export const GET_CUSTOMER_ADDRESSES = gql`
         }
         billing {
           ${ADDRESS_FIELDS}
+          email
         }
       }
     }
@@ -31,6 +32,7 @@ export const UPDATE_ADDRESS = gql`
       customer {
         billing {
           ${ADDRESS_FIELDS}
+          email
         }
         shipping {
           ${ADDRESS_FIELDS}
