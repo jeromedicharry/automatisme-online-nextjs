@@ -1,13 +1,13 @@
-// import Image from 'next/image';
+import Image from 'next/image';
 import React from 'react';
-// import { BrandStickerProps } from './ProductContent';
+import { BrandStickerProps } from './ProductContent';
 
 const ProductHeader = ({
   title,
-  // brand,
+  brand,
 }: {
   title: string;
-  // brand: BrandStickerProps;
+  brand?: BrandStickerProps;
 }) => {
   return (
     <header>
@@ -15,7 +15,7 @@ const ProductHeader = ({
         <h1>{title}</h1>
 
         <div className="h-fit">
-          {/* {brand?.thumbnail?.sourceUrl ? (
+          {brand?.thumbnail?.sourceUrl ? (
             <Image
               src={brand?.thumbnail.sourceUrl}
               width={80}
@@ -27,7 +27,7 @@ const ProductHeader = ({
             <span className="bg-secondary text-white text-sm leading-general px-2 py-1 rounded-md font-bold">
               {brand?.name}
             </span>
-          )} */}
+          )}
         </div>
       </div>
       <div>Avis vérifiés</div>

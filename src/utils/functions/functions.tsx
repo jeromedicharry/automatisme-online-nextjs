@@ -383,3 +383,7 @@ export const getCountryName = (countryCode: string) => {
   const country = COUNTRIES_LIST.find((c) => c.code === countryCode);
   return country ? country.name : '';
 };
+
+export const isProRole = (roles?: { name: string }[]): boolean => {
+  return roles?.some((role) => role.name === 'pro_customer') ?? false;
+};

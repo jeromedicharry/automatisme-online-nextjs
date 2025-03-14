@@ -44,8 +44,8 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
       </p>
       <p className="mb-[10px]">Widget Avis vérifiés</p>
       <ProductPrice
-        price={product?.price}
-        regularPrice={product?.regularPrice}
+        price={parseFloat(product?.price || '0')}
+        regularPrice={parseFloat(product?.regularPrice || '0')}
         variant="card"
       />
       <div className="mt-auto">

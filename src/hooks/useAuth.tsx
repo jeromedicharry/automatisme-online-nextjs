@@ -1,11 +1,12 @@
+import { isProRole } from '@/utils/functions/functions';
 import { useQuery, gql, ApolloError } from '@apollo/client';
 import React, { createContext, useContext, ReactNode } from 'react';
 
 export interface User {
   id: string;
   databaseId: number;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   roles: { nodes: { name: string }[] };
 }
@@ -13,6 +14,7 @@ export interface User {
 interface AuthData {
   loggedIn: boolean;
   user?: User;
+  countryCode?: string;
   loading: boolean;
   error?: ApolloError;
 }
@@ -27,7 +29,7 @@ const DEFAULT_STATE: AuthData = {
 const AuthContext = createContext(DEFAULT_STATE);
 
 export const GET_USER = gql`
-  query getUserId {
+  query GET_USER {
     viewer {
       id
       firstName
@@ -39,6 +41,11 @@ export const GET_USER = gql`
         }
       }
     }
+    customer {
+      billing {
+        country
+      }
+    }
   }
 `;
 
@@ -47,11 +54,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const user = data?.viewer;
   const loggedIn = Boolean(user);
 
+  const isPro = isProRole(user?.roles?.nodes);
+  const countryCode = data?.customer?.billing?.country;
+
   const value = {
     loggedIn,
     user,
+    isPro,
     loading,
     error,
+    countryCode,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

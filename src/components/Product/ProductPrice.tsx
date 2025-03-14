@@ -1,11 +1,14 @@
 // import useAuth from '@/hooks/useAuth';
 // import { calculerPrix } from '@/utils/functions/prices';
-import React, { useState } from 'react';
+import useAuth from '@/hooks/useAuth';
+import { isProRole } from '@/utils/functions/functions';
+import { calculerPrix } from '@/utils/functions/prices';
+import React, { useEffect, useState } from 'react';
 
 interface ProductPriceProps {
   onSale?: boolean;
-  price: string;
-  regularPrice: string;
+  price: number;
+  regularPrice: number;
   variant: 'card' | 'productPage';
   isProSession?: boolean;
   isProProduct?: boolean;
@@ -16,32 +19,36 @@ const ProductPrice = ({
   price,
   regularPrice,
   variant = 'card',
-  isProSession = false,
   // isProProduct = false,
 }: ProductPriceProps) => {
-  const [priceWithVAT] = useState(price);
-  const [regularPriceWithVAT] = useState(regularPrice);
+  const [priceWithVAT, setPriceWithVAT] = useState<number>(price);
+  const [regularPriceWithVAT, setRegularPriceWithVAT] =
+    useState<number>(regularPrice);
 
-  // Todo gérer la logique du calcul des prixs en fonction du user (isPro et sa TVA)
+  const { user, countryCode } = useAuth();
+  const isPro = isProRole(user?.roles?.nodes);
 
-  // const user = useAuth();
-
-  // useEffect(() => {
-  //   async function calculateVAT() {
-  //     try {
-  //       const calculatedPrice = await calculerPrix(price, false, 'FR');
-  //       const calculatedRegularPrice = await calculerPrix(
-  //         regularPrice,
-  //         false,
-  //         'FR',
-  //       );
-  //       setPriceWithVAT(calculatedPrice);
-  //       setRegularPriceWithVAT(calculatedRegularPrice);
-  //     } catch (error) {
-  //       console.error('Error calculating VAT:', error);
-  //     }
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    async function displayFormattedPrices(
+      price: number,
+      regularPrice: number,
+      countryCode: string,
+    ) {
+      try {
+        const calculatedPrice = await calculerPrix(price, isPro, countryCode);
+        const calculatedRegularPrice = await calculerPrix(
+          regularPrice,
+          isPro,
+          countryCode,
+        );
+        setPriceWithVAT(calculatedPrice);
+        setRegularPriceWithVAT(calculatedRegularPrice);
+      } catch (error) {
+        console.error('Error calculating VAT:', error);
+      }
+    }
+    displayFormattedPrices(price, regularPrice, countryCode || 'FR');
+  }, [isPro, price, regularPrice, countryCode]);
   return (
     <div className="flex items-center gap-4">
       <div
@@ -53,27 +60,23 @@ const ProductPrice = ({
           <span
             className={`absolute text-[0.5em] font-bold right-0 top-[0.25em]`}
           >
-            {isProSession ? 'HT' : 'TTC'}
+            {isPro ? 'HT' : 'TTC'}
           </span>
           <data className={`pr-1 text-[0.75em]`}>{priceWithVAT}</data>€
         </p>
-        <p className="text-dark-grey line-through mb-4 text-base">
-          <data>{regularPriceWithVAT}</data>
-          <span>€</span>
-          <span>{isProSession ? 'HT' : 'TTC'}</span>
-        </p>
+        {onSale && regularPrice && price && (
+          <p className="text-dark-grey line-through mb-4 text-base">
+            <data>{regularPriceWithVAT}</data>
+            <span>€</span>
+            {/* <span>{isPro ? ' HT' : ' TTC'}</span> */}
+          </p>
+        )}
       </div>
       {onSale && regularPrice && price && (
         <span
           className={`bg-secondary text-white rounded-[3px] font-bold ${variant === 'productPage' ? 'text-xs px-2 py-1 mb-[26px]' : 'text-base  px-4 py-2'} leading-general`}
         >
-          -
-          {Math.round(
-            ((parseFloat(regularPrice) - parseFloat(price)) /
-              parseFloat(regularPrice)) *
-              100,
-          )}
-          %
+          {Math.round(((150 - price) / regularPrice) * 100)}%
         </span>
       )}
     </div>

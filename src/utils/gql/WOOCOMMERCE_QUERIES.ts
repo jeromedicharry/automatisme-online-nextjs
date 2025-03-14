@@ -319,7 +319,7 @@ export const GET_CROSSSELL_PRODUCT_SIDE_DATA = gql`
 
 export const GET_TAX_RATES = gql`
   query GET_TAX_RATES {
-    taxRates {
+    taxRates(first: 100) {
       nodes {
         rate
         country

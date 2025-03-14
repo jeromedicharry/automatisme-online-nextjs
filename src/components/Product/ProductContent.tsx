@@ -30,7 +30,7 @@ export interface ProductContentProps extends CardProductProps {
       sourceUrl: string;
     }[];
   };
-  brands?: { nodes?: BrandStickerProps[] };
+  brands: { nodes: BrandStickerProps[] } | { nodes: [] } | undefined;
 }
 
 const ProductContent = ({
@@ -42,6 +42,11 @@ const ProductContent = ({
 }) => {
   // todo ajout aux favoris + mettre sur mobile ajout favioris + ajout au panier
   // todo mettre les bons pictos de paiement voir à les mettre en dur
+  // todo voir à ajouter plusieurs produits à la volée
+  // todo gérer les produits remplacés (à la place du prix, bouton vers le produit de remplacemnt)
+  // todo gérer les produits pros (si pas pro, on n'affiche pas le prix, bouton avec lien vers le compte pour passer en pro)
+  // todo gérer la réassurance : durée d'expédition dynamique selon produit ? + selon en stock ou pas
+
   return (
     <article className="my-12 md:my-16">
       <div className="flex flex-col md:grid md:grid-cols-2 items-start justify-between gap-5 max-md:max-w-md mx-auto">
@@ -55,7 +60,7 @@ const ProductContent = ({
           <div className="titre order-2 md:order-1">
             <ProductHeader
               title={product?.name}
-              // brand={product?.brands?.nodes[0] || null}
+              brand={product?.brands?.nodes[0]}
             />
           </div>
           <section className="prix order-3 md:order-2">
@@ -63,8 +68,8 @@ const ProductContent = ({
               <ProductPrice
                 onSale={product?.onSale}
                 variant="productPage"
-                price={product?.price}
-                regularPrice={product?.regularPrice}
+                price={parseFloat(product?.price || '0')}
+                regularPrice={parseFloat(product?.regularPrice || '0')}
               />
               <div className="max-md:hidden flex items-stretch gap-2 w-full justify-between mb-6">
                 <div
