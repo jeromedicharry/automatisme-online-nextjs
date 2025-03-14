@@ -387,3 +387,11 @@ export const getCountryName = (countryCode: string) => {
 export const isProRole = (roles?: { name: string }[]): boolean => {
   return roles?.some((role) => role.name === 'pro_customer') ?? false;
 };
+
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+};

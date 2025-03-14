@@ -19,7 +19,7 @@ import {
   UserSvg,
 } from '@/components/SVG/Icons';
 import TabLink, { TabType } from '@/components/Account/TabLink';
-import Orders from '@/components/Account/Orders';
+import Orders from '@/components/Account/orders';
 import Favorites from '@/components/Account/Favorites';
 import Profile from '@/components/Account/profile';
 import Help from '@/components/Account/Help';
@@ -27,6 +27,7 @@ import LogOut from '@/components/Auth/Logout';
 import Addresses from '@/components/Account/addresses';
 import AuthModal from '@/components/Auth/AuthModal';
 import useAuthModal from '@/hooks/useAuthModal';
+import { isProRole } from '@/utils/functions/functions';
 
 const Compte: NextPage = () => {
   const {
@@ -37,8 +38,9 @@ const Compte: NextPage = () => {
     closeModal,
     loading,
     user,
-    isPro,
   } = useAuthModal();
+
+  const isPro = isProRole(user?.roles?.nodes);
 
   const [mobileNavClosed, setMobileNavClosed] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabType>('orders');

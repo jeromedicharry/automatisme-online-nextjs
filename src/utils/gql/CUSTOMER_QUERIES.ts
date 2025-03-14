@@ -77,3 +77,39 @@ export const UPDATE_CUSTOMER_PRO_INFO = gql`
     }
   }
 `;
+
+export const GET_CUSTOMER_ORDERS = gql`
+  query GET_CUSTOMER_ORDERS($id: ID!, $first: Int, $after: String) {
+    customer(id: $id) {
+      orders(first: $first, after: $after) {
+        nodes {
+          orderNumber
+          date
+          status
+          subtotal(format: RAW)
+          totalTax(format: RAW)
+          total(format: RAW)
+          lineItems {
+            nodes {
+              product {
+                node {
+                  name
+                  sku
+                  featuredImage {
+                    node {
+                      sourceUrl(size: THUMBNAIL)
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+`;

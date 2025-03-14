@@ -14,6 +14,8 @@ interface ProductPriceProps {
   isProProduct?: boolean;
 }
 
+// attention aux types string number sur les prices Todo
+
 const ProductPrice = ({
   onSale = false,
   price,
