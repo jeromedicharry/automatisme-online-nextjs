@@ -14,6 +14,8 @@ export default function useAuthModal() {
 
   const { loggedIn, loading, user } = useAuth();
 
+  const isPro = isProRole(user?.roles?.nodes);
+
   useEffect(() => {
     if (loggedIn) {
       setIsModalOpen(false);
@@ -38,5 +40,10 @@ export default function useAuthModal() {
     loggedIn,
     loading,
     user,
+    isPro,
   };
 }
+
+export const isProRole = (roles?: { name: string }[]): boolean => {
+  return roles?.some((role) => role.name === 'pro_customer') ?? false;
+};

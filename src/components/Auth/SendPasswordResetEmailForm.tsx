@@ -3,7 +3,7 @@ import { useMutation, gql } from '@apollo/client';
 import { FormStatusProps } from '@/hooks/useAuthModal';
 import { ArrowLeft } from 'lucide-react';
 
-const SEND_PASSWORD_RESET_EMAIL = gql`
+export const SEND_PASSWORD_RESET_EMAIL = gql`
   mutation SendPasswordResetEmail($email: String!) {
     sendPasswordResetEmail(input: { username: $email }) {
       user {
@@ -31,7 +31,7 @@ const SendPasswordResetEmailForm: React.FC<SendPasswordResetEmailFormProps> = ({
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [sendResetEmail, { loading }] = useMutation(SEND_PASSWORD_RESET_EMAIL, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       setIsSuccess(true);
       setEmail('');
     },

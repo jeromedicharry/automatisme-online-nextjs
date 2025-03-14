@@ -7,7 +7,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  capabilities: string[];
+  roles: { nodes: { name: string }[] };
 }
 
 interface AuthData {
@@ -33,6 +33,11 @@ export const GET_USER = gql`
       firstName
       lastName
       email
+      roles {
+        nodes {
+          name
+        }
+      }
     }
   }
 `;

@@ -41,9 +41,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
       <div className="flex justify-between items-start">
         <div>
           <p className="font-bold text-sm leading-general mb-2">{label}</p>
-          <p className="text-dark-grey text-sm leading-general mb-2 ">
-            {value}
-          </p>
+          <p className="text-dark-grey text-sm leading-general">{value}</p>
         </div>
         <div className="w-fit">
           <button
@@ -72,7 +70,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
         />
         <div className="flex items-center gap-4">
           <Cta handleButtonClick={handleSubmit} slug="#" label="Confirmer">
-            Confirmer
+            Confirmer la mise à jour
           </Cta>
           <Cta
             handleButtonClick={handleCancel}

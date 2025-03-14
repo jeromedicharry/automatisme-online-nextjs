@@ -14,7 +14,7 @@ const LOG_IN = gql`
     }
   }
 `;
-
+//todo ajouter une étapge pour remplir SIRET et TVA et Company si manquant quand le user est pro et connecté
 export default function LogInForm({
   setFormStatus,
   handleCloseModal,

@@ -37,7 +37,7 @@ const TabLink = ({
         className={`w-full gap-3 font-bold flex items-center duration-300 justify-between ${activeTab === id ? 'text-secondary' : 'hover:opacity-80'}`}
       >
         <div className="flex gap-[10px] items-center">
-          {picto} {linkName}
+          <div className="w-6">{picto} </div> {linkName}
         </div>
         <div className="rotate-180">
           <Chevron />

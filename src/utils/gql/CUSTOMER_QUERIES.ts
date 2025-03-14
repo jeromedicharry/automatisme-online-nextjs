@@ -13,7 +13,7 @@ const ADDRESS_FIELDS = `
 `;
 
 export const GET_CUSTOMER_ADDRESSES = gql` 
-  query GET_CUSTOMER_INFOS($id: ID!) {
+  query GET_CUSTOMER_ADDRESSES($id: ID!) {
     customer(id: $id ) {
         shipping {
           ${ADDRESS_FIELDS}
@@ -47,6 +47,32 @@ export const UPDATE_USER_EMAIL = gql`
       user {
         id
         email
+      }
+    }
+  }
+`;
+
+export const GET_CUSTOMER_COMPANY = gql`
+  query GET_CUSTOMER_COMPANY($id: ID!) {
+    customer(id: $id) {
+      billing {
+        company
+      }
+    }
+  }
+`;
+
+export const UPDATE_CUSTOMER_PRO_INFO = gql`
+  mutation UPDATE_ADDRESS($id: ID!, $billing: CustomerAddressInput, $shipping: CustomerAddressInput) {
+    updateCustomer(input: { id: $id, billing: $billing, shipping: $shipping }) {
+      customer {
+        billing {
+          ${ADDRESS_FIELDS}
+          email
+        }
+        shipping {
+          ${ADDRESS_FIELDS}
+        }
       }
     }
   }

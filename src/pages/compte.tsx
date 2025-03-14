@@ -37,6 +37,7 @@ const Compte: NextPage = () => {
     closeModal,
     loading,
     user,
+    isPro,
   } = useAuthModal();
 
   const [mobileNavClosed, setMobileNavClosed] = useState<boolean>(false);
@@ -88,8 +89,8 @@ const Compte: NextPage = () => {
       picto: <InfoSvg />,
     },
     {
-      linkName: 'Passer en compte pro',
-      PageName: 'Passer en compte pro',
+      linkName: isPro ? 'Mon compte pro' : 'Passer en compte pro',
+      PageName: isPro ? 'Mon compte pro' : 'Passer en compte pro',
       id: 'pro',
       picto: <ProCustomerSvg />,
     },

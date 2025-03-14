@@ -30,6 +30,8 @@ const REGISTER_USER = gql`
   }
 `;
 
+// todo: voir à gérer le SIret + TVA à la création du compte pro
+
 export default function SignUpForm({
   setFormStatus,
   handleCloseModal,
@@ -161,11 +163,20 @@ export default function SignUpForm({
               Votre inscription a bien été prise en compte !
             </h2>
             <p>Un lien de confirmation vous a été envoyé par email.</p>
-            <strong className="text-secondary mb-10">
-              {
-                "Pensez à bien renseigner vos adresses de livraison sur l'onglet 'Gérer mes adresses'."
-              }
-            </strong>
+            <div className="mb-10">
+              <strong className="text-secondary">
+                {
+                  "Pensez à bien renseigner vos adresses de livraison sur l'onglet 'Gérer mes adresses'."
+                }
+              </strong>
+              {registerType === 'pro_customer' && (
+                <strong className=" text-primary block mt-2">
+                  {
+                    "Pensez à bien renseigner votre SIRET et numéro de TVA dans l'onglet 'Pour les pros'"
+                  }
+                </strong>
+              )}
+            </div>
             <Cta
               slug="#"
               label="Fermer"

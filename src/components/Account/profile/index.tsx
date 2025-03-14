@@ -4,6 +4,7 @@ import BackToAccountNav from '../BackToAccountNav';
 import useAuth from '@/hooks/useAuth';
 import { UPDATE_USER_EMAIL } from '@/utils/gql/CUSTOMER_QUERIES';
 import EditableField from './EditableField';
+import SendResetPasswordField from './SendResetPasswordField';
 
 const Profile = ({
   setMobileNavClosed,
@@ -52,6 +53,7 @@ const Profile = ({
           value={user?.email || ''}
           onSubmit={handleEmailSubmit}
         />
+        <SendResetPasswordField email={user?.email || ''} />
       </div>
     </>
   );
