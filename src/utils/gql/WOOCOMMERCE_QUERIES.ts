@@ -42,7 +42,12 @@ export const GET_SINGLE_PRODUCT = gql`
       slug
       description
       onSale
-      
+      acfProduct {
+        faq {
+          title
+          content
+        }
+      }
       name
       ... on SimpleProduct {
         salePrice(format: RAW)
@@ -124,6 +129,8 @@ export const GET_SINGLE_CATEGORY = gql`
 `;
 
 // isKit
+// isPro
+// hasPose
 
 export const GET_PRODUCTS_FROM_CATEGORY = gql`
   query GET_PRODUCTS_FROM_CATEGORY(
@@ -148,8 +155,7 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
               sourceUrl(size: MEDIUM)
             }
           }
-          isPro
-          hasPose
+
           ... on SimpleProduct {
             salePrice(format: RAW)
             regularPrice(format: RAW)

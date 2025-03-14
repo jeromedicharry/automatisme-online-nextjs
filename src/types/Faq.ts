@@ -1,5 +1,5 @@
 export interface FaqItemProps {
   title: string;
-  databaseId: number;
+  databaseId?: number;
   content: string;
 }

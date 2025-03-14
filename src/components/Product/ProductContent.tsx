@@ -8,6 +8,7 @@ import AddToCart from './AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
 import Image from 'next/image';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
+import ProductDetails from './ProductDetails';
 
 export interface BrandStickerProps {
   name: string;
@@ -25,6 +26,12 @@ export interface ProductContentProps extends CardProductProps {
   slug: string;
   description: string;
   stockQuantity: number;
+  acfProduct: {
+    faq: {
+      title: string;
+      content: string;
+    }[];
+  };
   galleryImages: {
     nodes: {
       sourceUrl: string;
@@ -129,7 +136,7 @@ const ProductContent = ({
           </section>
           <section className="videos order-6 md:order-4">Vidéos</section>
           <section className="details order-7 md:order-5">
-            <p>Détails</p>
+            <ProductDetails faqItems={product?.acfProduct?.faq} />
             <div className="flex mt-8 md:mt-6 gap-4 items-center justify-between">
               <span>Moyens de paiement sécurisés</span>
               <div className="flex items-center gap-2 bg-primary">
