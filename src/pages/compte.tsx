@@ -2,7 +2,7 @@
 import Layout from '@/components/Layout/Layout';
 
 // Types
-import type { NextPage } from 'next';
+import type { GetStaticProps } from 'next';
 import { useEffect, useState } from 'react';
 // import Modal from '@/components/Modals/Modal';
 // import useAuth from '@/hooks/useAuth';
@@ -28,8 +28,21 @@ import Addresses from '@/components/Account/addresses';
 import AuthModal from '@/components/Auth/AuthModal';
 import useAuthModal from '@/hooks/useAuthModal';
 import { isProRole } from '@/utils/functions/functions';
+import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
+import { CategoryMenuProps } from '@/types/Categories';
+import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 
-const Compte: NextPage = () => {
+const Compte = ({
+  themeSettings,
+  footerMenu1,
+  footerMenu2,
+  categoriesMenu,
+}: {
+  themeSettings: any;
+  footerMenu1: SimpleFooterMenuProps;
+  footerMenu2: SimpleFooterMenuProps;
+  categoriesMenu?: CategoryMenuProps[];
+}) => {
   const {
     isModalOpen,
     formStatus,
@@ -105,6 +118,10 @@ const Compte: NextPage = () => {
       uri="/compte"
       isBg
       excludeSeo
+      footerMenu1={footerMenu1}
+      footerMenu2={footerMenu2}
+      themeSettings={themeSettings}
+      categoriesMenu={categoriesMenu}
     >
       <div>
         <Container>
@@ -169,3 +186,14 @@ const Compte: NextPage = () => {
 };
 
 export default Compte;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const commonData = await fetchCommonData();
+
+  return {
+    props: {
+      ...commonData,
+    },
+    revalidate: 10000,
+  };
+};

@@ -5,7 +5,7 @@ import { LargeCartSvg } from './SVG/Icons';
 interface EmptyElementProps {
   picto?: React.ReactNode;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   ctaLabel?: string;
   ctaSlug?: string;
   ctaType?: 'primary' | 'secondary';
@@ -26,7 +26,9 @@ const EmptyElement = ({
       </div>
 
       <h2 className="mt-2 text-2xl font-bold">{title}</h2>
-      <div className="text-sm mt-2 mb-6 md:mb-4 text-balance">{subtitle}</div>
+      {subtitle && (
+        <div className="text-sm mt-2 mb-6 md:mb-4 text-balance">{subtitle}</div>
+      )}
       {ctaLabel && ctaSlug && (
         <Cta
           label={ctaLabel}

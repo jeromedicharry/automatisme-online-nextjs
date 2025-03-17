@@ -1,4 +1,4 @@
-export const Heart = () => {
+const Heart = () => {
   return (
     <svg
       width="19"
@@ -14,7 +14,7 @@ export const Heart = () => {
     </svg>
   );
 };
-export const HeartFilled = () => {
+const HeartFilled = () => {
   return (
     <svg
       width="19"
@@ -31,7 +31,7 @@ export const HeartFilled = () => {
   );
 };
 
-export const Chevron = () => (
+const Chevron = () => (
   <svg
     width="8"
     height="10"
@@ -45,7 +45,7 @@ export const Chevron = () => (
     />
   </svg>
 );
-export const Wifi = ({ variant }: { variant: 'bleu' | 'orange' }) => {
+const Wifi = ({ variant }: { variant: 'bleu' | 'orange' }) => {
   const color = variant === 'orange' ? '#f8d6b5' : '#dfeffd';
   return (
     <svg
@@ -71,7 +71,7 @@ export const Wifi = ({ variant }: { variant: 'bleu' | 'orange' }) => {
   );
 };
 
-export const UserSvg = () => {
+const UserSvg = () => {
   return (
     <svg
       width="24"
@@ -92,7 +92,7 @@ export const UserSvg = () => {
   );
 };
 
-export const PinPointSvg = () => {
+const PinPointSvg = () => {
   return (
     <svg
       width="19"
@@ -113,7 +113,7 @@ export const PinPointSvg = () => {
   );
 };
 
-export const SuccessBadgeSvg = () => {
+const SuccessBadgeSvg = () => {
   return (
     <svg
       width="24"
@@ -130,7 +130,7 @@ export const SuccessBadgeSvg = () => {
   );
 };
 
-export const LargeCartSvg = () => {
+const LargeCartSvg = () => {
   return (
     <svg
       width="82"
@@ -155,7 +155,7 @@ export const LargeCartSvg = () => {
   );
 };
 
-export const OrderSvg = () => {
+const OrderSvg = () => {
   return (
     <svg
       width="25"
@@ -172,7 +172,7 @@ export const OrderSvg = () => {
   );
 };
 
-export const HouseSvg = () => {
+const HouseSvg = () => {
   return (
     <svg
       width="25"
@@ -189,7 +189,7 @@ export const HouseSvg = () => {
   );
 };
 
-export const InfoSvg = () => {
+const InfoSvg = () => {
   return (
     <svg
       width="25"
@@ -229,7 +229,7 @@ export const InfoSvg = () => {
     </svg>
   );
 };
-export const ProCustomerSvg = () => {
+const ProCustomerSvg = () => {
   return (
     <svg
       width="25"
@@ -263,7 +263,7 @@ export const ProCustomerSvg = () => {
     </svg>
   );
 };
-export const LogoutSvg = () => {
+const LogoutSvg = () => {
   return (
     <svg
       width="25"
@@ -292,7 +292,7 @@ export const LogoutSvg = () => {
   );
 };
 
-export const HelpSvg = () => {
+const HelpSvg = () => {
   return (
     <svg
       width="24"
@@ -317,7 +317,7 @@ export const HelpSvg = () => {
   );
 };
 
-export const HeadPhonesSvg = () => {
+const HeadPhonesSvg = () => {
   return (
     <svg
       width="24"
@@ -334,7 +334,7 @@ export const HeadPhonesSvg = () => {
   );
 };
 
-export const CheckMedalSvg = () => {
+const CheckMedalSvg = () => {
   return (
     <svg
       width="24"
@@ -351,7 +351,7 @@ export const CheckMedalSvg = () => {
   );
 };
 
-export const QuestionMarkSvg = () => {
+const QuestionMarkSvg = () => {
   return (
     <svg
       width="25"
@@ -374,4 +374,24 @@ export const QuestionMarkSvg = () => {
       />
     </svg>
   );
+};
+
+export {
+  CheckMedalSvg,
+  Chevron,
+  HeadPhonesSvg,
+  Heart,
+  HeartFilled,
+  HelpSvg,
+  HouseSvg,
+  InfoSvg,
+  LargeCartSvg,
+  LogoutSvg,
+  OrderSvg,
+  PinPointSvg,
+  ProCustomerSvg,
+  QuestionMarkSvg,
+  SuccessBadgeSvg,
+  UserSvg,
+  Wifi,
 };

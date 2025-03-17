@@ -203,3 +203,27 @@ form input, form button, form textarea, form select {
 form ::placeholder {
   color: #6F6F6F;
 }
+
+
+.configurator-radio {
+  border-radius: 4px;
+  background-color: #FFF;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 145px;
+  width: fit-content;  
+  height: 48px;
+}
+
+.configurator-radio input[type=radio] {
+  accent-color: #E94E1B;
+  width: 16px;
+  height: 16px;
+}
+
+.message span {
+  color: #E94E1B;
+}
