@@ -30,23 +30,24 @@ const ProductDetails = ({ faqItems }: { faqItems: FaqItemProps[] }) => {
           }}
         />
       </ProductDetailAccordionItem>
-
-      <ProductDetailAccordionItem
-        picto={<QuestionMarkSvg />}
-        title="Questions fréquentes sur le produit"
-      >
-        {faqItems.map((item, key) => (
-          <div key={key} className="mt-4 first:mt-0">
-            <h3 className="font-bold mb-2 text-base leading-general">
-              {item.title}
-            </h3>
-            <div
-              className="text-sm leading-general"
-              dangerouslySetInnerHTML={{ __html: item.content }}
-            />
-          </div>
-        ))}
-      </ProductDetailAccordionItem>
+      {faqItems?.length > 0 && (
+        <ProductDetailAccordionItem
+          picto={<QuestionMarkSvg />}
+          title="Questions fréquentes sur le produit"
+        >
+          {faqItems.map((item, key) => (
+            <div key={key} className="mt-4 first:mt-0">
+              <h3 className="font-bold mb-2 text-base leading-general">
+                {item.title}
+              </h3>
+              <div
+                className="text-sm leading-general"
+                dangerouslySetInnerHTML={{ __html: item.content }}
+              />
+            </div>
+          ))}
+        </ProductDetailAccordionItem>
+      )}
     </>
   );
 };
