@@ -5,15 +5,15 @@ export async function calculerPrix(
   prixHT: number,
   isProSession: boolean,
   countryCode: string,
-) {
+): Promise<number> {
   if (isProSession) {
-    return Number(prixHT).toFixed(2); // Pas de TVA pour les sessions pro
+    return Math.round(prixHT * 100) / 100; // Pas de TVA pour les sessions pro
   } else {
     const tauxTVA = (await getTauxTVA(countryCode)) || 20;
 
     const prixFinal = prixHT * (1 + tauxTVA / 100);
 
-    return Number(prixFinal).toFixed(2);
+    return Math.round(prixFinal * 100) / 100;
   }
 }
 

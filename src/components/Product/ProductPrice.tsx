@@ -64,11 +64,14 @@ const ProductPrice = ({
           >
             {isPro ? 'HT' : 'TTC'}
           </span>
-          <data className={`pr-1 text-[0.75em]`}>{priceWithVAT}</data>€
+          <data className={`pr-1 text-[0.75em]`}>
+            {priceWithVAT.toFixed(2)}
+          </data>
+          €
         </p>
         {onSale && regularPrice && price && (
           <p className="text-dark-grey line-through mb-4 text-base">
-            <data>{regularPriceWithVAT}</data>
+            <data>{regularPriceWithVAT.toFixed(2)}</data>
             <span>€</span>
             {/* <span>{isPro ? ' HT' : ' TTC'}</span> */}
           </p>
@@ -78,7 +81,7 @@ const ProductPrice = ({
         <span
           className={`bg-secondary text-white rounded-[3px] font-bold ${variant === 'productPage' ? 'text-xs px-2 py-1 mb-[26px]' : 'text-base  px-4 py-2'} leading-general`}
         >
-          {Math.round(((150 - price) / regularPrice) * 100)}%
+          {Math.round(((regularPrice - price) / regularPrice) * 100)}%
         </span>
       )}
     </div>
