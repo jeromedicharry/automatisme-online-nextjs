@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { RootObject, Product } from '@/stores/CartProvider';
 
 import { ChangeEvent } from 'react';
+import { COUNTRIES_LIST } from '../constants/COUNTRIES_LIST';
 // import { IVariationNodes } from '@/components/Product/AddToCart';
 
 /* Interface for products*/
@@ -338,4 +339,59 @@ export const makeRelativeLink = (url: string): string => {
   }
 
   return url.startsWith(adminUrl) ? url.replace(adminUrl, '') : url;
+};
+
+export function formatPhoneNumber(phone: string) {
+  if (!phone) return '';
+
+  // Supprimer tout sauf les chiffres et le +
+  let cleaned = phone.replace(/[^\d+]/g, '');
+
+  // Vérifier si le numéro commence par un indicatif international
+  let hasInternationalPrefix = cleaned.startsWith('+');
+
+  // Supprimer le + temporairement pour la mise en forme
+  if (hasInternationalPrefix) {
+    cleaned = cleaned.substring(1);
+  }
+
+  // Détecter la longueur du numéro pour adapter le format
+  if (cleaned.length === 10) {
+    // Format national (ex: FR, BE, etc.)
+    cleaned = cleaned.replace(
+      /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
+      '$1 $2 $3 $4 $5',
+    );
+  } else if (cleaned.length === 11 && cleaned.startsWith('1')) {
+    // USA / Canada (ex: 1XXXXXXXXXX -> (XXX) XXX-XXXX)
+    cleaned = cleaned.replace(/1(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+  } else if (cleaned.length >= 11 && cleaned.length <= 15) {
+    // Format international standard (ex: +33 6 XX XX XX XX)
+    cleaned = cleaned
+      .replace(
+        /(\d{1,3})(\d{2,3})(\d{2,3})(\d{2,3})(\d{0,4})/,
+        '$1 $2 $3 $4 $5',
+      )
+      .trim();
+  }
+
+  // Ajouter de nouveau le préfixe international si présent
+  return hasInternationalPrefix ? `+${cleaned}` : cleaned;
+}
+
+export const getCountryName = (countryCode: string) => {
+  const country = COUNTRIES_LIST.find((c) => c.code === countryCode);
+  return country ? country.name : '';
+};
+
+export const isProRole = (roles?: { name: string }[]): boolean => {
+  return roles?.some((role) => role.name === 'pro_customer') ?? false;
+};
+
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
 };

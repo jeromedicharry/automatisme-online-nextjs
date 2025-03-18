@@ -35,7 +35,7 @@ const Product: NextPage = ({
       themeSettings={themeSettings}
     >
       <Container>
-        <BreadCrumbs breadCrumbs={product.seo.breadcrumbs} />
+        <BreadCrumbs breadCrumbs={product.seo?.breadcrumbs} />
         <ProductContent
           product={product}
           paymentPictos={themeSettings?.paymentPictos}

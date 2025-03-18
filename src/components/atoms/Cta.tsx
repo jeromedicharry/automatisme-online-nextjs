@@ -26,19 +26,19 @@ const Cta = ({
   additionalClass?: string;
 }) => {
   const buttonClass =
-    'flex items-center justify-center  font-bold transition duration-300 ease-in-out rounded-[5px] min-w-[170px] border';
+    'flex items-center justify-center font-bold transition duration-300 ease-in-out rounded-[5px] min-w-[170px] border';
   const sizeClass =
     size === 'large'
       ? 'text-base leading-general px-12 py-3 gap-4 whitespace-nowrap'
       : size === 'small'
-        ? 'text-xs leading-general px-2 py-1 gap-[2px]'
-        : 'text-base leading-general px-4 py-2 gap-2';
+        ? 'text-xs leading-general px-2 py-1 gap-[2px] min-h-[24px] min-w-fit'
+        : 'text-base leading-general px-4 py-2 gap-2 min-h-[43px]';
 
   const variantClasses = {
     primary:
       'bg-primary text-white hover:bg-primary-dark border-primary hover:border-primary-dark',
     primaryHollow:
-      'border border-primary-dark text-primary-dark hover:bg-primary-dark hover:text-white',
+      'border border-primary text-primary hover:bg-primary hover:text-white',
     secondary:
       'bg-secondary text-white hover:bg-secondary-dark border-secondary hover:border-secondary-dark',
     secondaryHollow:

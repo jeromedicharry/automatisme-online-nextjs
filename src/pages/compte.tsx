@@ -2,8 +2,8 @@
 import Layout from '@/components/Layout/Layout';
 
 // Types
-import type { NextPage } from 'next';
-import { useState } from 'react';
+import type { GetStaticProps } from 'next';
+import { useEffect, useState } from 'react';
 // import Modal from '@/components/Modals/Modal';
 // import useAuth from '@/hooks/useAuth';
 // import LogInForm from '@/components/Auth/LoginForm';
@@ -11,47 +11,61 @@ import { useState } from 'react';
 // import SendPasswordResetEmailForm from '@/components/Auth/SendPasswordResetEmailForm';
 import Container from '@/components/container';
 import {
-  Chevron,
   Heart,
   HouseSvg,
   InfoSvg,
-  LogoutSvg,
   OrderSvg,
   ProCustomerSvg,
   UserSvg,
 } from '@/components/SVG/Icons';
 import TabLink, { TabType } from '@/components/Account/TabLink';
-import Orders from '@/components/Account/Orders';
+import Orders from '@/components/Account/orders';
 import Favorites from '@/components/Account/Favorites';
-import Addresses from '@/components/Account/addresses';
-import Profile from '@/components/Account/Profile';
+import Profile from '@/components/Account/profile';
 import Help from '@/components/Account/Help';
+import LogOut from '@/components/Auth/Logout';
+import Addresses from '@/components/Account/addresses';
+import AuthModal from '@/components/Auth/AuthModal';
+import useAuthModal from '@/hooks/useAuthModal';
+import { isProRole } from '@/utils/functions/functions';
+import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
+import { CategoryMenuProps } from '@/types/Categories';
+import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 
-// type FormStatusProps = 'login' | 'register' | 'reset';
+const Compte = ({
+  themeSettings,
+  footerMenu1,
+  footerMenu2,
+  categoriesMenu,
+}: {
+  themeSettings: any;
+  footerMenu1: SimpleFooterMenuProps;
+  footerMenu2: SimpleFooterMenuProps;
+  categoriesMenu?: CategoryMenuProps[];
+}) => {
+  const {
+    isModalOpen,
+    formStatus,
+    setFormStatus,
+    openModal,
+    closeModal,
+    loading,
+    user,
+  } = useAuthModal();
 
-const Compte: NextPage = () => {
+  const isPro = isProRole(user?.roles?.nodes);
+
   const [mobileNavClosed, setMobileNavClosed] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabType>('orders');
-  // const [isModalOpen, setIsModalOpen] = useState(true);
 
-  // const [formStatus, setFormStatus] = useState<FormStatusProps>('login');
+  // Ouvrir automatiquement la modale si l'utilisateur n'est pas connecté
+  useEffect(() => {
+    if (!loading && (!user || !user?.id)) {
+      openModal('login');
+    }
+  }, [loading, user, openModal]);
 
-  // const { loggedIn, loading, user } = useAuth();
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     setIsModalOpen(false);
-  //   }
-  // }, [loggedIn]);
-
-  // if (loading) return <div>Loading...</div>;
-
-  // const handleOpenModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  // const handleCloseModal = () => {
-  //   setIsModalOpen(false);
-  // };
+  if (loading) return <div>Loading...</div>;
 
   const navigation: {
     linkName: string;
@@ -90,28 +104,28 @@ const Compte: NextPage = () => {
       picto: <InfoSvg />,
     },
     {
-      linkName: 'Passer en compte pro',
-      PageName: 'Passer en compte pro',
+      linkName: isPro ? 'Mon compte pro' : 'Passer en compte pro',
+      PageName: isPro ? 'Mon compte pro' : 'Passer en compte pro',
       id: 'pro',
       picto: <ProCustomerSvg />,
     },
   ];
 
-  const handleLogout = () => {
-    console.log('lgout');
-  };
-
   return (
     <Layout
-      meta={{ title: 'Caisse' }}
-      title="Caisse"
-      uri="/checkout"
+      meta={{ title: 'Mon compte' }}
+      title="Mon compte"
+      uri="/compte"
       isBg
       excludeSeo
+      footerMenu1={footerMenu1}
+      footerMenu2={footerMenu2}
+      themeSettings={themeSettings}
+      categoriesMenu={categoriesMenu}
     >
       <div>
         <Container>
-          <div className="flex gap-10">
+          <div className="flex gap-10 items-start mb-10 md:mb-16">
             <aside
               className={`max-md:mx-auto max-md:mb-10 md:mt-10 pb-3 pt-5 px-6 w-fit shadow-card rounded-lg bg-white sticky top-20 ${mobileNavClosed ? 'max-md:hidden' : ''}`}
             >
@@ -129,19 +143,7 @@ const Compte: NextPage = () => {
                     />
                   ))}
                   <li className="min-w-[230px]">
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                      }}
-                      className={`w-full gap-3 font-bold flex items-center duration-300 justify-between`}
-                    >
-                      <div className="flex gap-[10px] items-center">
-                        <LogoutSvg /> Déconnexion
-                      </div>
-                      <div className="rotate-180">
-                        <Chevron />
-                      </div>
-                    </button>
+                    <LogOut />
                   </li>
                 </ul>
               </nav>
@@ -171,33 +173,27 @@ const Compte: NextPage = () => {
             </section>
           </div>
         </Container>
-        {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
-
-        {/* <Modal
+        <AuthModal
           isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          isNotClosable
-          size="small"
-        >
-          {formStatus === 'register' ? (
-            <SignUpForm
-              setFormStatus={setFormStatus}
-              handleCloseModal={handleCloseModal}
-            />
-          ) : formStatus === 'login' ? (
-            <LogInForm
-              setFormStatus={setFormStatus}
-              handleCloseModal={handleCloseModal}
-            />
-          ) : formStatus === 'reset' ? (
-            <SendPasswordResetEmailForm />
-          ) : (
-            <>TOTO</>
-          )}
-        </Modal> */}
+          onClose={closeModal}
+          formStatus={formStatus}
+          setFormStatus={setFormStatus}
+          isNotClosable={true}
+        />
       </div>
     </Layout>
   );
 };
 
 export default Compte;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const commonData = await fetchCommonData();
+
+  return {
+    props: {
+      ...commonData,
+    },
+    revalidate: 10000,
+  };
+};

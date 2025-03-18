@@ -13,10 +13,10 @@ export const PRODUCT_CARD_FRAGMENT = `
   }
   price(format: RAW)
   salePrice(format: RAW)
-  isPro
-  hasPose
   regularPrice(format: RAW)
   sku
+  isPro
+  hasPose
   isKit
 `;
 
@@ -26,6 +26,8 @@ export const PRODUCT_CARD_FRAGMENT = `
 //     name
 //   }
 // }
+
+// isKit
 
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
@@ -38,7 +40,12 @@ export const GET_SINGLE_PRODUCT = gql`
       slug
       description
       onSale
-      
+      acfProduct {
+        faq {
+          title
+          content
+        }
+      }
       name
       ... on SimpleProduct {
         salePrice(format: RAW)
@@ -47,6 +54,8 @@ export const GET_SINGLE_PRODUCT = gql`
         id
         stockQuantity
         sku
+        isPro
+        hasPose
         isKit
         galleryImages {
           nodes {
@@ -57,16 +66,20 @@ export const GET_SINGLE_PRODUCT = gql`
         upsell {
           nodes {
             ... on SimpleProduct {
-              isKit
               ${PRODUCT_CARD_FRAGMENT}
+              isPro
+              hasPose
+              isKit
             } 
           }
         }
         crossSell {
           nodes {
             ... on SimpleProduct {
-              isKit
               ${PRODUCT_CARD_FRAGMENT}
+              isPro
+              hasPose
+              isKit
             } 
           }
         }
@@ -145,8 +158,7 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
               sourceUrl(size: MEDIUM)
             }
           }
-          isPro
-          hasPose
+
           ... on SimpleProduct {
             salePrice(format: RAW)
             regularPrice(format: RAW)
@@ -155,9 +167,11 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
             id
             taxClass
             sku
-            isKit
             uri
             slug
+            isPro
+            hasPose
+            isKit
           }
         }
         pageInfo {
@@ -287,8 +301,8 @@ export const GET_RELATED_PRODUCT_SIDE_DATA = gql`
         upsell {
           nodes {
             ... on SimpleProduct {
-              isKit
               ${PRODUCT_CARD_FRAGMENT}
+              isKit
             } 
           }
         }
@@ -296,6 +310,7 @@ export const GET_RELATED_PRODUCT_SIDE_DATA = gql`
     }
   }
 `;
+// isKit
 
 export const GET_CROSSSELL_PRODUCT_SIDE_DATA = gql`
   query GET_PRODUCT_SIDE_DATA ($id: ID!, $idType: ProductIdTypeEnum = DATABASE_ID) {
@@ -304,8 +319,8 @@ export const GET_CROSSSELL_PRODUCT_SIDE_DATA = gql`
         crossSell {
           nodes {
             ... on SimpleProduct {
-              isKit
               ${PRODUCT_CARD_FRAGMENT}
+              isKit
             } 
           }
         }
@@ -316,7 +331,7 @@ export const GET_CROSSSELL_PRODUCT_SIDE_DATA = gql`
 
 export const GET_TAX_RATES = gql`
   query GET_TAX_RATES {
-    taxRates {
+    taxRates(first: 100) {
       nodes {
         rate
         country

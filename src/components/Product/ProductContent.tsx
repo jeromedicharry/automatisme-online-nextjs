@@ -8,6 +8,7 @@ import AddToCart from './AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
 import Image from 'next/image';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
+import ProductDetails from './ProductDetails';
 
 export interface BrandStickerProps {
   name: string;
@@ -20,17 +21,24 @@ export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
   isPro: boolean;
   hasPose: boolean;
+  isKit: boolean;
   uri: string;
   seo: SeoProps;
   slug: string;
   description: string;
   stockQuantity: number;
+  acfProduct: {
+    faq: {
+      title: string;
+      content: string;
+    }[];
+  };
   galleryImages: {
     nodes: {
       sourceUrl: string;
     }[];
   };
-  brands?: { nodes?: BrandStickerProps[] };
+  brands: { nodes: BrandStickerProps[] } | { nodes: [] } | undefined;
 }
 
 const ProductContent = ({
@@ -42,6 +50,11 @@ const ProductContent = ({
 }) => {
   // todo ajout aux favoris + mettre sur mobile ajout favioris + ajout au panier
   // todo mettre les bons pictos de paiement voir à les mettre en dur
+  // todo voir à ajouter plusieurs produits à la volée
+  // todo gérer les produits remplacés (à la place du prix, bouton vers le produit de remplacemnt)
+  // todo gérer les produits pros (si pas pro, on n'affiche pas le prix, bouton avec lien vers le compte pour passer en pro)
+  // todo gérer la réassurance : durée d'expédition dynamique selon produit ? + selon en stock ou pas
+
   return (
     <article className="my-12 md:my-16">
       <div className="flex flex-col md:grid md:grid-cols-2 items-start justify-between gap-5 max-md:max-w-md mx-auto">
@@ -55,7 +68,7 @@ const ProductContent = ({
           <div className="titre order-2 md:order-1">
             <ProductHeader
               title={product?.name}
-              // brand={product?.brands?.nodes[0] || null}
+              brand={product?.brands?.nodes[0]}
             />
           </div>
           <section className="prix order-3 md:order-2">
@@ -63,8 +76,8 @@ const ProductContent = ({
               <ProductPrice
                 onSale={product?.onSale}
                 variant="productPage"
-                price={product?.price}
-                regularPrice={product?.regularPrice}
+                price={parseFloat(product?.price || '0')}
+                regularPrice={parseFloat(product?.regularPrice || '0')}
               />
               <div className="max-md:hidden flex items-stretch gap-2 w-full justify-between mb-6">
                 <div
@@ -124,7 +137,7 @@ const ProductContent = ({
           </section>
           <section className="videos order-6 md:order-4">Vidéos</section>
           <section className="details order-7 md:order-5">
-            <p>Détails</p>
+            <ProductDetails faqItems={product?.acfProduct?.faq} />
             <div className="flex mt-8 md:mt-6 gap-4 items-center justify-between">
               <span>Moyens de paiement sécurisés</span>
               <div className="flex items-center gap-2 bg-primary">

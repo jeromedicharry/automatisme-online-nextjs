@@ -8,7 +8,7 @@ const BlocIntroLarge = ({
 }: {
   title: string;
   isH1?: boolean;
-  subtitle: string;
+  subtitle?: string;
 }) => {
   if (!title && !subtitle) return null;
   return (

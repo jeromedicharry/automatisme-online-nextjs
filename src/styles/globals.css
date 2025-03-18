@@ -177,3 +177,53 @@ svg {
   width: 90px;
   height: auto;
 }
+
+form label {
+  color: #042B60;
+}
+
+form input {
+  color: #042B60;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+form textarea {
+  color: #042B60;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+
+form input, form button, form textarea, form select {
+  border-color: #042B60;
+  outline-color: #E94E1B;
+}
+
+
+form ::placeholder {
+  color: #6F6F6F;
+}
+
+
+.configurator-radio {
+  border-radius: 4px;
+  background-color: #FFF;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 145px;
+  width: fit-content;  
+  height: 48px;
+}
+
+.configurator-radio input[type=radio] {
+  accent-color: #E94E1B;
+  width: 16px;
+  height: 16px;
+}
+
+.message span {
+  color: #E94E1B;
+}

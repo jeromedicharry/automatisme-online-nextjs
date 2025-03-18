@@ -29,7 +29,7 @@ const ProductGalerie = ({
         className="w-full"
       >
         {images.map((image, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide key={index} className="flex justify-center">
             <figure className="relative max-w-sm md:max-w-[520px] flex justify-center">
               <Image
                 src={image.sourceUrl}
