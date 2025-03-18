@@ -1,10 +1,6 @@
 import { gql } from '@apollo/client';
 import { seoFields } from './SEO';
 
-// isPro
-// hasPose
-// isKit
-
 export const PRODUCT_CARD_FRAGMENT = `
   databaseId
   name
@@ -17,9 +13,11 @@ export const PRODUCT_CARD_FRAGMENT = `
   }
   price(format: RAW)
   salePrice(format: RAW)
-
   regularPrice(format: RAW)
   sku
+  isPro
+  hasPose
+  isKit
 `;
 
 // todo gérer les brands
@@ -56,6 +54,9 @@ export const GET_SINGLE_PRODUCT = gql`
         id
         stockQuantity
         sku
+        isPro
+        hasPose
+        isKit
         galleryImages {
           nodes {
             sourceUrl
@@ -66,6 +67,9 @@ export const GET_SINGLE_PRODUCT = gql`
           nodes {
             ... on SimpleProduct {
               ${PRODUCT_CARD_FRAGMENT}
+              isPro
+              hasPose
+              isKit
             } 
           }
         }
@@ -73,6 +77,9 @@ export const GET_SINGLE_PRODUCT = gql`
           nodes {
             ... on SimpleProduct {
               ${PRODUCT_CARD_FRAGMENT}
+              isPro
+              hasPose
+              isKit
             } 
           }
         }
@@ -128,10 +135,6 @@ export const GET_SINGLE_CATEGORY = gql`
   }
 `;
 
-// isKit
-// isPro
-// hasPose
-
 export const GET_PRODUCTS_FROM_CATEGORY = gql`
   query GET_PRODUCTS_FROM_CATEGORY(
     $after: String
@@ -166,6 +169,9 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
             sku
             uri
             slug
+            isPro
+            hasPose
+            isKit
           }
         }
         pageInfo {
@@ -288,8 +294,6 @@ export const GET_CUSTOMER = gql`
   }
 `;
 
-// isKit
-
 export const GET_RELATED_PRODUCT_SIDE_DATA = gql`
   query GET_PRODUCT_SIDE_DATA ($id: ID!, $idType: ProductIdTypeEnum = DATABASE_ID) {
     product(id: $id, idType: $idType) {
@@ -298,6 +302,7 @@ export const GET_RELATED_PRODUCT_SIDE_DATA = gql`
           nodes {
             ... on SimpleProduct {
               ${PRODUCT_CARD_FRAGMENT}
+              isKit
             } 
           }
         }
@@ -315,6 +320,7 @@ export const GET_CROSSSELL_PRODUCT_SIDE_DATA = gql`
           nodes {
             ... on SimpleProduct {
               ${PRODUCT_CARD_FRAGMENT}
+              isKit
             } 
           }
         }

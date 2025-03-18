@@ -17,8 +17,6 @@ sliderAdvices {
     }
 }`;
 
-// isKit sur AcfPageBlocsBlocFeaturedProductsLayout
-
 export const blocsFields = `
   blocs {
 
@@ -71,6 +69,7 @@ export const blocsFields = `
                 ... on SimpleProduct {
                     ${PRODUCT_CARD_FRAGMENT}
                     sku
+                    isKit
                 }
             }
         }

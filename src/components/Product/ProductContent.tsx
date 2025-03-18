@@ -21,6 +21,7 @@ export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
   isPro: boolean;
   hasPose: boolean;
+  isKit: boolean;
   uri: string;
   seo: SeoProps;
   slug: string;
