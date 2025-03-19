@@ -15,13 +15,13 @@ export default function Container({
 }: ContainerProps) {
   return (
     <div
-      className={`w-full mx-auto ${mobileFull ? '' : 'px-5'} md:px-6 xl:px-0 ${
+      className={`w-full mx-auto ${mobileFull ? '' : 'px-5'} md:px-6 ${
         large
           ? 'lg:max-w-[1260px]'
           : small
             ? 'max-w-[840px]'
             : 'lg:max-w-[1060px]'
-      } xxl:max-w-[1360px]`}
+      } xxl:max-w-[1408px]`}
     >
       {children}
     </div>

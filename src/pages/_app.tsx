@@ -15,6 +15,7 @@ import '@/styles/globals.css';
 import 'nprogress/nprogress.css';
 import { AuthProvider } from '@/hooks/useAuth';
 import { InterMediateCartProvider } from '@/stores/IntermediateCartContext';
+import { FavoritesProvider } from '@/hooks/useFavorites';
 
 // NProgress
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -25,11 +26,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <AuthProvider>
-        <CartProvider>
-          <InterMediateCartProvider>
-            <Component {...pageProps} />
-          </InterMediateCartProvider>
-        </CartProvider>
+        <FavoritesProvider>
+          <CartProvider>
+            <InterMediateCartProvider>
+              <Component {...pageProps} />
+            </InterMediateCartProvider>
+          </CartProvider>
+        </FavoritesProvider>
       </AuthProvider>
     </ApolloProvider>
   );

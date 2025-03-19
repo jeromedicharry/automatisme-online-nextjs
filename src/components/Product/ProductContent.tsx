@@ -3,12 +3,13 @@ import ProductDescription from './ProductDescription';
 import ProductGalerie from './ProductGalerie';
 import ProductHeader from './ProductHeader';
 import ProductPrice from './ProductPrice';
-import { Heart } from 'lucide-react';
 import AddToCart from './AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
 import Image from 'next/image';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import ProductDetails from './ProductDetails';
+import FavoriteButton from '../atoms/FavoriteButton';
+import useAuth from '@/hooks/useAuth';
 
 export interface BrandStickerProps {
   name: string;
@@ -48,6 +49,7 @@ const ProductContent = ({
   product: ProductContentProps;
   paymentPictos: any;
 }) => {
+  const { loggedIn } = useAuth();
   // todo ajout aux favoris + mettre sur mobile ajout favioris + ajout au panier
   // todo mettre les bons pictos de paiement voir à les mettre en dur
   // todo voir à ajouter plusieurs produits à la volée
@@ -79,16 +81,15 @@ const ProductContent = ({
                 price={parseFloat(product?.price || '0')}
                 regularPrice={parseFloat(product?.regularPrice || '0')}
               />
-              <div className="max-md:hidden flex items-stretch gap-2 w-full justify-between mb-6">
-                <div
-                  title="Ajouter aux favoris"
-                  className="shrink-0 basis-[45px] h-[45px] w-[45px] rounded-md flex justify-center items-center border border-primary"
-                >
-                  <Heart />
-                </div>
+              {loggedIn && product?.databaseId !== undefined && (
+                <div className="max-md:hidden flex items-stretch gap-2 w-full justify-between mb-6">
+                  <div className="shrink-0 basis-[45px] h-[45px] w-[45px] rounded-md flex justify-center items-center border border-primary">
+                    <FavoriteButton productId={Number(product?.databaseId)} />
+                  </div>
 
-                <AddToCart variant="primary" product={product}></AddToCart>
-              </div>
+                  <AddToCart variant="primary" product={product}></AddToCart>
+                </div>
+              )}
             </div>
             <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
               Payer en 3 versements sans frais.
