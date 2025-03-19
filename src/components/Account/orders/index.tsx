@@ -8,6 +8,7 @@ import useAuth from '@/hooks/useAuth';
 import { useQuery } from '@apollo/client';
 import OrdersList from './OrdersList';
 import Cta from '@/components/atoms/Cta';
+import AccountLoader from '@/components/Account/AccountLoader';
 
 const Orders = ({
   setMobileNavClosed,
@@ -77,13 +78,13 @@ const Orders = ({
       </h1>
 
       {error && (
-        <p className="text-red-500">
+        <p className="text-red-500 mb-6">
           Erreur lors du chargement des commandes : {error.message}
         </p>
       )}
 
       {loading && allOrders.length === 0 ? (
-        <p>Chargement des commandes...</p>
+        <AccountLoader text="Chargement des commandes..." />
       ) : allOrders && allOrders.length > 0 ? (
         <>
           <OrdersList orders={allOrders} />

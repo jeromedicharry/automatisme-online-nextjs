@@ -6,7 +6,7 @@ import { GET_FAVORITES } from '@/utils/gql/FAVORITES_QUERIES';
 import EmptyElement from '../EmptyElement';
 import BackToAccountNav from './BackToAccountNav';
 import Cardproduct from '../cards/CardProduct';
-import Container from '../container';
+import AccountLoader from './AccountLoader';
 
 const Favorites = ({
   setMobileNavClosed,
@@ -46,11 +46,7 @@ const Favorites = ({
         Mes Favoris
       </h1>
 
-      {loading && (
-        <p className="max-md:text-center my-6 text-xl lg:text-2xl">
-          Chargement des produits favoris...
-        </p>
-      )}
+      {loading && <AccountLoader text="Chargement des produits favorits ..." />}
 
       {error && (
         <p className="text-red-500 p-6 border border-red-500 max-md:text-center w-fit mx-auto mb-6">

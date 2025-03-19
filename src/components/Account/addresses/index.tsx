@@ -10,6 +10,7 @@ import AddressForm from './AddressForm';
 import AddressCard from './AddressCard';
 import EmptyAddressWithCTA from './EmptyAddressWithCta';
 import BillingOptions from './BillingOptions';
+import AccountLoader from '../AccountLoader';
 
 export type AddressData = {
   address1: string;
@@ -111,7 +112,7 @@ const Addresses = ({
     setIsBillingSameAsShipping(false);
   };
 
-  if (loading) return <div className="p-4">Chargement des adresses...</div>;
+  if (loading) return <AccountLoader text="Chargement des adresses..." />;
   if (error)
     return <div className="p-4 text-red-500">Erreur: {error.message}</div>;
 
