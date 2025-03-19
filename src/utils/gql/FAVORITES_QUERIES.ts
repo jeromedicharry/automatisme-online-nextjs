@@ -1,6 +1,7 @@
 // Requête pour récupérer les Ids
 
 import { gql } from '@apollo/client';
+import { PRODUCT_CARD_FRAGMENT } from './WOOCOMMERCE_QUERIES';
 
 const GET_FAVORITE_IDS = gql`
   query GetFavorites {
@@ -13,17 +14,9 @@ const GET_FAVORITE_IDS = gql`
 const GET_FAVORITES = gql`
   query GetFavorites {
     favorites {
-      id
-      databaseId
-      name
-      price
-      regularPrice
-      salePrice
-      image {
-        sourceUrl
-      }
+      slug
       ... on SimpleProduct {
-        stockStatus
+        ${PRODUCT_CARD_FRAGMENT}
       }
     }
   }

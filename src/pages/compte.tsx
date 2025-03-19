@@ -127,10 +127,10 @@ const Compte = ({
         <Container>
           <div className="flex gap-10 items-start mb-10 md:mb-16">
             <aside
-              className={`max-md:mx-auto max-md:mb-10 md:mt-10 pb-3 pt-5 px-6 w-fit shadow-card rounded-lg bg-white sticky top-20 ${mobileNavClosed ? 'max-md:hidden' : ''}`}
+              className={`max-md:mx-auto max-md:mb-10 md:mt-10 pb-3 pt-5 px-6 shadow-card rounded-lg bg-white sticky top-20 ${mobileNavClosed ? 'max-md:hidden' : ''}`}
             >
               <nav>
-                <ul className="flex flex-col gap-3">
+                <ul className="flex flex-col gap-3 align-start xxl:w-[325px]">
                   {navigation.map((item) => (
                     <TabLink
                       key={item.id}
