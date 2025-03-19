@@ -112,10 +112,6 @@ const Addresses = ({
     setIsBillingSameAsShipping(false);
   };
 
-  if (loading) return <AccountLoader text="Chargement des adresses..." />;
-  if (error)
-    return <div className="p-4 text-red-500">Erreur: {error.message}</div>;
-
   const { shipping, billing } = data?.customer || {};
 
   const isAddressComplete = (address: AddressData) => {
@@ -133,6 +129,17 @@ const Addresses = ({
       <h1 className="text-2xl leading-general font-bold mb-6 md:mb-3 max-md:mt-6">
         Mes adresses
       </h1>
+
+      {loading && <AccountLoader text="Chargement des adresses..." />}
+
+      {error && (
+        <p className="text-red-500 p-6 border border-red-500 max-md:text-center w-fit mx-auto mb-6">
+          {
+            "Une erreur s'est produite lors de la chargement de vos produits favoris: : "
+          }
+          {error.message}
+        </p>
+      )}
 
       {!loggedIn && (
         <div className="text-center py-8">

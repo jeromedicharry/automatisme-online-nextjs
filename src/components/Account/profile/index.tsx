@@ -22,7 +22,7 @@ const Profile = ({
           variables: { id: user?.id, email: newEmail },
         });
         setErrorMessage(null); // Réinitialise l'erreur si la mutation est réussie
-      } catch (error) {
+      } catch (error: any) {
         setErrorMessage(error);
       }
     }
@@ -44,7 +44,9 @@ const Profile = ({
 
         {/* Affichage de l'erreur si elle existe */}
         {errorMessage && (
-          <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+          <div className="text-red-500 text-sm mb-4">
+            Error lors du chargement du profil: {errorMessage}
+          </div>
         )}
 
         {/* Utilisation du composant EditableField pour l'email */}

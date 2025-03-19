@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import {
-  GET_CUSTOMER_PRO_INFO,
-  UPDATE_CUSTOMER_PRO_INFO,
+  GET_CUSTOMER_ADDRESSES,
+  UPDATE_ADDRESS,
 } from '@/utils/gql/CUSTOMER_QUERIES';
 import useAuth from '@/hooks/useAuth';
 import BackToAccountNav from '../BackToAccountNav';
-import AddressForm from './AddressForm';
-import AddressCard from './AddressCard';
-import EmptyAddressWithCTA from './EmptyAddressWithCta';
-import BillingOptions from './BillingOptions';
+import EmptyAddressWithCTA from '../addresses/EmptyAddressWithCta';
+import AddressForm from '../addresses/AddressForm';
+import AddressCard from '../addresses/AddressCard';
+import BillingOptions from '../addresses/BillingOptions';
 
 export type AddressData = {
   address1: string;
