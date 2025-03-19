@@ -6,6 +6,7 @@ import { RootObject, Product } from '@/stores/CartProvider';
 
 import { ChangeEvent } from 'react';
 import { COUNTRIES_LIST } from '../constants/COUNTRIES_LIST';
+import { calculerPrix, getTauxTVA } from './prices';
 // import { IVariationNodes } from '@/components/Product/AddToCart';
 
 /* Interface for products*/
@@ -120,94 +121,102 @@ export const trimmedStringToLength = (input: string, length: number) => {
 };
 
 /**
- * Filter variant price. Changes "kr198.00 - kr299.00" to kr299.00 or kr198 depending on the side variable
- * @param {String} side Which side of the string to return (which side of the "-" symbol)
- * @param {String} price The inputted price that we need to convert
- */
-export const filteredVariantPrice = (price: string, side: string) => {
-  if ('right' === side) {
-    return price.substring(price.length, price.indexOf('-')).replace('-', '');
-  }
-
-  return price.substring(0, price.indexOf('-')).replace('-', '');
-};
-
-/**
  * Returns cart data in the required format.
  * @param {String} data Cart data
  */
 
-export const getFormattedCart = (data: IFormattedCartProps) => {
+export const getFormattedCart = async (
+  data: IFormattedCartProps,
+  user?: any,
+  countryCode?: string,
+): Promise<RootObject | undefined> => {
   const formattedCart: RootObject = {
     products: [],
     totalProductsCount: 0,
     totalProductsPrice: 0,
+    taxInfo: {
+      isPriceHT: false,
+      countryCode: 'FR',
+      taxRate: 20,
+    },
   };
 
   if (!data) {
     return;
   }
+
+  const isProSession = isProRole(user?.roles?.nodes);
   const givenProducts = data.cart.contents.nodes;
 
   // Create an empty object.
   formattedCart.products = [];
-
-  const product: Product = {
-    productId: 0,
-    cartKey: '',
-    name: '',
-    qty: 0,
-    price: 0,
-    totalPrice: '0',
-    image: { sourceUrl: '', srcSet: '', title: '' },
-    upsell: { nodes: [] },
-  };
-
   let totalProductsCount = 0;
-  let i = 0;
+  let totalPrice = 0;
 
   if (!givenProducts.length) {
     return;
   }
 
-  givenProducts.forEach(() => {
-    const givenProduct = givenProducts[Number(i)].product.node;
+  // Traitement asynchrone des produits
+  const productPromises = givenProducts.map(async (givenProductItem) => {
+    const givenProduct = givenProductItem.product.node;
 
-    // Convert price to a float value
-    const convertedCurrency = givenProducts[Number(i)].total.replace(
-      /[^0-9.-]+/g,
-      '',
+    // Extraire le prix HT
+    const rawPrice = givenProductItem.total.replace(/[^0-9.-]+/g, '');
+    const quantity = givenProductItem.quantity;
+    const prixUnitaireHT = Number(rawPrice) / quantity;
+
+    // Calculer le prix final avec TVA si nécessaire
+    const prixFinal = await calculerPrix(
+      prixUnitaireHT,
+      isProSession,
+      countryCode || 'FR',
     );
 
-    product.productId = givenProduct.productId;
-    product.cartKey = givenProducts[Number(i)].key;
-    product.name = givenProduct.name;
-    product.qty = givenProducts[Number(i)].quantity;
-    product.price = Number(convertedCurrency) / product.qty;
-    product.totalPrice = givenProducts[Number(i)].total;
+    const product: Product = {
+      productId: givenProduct.productId,
+      cartKey: givenProductItem.key,
+      name: givenProduct.name,
+      qty: quantity,
+      price: isProSession ? prixUnitaireHT : prixFinal, // HT pour pro, TTC pour autres
+      originalPrice: prixUnitaireHT, // Conserver le prix HT original
+      totalPrice: isProSession
+        ? prixUnitaireHT * quantity
+        : prixFinal * quantity,
+      isPriceHT: isProSession, // Indiquer si le prix est HT ou TTC
+      image: givenProduct.image.sourceUrl
+        ? {
+            sourceUrl: givenProduct.image.sourceUrl,
+            srcSet: givenProduct.image.srcSet,
+            title: givenProduct.image.title,
+          }
+        : {
+            sourceUrl: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
+            srcSet: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
+            title: givenProduct.name,
+          },
+      upsell: { nodes: [] },
+    };
 
-    // Ensure we can add products without images to the cart
+    totalProductsCount += quantity;
+    totalPrice += isProSession
+      ? prixUnitaireHT * quantity
+      : prixFinal * quantity;
 
-    product.image = givenProduct.image.sourceUrl
-      ? {
-          sourceUrl: givenProduct.image.sourceUrl,
-          srcSet: givenProduct.image.srcSet,
-          title: givenProduct.image.title,
-        }
-      : {
-          sourceUrl: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
-          srcSet: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
-          title: givenProduct.name,
-        };
-
-    totalProductsCount += givenProducts[Number(i)].quantity;
-
-    // Push each item into the products array.
-    formattedCart.products.push(product);
-    i++;
+    return product;
   });
+
+  // Attendre que tous les produits soient traités
+  formattedCart.products = await Promise.all(productPromises);
   formattedCart.totalProductsCount = totalProductsCount;
-  formattedCart.totalProductsPrice = data.cart.total;
+  formattedCart.totalProductsPrice = totalPrice;
+
+  // Ajouter des informations supplémentaires sur la TVA
+  formattedCart.taxInfo = {
+    isPriceHT: isProSession,
+    countryCode: countryCode || 'FR',
+    taxRate: isProSession ? 0 : await getTauxTVA(countryCode || 'FR'),
+  };
 
   return formattedCart;
 };

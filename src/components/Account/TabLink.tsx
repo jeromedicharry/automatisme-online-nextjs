@@ -26,7 +26,6 @@ const TabLink = ({
   setActiveTab,
   setMobileNavClosed,
 }: TabLinkProps) => {
-  //todo last border
   return (
     <li className="pb-3 border-b last:border-b-0 border-breadcrumb-grey min-w-[230px]">
       <button

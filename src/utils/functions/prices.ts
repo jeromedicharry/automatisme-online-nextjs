@@ -17,7 +17,7 @@ export async function calculerPrix(
   }
 }
 
-async function getTauxTVA(countryCode: string) {
+export async function getTauxTVA(countryCode: string) {
   try {
     const response = await client.query({ query: GET_TAX_RATES });
 
