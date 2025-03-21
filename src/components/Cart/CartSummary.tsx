@@ -1,37 +1,22 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import { CartContext } from '@/stores/CartProvider';
 import Cta from '../atoms/Cta';
 import Image from 'next/image';
-import { useQuery } from '@apollo/client';
-import { getFormattedCart } from '@/utils/functions/functions';
-import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+
 import Separator from '../atoms/Separator';
 import Link from 'next/link';
-import useAuth from '@/hooks/useAuth';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
-const CartSummary = () => {
-  const { cart, setCart } = useContext(CartContext);
-  const { countryCode, user } = useAuth();
+const CartSummary = ({ isProSession }: { isProSession: boolean }) => {
+  const { cart } = useContext(CartContext);
 
-  const { data, refetch } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: async () => {
-      const updatedCart = await getFormattedCart(data, user, countryCode);
-      if (!updatedCart || !updatedCart.products.length) {
-        localStorage.removeItem('woocommerce-cart');
-        setCart(null);
-        return;
-      }
-      localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
-      setCart(updatedCart);
-      console.log({ cart });
-    },
-  });
+  if (!cart || !cart.products) {
+    return null;
+  }
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+  console.log({ cart });
+
   return (
     <>
       <BlocIntroSmall title="Récapitulatif" />
@@ -40,8 +25,8 @@ const CartSummary = () => {
           <div>
             <strong>Total panier</strong>
             <div className="text-xl">
-              {cart?.taxInfo?.isPriceHT ? 'HT: ' : 'TTC: '}
-              {cart?.totalProductsPrice?.toFixed(2)}€
+              {isProSession ? 'HT: ' : 'TTC: '}
+              {cart.totalProductsPrice.toFixed(2)}€
             </div>
           </div>
           <Cta
@@ -56,25 +41,24 @@ const CartSummary = () => {
         </div>
       </div>
       <div className="max-md:hidden p-4 bg-white rounded-lg shadow-card flex flex-col gap-4 items-stretch">
-        {cart?.products?.map((product: any, index: number) => (
+        {cart.products.map((product, index) => (
           <Link
             title="Voir le produit"
-            href={`/nos-produits/${product?.product?.node?.slug}`}
+            href={`/nos-produits/${product.productId}`}
             className="flex justify-between items-center"
             key={index}
           >
             <Image
-              src={product?.image?.sourceUrl}
-              alt={product?.name || 'Produit automatisme online'}
+              src={product.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
+              alt={product.name || 'Produit automatisme online'}
               width={80}
               height={80}
               className="max-w-[60px] aspect-square object-contain shrink-0"
             />
-            <div className="font-bold shrink-1">{product?.name}</div>
-            <div className="text-xl">
-              {cart?.taxInfo?.isPriceHT ? '' : ''}
-              {product?.totalPrice?.toFixed(2)}€
+            <div className="font-bold shrink-1 overflow-hidden text-ellipsis break-words whitespace-pre-line line-clamp-2">
+              {product.name}
             </div>
+            <div className="font-bold">{product.totalPrice.toFixed(2)}€</div>
           </Link>
         ))}
 
@@ -88,16 +72,19 @@ const CartSummary = () => {
         <Separator />
         <div>
           <div className="flex text-primary font-bold justify-between gap-6 items-center">
-            <p>Total {cart?.taxInfo?.isPriceHT ? 'HT' : 'TTC'}</p>
-            <p>{cart?.totalProductsPrice?.toFixed(2)}€</p>
+            <p>Total {isProSession ? 'HT' : 'TTC'}</p>
+            <p>{cart.totalProductsPrice.toFixed(2)}€</p>
           </div>
           <div className="flex text-primary justify-between gap-6 items-center">
-            <p>Dont TVA</p>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: data?.cart?.totalTax,
-              }}
-            />
+            <p>
+              Dont TVA (
+              {(
+                (cart.totalTax * 100) /
+                (cart.totalProductsPrice - cart.totalTax)
+              ).toFixed(1)}
+              %)
+            </p>
+            <p>{isProSession ? '0€' : `${cart.totalTax}€`}</p>
           </div>
         </div>
         <Separator />

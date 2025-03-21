@@ -17,6 +17,7 @@ import { getFormattedCart } from '@/utils/functions/functions';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
 import { CardProductProps } from '@/types/blocTypes';
+import useAuth from '@/hooks/useAuth';
 
 const AddToCart = ({
   product,
@@ -30,6 +31,7 @@ const AddToCart = ({
     | 'secondary'
     | 'secondaryHollow';
 }) => {
+  const { isPro } = useAuth();
   const { setCart } = useContext(CartContext);
   const { openCartModal } = useIntermediateCart();
   const [requestError, setRequestError] = useState<boolean>(false);
@@ -44,9 +46,11 @@ const AddToCart = ({
   const { data, refetch } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
     onCompleted: () => {
-      const updatedCart = getFormattedCart(data);
+      const updatedCart = getFormattedCart(data, isPro);
 
-      if (!updatedCart) {
+      if (!updatedCart || !updatedCart.products.length) {
+        localStorage.removeItem('woocommerce-cart');
+        setCart(null);
         return;
       }
 
@@ -69,13 +73,20 @@ const AddToCart = ({
     },
   });
 
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent, isPro?: boolean) => {
     e.preventDefault();
     await addToCart();
-    // Refetch cart après 2 secondes
+
     setTimeout(() => {
-      refetch();
-    }, 2000);
+      refetch().then(({ data }) => {
+        const updatedCart = getFormattedCart(data, isPro);
+
+        if (updatedCart) {
+          localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
+          setCart(updatedCart);
+        }
+      });
+    }, 1000);
   };
 
   return (

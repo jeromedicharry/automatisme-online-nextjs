@@ -6,7 +6,6 @@ import { RootObject, Product } from '@/stores/CartProvider';
 
 import { ChangeEvent } from 'react';
 import { COUNTRIES_LIST } from '../constants/COUNTRIES_LIST';
-import { calculerPrix, getTauxTVA } from './prices';
 // import { IVariationNodes } from '@/components/Product/AddToCart';
 
 /* Interface for products*/
@@ -30,15 +29,13 @@ interface IProductNode {
   id: string;
   databaseId: number;
   name: string;
-  description: string;
   type: string;
-  onSale: boolean;
   slug: string;
-  averageRating: number;
-  reviewCount: number;
   image: IImage;
   galleryImages: IGalleryImages;
   productId: number;
+  price: string;
+  upsell: { nodes: IProduct[] };
 }
 
 interface IProduct {
@@ -54,7 +51,6 @@ export interface IProductRootObject {
   quantity: number;
   total: string;
   subtotal: string;
-  subtotalTax: string;
 }
 
 type TUpdatedItems = { key: string; quantity: number }[];
@@ -80,7 +76,12 @@ export interface IUpdateCartRootObject {
 /* Interface for props */
 
 interface IFormattedCartProps {
-  cart: { contents: { nodes: IProductRootObject[] }; total: number };
+  cart: {
+    contents: { nodes: IProductRootObject[] };
+    total: string;
+    subtotal: string;
+    totalTax: string;
+  };
 }
 
 export interface ICheckoutDataProps {
@@ -125,66 +126,50 @@ export const trimmedStringToLength = (input: string, length: number) => {
  * @param {String} data Cart data
  */
 
-export const getFormattedCart = async (
+export const getFormattedCart = (
   data: IFormattedCartProps,
-  user?: any,
-  countryCode?: string,
-): Promise<RootObject | undefined> => {
+  isProSession?: boolean,
+) => {
   const formattedCart: RootObject = {
     products: [],
     totalProductsCount: 0,
     totalProductsPrice: 0,
-    taxInfo: {
-      isPriceHT: false,
-      countryCode: 'FR',
-      taxRate: 20,
-    },
+    totalTax: 20,
   };
 
-  if (!data) {
-    return;
+  if (!data || !data.cart || !data.cart.contents) {
+    return formattedCart;
   }
 
-  const isProSession = isProRole(user?.roles?.nodes);
   const givenProducts = data.cart.contents.nodes;
 
-  // Create an empty object.
-  formattedCart.products = [];
-  let totalProductsCount = 0;
-  let totalPrice = 0;
-
-  if (!givenProducts.length) {
-    return;
+  if (!givenProducts || !givenProducts.length) {
+    return formattedCart;
   }
 
-  // Traitement asynchrone des produits
-  const productPromises = givenProducts.map(async (givenProductItem) => {
+  let totalProductsCount = 0;
+
+  // Process products
+  formattedCart.products = givenProducts.map((givenProductItem) => {
     const givenProduct = givenProductItem.product.node;
-
-    // Extraire le prix HT
-    const rawPrice = givenProductItem.total.replace(/[^0-9.-]+/g, '');
     const quantity = givenProductItem.quantity;
-    const prixUnitaireHT = Number(rawPrice) / quantity;
 
-    // Calculer le prix final avec TVA si nécessaire
-    const prixFinal = await calculerPrix(
-      prixUnitaireHT,
-      isProSession,
-      countryCode || 'FR',
-    );
+    // Get price values directly from GraphQL response
+    const unitPriceHT = parseFloat(givenProduct.price); // Price HT from product
+    const lineSubtotal = parseFloat(givenProductItem.subtotal); // Subtotal HT
+    const lineTotal = parseFloat(givenProductItem.total); // Total TTC
+
+    // Calculate unit price with tax
+    const unitPriceTTC = quantity > 0 ? lineTotal / quantity : 0;
 
     const product: Product = {
-      productId: givenProduct.productId,
+      productId: givenProduct.databaseId,
       cartKey: givenProductItem.key,
       name: givenProduct.name,
       qty: quantity,
-      price: isProSession ? prixUnitaireHT : prixFinal, // HT pour pro, TTC pour autres
-      originalPrice: prixUnitaireHT, // Conserver le prix HT original
-      totalPrice: isProSession
-        ? prixUnitaireHT * quantity
-        : prixFinal * quantity,
-      isPriceHT: isProSession, // Indiquer si le prix est HT ou TTC
-      image: givenProduct.image.sourceUrl
+      price: isProSession ? unitPriceHT : unitPriceTTC, // HT for pro, TTC for others
+      totalPrice: isProSession ? lineSubtotal : lineTotal, // Subtotal HT for pro, Total TTC for others
+      image: givenProduct.image?.sourceUrl
         ? {
             sourceUrl: givenProduct.image.sourceUrl,
             srcSet: givenProduct.image.srcSet,
@@ -195,28 +180,25 @@ export const getFormattedCart = async (
             srcSet: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
             title: givenProduct.name,
           },
-      upsell: { nodes: [] },
+      // upsell: givenProduct.upsell || { nodes: [] },
     };
 
     totalProductsCount += quantity;
-    totalPrice += isProSession
-      ? prixUnitaireHT * quantity
-      : prixFinal * quantity;
 
     return product;
   });
 
-  // Attendre que tous les produits soient traités
-  formattedCart.products = await Promise.all(productPromises);
+  // Set cart totals
   formattedCart.totalProductsCount = totalProductsCount;
-  formattedCart.totalProductsPrice = totalPrice;
 
-  // Ajouter des informations supplémentaires sur la TVA
-  formattedCart.taxInfo = {
-    isPriceHT: isProSession,
-    countryCode: countryCode || 'FR',
-    taxRate: isProSession ? 0 : await getTauxTVA(countryCode || 'FR'),
-  };
+  // Use cart level totals directly from GraphQL
+  const cartSubtotal = parseFloat(data.cart.subtotal); // Total HT
+  const cartTotal = parseFloat(data.cart.total); // Total TTC
+  const cartTotalTax = parseFloat(data.cart.totalTax); // Total TTC
+
+  // Set total price based on user type
+  formattedCart.totalProductsPrice = isProSession ? cartSubtotal : cartTotal;
+  formattedCart.totalTax = isProSession ? 0 : cartTotalTax;
 
   return formattedCart;
 };

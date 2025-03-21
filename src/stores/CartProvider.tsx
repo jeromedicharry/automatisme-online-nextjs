@@ -1,4 +1,3 @@
-import { CardProductProps } from '@/types/blocTypes';
 import React, {
   useState,
   useEffect,
@@ -32,21 +31,17 @@ export interface Product {
   name: string;
   qty: number;
   price: number;
-  totalPrice: string;
+  totalPrice: number;
   image: Image;
   productId: number;
-  upsell: { nodes: CardProductProps[] };
+  // upsell: { nodes: CardProductProps[] };
 }
 
 export interface RootObject {
   products: Product[];
   totalProductsCount: number;
   totalProductsPrice: number;
-  taxInfo?: {
-    isPriceHT: boolean;
-    countryCode: string;
-    taxRate: number;
-  };
+  totalTax: number;
 }
 
 export type TRootObject = RootObject | string | null | undefined;
@@ -74,14 +69,19 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
 
   useEffect(() => {
     // Check if we are client-side before we access the localStorage
-    if (!process.browser) {
+    if (typeof window === 'undefined') {
+      console.log('ici');
       return;
     }
     const localCartData = localStorage.getItem('woocommerce-cart');
-
     if (localCartData) {
-      const cartData: RootObject = JSON.parse(localCartData);
-      setCart(cartData);
+      try {
+        const cartData: RootObject = JSON.parse(localCartData);
+        console.log('Cart data from localStorage:', cartData);
+        setCart(cartData);
+      } catch (error) {
+        console.error('Error parsing cart data:', error);
+      }
     }
   }, []);
 

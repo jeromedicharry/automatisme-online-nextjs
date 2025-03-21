@@ -183,88 +183,42 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
   }
 `;
 
+export const PRODUCT_CART_ITEM = `product {
+  node {
+    id
+    databaseId
+    name
+    slug
+    image {
+      sourceUrl
+    }
+    ... on SimpleProduct {
+      price(format: RAW)
+    }
+  }
+}
+`;
+
 export const GET_CART = gql`
   query GET_CART {
     cart {
       contents {
         nodes {
           key
-          product {
-            node {
-              id
-              databaseId
-              name
-              description
-              type
-              onSale
-              slug
-              averageRating
-              reviewCount
-              image {
-                id
-                sourceUrl
-                srcSet
-                altText
-                title
-              }
-              galleryImages {
-                nodes {
-                  id
-                  sourceUrl
-                  srcSet
-                  altText
-                  title
-                }
-              }
-              upsell {
-                nodes {
-                  ... on SimpleProduct {
-                    ${PRODUCT_CARD_FRAGMENT}
-                  } 
-                }
-              }
-            }
-          }
-          variation {
-            node {
-              id
-              databaseId
-              name
-              description
-              type
-              onSale
-              price
-              regularPrice
-              salePrice
-              image {
-                id
-                sourceUrl
-                srcSet
-                altText
-                title
-              }
-              attributes {
-                nodes {
-                  id
-                  name
-                  value
-                }
-              }
-            }
-          }
+          ${PRODUCT_CART_ITEM}
           quantity
-          total
-          subtotal
-          subtotalTax
+          total(format: RAW)
+          subtotal(format: RAW)
+          subtotalTax(format: RAW)
         }
       }
 
-      subtotal
-      subtotalTax
-      shippingTax
-      shippingTotal
-      total
-      totalTax
+      subtotal(format: RAW)
+      subtotalTax(format: RAW)
+      shippingTax(format: RAW)
+      shippingTotal(format: RAW)
+      total(format: RAW)
+      totalTax(format: RAW)
       feeTax
       feeTotal
       discountTax

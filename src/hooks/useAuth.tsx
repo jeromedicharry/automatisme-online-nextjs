@@ -17,6 +17,7 @@ interface AuthData {
   countryCode?: string;
   loading: boolean;
   error?: ApolloError;
+  isPro: boolean;
 }
 
 const DEFAULT_STATE: AuthData = {
@@ -24,6 +25,7 @@ const DEFAULT_STATE: AuthData = {
   user: undefined,
   loading: false,
   error: undefined,
+  isPro: false,
 };
 
 const AuthContext = createContext(DEFAULT_STATE);
