@@ -42,6 +42,11 @@ export interface RootObject {
   products: Product[];
   totalProductsCount: number;
   totalProductsPrice: number;
+  taxInfo?: {
+    isPriceHT: boolean;
+    countryCode: string;
+    taxRate: number;
+  };
 }
 
 export type TRootObject = RootObject | string | null | undefined;

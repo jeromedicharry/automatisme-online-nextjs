@@ -15,8 +15,6 @@ const Orders = ({
 }: {
   setMobileNavClosed: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  // todo gérer les commandes
-
   const { user, loggedIn } = useAuth();
 
   const [allOrders, setAllOrders] = useState<any[]>([]);

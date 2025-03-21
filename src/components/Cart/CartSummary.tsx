@@ -7,21 +7,25 @@ import { useQuery } from '@apollo/client';
 import { getFormattedCart } from '@/utils/functions/functions';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import Separator from '../atoms/Separator';
+import Link from 'next/link';
+import useAuth from '@/hooks/useAuth';
 
 const CartSummary = () => {
-  const { setCart } = useContext(CartContext);
+  const { cart, setCart } = useContext(CartContext);
+  const { countryCode, user } = useAuth();
 
   const { data, refetch } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      const updatedCart = getFormattedCart(data);
-      if (!updatedCart && !data.cart.contents.nodes.length) {
+    onCompleted: async () => {
+      const updatedCart = await getFormattedCart(data, user, countryCode);
+      if (!updatedCart || !updatedCart.products.length) {
         localStorage.removeItem('woocommerce-cart');
         setCart(null);
         return;
       }
       localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
       setCart(updatedCart);
+      console.log({ cart });
     },
   });
 
@@ -35,12 +39,10 @@ const CartSummary = () => {
         <div className="flex items-center justify-between gap-4">
           <div>
             <strong>Total panier</strong>
-            <div
-              className="text-xl"
-              dangerouslySetInnerHTML={{
-                __html: data?.cart?.total,
-              }}
-            />
+            <div className="text-xl">
+              {cart?.taxInfo?.isPriceHT ? 'HT: ' : 'TTC: '}
+              {cart?.totalProductsPrice?.toFixed(2)}€
+            </div>
           </div>
           <Cta
             slug="/caisse"
@@ -54,21 +56,26 @@ const CartSummary = () => {
         </div>
       </div>
       <div className="max-md:hidden p-4 bg-white rounded-lg shadow-card flex flex-col gap-4 items-stretch">
-        {data?.cart?.contents?.nodes?.map((product: any, index: number) => (
-          <div className="flex justify-between items-center" key={index}>
+        {cart?.products?.map((product: any, index: number) => (
+          <Link
+            title="Voir le produit"
+            href={`/nos-produits/${product?.product?.node?.slug}`}
+            className="flex justify-between items-center"
+            key={index}
+          >
             <Image
-              src={product?.product?.node?.image?.sourceUrl}
-              alt={product?.name}
+              src={product?.image?.sourceUrl}
+              alt={product?.name || 'Produit automatisme online'}
               width={80}
               height={80}
               className="max-w-[60px] aspect-square object-contain shrink-0"
             />
             <div className="font-bold shrink-1">{product?.name}</div>
-            <div
-              className="text-xl"
-              dangerouslySetInnerHTML={{ __html: product?.total }}
-            />
-          </div>
+            <div className="text-xl">
+              {cart?.taxInfo?.isPriceHT ? '' : ''}
+              {product?.totalPrice?.toFixed(2)}€
+            </div>
+          </Link>
         ))}
 
         <Separator />
@@ -81,12 +88,8 @@ const CartSummary = () => {
         <Separator />
         <div>
           <div className="flex text-primary font-bold justify-between gap-6 items-center">
-            <p>Total TTC</p>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: data?.cart?.total,
-              }}
-            />
+            <p>Total {cart?.taxInfo?.isPriceHT ? 'HT' : 'TTC'}</p>
+            <p>{cart?.totalProductsPrice?.toFixed(2)}€</p>
           </div>
           <div className="flex text-primary justify-between gap-6 items-center">
             <p>Dont TVA</p>

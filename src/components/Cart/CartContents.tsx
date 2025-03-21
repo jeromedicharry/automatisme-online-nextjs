@@ -17,16 +17,17 @@ import {
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { UPDATE_CART } from '@/utils/gql/GQL_MUTATIONS';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
+import useAuth from '@/hooks/useAuth';
 
 const CartContents = () => {
-  const { setCart } = useContext(CartContext);
+  const { cart, setCart } = useContext(CartContext);
+  const { countryCode, user } = useAuth();
 
   const { data, refetch } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      const updatedCart = getFormattedCart(data);
-      console.log({ updateCart });
-      if (!updatedCart && !data.cart.contents.nodes.length) {
+    onCompleted: async () => {
+      const updatedCart = await getFormattedCart(data, user, countryCode);
+      if (!updatedCart || !updatedCart.products.length) {
         localStorage.removeItem('woocommerce-cart');
         setCart(null);
         return;
@@ -96,13 +97,13 @@ const CartContents = () => {
                   src={
                     item.product?.node.image?.sourceUrl || '/placeholder.png'
                   }
-                  alt={item.product.node.name}
+                  alt={item.product.node.name || 'Produit Automatisme Online'}
                   width={200}
                   height={200}
                   className="aspect-square object-contain"
                 />
               </div>
-              <div className="flex-grow ml-4">
+              <div className="flex-grow mx-4">
                 <h2 className="font-bold text-primary">
                   {item.product.node.name}
                 </h2>
@@ -110,7 +111,7 @@ const CartContents = () => {
                 <p
                   className="text-primary text-2xl font-bold"
                   dangerouslySetInnerHTML={{
-                    __html: item.total,
+                    __html: item.subtotal,
                   }}
                 >
                   {/* kr {getUnitPrice(item.subtotal, item.quantity)} */}
