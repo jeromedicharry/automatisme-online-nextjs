@@ -42,6 +42,7 @@ export default function Meta({
       ></meta>
       {excludeSeo && <meta name="robots" content="noindex, nofollow" />}
       {/* Favicon and icons */}
+
       <link
         rel="apple-touch-icon"
         sizes="57x57"
@@ -118,6 +119,7 @@ export default function Meta({
         content="/favicon/ms-icon-144x144.png"
       />
       <meta name="theme-color" content="#ffffff" />
+
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       <title>{meta?.title}</title>
       <meta name="description" content={meta?.metaDesc} />
