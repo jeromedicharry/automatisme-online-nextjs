@@ -84,7 +84,7 @@ const CartSummary = ({ isProSession }: { isProSession: boolean }) => {
               ).toFixed(1)}
               %)
             </p>
-            <p>{isProSession ? '0€' : `${cart.totalTax}€`}</p>
+            <p>{isProSession ? '0€' : `${cart.totalTax.toFixed(2)}€`}</p>
           </div>
         </div>
         <Separator />

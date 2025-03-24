@@ -29,7 +29,7 @@ const Panier = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
-  const { cart, refetchCart, isPro } = useCartOperations();
+  const { cart, isPro } = useCartOperations();
 
   return (
     <Layout
@@ -56,7 +56,7 @@ const Panier = ({
             <div className="relative flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10 xl:gap-16 max-lg:max-w-xl mx-auto mt-6 lg:mt-12">
               {/* Conteneur principal */}
               <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10 xl:gap-16">
-                <CartContents isProSession={isPro} refetch={refetchCart} />
+                <CartContents />
                 <Separator />
                 <DeliveryChoices />
                 <Separator />

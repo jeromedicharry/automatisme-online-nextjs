@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { getFormattedCart } from '@/utils/functions/functions';
@@ -7,21 +7,32 @@ import useAuth from './useAuth';
 
 export const useCartOperations = () => {
   const { cart, setCart } = useContext(CartContext);
-  const { isPro } = useAuth();
+  const { isPro, loggedIn } = useAuth();
 
   const { refetch } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
     onCompleted: (data) => {
       const updatedCart = getFormattedCart(data, isPro);
       if (!updatedCart || !updatedCart.products.length) {
-        localStorage.removeItem('woocommerce-cart');
         setCart(null);
         return;
       }
       localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
       setCart(updatedCart);
     },
+    onError: () => {
+      console.error('Erreur lors de la récupération du panier');
+    }
   });
+
+  // Effet pour gérer la connexion
+  useEffect(() => {
+    if (loggedIn) {
+      // À la connexion : on récupère le panier de l'utilisateur
+      // WooCommerce fusionnera automatiquement avec le panier anonyme
+      refetch().catch(console.error);
+    }
+  }, [loggedIn, refetch]);
 
   return {
     cart,

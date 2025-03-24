@@ -6,11 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { CartContext, Product } from '@/stores/CartProvider';
 import LoadingSpinner from '../atoms/LoadingSpinner';
 import Cta from '../atoms/Cta';
-
-import { getFormattedCart } from '@/utils/functions/functions';
-
-import { UPDATE_CART } from '@/utils/gql/GQL_MUTATIONS';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
+
+// Utils
+import { UPDATE_CART } from '@/utils/gql/GQL_MUTATIONS';
+import { useCartOperations } from '@/hooks/useCartOperations';
 
 // Nouvelle fonction adaptée pour les produits formatés
 const getUpdatedItemsFromFormatted = (
@@ -33,49 +33,26 @@ const getUpdatedItemsFromFormatted = (
   });
 };
 
-const CartContents = ({
-  isProSession,
-  refetch,
-}: {
-  isProSession: boolean;
-  refetch: () => Promise<any>;
-}) => {
-  const { cart, setCart } = useContext(CartContext);
+const CartContents = () => {
+  const { cart } = useContext(CartContext);
+  const { refetchCart, isPro } = useCartOperations();
 
   const [updateCart, { loading: updateCartProcessing }] = useMutation(
     UPDATE_CART,
     {
       onCompleted: async () => {
-        try {
-          const { data: newData } = await refetch();
-          if (!newData || !newData.cart) return;
-
-          const updatedCart = getFormattedCart(newData, isProSession);
-          if (updatedCart) {
-            localStorage.setItem(
-              'woocommerce-cart',
-              JSON.stringify(updatedCart),
-            );
-            // Force le re-render avec le nouveau state
-            await Promise.resolve();
-            setCart(updatedCart);
-          }
-        } catch (error) {
-          console.error('Error updating cart:', error);
-        }
+        await refetchCart();
       },
     },
   );
 
   // Fonction pour gérer le changement de quantité d'un produit
-  const handleQuantityChangeFormatted = (
+  const handleQuantityChangeFormatted = async (
     event: React.ChangeEvent<HTMLInputElement>,
     cartKey: string,
     products: Product[],
-    updateCart: any,
-    loading: boolean,
   ) => {
-    if (loading) {
+    if (updateCartProcessing) {
       return;
     }
 
@@ -86,13 +63,9 @@ const CartContents = ({
       return;
     }
 
-    const updatedItems = getUpdatedItemsFromFormatted(
-      products,
-      newQty,
-      cartKey,
-    );
+    const updatedItems = getUpdatedItemsFromFormatted(products, newQty, cartKey);
 
-    updateCart({
+    await updateCart({
       variables: {
         input: {
           clientMutationId: uuidv4(),
@@ -103,14 +76,10 @@ const CartContents = ({
   };
 
   // Fonction pour supprimer un produit
-  const handleRemoveProductClick = (cartKey: string) => {
+  const handleRemoveProductClick = async (cartKey: string) => {
     if (cart?.products?.length) {
-      const updatedItems = getUpdatedItemsFromFormatted(
-        cart.products,
-        0,
-        cartKey,
-      );
-      updateCart({
+      const updatedItems = getUpdatedItemsFromFormatted(cart.products, 0, cartKey);
+      await updateCart({
         variables: {
           input: {
             clientMutationId: uuidv4(),
@@ -155,7 +124,7 @@ const CartContents = ({
               <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
                 {item.price.toFixed(2)}€{' '}
                 <span className="absolute right-0 top-1 text-xs">
-                  {isProSession ? 'HT' : 'TTC'}
+                  {isPro ? 'HT' : 'TTC'}
                 </span>
               </p>
               <div className="text-dark-grey text-xs">
@@ -167,15 +136,9 @@ const CartContents = ({
                 type="number"
                 min="1"
                 value={item.qty}
-                onChange={(event) => {
-                  handleQuantityChangeFormatted(
-                    event,
-                    item.cartKey,
-                    cart.products,
-                    updateCart,
-                    updateCartProcessing,
-                  );
-                }}
+                onChange={(event) =>
+                  handleQuantityChangeFormatted(event, item.cartKey, cart.products)
+                }
                 className="w-12 px-2 py-1 text-center border border-primary rounded-lg mr-2"
               />
               <Cta
