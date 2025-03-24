@@ -1,27 +1,7 @@
-import React, {
-  useState,
-  useEffect,
-  createContext,
-  ReactElement,
-  JSXElementConstructor,
-  ReactFragment,
-  ReactPortal,
-} from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import { getFormattedCart } from '@/utils/functions/functions';
-import useAuth from '@/hooks/useAuth';
+import React, { useState, useEffect, createContext, ReactNode } from 'react';
 
 interface ICartProviderProps {
-  children:
-    | string
-    | number
-    | boolean
-    | ReactElement<any, string | JSXElementConstructor<any>>
-    | ReactFragment
-    | ReactPortal
-    | null
-    | undefined;
+  children: ReactNode;
 }
 
 interface Image {
@@ -48,49 +28,26 @@ export interface RootObject {
 }
 
 export type TRootObject = RootObject | string | null | undefined;
-
 export type TRootObjectNull = RootObject | null | undefined;
 
 interface ICartContext {
   cart: RootObject | null | undefined;
   setCart: React.Dispatch<React.SetStateAction<TRootObjectNull>>;
-  refetchCart: () => Promise<any>;
 }
 
 const CartState = {
   cart: null,
   setCart: () => {},
-  refetchCart: async () => {},
 };
 
 export const CartContext = createContext<ICartContext>(CartState);
 
-/**
- * Provides a global application context for the entire application with the cart contents
- */
 export const CartProvider = ({ children }: ICartProviderProps) => {
   const [cart, setCart] = useState<RootObject | null>();
-  const { isPro } = useAuth();
-
-  const { refetch } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: (data) => {
-      const updatedCart = getFormattedCart(data, isPro);
-      if (!updatedCart || !updatedCart.products.length) {
-        localStorage.removeItem('woocommerce-cart');
-        setCart(null);
-        return;
-      }
-      localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
-      setCart(updatedCart);
-    },
-  });
 
   useEffect(() => {
-    // Check if we are client-side before we access the localStorage
-    if (typeof window === 'undefined') {
-      return;
-    }
+    if (typeof window === 'undefined') return;
+    
     const localCartData = localStorage.getItem('woocommerce-cart');
     if (localCartData) {
       try {
@@ -103,7 +60,7 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
   }, []);
 
   return (
-    <CartContext.Provider value={{ cart, setCart, refetchCart: refetch }}>
+    <CartContext.Provider value={{ cart, setCart }}>
       {children}
     </CartContext.Provider>
   );

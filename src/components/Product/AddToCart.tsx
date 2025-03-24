@@ -1,5 +1,5 @@
 // Imports
-import React, { useContext } from 'react';
+import React from 'react';
 import { useMutation } from '@apollo/client';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,8 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Cta from '../atoms/Cta';
 
 // State
-import { CartContext } from '@/stores/CartProvider';
 import { useIntermediateCart } from '@/stores/IntermediateCartContext';
+import { useCartOperations } from '@/hooks/useCartOperations';
 
 // GraphQL
 import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
@@ -27,7 +27,7 @@ const AddToCart = ({
     | 'secondaryHollow';
 }) => {
   const { openCartModal } = useIntermediateCart();
-  const { refetchCart } = useContext(CartContext);
+  const { refetchCart } = useCartOperations();
 
   const productId = product?.databaseId;
 
