@@ -1,24 +1,15 @@
 // Imports
-import { ReactNode, useContext, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { ReactNode } from 'react';
 
 // Components
-import Meta, { IMeta } from './Meta';
-import Header from '../sections/Header/Header';
+import Meta from './Meta';
+import type { IMeta } from './Meta';
+import Header from '@/components/sections/Header/Header';
 import Footer from '@/components/sections/Footer/Footer';
-import CartModal from '../Modals/CartModal';
-
-// State
-import { CartContext } from '@/stores/CartProvider';
-
-// Utils
-import { getFormattedCart } from '@/utils/functions/functions';
-
-// GraphQL
-import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import CartModal from '@/components/Modals/CartModal';
 
 // Types
-import { SimpleFooterMenuProps } from '../sections/Footer/SimpleFooterMenu';
+import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
 
 interface LayoutProps {
@@ -42,7 +33,6 @@ interface LayoutProps {
  * @param {TTitle} title - Title for the page. Is set in <title>{title}</title>
  * @returns {JSX.Element} - Rendered component
  */
-
 const Layout = ({
   children,
   meta,
@@ -55,30 +45,6 @@ const Layout = ({
   isBg = false,
   excludeSeo = false,
 }: LayoutProps) => {
-  const { setCart } = useContext(CartContext);
-
-  const { data, refetch } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      // Update cart in the localStorage.
-      const updatedCart = getFormattedCart(data);
-
-      if (!updatedCart && !data?.cart?.contents?.nodes.length) {
-        // Should we clear the localStorage if we have no remote cart?
-        return;
-      }
-
-      localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
-
-      // Update cart data in React Context.
-      setCart(updatedCart);
-    },
-  });
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
   return (
     <>
       <Meta meta={meta} uri={uri} excludeSeo={excludeSeo} />
@@ -86,7 +52,9 @@ const Layout = ({
 
       <Header categoriesMenu={categoriesMenu} />
       <div
-        className={`min-h-screen flex flex-col font-primary ${isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'} ${isBg ? 'bg-primary-light' : ''}`}
+        className={`min-h-screen flex flex-col font-primary ${
+          isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'
+        } ${isBg ? 'bg-primary-light' : ''}`}
       >
         <main className="grow shrink-0 text-primary font-primary">
           {children}

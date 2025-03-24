@@ -1,6 +1,6 @@
 // Imports
-import React, { useContext, useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import React, { useContext } from 'react';
+import { useMutation } from '@apollo/client';
 import { v4 as uuidv4 } from 'uuid';
 
 // Components
@@ -10,14 +10,9 @@ import Cta from '../atoms/Cta';
 import { CartContext } from '@/stores/CartProvider';
 import { useIntermediateCart } from '@/stores/IntermediateCartContext';
 
-// Utils
-import { getFormattedCart } from '@/utils/functions/functions';
-
 // GraphQL
-import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
 import { CardProductProps } from '@/types/blocTypes';
-import useAuth from '@/hooks/useAuth';
 
 const AddToCart = ({
   product,
@@ -31,10 +26,8 @@ const AddToCart = ({
     | 'secondary'
     | 'secondaryHollow';
 }) => {
-  const { isPro } = useAuth();
-  const { setCart } = useContext(CartContext);
   const { openCartModal } = useIntermediateCart();
-  const [requestError, setRequestError] = useState<boolean>(false);
+  const { refetchCart } = useContext(CartContext);
 
   const productId = product?.databaseId;
 
@@ -43,61 +36,30 @@ const AddToCart = ({
     productId,
   };
 
-  const { data, refetch } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      const updatedCart = getFormattedCart(data, isPro);
-
-      if (!updatedCart || !updatedCart.products.length) {
-        localStorage.removeItem('woocommerce-cart');
-        setCart(null);
-        return;
-      }
-
-      localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
-      setCart(updatedCart);
-    },
-  });
-
   const [addToCart, { loading: addToCartLoading }] = useMutation(ADD_TO_CART, {
     variables: {
       input: productQueryInput,
     },
-    onCompleted: () => {
-      refetch();
-      // Ouvrir la modale intermédiaire après l'ajout réussi
+    onCompleted: async () => {
+      await refetchCart();
       openCartModal(product);
-    },
-    onError: () => {
-      setRequestError(true);
     },
   });
 
-  const handleAddToCart = async (e: React.MouseEvent, isPro?: boolean) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     await addToCart();
-
-    setTimeout(() => {
-      refetch().then(({ data }) => {
-        const updatedCart = getFormattedCart(data, isPro);
-
-        if (updatedCart) {
-          localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
-          setCart(updatedCart);
-        }
-      });
-    }, 1000);
   };
 
   return (
     <Cta
-      handleButtonClick={(e) => handleAddToCart(e)}
+      handleButtonClick={handleAddToCart}
       label="Ajouter au panier"
       variant={variant}
       size="large"
       slug="#"
       additionalClass={`w-full ${
-        addToCartLoading || requestError ? 'opacity-50 pointer-events-none' : ''
+        addToCartLoading ? 'opacity-50 pointer-events-none' : ''
       }`}
     >
       AJOUTER AU PANIER

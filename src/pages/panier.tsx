@@ -17,7 +17,9 @@ import Separator from '@/components/atoms/Separator';
 import EmptyElement from '@/components/EmptyElement';
 import { LargeCartSvg } from '@/components/SVG/Icons';
 import useAuth from '@/hooks/useAuth';
-// import { CardProductProps } from '@/types/blocTypes';
+import { useQuery } from '@apollo/client';
+import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import { getFormattedCart } from '@/utils/functions/functions';
 
 const Panier = ({
   themeSettings,
@@ -30,11 +32,25 @@ const Panier = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
-  const { cart } = useContext(CartContext);
+  const { cart, setCart } = useContext(CartContext);
 
   const { isPro } = useAuth();
-  // const upsellProducts: CardProductProps[] = [];
-  //todo revoir quels prix on affiche + logique des produits upsell + logique des livraison + regrouper ici la logique d'update du panier
+
+  // Déplacer la logique GET_CART ici
+  const { refetch } = useQuery(GET_CART, {
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data) => {
+      const updatedCart = getFormattedCart(data, isPro);
+      if (!updatedCart || !updatedCart.products.length) {
+        localStorage.removeItem('woocommerce-cart');
+        setCart(null);
+        return;
+      }
+      localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
+      setCart(updatedCart);
+    },
+  });
+
   return (
     <Layout
       meta={{ title: 'Panier - Automatisme Online' }}
@@ -58,21 +74,21 @@ const Panier = ({
           />
         ) : (
           <>
-            <div className="relative flex flex-col md:flex-row md:items-start gap-6 md:gap-10 xl:gap-16 max-md:max-w-md mx-auto mt-6 md:mt-12">
+            <div className="relative flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10 xl:gap-16 max-lg:max-w-xl mx-auto mt-6 lg:mt-12">
               {/* Conteneur principal */}
-              <div className="flex-1 shrink-1 flex flex-col gap-6 md:gap-10 xl:gap-16">
-                <CartContents isProSession={isPro} />
+              <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10 xl:gap-16">
+                <CartContents isProSession={isPro} refetch={refetch} />
                 <Separator />
                 <DeliveryChoices />
                 <Separator />
               </div>
 
               {/* CartSummary en sticky à droite en desktop */}
-              <aside className="w-full md:min-w-1/4 md:sticky md:max-w-[300px] md:top-20 self-start md:shrink-1">
+              <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] lg:top-20 self-start lg:shrink-1">
                 <CartSummary isProSession={isPro} />
               </aside>
             </div>
-            <div className="py-6 md:py-10 xl:py-16">
+            <div className="py-6 lg:py-10 xl:py-16">
               <CartUpsellProducts />
             </div>
           </>

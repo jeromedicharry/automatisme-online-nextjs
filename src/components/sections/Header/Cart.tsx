@@ -5,7 +5,11 @@ import { CartContext } from '@/stores/CartProvider';
 
 const Cart = () => {
   const { cart } = useContext(CartContext);
-  const [productCount, setProductCount] = useState<number | null | undefined>();
+  const [productCount, setProductCount] = useState<number | null | undefined>(
+    null,
+  );
+
+  console.log({ productCount });
 
   useEffect(() => {
     if (cart) {
@@ -37,13 +41,13 @@ const Cart = () => {
             fill="#042B60"
           />
         </svg>
-        {productCount && (
+        {productCount && productCount > 0 ? (
           <span
             className={`rounded-full text-xs w-4 h-4 flex items-center pt-[1px] justify-center absolute top-[-5px] right-[-5px] bg-secondary text-white`}
           >
             {productCount}
           </span>
-        )}
+        ) : null}
       </Link>
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,7 +9,6 @@ import Cta from '../atoms/Cta';
 
 import { getFormattedCart } from '@/utils/functions/functions';
 
-import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { UPDATE_CART } from '@/utils/gql/GQL_MUTATIONS';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 
@@ -34,36 +33,36 @@ const getUpdatedItemsFromFormatted = (
   });
 };
 
-const CartContents = ({ isProSession }: { isProSession: boolean }) => {
+const CartContents = ({
+  isProSession,
+  refetch,
+}: {
+  isProSession: boolean;
+  refetch: () => Promise<any>;
+}) => {
   const { cart, setCart } = useContext(CartContext);
-
-  const { data, refetch } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      const updatedCart = getFormattedCart(data, isProSession);
-
-      if (!updatedCart || !updatedCart.products.length) {
-        localStorage.removeItem('woocommerce-cart');
-        setCart(null);
-        return;
-      }
-
-      // Met à jour le contexte avec les nouveaux produits du panier
-      localStorage.setItem('woocommerce-cart', JSON.stringify(updatedCart));
-      setCart(updatedCart); // Mise à jour immédiate dans le contexte
-
-      // Optionnel : Force un rafraîchissement des données depuis le serveur
-      setTimeout(() => {
-        refetch();
-      }, 200);
-    },
-  });
 
   const [updateCart, { loading: updateCartProcessing }] = useMutation(
     UPDATE_CART,
     {
-      onCompleted: () => {
-        refetch(); // Si tu veux recharger le panier après une mise à jour
+      onCompleted: async () => {
+        try {
+          const { data: newData } = await refetch();
+          if (!newData || !newData.cart) return;
+
+          const updatedCart = getFormattedCart(newData, isProSession);
+          if (updatedCart) {
+            localStorage.setItem(
+              'woocommerce-cart',
+              JSON.stringify(updatedCart),
+            );
+            // Force le re-render avec le nouveau state
+            await Promise.resolve();
+            setCart(updatedCart);
+          }
+        } catch (error) {
+          console.error('Error updating cart:', error);
+        }
       },
     },
   );
