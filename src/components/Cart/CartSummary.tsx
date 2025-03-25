@@ -15,8 +15,6 @@ const CartSummary = ({ isProSession }: { isProSession: boolean }) => {
     return null;
   }
 
-  console.log({ cart });
-
   return (
     <>
       <BlocIntroSmall title="Récapitulatif" />

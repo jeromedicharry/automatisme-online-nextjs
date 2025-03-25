@@ -3,7 +3,6 @@ import React from 'react';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 
 const CartUpsellProducts = () => {
-  console.log();
   return (
     <section>
       <BlocIntroSmall title="Complétez votre panier" />

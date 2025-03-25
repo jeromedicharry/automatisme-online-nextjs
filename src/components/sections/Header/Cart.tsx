@@ -9,8 +9,6 @@ const Cart = () => {
     null,
   );
 
-  console.log({ productCount });
-
   useEffect(() => {
     if (cart) {
       setProductCount(cart.totalProductsCount);
