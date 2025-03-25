@@ -241,3 +241,20 @@ export const GET_INSTALLATION_CTA = gql`
     }
   }
 `;
+
+export const GET_INSTALLERS = gql`
+  query GET_INSTALLERS {
+    installateurs {
+      nodes {
+        title
+        acfContent {
+          address
+          geolocation {
+            latitude
+            longitude
+          }
+        }
+      }
+    }
+  }
+`;

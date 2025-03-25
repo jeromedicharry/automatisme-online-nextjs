@@ -18,6 +18,11 @@ export interface BrandStickerProps {
   };
 }
 
+export interface ProductFaqItemProps {
+  title: string;
+  content: string;
+}
+
 export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
   isPro: boolean;
@@ -29,10 +34,7 @@ export interface ProductContentProps extends CardProductProps {
   description: string;
   stockQuantity: number;
   acfProduct: {
-    faq: {
-      title: string;
-      content: string;
-    }[];
+    faq: ProductFaqItemProps[];
   };
   galleryImages: {
     nodes: {

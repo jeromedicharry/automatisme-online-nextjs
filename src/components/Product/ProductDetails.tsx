@@ -1,9 +1,9 @@
-import { FaqItemProps } from '@/types/Faq';
 import React from 'react';
 import ProductDetailAccordionItem from './ProductDetailAccordionItem';
 import { ProCustomerSvg, QuestionMarkSvg } from '../SVG/Icons';
+import { ProductFaqItemProps } from './ProductContent';
 
-const ProductDetails = ({ faqItems }: { faqItems: FaqItemProps[] }) => {
+const ProductDetails = ({ faqItems }: { faqItems: ProductFaqItemProps[] }) => {
   //todo gérer la marque du produit
   // todo gérer la catégorie la plus basse du produit
   return (

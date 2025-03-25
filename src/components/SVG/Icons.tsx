@@ -45,8 +45,13 @@ const Chevron = () => (
     />
   </svg>
 );
-const Wifi = ({ variant }: { variant: 'bleu' | 'orange' }) => {
-  const color = variant === 'orange' ? '#f8d6b5' : '#dfeffd';
+const Wifi = ({ variant }: { variant: 'bleu' | 'orange' | 'bleu2' }) => {
+  const color =
+    variant === 'orange'
+      ? '#f8d6b5'
+      : variant === 'bleu2'
+        ? '#DBF0FE'
+        : '#0273FF';
   return (
     <svg
       id="Calque_1"
