@@ -66,7 +66,7 @@ export interface CardProductProps {
   isKit?: boolean;
   price: string;
   salePrice: string;
-  isProProduct: boolean;
+  isPro: boolean;
   hasProDiscount: boolean;
   regularPrice: string;
   sku: string;

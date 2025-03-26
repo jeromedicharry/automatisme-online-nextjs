@@ -7,10 +7,10 @@ import ProductPrice from '../Product/ProductPrice';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import FavoriteButton from '../atoms/FavoriteButton';
 import useAuth from '@/hooks/useAuth';
+import Cta from '../atoms/Cta';
 
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
-  // todo ajout aux favoris
-  const { loggedIn } = useAuth();
+  const { loggedIn, isPro } = useAuth();
   return (
     <article className="flex flex-col max-w-[250px] xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
@@ -50,14 +50,30 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
         {product?.sku}
       </p>
       <p className="mb-[10px]">Widget Avis vérifiés</p>
-      <ProductPrice
-        price={parseFloat(product?.price || '0')}
-        regularPrice={parseFloat(product?.regularPrice || '0')}
-        variant="card"
-      />
-      <div className="mt-auto">
-        <AddToCart product={product} />
-      </div>
+      {product?.isPro && !isPro ? (
+        <div className="mt-auto">
+          <Cta
+            variant="secondary"
+            slug="/compte"
+            size="default"
+            isFull
+            label="Passer mon compte en pro"
+          >
+            Passer mon compte en pro
+          </Cta>
+        </div>
+      ) : (
+        <>
+          <ProductPrice
+            price={parseFloat(product?.price || '0')}
+            regularPrice={parseFloat(product?.regularPrice || '0')}
+            variant="card"
+          />
+          <div className="mt-auto">
+            <AddToCart product={product} />
+          </div>
+        </>
+      )}
     </article>
   );
 };

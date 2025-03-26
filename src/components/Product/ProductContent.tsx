@@ -10,6 +10,7 @@ import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import ProductDetails from './ProductDetails';
 import FavoriteButton from '../atoms/FavoriteButton';
 import useAuth from '@/hooks/useAuth';
+import Cta from '../atoms/Cta';
 
 export interface BrandStickerProps {
   name: string;
@@ -51,8 +52,48 @@ const ProductContent = ({
   product: ProductContentProps;
   paymentPictos: any;
 }) => {
-  const { loggedIn } = useAuth();
-  // todo ajout aux favoris + mettre sur mobile ajout favioris + ajout au panier
+  const { loggedIn, isPro } = useAuth();
+
+  const NotProConnectedAlternate = () => {
+    if (!loggedIn) {
+      return (
+        <div className="flex flex-col gap-3 justify-start items-start">
+          <p>{'Ce produit est réservé aux professionnels.'}</p>
+          <div className="w-fit">
+            <Cta
+              variant="secondary"
+              slug="/compte"
+              size="default"
+              label="Me connecter ou créer un compte pro"
+            >
+              Me connecter ou créer un compte pro
+            </Cta>
+          </div>
+        </div>
+      );
+    }
+    if (!isPro) {
+      return (
+        <div className="flex flex-col gap-3 justify-start align-top">
+          <p>{'Ce produit est réservé aux professionnels.'}</p>
+          <div className="w-fit">
+            <Cta
+              variant="secondary"
+              slug="/compte"
+              size="default"
+              label="Passer mon compte en pro"
+            >
+              Passer mon compte en pro
+            </Cta>{' '}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  // mettre sur mobile ajout favioris + ajout au panier
   // todo mettre les bons pictos de paiement voir à les mettre en dur
   // todo voir à ajouter plusieurs produits à la volée
   // todo gérer les produits remplacés (à la place du prix, bouton vers le produit de remplacemnt)
@@ -76,26 +117,33 @@ const ProductContent = ({
             />
           </div>
           <section className="prix order-3 md:order-2">
-            <div className="flex items-center gap-3">
-              <ProductPrice
-                onSale={product?.onSale}
-                variant="productPage"
-                price={parseFloat(product?.price || '0')}
-                regularPrice={parseFloat(product?.regularPrice || '0')}
-              />
-              {loggedIn && product?.databaseId !== undefined && (
-                <div className="max-md:hidden flex items-stretch gap-2 w-full justify-between mb-6">
-                  <div className="shrink-0 basis-[45px] h-[45px] w-[45px] rounded-md flex justify-center items-center border border-primary">
-                    <FavoriteButton productId={Number(product?.databaseId)} />
+            {product?.isPro && !isPro ? (
+              <NotProConnectedAlternate />
+            ) : (
+              <>
+                <div className="flex items-center gap-3">
+                  <ProductPrice
+                    onSale={product?.onSale}
+                    variant="productPage"
+                    price={parseFloat(product?.price || '0')}
+                    regularPrice={parseFloat(product?.regularPrice || '0')}
+                  />
+                  <div className="max-md:hidden flex items-stretch gap-2 w-full justify-between mb-6">
+                    {loggedIn && product?.databaseId !== undefined && (
+                      <div className="shrink-0 basis-[45px] h-[45px] w-[45px] rounded-md flex justify-center items-center border border-primary">
+                        <FavoriteButton
+                          productId={Number(product?.databaseId)}
+                        />
+                      </div>
+                    )}
+                    <AddToCart variant="primary" product={product}></AddToCart>
                   </div>
-
-                  <AddToCart variant="primary" product={product}></AddToCart>
                 </div>
-              )}
-            </div>
-            <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
-              Payer en 3 versements sans frais.
-            </p>
+                <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
+                  Payer en 3 versements sans frais.
+                </p>
+              </>
+            )}
             {product?.hasPose && (
               <div className="mt-8 md:mt-6">
                 <p className="mb-4 font-bold">{"Choix de l'option"}</p>
