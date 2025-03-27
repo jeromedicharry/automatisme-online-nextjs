@@ -214,6 +214,12 @@ export const GET_ALL_LEVEL_1_CATEGORIES = gql`
               nodes {
                 uri
                 name
+                children {
+                  nodes {
+                    uri
+                    name
+                  }
+                }
               }
             }
           }

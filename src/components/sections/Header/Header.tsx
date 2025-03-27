@@ -9,6 +9,7 @@ import Container from '@/components/container';
 import { CategoryMenuProps } from '@/types/Categories';
 import { BulletSvg } from '../blocs/BlocAnchorsPicto';
 import useAuth from '@/hooks/useAuth';
+import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
 
 export default function Header({
   categoriesMenu,
@@ -166,10 +167,13 @@ export default function Header({
             </div>
 
             {/* Desktop menu */}
-            <nav className="pb-6">
+            <nav className="">
               <ul className="flex justify-between xl:justify-evenly relative xl:gap-5">
                 {categoriesMenu?.map((item) => (
-                  <li key={item.name} className="group">
+                  <li
+                    key={item.name}
+                    className="group pb-6 duration-300 hover:border-b hover:border-primary"
+                  >
                     <Link
                       href={item.uri}
                       className="whitespace-nowrap text-primary hover:text-primary-dark duration-300 font-bold text-xs leading-general flex items-center gap-1"
@@ -182,9 +186,10 @@ export default function Header({
                       )}
                     </Link>
                     {item.children?.nodes?.length > 0 && (
-                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 duration-300">
+                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 shadow-card duration-300">
                         <Container large>
-                          <ul className="flex flex-wrap gap-6 w-full max-w-7xl mx-auto border-t border-t-primary pt-6">
+                          <BlocIntroSmall title={'Catégories'} />
+                          <ul className="flex flex-wrap gap-6 w-full max-w-7xl mx-auto">
                             {item.children.nodes.map((subItem) => (
                               <li key={subItem.name}>
                                 <Link
