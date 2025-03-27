@@ -36,7 +36,7 @@ const BlocReassurance = ({
               key={index}
               className="flex items-center gap-2 text-primary hover:text-primary-dark duration-300"
             >
-              {item.picto.node.sourceUrl ? (
+              {item.picto?.node?.sourceUrl ? (
                 <div
                   className={`flex rounded-[3px] ${mobileBgColor} px-[6px] py-[5px]`}
                 >

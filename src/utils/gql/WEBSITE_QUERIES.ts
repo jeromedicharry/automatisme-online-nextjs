@@ -53,6 +53,8 @@ export const GET_OPTIONS = gql`
         }
         ${sliderAdvicesFields}
         ${FEATURED_FAQ}
+        contactTitle
+        contactText
       }
     }
   }
