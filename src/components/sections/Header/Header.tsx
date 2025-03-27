@@ -8,6 +8,7 @@ import Cart from './Cart';
 import Container from '@/components/container';
 import { CategoryMenuProps } from '@/types/Categories';
 import { BulletSvg } from '../blocs/BlocAnchorsPicto';
+import useAuth from '@/hooks/useAuth';
 
 export default function Header({
   categoriesMenu,
@@ -39,6 +40,8 @@ export default function Header({
     );
   };
 
+  const { isPro } = useAuth();
+
   return (
     <header
       className={`fixed w-full top-0 z-50 transform transition-transform duration-300 ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`}
@@ -46,10 +49,10 @@ export default function Header({
       {/* Desktop top bar */}
       <div className="hidden lg:flex w-full">
         <Link
-          href="/espace-pro"
+          href="/compte"
           className="w-1/2 bg-primary py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
         >
-          Mon espace professionel
+          Mon espace {isPro ? 'professionel' : 'client'}
           <div className="max-w-1">
             <BulletSvg />
           </div>
@@ -179,7 +182,7 @@ export default function Header({
                       )}
                     </Link>
                     {item.children?.nodes?.length > 0 && (
-                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 shadow-card duration-300">
+                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 duration-300">
                         <Container large>
                           <ul className="flex flex-wrap gap-6 w-full max-w-7xl mx-auto border-t border-t-primary pt-6">
                             {item.children.nodes.map((subItem) => (

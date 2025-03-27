@@ -1,27 +1,17 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import {
-  GET_CUSTOMER_ADDRESSES,
-  UPDATE_ADDRESS,
+  GET_CUSTOMER_PRO_INFO,
+  UPDATE_CUSTOMER_PRO_INFO,
+  UPGRADE_TO_PRO_CUSTOMER,
 } from '@/utils/gql/CUSTOMER_QUERIES';
 import useAuth from '@/hooks/useAuth';
 import BackToAccountNav from '../BackToAccountNav';
-import EmptyAddressWithCTA from '../addresses/EmptyAddressWithCta';
-import AddressForm from '../addresses/AddressForm';
-import AddressCard from '../addresses/AddressCard';
-import BillingOptions from '../addresses/BillingOptions';
+import Cta from '@/components/atoms/Cta';
 
-export type AddressData = {
-  address1: string;
-  address2: string;
-  city: string;
+type ProData = {
   company: string;
-  country: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  postcode: string;
-  email?: string;
+  siret: string;
 };
 
 const Pro = ({
@@ -29,174 +19,231 @@ const Pro = ({
 }: {
   setMobileNavClosed: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { user, loggedIn } = useAuth();
+  const { user, loggedIn, isPro } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState<
-    null | 'billing' | 'shipping'
-  >(null);
-  const [isBillingSameAsShipping, setIsBillingSameAsShipping] = useState(false);
+  const [upgradeError, setUpgradeError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const { data, loading, error, refetch } = useQuery(GET_CUSTOMER_ADDRESSES, {
+  const { data, loading, error, refetch } = useQuery(GET_CUSTOMER_PRO_INFO, {
     variables: { id: user?.id },
     skip: !loggedIn,
   });
 
-  const [updateAddress] = useMutation(UPDATE_ADDRESS);
+  const [updateProInfo] = useMutation(UPDATE_CUSTOMER_PRO_INFO);
+  const [upgradeToProCustomer] = useMutation(UPGRADE_TO_PRO_CUSTOMER);
 
-  const handleEdit = (addressType: 'billing' | 'shipping') => {
-    setSelectedAddress(addressType);
-    setIsEditing(true);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    setSelectedAddress(null);
-  };
-
-  const handleSubmit = async (addressData: AddressData) => {
+  const handleSubmit = async (proData: ProData) => {
     if (!user?.id) return;
 
     try {
-      const variables: {
-        id: string;
-        billing?: AddressData;
-        shipping?: AddressData;
-      } = {
-        id: user.id,
-      };
-
-      if (selectedAddress === 'billing') {
-        variables.billing = addressData;
-      }
-
-      if (selectedAddress === 'shipping') {
-        variables.shipping = addressData;
-
-        if (isBillingSameAsShipping) {
-          // Si billing est mis à jour aussi, on s'assure de garder l'email existant
-          variables.billing = {
-            ...addressData,
-            email: billing?.email || addressData.email, // Préserve l'email
-          };
-        }
-      }
-      await updateAddress({
-        variables,
+      await updateProInfo({
+        variables: {
+          id: user.id,
+          siret: proData.siret,
+          company: proData.company,
+        },
       });
 
       await refetch();
       setIsEditing(false);
-      setSelectedAddress(null);
     } catch (error) {
-      console.error('Error updating address', error);
+      console.error('Error updating pro info', error);
     }
   };
 
-  const handleAddressCreation = (addressType: 'shipping' | 'billing') => {
-    setSelectedAddress(addressType);
-    setIsEditing(true);
-  };
+  const handleUpgradeToPro = async () => {
+    if (!user?.databaseId) return;
 
-  const handleUseSameAsBilling = () => {
-    if (data?.customer?.shipping) {
-      setSelectedAddress('billing');
-      setIsEditing(true);
-      setIsBillingSameAsShipping(true);
+    try {
+      setUpgradeError(null);
+      const { data } = await upgradeToProCustomer({
+        variables: {
+          id: user.databaseId, // Utilisez databaseId directement
+        },
+      });
+
+      if (data?.upgradeToProCustomer?.success) {
+        await refetch();
+        // Recharger la page pour mettre à jour le contexte d'authentification
+        setSuccessMessage(
+          'Votre passage en pro a été réussi nous allons recharger la page dans quelques secondes pour rafraichir vos données.',
+        );
+        setTimeout(() => window.location.reload(), 2000);
+      }
+    } catch (error: any) {
+      console.error('Error upgrading to pro', error);
+      setUpgradeError(error.message);
     }
   };
 
-  const handleAddNewBilling = () => {
-    setSelectedAddress('billing');
-    setIsEditing(true);
-    setIsBillingSameAsShipping(false);
-  };
+  const hasProInfo = data?.customer?.billing?.company && data?.customer?.siret;
 
-  if (loading) return <div className="p-4">Chargement des adresses...</div>;
-  if (error)
-    return <div className="p-4 text-red-500">Erreur: {error.message}</div>;
+  if (!loggedIn) {
+    return (
+      <div className="p-4">
+        <p>
+          Veuillez vous connecter pour accéder à votre espace professionnel.
+        </p>
+      </div>
+    );
+  }
 
-  const { shipping, billing } = data?.customer || {};
+  const renderForm = () => (
+    <div className="border rounded-lg p-6 bg-white shadow-card">
+      <h3 className="text-lg font-semibold mb-4">
+        {isPro
+          ? 'Modifier vos informations professionnelles'
+          : 'Informations professionnelles requises'}
+      </h3>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          handleSubmit({
+            company: formData.get('company') as string,
+            siret: formData.get('siret') as string,
+          });
+        }}
+      >
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="company" className="block mb-1">
+              {"Nom de l'entreprise"}
+            </label>
+            <input
+              type="text"
+              name="company"
+              id="company"
+              defaultValue={data?.customer?.billing?.company || ''}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
 
-  const isAddressComplete = (address: AddressData) => {
-    return address && address.address1 && address.city;
-  };
+          <div>
+            <label htmlFor="siret" className="block mb-1">
+              Numéro SIRET
+            </label>
+            <input
+              type="text"
+              name="siret"
+              id="siret"
+              pattern="[0-9]{14}"
+              title="Le numéro SIRET doit contenir 14 chiffres"
+              defaultValue={data?.customer?.siret || ''}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+        </div>
 
-  const hasShippingAddress = isAddressComplete(shipping);
-  const hasBillingAddress = isAddressComplete(billing);
+        <div className="flex justify-end gap-4 w-fit ml-auto mt-10">
+          {isEditing && (
+            <Cta
+              slug="#"
+              handleButtonClick={() => setIsEditing(false)}
+              variant="primaryHollow"
+              label="Annuler"
+            >
+              Annuler
+            </Cta>
+          )}
+          <button
+            type="submit"
+            className="text-base leading-general px-4 py-2 gap-2 bg-primary duration-300 hover:bg-primary-dark text-white min-h-[43px] rounded-[5px] min-w-[170px]"
+          >
+            {isEditing ? 'Mettre à jour' : 'Enregistrer les informations'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+
+  const renderInfo = () => (
+    <div className="border rounded-lg py-4 px-5 mb-4 relative bg-white shadow-card">
+      <h3 className="font-semibold mb-4">Informations professionnelles</h3>
+      {isPro && (
+        <div className="absolute max-sm:bottom-4 sm:top-4 right-5">
+          <Cta
+            handleButtonClick={() => setIsEditing(true)}
+            variant="primary"
+            size="small"
+            label="Modifier"
+            slug="#"
+          >
+            Modifier
+          </Cta>
+        </div>
+      )}
+      <p className="mt-1 font-medium mb-1 underline">Entreprise :</p>
+      <p className="mb-2">{data?.customer?.billing?.company}</p>
+      <p className="mt-1 font-medium mb-1 underline">N° de SIRET :</p>
+      <p>{data?.customer?.siret}</p>
+
+      <div className="space-y-4">
+        {!isPro && (
+          <div className="border-t pt-4 mt-4">
+            <p className="mb-4 text-sm text-gray-600">
+              Vos informations professionnelles ont été enregistrées. Vous
+              pouvez maintenant faire une demande de passage en compte
+              professionnel.
+            </p>
+            {upgradeError && (
+              <p className="mb-4 text-sm text-red-600">{upgradeError}</p>
+            )}
+            {successMessage && (
+              <p className="mb-4 p-4 border border-primary text-sm text-primary">
+                {successMessage}
+              </p>
+            )}
+            <div className="flex justify-end space-x-3 w-fit ml-auto">
+              <Cta
+                slug="#"
+                handleButtonClick={() => setIsEditing(true)}
+                variant="primaryHollow"
+                label="Modifier les informations"
+                isFull={false}
+                additionalClass="items-start"
+              >
+                Modifier les informations
+              </Cta>
+
+              <Cta
+                slug="#"
+                handleButtonClick={handleUpgradeToPro}
+                variant="primary"
+                label="Passer en pro"
+                isFull={false}
+              >
+                Passer en pro
+              </Cta>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <>
       <div className="md:hidden">
         <BackToAccountNav setMobileNavClosed={setMobileNavClosed} />
       </div>
+
       <h1 className="text-2xl leading-general font-bold mb-6 md:mb-3 max-md:mt-6">
-        Mes adresses
+        Espace Professionnel
       </h1>
 
-      {!loggedIn && (
-        <div className="text-center py-8">
-          <p>Veuillez vous connecter pour gérer vos adresses.</p>
-        </div>
-      )}
-
-      {loggedIn && !hasShippingAddress && !isEditing && (
-        <>
-          <EmptyAddressWithCTA
-            type="shipping"
-            onAddAddress={() => handleAddressCreation('shipping')}
-          />
-        </>
-      )}
-
-      {loggedIn && isEditing && (
-        <AddressForm
-          addressType={selectedAddress}
-          initialData={selectedAddress === 'shipping' ? shipping : billing}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          isBillingSameAsShipping={isBillingSameAsShipping}
-          setIsBillingSameAsShipping={setIsBillingSameAsShipping}
-        />
-      )}
-
-      {loggedIn && !isEditing && (
-        <div className="space-y-6">
-          {hasShippingAddress ? (
-            <AddressCard
-              address={shipping}
-              type="shipping"
-              onEdit={() => handleEdit('shipping')}
-            />
-          ) : (
-            <EmptyAddressWithCTA
-              type="shipping"
-              onAddAddress={() => handleAddressCreation('shipping')}
-            />
-          )}
-
-          {hasShippingAddress && !hasBillingAddress && !isEditing && (
-            <BillingOptions
-              onUseSameAddress={handleUseSameAsBilling}
-              onAddNewAddress={handleAddNewBilling}
-            />
-          )}
-
-          {hasBillingAddress ? (
-            <AddressCard
-              address={billing}
-              type="billing"
-              onEdit={() => handleEdit('billing')}
-            />
-          ) : (
-            hasShippingAddress &&
-            !isEditing && (
-              <EmptyAddressWithCTA
-                type="billing"
-                onAddAddress={() => handleAddressCreation('billing')}
-              />
-            )
-          )}
-        </div>
+      {loading ? (
+        <p>Chargement...</p>
+      ) : error ? (
+        <p>Une erreur est survenue</p>
+      ) : isEditing ? (
+        renderForm()
+      ) : hasProInfo ? (
+        renderInfo()
+      ) : (
+        renderForm()
       )}
     </>
   );

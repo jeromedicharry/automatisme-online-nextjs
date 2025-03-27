@@ -52,9 +52,11 @@ export const UPDATE_USER_EMAIL = gql`
   }
 `;
 
-export const GET_CUSTOMER_COMPANY = gql`
-  query GET_CUSTOMER_COMPANY($id: ID!) {
+export const GET_CUSTOMER_PRO_INFO = gql`
+  query GET_CUSTOMER_PRO_INFO($id: ID!) {
     customer(id: $id) {
+      id
+      siret
       billing {
         company
       }
@@ -63,16 +65,37 @@ export const GET_CUSTOMER_COMPANY = gql`
 `;
 
 export const UPDATE_CUSTOMER_PRO_INFO = gql`
-  mutation UPDATE_ADDRESS($id: ID!, $billing: CustomerAddressInput, $shipping: CustomerAddressInput) {
-    updateCustomer(input: { id: $id, billing: $billing, shipping: $shipping }) {
+  mutation UPDATE_CUSTOMER_PRO_INFO(
+    $id: ID!
+    $company: String!
+    $siret: String!
+  ) {
+    updateCustomer(
+      input: {
+        id: $id
+        billing: { company: $company }
+        metaData: [{ key: "siret", value: $siret }]
+      }
+    ) {
       customer {
+        id
+        siret
         billing {
-          ${ADDRESS_FIELDS}
-          email
+          company
         }
-        shipping {
-          ${ADDRESS_FIELDS}
-        }
+      }
+    }
+  }
+`;
+
+export const UPDATE_CUSTOMER_SIRET = gql`
+  mutation UPDATE_CUSTOMER_SIRET($id: ID!, $siret: String!) {
+    updateCustomer(
+      input: { id: $id, metaData: [{ key: "siret", value: $siret }] }
+    ) {
+      customer {
+        id
+        siret
       }
     }
   }
@@ -109,6 +132,17 @@ export const GET_CUSTOMER_ORDERS = gql`
           endCursor
           hasNextPage
         }
+      }
+    }
+  }
+`;
+
+export const UPGRADE_TO_PRO_CUSTOMER = gql`
+  mutation UPGRADE_TO_PRO_CUSTOMER($id: ID!) {
+    upgradeToProCustomer(input: { id: $id }) {
+      success
+      customer {
+        id
       }
     }
   }

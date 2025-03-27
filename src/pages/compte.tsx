@@ -31,6 +31,7 @@ import { isProRole } from '@/utils/functions/functions';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
+import Pro from '@/components/Account/pro';
 
 const Compte = ({
   themeSettings,
@@ -169,7 +170,9 @@ const Compte = ({
                   setActiveTab={setActiveTab}
                 />
               )}
-              {activeTab === 'pro' && <div>Passer en compte pro</div>}
+              {activeTab === 'pro' && (
+                <Pro setMobileNavClosed={setMobileNavClosed} />
+              )}
             </section>
           </div>
         </Container>
