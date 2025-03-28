@@ -7,6 +7,13 @@ import useAuthModal from '@/hooks/useAuthModal';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
+import { useCartOperations } from '@/hooks/useCartOperations';
+import Container from '@/components/container';
+import EmptyElement from '@/components/EmptyElement';
+import { LargeCartSvg } from '@/components/SVG/Icons';
+import CartSummary from '@/components/Cart/CartSummary';
+import CheckoutSteps from '@/components/Checkout';
+import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 
 const Caisse = ({
   themeSettings,
@@ -29,6 +36,8 @@ const Caisse = ({
     user,
   } = useAuthModal();
 
+  const { cart, isPro } = useCartOperations();
+
   // Ouvrir automatiquement la modale si l'utilisateur n'est pas connecté
   useEffect(() => {
     if (!loading && !user) {
@@ -43,28 +52,51 @@ const Caisse = ({
       meta={{ title: 'Caisse' }}
       title="Caisse"
       uri="/checkout"
-      excludeSeo
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
-      isBg
     >
-      <div>
-        <h1 className="text-4xl md:text-5xl font-bold leading-general text-center text-balance">
-          Page de caisse
-        </h1>
-        <pre>{JSON.stringify(user, null, 2)}</pre>
+      <AuthModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        formStatus={formStatus}
+        setFormStatus={setFormStatus}
+        isNotClosable={true}
+      />
+      <BlocIntroLarge
+        title="Caisse"
+        isH1
+        subtitle="Suivez les différentes étapes pour passer votre commande"
+      />
+      <div className="mb-10 md:mb-16">
+        <Container>
+          {!cart?.products?.length ? (
+            <EmptyElement
+              picto={<LargeCartSvg />}
+              title="Votre panier est vide"
+              subtitle="Ajoutez des produits à votre panier pour passer commande"
+              ctaLabel="Voir nos produits"
+              ctaSlug="/"
+              ctaType="primary"
+            />
+          ) : (
+            <>
+              <div className="relative flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10 xl:gap-16 max-lg:max-w-xl mx-auto mt-6 lg:mt-12">
+                {/* Conteneur principal */}
+                <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10 xl:gap-16">
+                  <CheckoutSteps />
+                </div>
 
-        <AuthModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          formStatus={formStatus}
-          setFormStatus={setFormStatus}
-          isNotClosable={true}
-        />
+                {/* CartSummary en sticky à droite en desktop */}
+                <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] lg:top-20 self-start lg:shrink-1">
+                  <CartSummary isProSession={isPro} isCheckout />
+                </aside>
+              </div>
+            </>
+          )}
+        </Container>
       </div>
-      {/* <CheckoutForm /> */}
     </Layout>
   );
 };

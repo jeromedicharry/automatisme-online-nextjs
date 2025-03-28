@@ -10,6 +10,7 @@ const Cta = ({
   variant = 'primary',
   isFull,
   additionalClass,
+  disabled = false,
 }: {
   children?: React.ReactNode;
   handleButtonClick?: (e: React.MouseEvent) => void;
@@ -24,9 +25,10 @@ const Cta = ({
     | 'primaryWhite';
   isFull?: boolean;
   additionalClass?: string;
+  disabled?: boolean;
 }) => {
   const buttonClass =
-    'flex items-center justify-center font-bold transition duration-300 ease-in-out rounded-[5px] min-w-[170px] border';
+    'whitespace-nowrap flex items-center justify-center font-bold transition duration-300 ease-in-out rounded-[5px] min-w-[170px] border';
   const sizeClass =
     size === 'large'
       ? 'text-base leading-general px-12 py-3 gap-4 whitespace-nowrap'
@@ -53,6 +55,7 @@ const Cta = ({
       title={label}
       className={`${buttonClass} ${sizeClass} ${variantClasses[variant]} ${additionalClass} ${isFull ? 'w-full' : 'w-fit mx-auto'}`}
       onClick={handleButtonClick}
+      aria-disabled={disabled}
     >
       {children}
     </Link>

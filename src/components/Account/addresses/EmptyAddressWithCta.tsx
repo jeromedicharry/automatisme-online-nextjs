@@ -19,7 +19,7 @@ const EmptyAddressWithCTA: React.FC<EmptyAddressWithCTAProps> = ({
     <div className="mb-6">
       <EmptyElement
         picto={<HouseSvg />}
-        title={`${title} non renseignée`}
+        title={`${title} obligatoire et non renseignée`}
         subtitle={`Ajoutez une ${type === 'shipping' ? 'adresse de livraison' : 'adresse de facturation'} pour faciliter vos prochaines commandes.`}
       />
 

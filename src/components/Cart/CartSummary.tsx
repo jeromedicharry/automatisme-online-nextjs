@@ -8,7 +8,13 @@ import Separator from '../atoms/Separator';
 import Link from 'next/link';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
-const CartSummary = ({ isProSession }: { isProSession: boolean }) => {
+const CartSummary = ({
+  isProSession,
+  isCheckout = false,
+}: {
+  isProSession: boolean;
+  isCheckout?: boolean;
+}) => {
   const { cart } = useContext(CartContext);
 
   if (!cart || !cart.products) {
@@ -85,16 +91,20 @@ const CartSummary = ({ isProSession }: { isProSession: boolean }) => {
             <p>{isProSession ? '0€' : `${cart.totalTax.toFixed(2)}€`}</p>
           </div>
         </div>
-        <Separator />
-        <Cta
-          slug="/caisse"
-          label="Continuer"
-          size="default"
-          variant="primary"
-          isFull
-        >
-          Continuer
-        </Cta>
+        {!isCheckout && (
+          <>
+            <Separator />
+            <Cta
+              slug="/caisse"
+              label="Continuer"
+              size="default"
+              variant="primary"
+              isFull
+            >
+              Continuer
+            </Cta>
+          </>
+        )}
       </div>
     </>
   );
