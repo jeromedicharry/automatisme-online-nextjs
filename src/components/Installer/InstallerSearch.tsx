@@ -87,7 +87,7 @@ const InstallerSearch = ({ onSearch }: InstallerSearchProps) => {
             >
               <span className="font-medium">{city.nom}</span>
               <span className="text-sm text-gray-600">
-                {city.codesPostaux.join(', ')}
+                {city.codesPostaux[0]}
               </span>
             </button>
           ))}

@@ -1,4 +1,3 @@
-// pages/trouver-installateur.tsx
 import Layout from '@/components/Layout/Layout';
 import type { GetStaticProps } from 'next';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
@@ -11,16 +10,14 @@ import { useInstallerSearch } from '@/hooks/useInstallerSearch';
 import InstallerSearch from '@/components/Installer/InstallerSearch';
 import InstallerCard from '@/components/Installer/InstallerCard';
 import { GET_INSTALLERS } from '@/utils/gql/WEBSITE_QUERIES';
-import { useQuery } from '@apollo/client';
 import EmptyElement from '@/components/EmptyElement';
 import { OrderSvg } from '@/components/SVG/Icons';
+import client from '@/utils/apollo/ApolloClient';
 
 // Import dynamique de la carte pour éviter les erreurs SSR
 const InstallerMap = dynamic(
   () => import('@/components/Installer/InstallerMap'),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 );
 
 const InstallerPage = ({
@@ -28,13 +25,14 @@ const InstallerPage = ({
   footerMenu1,
   footerMenu2,
   categoriesMenu,
+  installateurs, // On passe la liste complète des installateurs
 }: {
   themeSettings: any;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
+  installateurs: any[];
 }) => {
-  const { data } = useQuery(GET_INSTALLERS);
   const {
     filteredInstallers,
     searchCenter,
@@ -43,7 +41,7 @@ const InstallerPage = ({
     searchInstallers,
     activeInstallerIndex,
     setActiveInstallerIndex,
-  } = useInstallerSearch(data?.installateurs?.nodes || []);
+  } = useInstallerSearch(installateurs);
 
   return (
     <Layout
@@ -125,12 +123,34 @@ const InstallerPage = ({
 
 export default InstallerPage;
 
+// Fonction pour récupérer tous les installateurs avec pagination
+const fetchAllInstallers = async () => {
+  let allInstallers: any[] = [];
+  let cursor: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const { data }: any = await client.query({
+      query: GET_INSTALLERS,
+      variables: { cursor },
+    });
+
+    allInstallers = [...allInstallers, ...data.installateurs.nodes];
+    hasNextPage = data.installateurs.pageInfo.hasNextPage;
+    cursor = data.installateurs.pageInfo.endCursor;
+  }
+
+  return allInstallers;
+};
+
 export const getStaticProps: GetStaticProps = async () => {
   const commonData = await fetchCommonData();
+  const installateurs = await fetchAllInstallers();
 
   return {
     props: {
       ...commonData,
+      installateurs, // On passe la liste complète en props
     },
     revalidate: 120,
   };

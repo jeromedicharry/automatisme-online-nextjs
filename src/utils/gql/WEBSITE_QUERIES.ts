@@ -251,8 +251,8 @@ export const GET_INSTALLATION_CTA = gql`
 `;
 
 export const GET_INSTALLERS = gql`
-  query GET_INSTALLERS {
-    installateurs {
+  query GET_INSTALLERS($cursor: String) {
+    installateurs(first: 100, after: $cursor) {
       nodes {
         title
         acfContent {
@@ -261,7 +261,13 @@ export const GET_INSTALLERS = gql`
             latitude
             longitude
           }
+          email
+          phone
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }

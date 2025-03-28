@@ -43,7 +43,7 @@ const InstallerMap: React.FC<InstallerMapProps> = ({
   const getZoomLevel = () => {
     if (installers.length === 0) return 6; // Vue de la France entière
     if (center[0] === 46.603354 && center[1] === 1.888334) return 6; // Centre par défaut
-    return 10; // Zoom sur la ville recherchée
+    return 9.5; // Zoom sur la ville recherchée
   };
 
   return (

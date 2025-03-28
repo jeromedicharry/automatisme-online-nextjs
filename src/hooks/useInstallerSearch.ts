@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-interface Installer {
+export interface Installer {
   title: string;
   acfContent: {
     address: string;
@@ -8,6 +8,8 @@ interface Installer {
       latitude: number;
       longitude: number;
     };
+    phone?: string;
+    email?: string;
   };
 }
 
@@ -37,7 +39,9 @@ function calculateDistance(
 }
 
 // Calcul du barycentre d'une liste de points
-function calculateBarycenter(points: { lat: number; lon: number }[]): [number, number] {
+function calculateBarycenter(
+  points: { lat: number; lon: number }[],
+): [number, number] {
   if (points.length === 0) return [46.603354, 1.888334]; // Centre de la France par défaut
   if (points.length === 1) return [points[0].lat, points[0].lon];
 
@@ -51,10 +55,12 @@ export const useInstallerSearch = (allInstallers: Installer[]) => {
   const [filteredInstallers, setFilteredInstallers] = useState<
     (Installer & { distance?: number })[]
   >([]);
-  const [searchCenter, setSearchCenter] = useState<[number, number] | null>(null);
-  const [activeInstallerIndex, setActiveInstallerIndex] = useState<number | null>(
+  const [searchCenter, setSearchCenter] = useState<[number, number] | null>(
     null,
   );
+  const [activeInstallerIndex, setActiveInstallerIndex] = useState<
+    number | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -99,9 +105,9 @@ export const useInstallerSearch = (allInstallers: Installer[]) => {
 
         // Calculer le barycentre des installateurs trouvés
         if (filtered.length > 0) {
-          const points = filtered.map(installer => ({
+          const points = filtered.map((installer) => ({
             lat: installer.acfContent.geolocation.latitude,
-            lon: installer.acfContent.geolocation.longitude
+            lon: installer.acfContent.geolocation.longitude,
           }));
           const barycenter = calculateBarycenter(points);
           setSearchCenter(barycenter);
