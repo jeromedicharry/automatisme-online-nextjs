@@ -6,7 +6,7 @@ import { CategoryMenuProps } from '@/types/Categories';
 import Container from '@/components/container';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 import dynamic from 'next/dynamic';
-import { useInstallerSearch } from '@/hooks/useInstallerSearch';
+import { Installer, useInstallerSearch } from '@/hooks/useInstallerSearch';
 import InstallerSearch from '@/components/Installer/InstallerSearch';
 import InstallerCard from '@/components/Installer/InstallerCard';
 import { GET_INSTALLERS } from '@/utils/gql/WEBSITE_QUERIES';
@@ -31,7 +31,7 @@ const InstallerPage = ({
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
-  installateurs: any[];
+  installateurs: Installer[];
 }) => {
   const {
     filteredInstallers,
@@ -110,6 +110,7 @@ const InstallerPage = ({
                     title={installer.title}
                     address={installer.acfContent.address}
                     distance={installer.distance}
+                    id={installer.id}
                   />
                 ))}
               </div>
@@ -152,6 +153,6 @@ export const getStaticProps: GetStaticProps = async () => {
       ...commonData,
       installateurs, // On passe la liste complète en props
     },
-    revalidate: 120,
+    revalidate: 3600,
   };
 };

@@ -254,6 +254,7 @@ export const GET_INSTALLERS = gql`
   query GET_INSTALLERS($cursor: String) {
     installateurs(first: 100, after: $cursor) {
       nodes {
+        id
         title
         acfContent {
           address

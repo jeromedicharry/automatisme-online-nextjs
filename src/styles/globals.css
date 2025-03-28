@@ -227,3 +227,12 @@ form ::placeholder {
 .message span {
   color: #E94E1B;
 }
+
+.contact input, .contact textarea, .contact select {
+  border-radius: 4px;
+  border-color: transparent;
+}  
+
+.contact textarea {
+  min-height: 130px;
+}

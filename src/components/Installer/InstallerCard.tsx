@@ -1,7 +1,8 @@
 import Cta from '../atoms/Cta';
 import { Wifi } from '../SVG/Icons';
 
-interface InstallerCardProps {
+export interface InstallerCardProps {
+  id: string;
   title: string;
   address: string;
   distance?: number;
@@ -9,6 +10,7 @@ interface InstallerCardProps {
 }
 
 const InstallerCard = ({
+  id,
   title,
   address,
   distance,
@@ -40,7 +42,7 @@ const InstallerCard = ({
       <div className="mt-auto">
         <Cta
           label="Choisir"
-          slug="/trouver-installateur/contact"
+          slug={`/devis?installerId=${id}`}
           size="default"
           variant="primary"
           isFull

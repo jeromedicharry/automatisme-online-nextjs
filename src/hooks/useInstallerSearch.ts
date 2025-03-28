@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 export interface Installer {
+  id: string;
   title: string;
   acfContent: {
     address: string;

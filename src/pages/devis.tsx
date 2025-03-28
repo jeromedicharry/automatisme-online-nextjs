@@ -8,11 +8,12 @@ import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
 import { Wifi } from '@/components/SVG/Icons';
+import { useRouter } from 'next/router';
 import BlocIntroForm from '@/components/atoms/BlocIntroForm';
 
 // import { CardProductProps } from '@/types/blocTypes';
 
-const contactPage = ({
+const Devis = ({
   themeSettings,
   footerMenu1,
   footerMenu2,
@@ -23,10 +24,14 @@ const contactPage = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
+  const router = useRouter();
+  const installerId = router.query.installerId;
+
+  console.log(installerId);
   return (
     <Layout
-      meta={{ title: 'Contactez Automatisme Online' }}
-      uri={'/contact'}
+      meta={{ title: 'Contactez un installateur Automatisme Online' }}
+      uri={'/devis'}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
@@ -35,17 +40,15 @@ const contactPage = ({
       excludeSeo
     >
       <Container>
-        <div className="md:max-w-[700px] mx-auto">
+        <div className="md:max-w-[900px] mx-auto">
           <div className="mt-10 relative z-0 overflow-hidden bg-primary-light-alt rounded-2xl p-4 md:p-8 lg:p-16">
             <div className={`absolute bottom-[-8px] right-[-8px] w-1/2 z-[-1]`}>
               <Wifi variant="bleu2" />
             </div>
-            <div className="flex gap-4 items-center mb-4 max-md:justify-center md:mb-10">
-              <div className="w-6 md:w-10">
-                <SvgEnveloppe />
-              </div>
+            <div className="text-center text-balance mb-4 md:mb-10">
               <BlocIntroForm
-                title={themeSettings?.contactTitle || 'Contactez-nous'}
+                title="Vous désirez soumettre votre projet à cet installateur?"
+                subtitle="nous lui envoyons votre demande et vous recontacterons en moins de 48h"
               />
             </div>
             <form action="" className="space-y-3 contact">
@@ -62,11 +65,24 @@ const contactPage = ({
                   type="text"
                   name="firstName"
                   id="firstName"
-                  placeholder="Prénom"
+                  placeholder="Prénom *"
+                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
+                  required
+                />
+                <input
+                  type="text"
+                  name="company"
+                  id="company"
+                  placeholder="Société"
                   className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
                 />
-              </div>
-              <div className="">
+                <input
+                  type="text"
+                  name="role"
+                  id="role"
+                  placeholder="Fonction"
+                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
+                />
                 <input
                   type="tel"
                   name="phone"
@@ -75,26 +91,59 @@ const contactPage = ({
                   className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
                   required
                 />
-              </div>
-              <div className="">
                 <input
                   type="email"
                   name="email"
                   id="email"
-                  placeholder="Email"
+                  placeholder="Email *"
                   className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
                   required
                 />
+                <input
+                  type="text"
+                  name="address"
+                  id="address"
+                  placeholder="Adresse *"
+                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
+                  required
+                />
+                <input
+                  type="text"
+                  name="code"
+                  id="code"
+                  placeholder="Code postal *"
+                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
+                  required
+                />
+
+                <input
+                  type="text"
+                  name="city"
+                  id="city"
+                  placeholder="Ville *"
+                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
+                />
+                <select
+                  name="country"
+                  id="country"
+                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
+                  required
+                >
+                  <option value="">Pays *</option>
+                  <option value="france">France</option>
+                  <option value="belgique">Belgique</option>
+                </select>
               </div>
               <div className="">
                 <textarea
                   name="message"
                   id="message"
-                  placeholder="Message"
+                  placeholder="Quel produit souhaitez vous faire installer / réviser ? *"
                   className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
                   required
                 />
               </div>
+
               <div className="flex justify-end">
                 <button
                   type="submit"
@@ -117,7 +166,7 @@ const contactPage = ({
   );
 };
 
-export default contactPage;
+export default Devis;
 
 export const getStaticProps: GetStaticProps = async () => {
   const commonData = await fetchCommonData();
