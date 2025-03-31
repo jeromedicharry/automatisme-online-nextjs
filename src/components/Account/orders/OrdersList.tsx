@@ -4,6 +4,7 @@ import { OrderProps } from '@/types/orderTypes';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import { formatDate, GetStatusName } from '@/utils/functions/functions';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 const OrdersList = ({ orders }: { orders: OrderProps[] }) => {
@@ -59,7 +60,11 @@ const OrdersList = ({ orders }: { orders: OrderProps[] }) => {
                       </div>
                     </div>
                   ) : (
-                    <div key={product?.node?.sku} className="w-[200px]">
+                    <Link
+                      href={`/nos-produits/${product?.node?.slug}`}
+                      key={product?.node?.sku}
+                      className="w-[200px]"
+                    >
                       <Image
                         src={
                           product.node.featuredImage.node.sourceUrl ||
@@ -76,7 +81,7 @@ const OrdersList = ({ orders }: { orders: OrderProps[] }) => {
                         </strong>
                         <p className="text-dark-grey">{product.node.sku}</p>
                       </div>
-                    </div>
+                    </Link>
                   ),
                 )}
               </div>

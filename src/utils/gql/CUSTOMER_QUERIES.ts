@@ -118,6 +118,7 @@ export const GET_CUSTOMER_ORDERS = gql`
                 node {
                   name
                   sku
+                  slug
                   featuredImage {
                     node {
                       sourceUrl(size: THUMBNAIL)

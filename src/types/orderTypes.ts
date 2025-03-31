@@ -13,6 +13,7 @@ export interface OrderProps {
         node: {
           name: string;
           sku: string;
+          slug: string;
           featuredImage: {
             node: {
               sourceUrl: string;
