@@ -386,3 +386,34 @@ export const formatDate = (dateString: string) => {
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 };
+
+export type OrderStatus =
+  | ''
+  | 'PENDING'
+  | 'ON_HOLD'
+  | 'PROCESSING'
+  | 'COMPLETED'
+  | 'CANCELLED'
+  | 'FAILED'
+  | 'REFUNDED';
+
+export const GetStatusName = (status: OrderStatus) => {
+  switch (status) {
+    case 'PENDING':
+      return 'En attente de paiement';
+    case 'ON_HOLD':
+      return 'En attente';
+    case 'PROCESSING':
+      return 'En cours';
+    case 'COMPLETED':
+      return 'Terminée';
+    case 'CANCELLED':
+      return 'Annulée';
+    case 'FAILED':
+      return 'Échouée';
+    case 'REFUNDED':
+      return 'Remboursée';
+    default:
+      return status;
+  }
+};

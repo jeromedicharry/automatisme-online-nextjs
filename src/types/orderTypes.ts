@@ -1,7 +1,9 @@
+import { OrderStatus } from '@/utils/functions/functions';
+
 export interface OrderProps {
   orderNumber: string;
   date: string;
-  status: string;
+  status: OrderStatus;
   subtotal: string;
   totalTax: string;
   total: string;
