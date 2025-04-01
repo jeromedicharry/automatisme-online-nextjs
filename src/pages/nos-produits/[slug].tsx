@@ -71,7 +71,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         product: data?.product,
         ...commonData,
       },
-      revalidate: 120,
     };
   } catch (error) {
     console.error('Erreur Apollo:', error);
@@ -86,7 +85,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   let hasNextPage = true;
   let endCursor: string | undefined | null = null;
 
-  const maxProducts = 1000;
+  const maxProducts = 50;
 
   while (hasNextPage && allProducts.length < maxProducts) {
     const {

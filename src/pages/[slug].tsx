@@ -110,7 +110,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       featuredFaq,
       faqItems,
     },
-    revalidate: 60,
   };
 };
 

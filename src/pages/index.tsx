@@ -111,6 +111,6 @@ export const getStaticProps: GetStaticProps = async () => {
       featuredFaq,
       faqItems,
     },
-    revalidate: 60,
+    revalidate: 3600,
   };
 };

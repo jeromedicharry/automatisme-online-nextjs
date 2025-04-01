@@ -144,7 +144,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       pageInfo,
       ...commonData,
     },
-    revalidate: 60,
+    revalidate: 3600,
   };
 };
 

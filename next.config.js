@@ -25,6 +25,9 @@ const nextConfig = {
       },
     ],
   },
+  env: {
+    REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
+  },
 };
 
 module.exports = nextConfig;
