@@ -1,44 +1,46 @@
-// pages/api/revalidate.ts
+// revalidation des pages (sauf accueil)
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  // Vérifier la méthode
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Méthode non autorisée' });
   }
 
   try {
-    // Récupérer les paramètres
-    const { path, secret } = req.body;
+    const { slug, secret } = req.body;
 
-    // Vérifier que tous les paramètres sont fournis
-    if (!path || !secret) {
-      return res
-        .status(400)
-        .json({ message: 'Paramètres manquants: path et secret sont requis' });
+    // Vérifier les paramètres
+    if (!secret) {
+      return res.status(400).json({ message: 'Secret manquant' });
     }
 
     // Vérifier le secret
-    const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
-    if (secret !== REVALIDATE_SECRET) {
+    const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;
+    if (secret !== REVALIDATION_SECRET) {
       return res.status(401).json({ message: 'Clé de sécurité invalide' });
     }
 
-    console.log(`Revalidation demandée pour le chemin: ${path}`);
+    // Déterminer le chemin à revalider
+    let path = '/';
+    if (slug && slug !== 'accueil') {
+      path = `/${slug}`;
+    }
 
-    // Revalider le chemin spécifié
+    console.log(`Revalidation de page: ${path}`);
+
+    // Revalider le chemin
     await res.revalidate(path);
 
     return res.status(200).json({
       revalidated: true,
       path,
-      message: `Chemin ${path} revalidé avec succès`,
+      message: `Page ${path} revalidée avec succès`,
     });
   } catch (err) {
-    // Si une erreur se produit, renvoyer un message d'erreur
+    console.error('Erreur de revalidation:', err);
     return res.status(500).json({
       message: `Erreur lors de la revalidation`,
       error: err instanceof Error ? err.message : String(err),
