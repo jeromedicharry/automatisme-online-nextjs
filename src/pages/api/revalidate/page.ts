@@ -4,16 +4,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  // Vérifier que la méthode est POST
-  if (req.method !== 'POST') {
+  // Accepter les méthodes POST et GET pour plus de flexibilité
+  if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({ message: 'Méthode non autorisée' });
   }
 
   try {
     console.log('DEBUT DU REVALIDATE DEPUIS WP');
 
-    // Récupérer les données du corps de la requête
-    const { slug, secret } = req.body;
+    // Récupérer les données du corps de la requête OU des paramètres de l'URL
+    const secret = req.body?.secret || req.query?.secret;
+    const slug = req.body?.slug || req.query?.slug;
 
     console.log('Données reçues:', {
       slug,
@@ -27,12 +28,9 @@ export default async function handler(
     }
 
     if (secret !== REVALIDATE_SECRET) {
-      return res.status(401).json({ message: 'Clé de sécurité invalide' });
-    }
-
-    // Vérifier le slug
-    if (slug === undefined) {
-      return res.status(400).json({ message: 'Slug manquant pour la page' });
+      return res
+        .status(401)
+        .json({ message: 'Clé de sécurité invalide', provided: secret });
     }
 
     // Déterminer le chemin à revalider
