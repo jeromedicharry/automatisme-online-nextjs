@@ -6,7 +6,10 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const secret = req.body?.secret;
+    const { secret } = req.body;
+
+    console.log({ secret });
+    console.log('TATA');
 
     // Vérifier les paramètres
     if (!secret) {
