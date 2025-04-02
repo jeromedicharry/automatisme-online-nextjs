@@ -16,6 +16,9 @@ export default async function handler(
     if (!secret) {
       return res.status(400).json({ message: 'Secret manquant' });
     }
+    if (!slug) {
+      return res.status(400).json({ message: 'Slug manquant pour le produit' });
+    }
 
     // Vérifier le secret
     const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;

@@ -5,12 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Méthode non autorisée' });
-  }
-
   try {
-    const { secret } = req.body;
+    const secret = req.body?.secret;
 
     // Vérifier les paramètres
     if (!secret) {

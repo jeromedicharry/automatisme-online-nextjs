@@ -5,16 +5,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Méthode non autorisée' });
-  }
-
   try {
     const { slug, secret } = req.body;
 
     // Vérifier les paramètres
     if (!secret) {
       return res.status(400).json({ message: 'Secret manquant' });
+    }
+    // Vérifier les paramètres
+    if (!slug) {
+      return res.status(400).json({ message: 'Slug manquant pour la page' });
     }
 
     // Vérifier le secret
