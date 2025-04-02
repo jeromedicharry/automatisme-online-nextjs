@@ -1,32 +1,43 @@
-// revalidation des pages (sauf accueil)
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  // Vérifier que la méthode est POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Méthode non autorisée' });
+  }
+
   try {
     console.log('DEBUT DU REVALIDATE DEPUIS WP');
+
+    // Récupérer les données du corps de la requête
     const { slug, secret } = req.body;
 
-    // Vérifier les paramètres
-    if (!secret) {
-      return res.status(400).json({ message: 'Secret manquant' });
-    }
-    // Vérifier les paramètres
-    if (!slug) {
-      return res.status(400).json({ message: 'Slug manquant pour la page' });
-    }
+    console.log('Données reçues:', {
+      slug,
+      secret: secret ? '******' : 'manquant',
+    });
 
     // Vérifier le secret
     const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;
+    if (!secret) {
+      return res.status(400).json({ message: 'Secret manquant' });
+    }
+
     if (secret !== REVALIDATION_SECRET) {
       return res.status(401).json({ message: 'Clé de sécurité invalide' });
     }
 
+    // Vérifier le slug
+    if (slug === undefined) {
+      return res.status(400).json({ message: 'Slug manquant pour la page' });
+    }
+
     // Déterminer le chemin à revalider
     let path = '/';
-    if (slug && slug !== 'accueil') {
+    if (slug && slug !== 'accueil' && slug !== 'home') {
       path = `/${slug}`;
     }
 
