@@ -21,12 +21,12 @@ export default async function handler(
     });
 
     // Vérifier le secret
-    const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;
+    const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
     if (!secret) {
       return res.status(400).json({ message: 'Secret manquant' });
     }
 
-    if (secret !== REVALIDATION_SECRET) {
+    if (secret !== REVALIDATE_SECRET) {
       return res.status(401).json({ message: 'Clé de sécurité invalide' });
     }
 
