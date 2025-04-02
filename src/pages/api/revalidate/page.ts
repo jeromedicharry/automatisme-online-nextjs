@@ -6,6 +6,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
+    console.log('DEBUT DU REVALIDATE DEPUIS WP');
     const { slug, secret } = req.body;
 
     // Vérifier les paramètres
