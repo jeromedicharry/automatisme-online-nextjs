@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   GET_CUSTOMER_PRO_INFO,
   UPDATE_CUSTOMER_PRO_INFO,
 } from '@/utils/gql/CUSTOMER_QUERIES';
 import useAuth from '@/hooks/useAuth';
-import { stepTypes } from '.';
 import Cta from '@/components/atoms/Cta';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 
@@ -15,11 +14,12 @@ type ProData = {
 };
 
 const CheckoutProInfos = ({
-  setCurrentStep,
+  setIsProInfosComplete,
 }: {
-  setCurrentStep: (step: stepTypes) => void;
+  setIsProInfosComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { user, loggedIn, isPro } = useAuth();
+
   const [isEditing, setIsEditing] = useState(false);
 
   const { data, loading, error, refetch } = useQuery(GET_CUSTOMER_PRO_INFO, {
@@ -49,6 +49,16 @@ const CheckoutProInfos = ({
   };
 
   const hasProInfo = data?.customer?.billing?.company && data?.customer?.siret;
+
+  useEffect(() => {
+    if (!hasProInfo) {
+      setIsProInfosComplete(false);
+    } else {
+      setIsProInfosComplete(true);
+    }
+  }, [hasProInfo, setIsProInfosComplete]);
+
+  if (!isPro) return null;
 
   const renderForm = () => (
     <div className="border rounded-lg p-6 bg-white shadow-card">
@@ -99,7 +109,7 @@ const CheckoutProInfos = ({
 
         <div className="flex justify-between gap-4 mt-10 w-fit ml-auto">
           <Cta
-            handleButtonClick={() => setCurrentStep('Adresses')}
+            handleButtonClick={() => setIsEditing(false)}
             variant="primaryHollow"
             label="Annuler"
             slug="#"
@@ -139,7 +149,7 @@ const CheckoutProInfos = ({
   );
 
   return (
-    <main>
+    <section className="mt-8 md:mt-6">
       <BlocIntroSmall
         title="Informations Professionnelles"
         subtitle="En tant que professionnel, vos informations (SIRET etc..) sont obligatoires pour le traitement de vos commandes."
@@ -156,32 +166,7 @@ const CheckoutProInfos = ({
       ) : (
         renderForm()
       )}
-
-      <div className="flex justify-start max-md:flex-col max-md:items-stretch mt-6 md:w-fit gap-4 ml-auto">
-        <Cta
-          slug="#"
-          label="Retourner aux adresses"
-          size="default"
-          variant="primaryHollow"
-          handleButtonClick={() => setCurrentStep('Adresses')}
-          additionalClass="max-md:w-full"
-        >
-          {'Retourner aux adresses'}
-        </Cta>
-
-        {!loading && !error && isPro && hasProInfo && (
-          <Cta
-            handleButtonClick={() => setCurrentStep('ShippingMethod')}
-            label="Continuer"
-            variant="primary"
-            slug="#"
-            additionalClass="max-md:w-full"
-          >
-            Continuer
-          </Cta>
-        )}
-      </div>
-    </main>
+    </section>
   );
 };
 

@@ -64,11 +64,7 @@ const Caisse = ({
         setFormStatus={setFormStatus}
         isNotClosable={true}
       />
-      <BlocIntroLarge
-        title="Caisse"
-        isH1
-        subtitle="Suivez les différentes étapes pour passer votre commande"
-      />
+      <BlocIntroLarge title="Finalisez votre commande" isH1 />
       <div className="mb-10 md:mb-16">
         <Container>
           {!cart?.products?.length ? (
@@ -84,7 +80,7 @@ const Caisse = ({
             <>
               <div className="relative flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10 xl:gap-16 max-lg:max-w-xl mx-auto mt-6 lg:mt-12">
                 {/* Conteneur principal */}
-                <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10 xl:gap-16">
+                <div className="flex-1 shrink-1 gap-8 md:gap-6">
                   <CheckoutSteps />
                 </div>
 

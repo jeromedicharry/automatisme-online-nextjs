@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   GET_CUSTOMER_ADDRESSES,
@@ -6,20 +6,18 @@ import {
 } from '@/utils/gql/CUSTOMER_QUERIES';
 import useAuth from '@/hooks/useAuth';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
-import { stepTypes } from '.';
 import { AddressData } from '../Account/addresses';
 import AccountLoader from '../Account/AccountLoader';
 import AddressForm from '../Account/addresses/AddressForm';
 import AddressCard from '../Account/addresses/AddressCard';
 import EmptyAddressWithCTA from '../Account/addresses/EmptyAddressWithCta';
-import Cta from '../atoms/Cta';
 
 const CheckoutAdresses = ({
-  setCurrentStep,
+  setCanProceed,
 }: {
-  setCurrentStep: (step: stepTypes) => void;
+  setCanProceed: (value: boolean) => void;
 }) => {
-  const { user, loggedIn, isPro } = useAuth();
+  const { user, loggedIn } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState<
     null | 'billing' | 'shipping'
@@ -96,13 +94,18 @@ const CheckoutAdresses = ({
   const hasShippingAddress = isAddressComplete(shipping);
   const hasBillingAddress = isAddressComplete(billing);
 
-  const canProceed = hasShippingAddress && hasBillingAddress;
+  useEffect(() => {
+    const canProceedToNextStep = Boolean(
+      hasShippingAddress && hasBillingAddress,
+    );
+    setCanProceed(canProceedToNextStep);
+  }, [hasShippingAddress, hasBillingAddress, setCanProceed]);
 
   return (
-    <main>
+    <section>
       <BlocIntroSmall
-        title="Informations de livraison et facturation"
-        subtitle="Assurez-vous que vous avez renseigné vos adresses de livraison et de facturation."
+        title="Confirmez votre adresse de livraison"
+        // subtitle="Assurez-vous que vous avez renseigné vos adresses de livraison et de facturation."
       />
 
       {loading && <AccountLoader text="Chargement des adresses..." />}
@@ -131,7 +134,7 @@ const CheckoutAdresses = ({
       )}
 
       {loggedIn && !isEditing && (
-        <div className="space-y-6">
+        <div className="space-y-10 md:space-y-6">
           {hasShippingAddress ? (
             <AddressCard
               address={shipping}
@@ -144,6 +147,7 @@ const CheckoutAdresses = ({
               onAddAddress={() => handleAddressCreation('shipping')}
             />
           )}
+          <BlocIntroSmall title="Confirmez votre adresse de facturation" />
 
           {hasBillingAddress ? (
             <AddressCard
@@ -159,34 +163,9 @@ const CheckoutAdresses = ({
               />
             )
           )}
-
-          <div className="flex justify-start max-md:flex-col max-md:items-stretch mt-6 md:w-fit gap-4 ml-auto">
-            <Cta
-              slug="/panier"
-              label="Retourner au panier"
-              size="default"
-              variant="primaryHollow"
-              additionalClass="max-md:w-full"
-            >
-              {'Retourner au panier'}
-            </Cta>
-            <Cta
-              slug="#"
-              label="Continuer"
-              handleButtonClick={() =>
-                setCurrentStep(isPro ? 'ProInfos' : 'ShippingMethod')
-              }
-              disabled={!canProceed}
-              size="default"
-              variant="primary"
-              additionalClass="max-md:w-full"
-            >
-              Continuer
-            </Cta>
-          </div>
         </div>
       )}
-    </main>
+    </section>
   );
 };
 
