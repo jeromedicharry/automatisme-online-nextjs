@@ -27,6 +27,7 @@ const nextConfig = {
   },
   env: {
     REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
+    MEILISEARCH_API_KEY: process.env.MEILISEARCH_API_KEY,
   },
 };
 

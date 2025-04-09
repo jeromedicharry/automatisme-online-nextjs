@@ -3,65 +3,143 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import {
   GET_ALL_CATEGORIES_QUERY,
-  GET_PRODUCTS_FROM_CATEGORY,
   GET_SINGLE_CATEGORY,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import Cardproduct from '@/components/cards/CardProduct';
 import client from '@/utils/apollo/ApolloClient';
 import Layout from '@/components/Layout/Layout';
 
 import Container from '@/components/container';
-import { useState } from 'react';
-import { CardProductProps } from '@/types/blocTypes';
+import React, { useEffect, useState } from 'react';
 import Cta from '@/components/atoms/Cta';
 import LoadingSpinner from '@/components/atoms/LoadingSpinner';
 import { CategoryMenuProps, CategoryPageProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import BreadCrumbs from '@/components/atoms/BreadCrumbs';
-import { PageInfoProps, ThemeSettingsProps } from '@/types/CptTypes';
+import { ThemeSettingsProps } from '@/types/CptTypes';
+import { fetchMeiliProductsByCategory } from '@/utils/functions/meilisearch';
+import CardProductMeilisearch, {
+  CardProductMeilisearchProps,
+} from '@/components/cards/CardProductMeilisearch';
+import FilterSidebar from '@/components/filters/FilterSideBar';
+import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 
 const CategoryPage = ({
   products,
   category,
-  pageInfo,
+  total,
   themeSettings,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
+  initialFacets,
 }: {
-  products: CardProductProps[];
+  products: CardProductMeilisearchProps[];
   category: CategoryPageProps;
-  pageInfo: PageInfoProps;
+  total: number;
   themeSettings: ThemeSettingsProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
+  initialFacets: any;
 }) => {
   const router = useRouter();
   const [productSelection, setProductSelection] = useState(products || []);
-  const [currentPageInfo, setCurrentPageInfo] = useState(pageInfo || null);
+  const [currentTotal, setCurrentTotal] = useState(total);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(products.length < total);
+  const [facets, setFacets] = useState(initialFacets); // Ajouter un état pour les facettes
+
+  // Effet pour gérer les changements de filtres et la recherche
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const fetchFilteredProducts = async () => {
+      setIsLoading(true);
+
+      // Extraire uniquement les filtres valides de l'URL
+      const validFilters = {};
+      Object.entries(router.query).forEach(([key, value]) => {
+        // Exclure les paramètres slug, page, etc.
+        if (
+          !['slug', 'page', 'search'].includes(key) &&
+          typeof value === 'string'
+        ) {
+          validFilters[key] = value;
+        }
+      });
+
+      try {
+        const result = await fetchMeiliProductsByCategory({
+          query: category?.name || '',
+          page: 1, // Toujours commencer par la page 1 quand les filtres changent
+          limit: 50,
+          filters: validFilters,
+        });
+
+        setProductSelection(result.products);
+        setFacets(result.facets);
+        setCurrentTotal(result.total);
+        setCurrentPage(1);
+        setHasMore(result.products.length < result.total);
+      } catch (error) {
+        console.error(
+          'Erreur lors de la récupération des produits filtrés :',
+          error,
+        );
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchFilteredProducts();
+  }, [router.isReady, router.asPath, category?.name]);
+
+  useEffect(() => {
+    setProductSelection(products);
+    setCurrentPage(1);
+    setHasMore(products.length < total);
+    setFacets(initialFacets);
+  }, [products, total, initialFacets]);
 
   if (router.isFallback) {
     return <p>Chargement...</p>;
   }
 
-  const handleLoadMore = async () => {
+  const handleLoadMore = async (e?: React.MouseEvent) => {
+    e?.preventDefault();
     setIsLoading(true);
-    const { endCursor } = currentPageInfo;
-    const { products: newProducts, pageInfo: newPageInfo } =
-      await getProductsSelection({
-        categoryId: category?.uri,
-        after: endCursor,
-        first: 3,
+    const nextPage = currentPage + 1;
+
+    // Extraire les filtres actuels de l'URL
+    const validFilters = {};
+    Object.entries(router.query).forEach(([key, value]) => {
+      if (
+        !['slug', 'page', 'search'].includes(key) &&
+        typeof value === 'string'
+      ) {
+        validFilters[key] = value;
+      }
+    });
+
+    try {
+      const result = await fetchMeiliProductsByCategory({
+        query: category?.name || '',
+        page: nextPage,
+        limit: 50,
+        filters: validFilters, // Passer les filtres actuels
       });
 
-    setProductSelection((prevProducts: CardProductProps[]) =>
-      prevProducts.concat(newProducts),
-    );
+      setProductSelection((prev) => [...prev, ...result.products]);
+      setCurrentPage(nextPage);
+      setHasMore(
+        productSelection.length + result.products.length < result.total,
+      );
+    } catch (error) {
+      console.error('Erreur lors du chargement de plus de produits :', error);
+    }
 
-    setCurrentPageInfo(newPageInfo);
     setIsLoading(false);
   };
 
@@ -77,25 +155,35 @@ const CategoryPage = ({
     >
       <Container>
         <BreadCrumbs breadCrumbs={category?.seo?.breadcrumbs} />
-        <h1 className="my-10">Produits de la catégorie : {category?.name}</h1>
-        <p>{productSelection?.length} produits trouvés</p>
-        <div className="md:flex gap-4">
-          <aside className="md:w-[250px] shrink-0">FILTRES</aside>
+        <BlocIntroLarge
+          title={category?.name}
+          subtitle={category?.description}
+          isH1
+          isDescriptionFontNormal
+        />
+        <div className="flex flex-col items-start md:flex-row gap-4">
+          <FilterSidebar facetDistribution={facets} />
           <section>
+            <div className="flex justify-between mb-6 md:mb-4">
+              <p className="text-sm md:text-base leading-general text-dark-grey">
+                {currentTotal} produits trouvés
+              </p>
+              <span>TRIER</span>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {productSelection?.map((product: CardProductProps) => (
-                <Cardproduct key={product?.databaseId} product={product} />
+              {productSelection?.map((product: CardProductMeilisearchProps) => (
+                <CardProductMeilisearch key={product?.ID} product={product} />
               ))}
             </div>
             {isLoading && <LoadingSpinner />}
 
-            {currentPageInfo?.hasNextPage ? (
+            {hasMore && !isLoading ? (
               <Cta
                 label="Voir plus de produits"
                 slug="#"
                 variant="primary"
                 additionalClass="w-fit mx-auto mt-10"
-                handleButtonClick={() => handleLoadMore()}
+                handleButtonClick={(e) => handleLoadMore(e)}
               >
                 Voir plus de produits
               </Cta>
@@ -111,37 +199,38 @@ const CategoryPage = ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = Array.isArray(params?.slug)
-    ? `${params.slug.join('/')}` // Ajoute les barres obliques aux deux extrémités
+    ? `${params.slug.join('/')}`
     : params?.slug || '';
 
-  const categoryData =
-    (await client.query({
-      query: GET_SINGLE_CATEGORY,
-      variables: {
-        id: '/categorie/' + slug,
-      },
-    })) || null;
+  const categoryData = await client.query({
+    query: GET_SINGLE_CATEGORY,
+    variables: {
+      id: '/categorie/' + slug,
+    },
+  });
 
   if (!categoryData) {
     return {
-      notFound: true, // Si la catégorie n'existe pas
+      notFound: true,
     };
   }
 
   const commonData = await fetchCommonData();
 
-  const { products, pageInfo } =
-    (await getProductsSelection({
-      categoryId: '/categorie/' + slug,
-      first: 3, // Nombre de produits par page
-      after: null, // Si nous avons un after, on l'ajoute pour la pagination
-    })) || null;
+  const categoryName = categoryData?.data?.singleCategory?.name || '';
+
+  const { products, total, facets } = await fetchMeiliProductsByCategory({
+    query: categoryName,
+    page: 1,
+    limit: 50,
+  });
 
   return {
     props: {
       category: categoryData.data.singleCategory,
       products,
-      pageInfo,
+      total,
+      initialFacets: facets,
       ...commonData,
     },
     revalidate: 3600,
@@ -183,37 +272,3 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export default CategoryPage;
-
-export const getProductsSelection = async ({
-  categoryId = '',
-  filters = [],
-  first = 36,
-  after = null,
-}: {
-  categoryId: string;
-  filters?: any[];
-  first: number;
-  after: string | null | undefined;
-}) => {
-  try {
-    const { data, loading, error } = await client.query({
-      query: GET_PRODUCTS_FROM_CATEGORY,
-      variables: {
-        id: categoryId,
-        first,
-        after,
-        filters: filters, // La chaîne doit être convertie en tableau d'objets JSON
-      },
-    });
-
-    return {
-      products: data.productCategory.products.nodes,
-      pageInfo: data.productCategory.products.pageInfo,
-      loading,
-      error,
-    };
-  } catch (error) {
-    console.error('Erreur lors de la récupération des produits :', error);
-    return { products: [], pageInfo: null };
-  }
-};

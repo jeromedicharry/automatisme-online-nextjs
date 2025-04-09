@@ -5,10 +5,12 @@ const BlocIntroLarge = ({
   title,
   isH1 = false,
   subtitle,
+  isDescriptionFontNormal = false,
 }: {
   title: string;
   isH1?: boolean;
   subtitle?: string;
+  isDescriptionFontNormal?: boolean;
 }) => {
   if (!title && !subtitle) return null;
   return (
@@ -25,7 +27,7 @@ const BlocIntroLarge = ({
         )}
         {subtitle && (
           <div
-            className="text-base md:text-xl leading-general font-medium wysiwyg"
+            className={`text-base md:text-xl leading-general wysiwyg ${isDescriptionFontNormal ? 'font-normal' : 'font-medium'}`}
             dangerouslySetInnerHTML={{ __html: subtitle }}
           />
         )}

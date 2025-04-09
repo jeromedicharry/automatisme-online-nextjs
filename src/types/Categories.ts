@@ -5,6 +5,7 @@ export interface CategoryPageProps {
   uri: string;
   name: string;
   seo: IMeta;
+  description: string;
 }
 
 export interface CategoryMenuProps {

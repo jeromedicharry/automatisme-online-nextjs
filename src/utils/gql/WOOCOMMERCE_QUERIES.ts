@@ -130,6 +130,7 @@ export const GET_SINGLE_CATEGORY = gql`
       id
       uri
       name
+      description
       ${seoFields}
     }
   }

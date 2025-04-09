@@ -130,6 +130,10 @@ html {
   margin-bottom: 1rem;
 }
 
+.wysiwyg b, .wysiwyg strong {
+  font-weight: 700;
+}
+
 /* Gestion des modales */
 @keyframes slideIn {
   from {
