@@ -2,13 +2,17 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Chevron } from '../SVG/Icons';
+import useIsMobile from '@/utils/hooks/useIsMobile';
 
 type FilterType = 'checkbox' | 'range' | 'maxValueCheckbox';
+type SearchType = 'attribute' | 'taxonomy' | 'meta';
 
 type AllowedFilter = {
   label: string;
-  key: string; // clé brute dans facetDistribution (sans `.name`)
+  key: string;
   type: FilterType;
+  searchType: SearchType; // Nouveau champ pour spécifier le type de recherche
+  metaType?: 'number' | 'string'; // Pour les champs meta
 };
 
 type SimpleFacetValue = {
@@ -17,29 +21,118 @@ type SimpleFacetValue = {
 };
 
 export const allowedFilters: AllowedFilter[] = [
-  { label: 'Marque', key: 'product_brand', type: 'checkbox' },
+  // Taxonomies
   {
-    label: 'Difficulté de pose',
-    key: 'pa_difficulte-de-pose',
+    label: 'Marque',
+    key: 'product_brand',
     type: 'checkbox',
+    searchType: 'taxonomy',
   },
-  { label: 'Couleur', key: 'pa_couleur', type: 'checkbox' },
+  // {
+  //   label: 'Catégorie',
+  //   key: 'product_cat',
+  //   type: 'checkbox',
+  //   searchType: 'taxonomy',
+  // },
+
+  // Attributs de type checkbox
+  {
+    label: 'Codage télécommande',
+    key: 'codage-telecommande',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Couleur',
+    key: 'couleur',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
   {
     label: 'Couleur des boutons',
-    key: 'pa_couleur-des-boutons',
+    key: 'couleur-des-boutons',
     type: 'checkbox',
+    searchType: 'attribute',
   },
-  { label: 'Prix', key: 'meta._price', type: 'range' },
-  //   { label: 'Dimensions', key: 'dimensions', type: 'maxValueCheckbox' },
+  {
+    label: 'Difficulté de pose',
+    key: 'difficulte-de-pose',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Fréquence (MHz)',
+    key: 'frequence-telecommande-mhz',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Nombre de boutons',
+    key: 'nombre-de-boutons',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Tension (V)',
+    key: 'tension-telecommande-v',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+
+  {
+    label: 'Hauteur porte basculante (m)',
+    key: 'hauteur-porte-basculante-m',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Poids max porte (kg)',
+    key: 'poids-max-porte-de-garage-kg',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Surface porte (m²)',
+    key: 'surface-porte-de-garage-m²',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Puissance (W)',
+    key: 'puissance-w',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Usage',
+    key: 'usage',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  // Attributs numériques (type range)
+
+  // Meta (prix)
+  {
+    label: 'Prix',
+    key: '_price',
+    type: 'range',
+    searchType: 'meta',
+    metaType: 'number',
+  },
 ];
-
-export const getFacetKeyFromFilterKey = (key: string): string => {
-  const filter = allowedFilters.find((f) => f.key === key);
-
-  if (!filter) return key;
-
-  const isSpecial = ['range', 'maxValueCheckbox'].includes(filter.type);
-  return isSpecial ? key : `terms.${key}.name`;
+export const getFacetKeyFromFilterKey = (
+  key: string,
+  searchType: SearchType,
+): string => {
+  switch (searchType) {
+    case 'taxonomy':
+      return `taxonomies.${key}.slug`;
+    case 'meta':
+      return `meta.${key}`;
+    case 'attribute':
+    default:
+      return `attributes.${key}.slug`;
+  }
 };
 
 const formatFacets = (
@@ -50,20 +143,24 @@ const formatFacets = (
     { type: FilterType; values: SimpleFacetValue[] }
   > = {};
 
-  allowedFilters.forEach(({ label, key, type }) => {
-    const facetKey = getFacetKeyFromFilterKey(key);
-    const data = facets[facetKey];
+  allowedFilters
+    // Exclure les filtres de catégorie
+    .filter((filter) => filter.key !== 'product_cat')
+    .forEach(({ label, key, type, searchType }) => {
+      const facetKey = getFacetKeyFromFilterKey(key, searchType);
+      const data = facets[facetKey];
 
-    if (!data) return;
+      if (!data) return;
 
-    const values = Object.entries(data)
-      .filter(([, count]) => count > 0)
-      .map(([name, count]) => ({ name, count }));
+      const values = Object.entries(data)
+        .filter(([, count]) => count > 0)
+        .map(([name, count]) => ({ name, count }));
 
-    if (values.length > 0) {
-      result[label] = { type, values };
-    }
-  });
+      // Ne garder que les facettes avec des valeurs
+      if (values.length > 0 && values.some((v) => v.count > 0)) {
+        result[label] = { type, values };
+      }
+    });
 
   return result;
 };
@@ -73,28 +170,47 @@ const FilterSidebar = ({ facetDistribution }: any) => {
   const { query } = router;
   const formattedFacets = formatFacets(facetDistribution);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const isMobile = useIsMobile();
 
-  const toggleFilterValue = (key: string, value: string) => {
+  const toggleFilterValue = (
+    key: string,
+    value: string,
+    searchType: SearchType,
+    filterType?: FilterType,
+  ) => {
     const currentValues = (query[key] as string)?.split(',') ?? [];
     const isActive = currentValues.includes(value);
 
     let newValues: string[];
 
-    if (isActive) {
-      newValues = currentValues.filter((v) => v !== value);
+    // Gestion spéciale pour les filtres de type range (meta)
+    if (filterType === 'range' && searchType === 'meta') {
+      // Pour les ranges, on remplace complètement la valeur
+      newValues = isActive ? [] : [value];
     } else {
-      newValues = [...currentValues, value];
+      // Comportement standard pour les checkbox
+      newValues = isActive
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
     }
 
-    // Créer une copie du query actuel
     const newQuery = { ...query };
 
     if (newValues.length > 0) {
-      // Si il reste des valeurs, on met à jour
       newQuery[key] = newValues.join(',');
     } else {
-      // Si plus de valeurs, on supprime complètement la clé
       delete newQuery[key];
+    }
+
+    // Pour les meta de type range, on formate la valeur min-max
+    if (
+      filterType === 'range' &&
+      searchType === 'meta' &&
+      newValues.length > 0
+    ) {
+      const [min, max] = value.split('-');
+      newQuery[`${key}_min`] = min;
+      newQuery[`${key}_max`] = max;
     }
 
     router.push(
@@ -137,18 +253,25 @@ const FilterSidebar = ({ facetDistribution }: any) => {
     label: string,
     facet: { type: FilterType; values: SimpleFacetValue[] },
     key: string,
+    searchType: SearchType,
+    metaType?: 'number' | 'string',
   ) => {
-    const isOpen = openSections[label];
+    const isOpen =
+      openSections[label] ?? (searchType === 'taxonomy' && !isMobile) ?? true; // Par défaut ouvert
 
     return (
-      <div key={label} className="mb-3">
+      <div key={label} className="md:mb-3">
         <button
           onClick={() => toggleSection(label)}
-          className="w-full flex items-baseline text-left gap-2"
+          className="md:w-full flex items-baseline text-left gap-2"
         >
-          <p className="font-bold">{label}</p>
+          <p className="font-bold max-md:text-sm leading-general whitespace-nowrap">
+            {label}
+          </p>
           <div
-            className={`text-secondary w-3 h-3 flex justify-center items-center duration-300 ${isOpen ? 'rotate-90' : '-rotate-90'}`}
+            className={`text-secondary w-3 h-3 flex justify-center items-center duration-300 ${
+              isOpen ? 'rotate-90' : '-rotate-90'
+            }`}
           >
             <Chevron />
           </div>
@@ -156,12 +279,13 @@ const FilterSidebar = ({ facetDistribution }: any) => {
 
         <div
           className={`mt-3 overflow-hidden duration-300 ease-in-out ${
-            isOpen ? 'max-h-[1500px]' : 'max-h-0 pointer-events-none opacity-85'
+            isOpen
+              ? 'max-h-[600px] static'
+              : 'absolute max-h-0 pointer-events-none opacity-85'
           } transform origin-top`}
         >
-          {' '}
           {facet.type === 'checkbox' && (
-            <ul className="space-y-2">
+            <ul className="space-y-2 overflow-y-auto max-h-[600px] scrollbar-custom pr-6">
               {facet.values.map(({ name, count }) => (
                 <li key={name}>
                   <label className="flex items-center gap-2 text-sm">
@@ -171,10 +295,11 @@ const FilterSidebar = ({ facetDistribution }: any) => {
                       checked={(
                         (query[key] as string)?.split(',') ?? []
                       ).includes(name)}
-                      onChange={() => toggleFilterValue(key, name)}
+                      onChange={() =>
+                        toggleFilterValue(key, name, searchType, facet.type)
+                      }
                     />
-
-                    <span>
+                    <span className="whitespace-nowrap">
                       {name} ({count})
                     </span>
                   </label>
@@ -182,62 +307,88 @@ const FilterSidebar = ({ facetDistribution }: any) => {
               ))}
             </ul>
           )}
-          {facet.type === 'range' &&
-            (() => {
-              const valuesAsNumbers = facet.values
-                .map((v) => parseFloat(v.name))
-                .filter((v) => !isNaN(v));
-              const min = Math.min(...valuesAsNumbers);
-              const max = Math.max(...valuesAsNumbers);
 
-              return (
-                <div>
-                  <input type="range" min={min} max={max} className="w-full" />
+          {facet.type === 'range' && searchType === 'meta' && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Fourchette de prix
+                </label>
+                <div className="flex items-center gap-4">
                   <input
-                    type="range"
-                    min={min}
-                    max={max}
-                    className="w-full mt-2"
+                    type="number"
+                    placeholder="Min"
+                    className="w-full p-2 border rounded"
+                    value={query[`${key}_min`] || ''}
+                    onChange={(e) =>
+                      toggleFilterValue(
+                        key,
+                        `${e.target.value}-${query[`${key}_max`] || ''}`,
+                        searchType,
+                        facet.type,
+                      )
+                    }
                   />
-                  <p className="text-sm mt-1">
-                    Min: {min} - Max: {max}
-                  </p>
+                  <span>à</span>
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    className="w-full p-2 border rounded"
+                    value={query[`${key}_max`] || ''}
+                    onChange={(e) =>
+                      toggleFilterValue(
+                        key,
+                        `${query[`${key}_min`] || ''}-${e.target.value}`,
+                        searchType,
+                        facet.type,
+                      )
+                    }
+                  />
                 </div>
-              );
-            })()}
-          {facet.type === 'maxValueCheckbox' &&
-            (() => {
-              const sortedValues = facet.values
-                .map(({ name, count }) => ({
-                  value: parseFloat(name),
-                  count,
-                }))
-                .filter((v) => !isNaN(v.value))
-                .sort((a, b) => a.value - b.value);
+              </div>
+              {facet.values.length > 0 && (
+                <div className="text-xs text-gray-500">
+                  Valeurs disponibles:{' '}
+                  {Math.min(...facet.values.map((v) => parseFloat(v.name)))}€ -
+                  {Math.max(...facet.values.map((v) => parseFloat(v.name)))}€
+                </div>
+              )}
+            </div>
+          )}
 
-              return (
-                <ul className="space-y-2">
-                  {sortedValues.map(({ value, count }) => (
-                    <li key={value}>
-                      <label className="flex items-center gap-2 text-sm">
-                        <input type="checkbox" className="w-[12px] h-[12px]" />
-                        <span>
-                          ≤ {value} ({count})
-                        </span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              );
-            })()}
+          {facet.type === 'maxValueCheckbox' && searchType === 'meta' && (
+            <ul className="space-y-2">
+              {facet.values
+                .map(({ name }) => ({ value: parseFloat(name), name }))
+                .filter((v) => !isNaN(v.value))
+                .sort((a, b) => a.value - b.value)
+                .map(({ value, name }) => (
+                  <li key={name}>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        className="w-3 h-3 accent-primary"
+                        checked={(
+                          (query[key] as string)?.split(',') ?? []
+                        ).includes(name)}
+                        onChange={() =>
+                          toggleFilterValue(key, name, searchType, facet.type)
+                        }
+                      />
+                      <span>≤ {value}</span>
+                    </label>
+                  </li>
+                ))}
+            </ul>
+          )}
         </div>
       </div>
     );
   };
 
   return (
-    <aside className="min-w-[250px] xxl:min-w-[325px] text-primary md:sticky md:top-10">
-      <div className="mb-4">
+    <aside className="w-full md:w-[250px] xxl:w-[325px] text-primary md:sticky md:top-20 max-md:overflow-auto">
+      <div className="mb-4 flex justify-center">
         <button
           onClick={onResetFilters}
           disabled={
@@ -245,36 +396,32 @@ const FilterSidebar = ({ facetDistribution }: any) => {
               allowedFilters.some((f) => f.key === key),
             ).length === 0
           }
-          className={`w-full py-2 px-4 rounded-md transition-colors flex items-center justify-center gap-2 ${
+          className={`text-center text-primary hover:text-secondary duration-300 underline ${
             Object.keys(query).filter((key) =>
               allowedFilters.some((f) => f.key === key),
             ).length === 0
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-red-50 hover:bg-red-100 text-red-600'
+              ? 'opacity-40 cursor-not-allowed'
+              : ''
           }`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
           Supprimer les filtres
         </button>
       </div>
-      {Object.entries(formattedFacets).map(([label, facet]) => {
-        const filter = allowedFilters.find((f) => f.label === label);
-        if (!filter) return null;
-        return renderFacetFilter(label, facet, filter.key);
-      })}
+      <div className="bloc max-md:flex max-md:gap-4 overflow-x-auto scrollbar-custom max-md:items-start max-md:justify-start max-md:pb-4">
+        {Object.entries(formattedFacets)
+          .filter(([, facet]) => facet.values.length > 0)
+          .map(([label, facet]) => {
+            const filter = allowedFilters.find((f) => f.label === label);
+            if (!filter) return null;
+            return renderFacetFilter(
+              label,
+              facet,
+              filter.key,
+              filter.searchType,
+              filter.metaType,
+            );
+          })}
+      </div>
     </aside>
   );
 };

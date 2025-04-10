@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+#https ssl
+certificates
+
 # next.js
 /.next/
 /out/
@@ -38,3 +41,4 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
+

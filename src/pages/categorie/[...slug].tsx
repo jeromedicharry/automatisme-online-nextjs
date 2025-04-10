@@ -23,6 +23,11 @@ import CardProductMeilisearch, {
 } from '@/components/cards/CardProductMeilisearch';
 import FilterSidebar from '@/components/filters/FilterSideBar';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
+import Link from 'next/link';
+
+interface Filters {
+  [key: string]: string;
+}
 
 const CategoryPage = ({
   products,
@@ -52,6 +57,8 @@ const CategoryPage = ({
   const [facets, setFacets] = useState(initialFacets); // Ajouter un état pour les facettes
 
   // Effet pour gérer les changements de filtres et la recherche
+  // Dans CategoryPage.tsx, modifiez le useEffect principal comme suit :
+
   useEffect(() => {
     if (!router.isReady) return;
 
@@ -59,7 +66,7 @@ const CategoryPage = ({
       setIsLoading(true);
 
       // Extraire uniquement les filtres valides de l'URL
-      const validFilters = {};
+      const validFilters: Filters = {};
       Object.entries(router.query).forEach(([key, value]) => {
         // Exclure les paramètres slug, page, etc.
         if (
@@ -72,8 +79,8 @@ const CategoryPage = ({
 
       try {
         const result = await fetchMeiliProductsByCategory({
-          query: category?.name || '',
-          page: 1, // Toujours commencer par la page 1 quand les filtres changent
+          categorySlug: category?.slug || '',
+          page: 1,
           limit: 50,
           filters: validFilters,
         });
@@ -94,13 +101,14 @@ const CategoryPage = ({
     };
 
     fetchFilteredProducts();
-  }, [router.isReady, router.asPath, category?.name]);
+  }, [router.isReady, router.asPath, router.query, category]);
 
   useEffect(() => {
     setProductSelection(products);
     setCurrentPage(1);
     setHasMore(products.length < total);
     setFacets(initialFacets);
+    setCurrentTotal(total);
   }, [products, total, initialFacets]);
 
   if (router.isFallback) {
@@ -113,7 +121,7 @@ const CategoryPage = ({
     const nextPage = currentPage + 1;
 
     // Extraire les filtres actuels de l'URL
-    const validFilters = {};
+    const validFilters: Filters = {};
     Object.entries(router.query).forEach(([key, value]) => {
       if (
         !['slug', 'page', 'search'].includes(key) &&
@@ -124,8 +132,9 @@ const CategoryPage = ({
     });
 
     try {
+      const categorySlug = category?.slug;
       const result = await fetchMeiliProductsByCategory({
-        query: category?.name || '',
+        categorySlug,
         page: nextPage,
         limit: 50,
         filters: validFilters, // Passer les filtres actuels
@@ -161,18 +170,31 @@ const CategoryPage = ({
           isH1
           isDescriptionFontNormal
         />
-        <div className="flex flex-col items-start md:flex-row gap-4">
+        <div className="flex flex-col items-start md:flex-row gap-4 mb-10 md:mb-16">
           <FilterSidebar facetDistribution={facets} />
-          <section>
+          <section className="w-full">
             <div className="flex justify-between mb-6 md:mb-4">
               <p className="text-sm md:text-base leading-general text-dark-grey">
                 {currentTotal} produits trouvés
               </p>
               <span>TRIER</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {category?.children?.nodes?.length > 0 && (
+              <div className="flex justify-start items-start mb-6 md:mb-4 gap-2 overflow-x-auto scrollbar-custom pb-4 w-full">
+                {category?.children?.nodes?.map((child) => (
+                  <Link
+                    key={child?.uri}
+                    href={`${child?.uri}`}
+                    className="bg-white py-2 px-4 rounded-[4px] text-xs leading-general whitespace-nowrap text-dark-grey duration-300 hover:bg-primary hover:text-white"
+                  >
+                    {child?.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit">
               {productSelection?.map((product: CardProductMeilisearchProps) => (
-                <CardProductMeilisearch key={product?.ID} product={product} />
+                <CardProductMeilisearch key={product?.id} product={product} />
               ))}
             </div>
             {isLoading && <LoadingSpinner />}
@@ -187,9 +209,7 @@ const CategoryPage = ({
               >
                 Voir plus de produits
               </Cta>
-            ) : (
-              <p>{"Pas d'autres produits à montrer"}</p>
-            )}
+            ) : null}
           </section>
         </div>
       </Container>
@@ -201,6 +221,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = Array.isArray(params?.slug)
     ? `${params.slug.join('/')}`
     : params?.slug || '';
+
+  console.log({ slug }, 'tatatata');
 
   const categoryData = await client.query({
     query: GET_SINGLE_CATEGORY,
@@ -217,10 +239,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const commonData = await fetchCommonData();
 
-  const categoryName = categoryData?.data?.singleCategory?.name || '';
+  const categorySlug = categoryData?.data?.singleCategory?.slug || '';
 
   const { products, total, facets } = await fetchMeiliProductsByCategory({
-    query: categoryName,
+    categorySlug,
     page: 1,
     limit: 50,
   });

@@ -9,17 +9,22 @@ import useAuth from '@/hooks/useAuth';
 import Cta from '../atoms/Cta';
 
 export interface CardProductMeilisearchProps {
-  post_title: string;
+  title: string;
   slug: string;
-  ID: number;
+  id: number;
   image: string;
   meta: {
-    _sku: string;
-    _regular_price: string;
+    sku: string;
+    regular_price: string;
     _is_pro: boolean;
-    _price: string;
+    price: string;
     // todo attendre isFeatured slug et image et mettre à jour
     _is_featured: boolean;
+  };
+  thumbnail: {
+    medium: {
+      url: string;
+    };
   };
 }
 
@@ -37,8 +42,8 @@ const CardProductMeilisearch = ({
           className="absolute inset-0 w-full flex items-center justify-center"
         >
           <Image
-            src={product?.image || PRODUCT_IMAGE_PLACEHOLDER}
-            alt={product?.post_title}
+            src={product?.thumbnail?.medium?.url || PRODUCT_IMAGE_PLACEHOLDER}
+            alt={product?.title}
             width={248}
             height={257}
             className="block h-full object-contain w-full hover:opacity-85 duration-300"
@@ -52,21 +57,21 @@ const CardProductMeilisearch = ({
           ) : (
             <span></span>
           )}
-          {loggedIn && product?.ID !== undefined && (
+          {loggedIn && product?.id !== undefined && (
             <span>
-              <FavoriteButton productId={Number(product?.ID)} />
+              <FavoriteButton productId={Number(product?.id)} />
             </span>
           )}
         </div>
       </div>
       <Link href={`/nos-produits/${product?.slug}`} className="group">
         <h3 className="mt-4 mb-1 font-bold text-base leading-general duration-300 group-hover:text-secondary">
-          {product?.post_title}
+          {product?.title}
         </h3>
       </Link>
 
       <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
-        {product?.meta?._sku || 'Référence produit'}
+        {product?.meta?.sku || 'Référence produit'}
       </p>
       <p className="mb-[10px]">Widget Avis vérifiés</p>
       {product?.meta?._is_pro && !isPro ? (
@@ -84,8 +89,8 @@ const CardProductMeilisearch = ({
       ) : (
         <>
           <ProductPrice
-            price={parseFloat(product?.meta?._price || '0')}
-            regularPrice={parseFloat(product?.meta?._regular_price || '0')}
+            price={parseFloat(product?.meta?.price || '0')}
+            regularPrice={parseFloat(product?.meta?.regular_price || '0')}
             variant="card"
           />
           <div className="mt-auto">

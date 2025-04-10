@@ -1,43 +1,70 @@
 import { allowedFilters } from '@/components/filters/FilterSideBar';
 
 export const fetchMeiliProductsByCategory = async ({
-  query,
+  categorySlug,
   page = 1,
   limit = 50,
   filters = {},
 }: {
-  query: string;
+  categorySlug: string;
   page?: number;
   limit?: number;
   filters?: Record<string, string>;
 }) => {
   const offset = (page - 1) * limit;
 
-  const facets = allowedFilters
-    .filter((filter) => filter.type === 'checkbox')
-    .map((filter) => `terms.${filter.key}`);
+  // Ajouter la catégorie comme filtre principal
+  let meiliFilters = [`taxonomies.product_cat.slug = ${categorySlug}`];
 
-  // Convertir les filtres au format Meilisearch
-  let meiliFilters: string[] = [];
+  console.log({ categorySlug });
 
+  // Convertir les autres filtres au format Meilisearch
   for (const [key, value] of Object.entries(filters)) {
-    // Si la valeur contient des virgules, on crée un OR pour chaque valeur
-    if (value.includes(',')) {
-      const values = value.split(',').map((v) => v.trim());
-      const orConditions = values
-        .map((v) => `terms.${key}.name = ${v}`)
-        .join(' OR ');
-      meiliFilters.push(`(${orConditions})`);
-    } else {
-      meiliFilters.push(`terms.${key}.name = ${value}`);
+    const filterConfig = allowedFilters.find((f) => f.key === key);
+    if (!filterConfig) continue;
+
+    let filterCondition: string;
+
+    // Déterminer le préfixe en fonction du type
+    let fieldPrefix: string;
+    switch (filterConfig.searchType) {
+      case 'taxonomy':
+        fieldPrefix = `taxonomies.${key}.slug`;
+        break;
+      case 'meta':
+        fieldPrefix = `meta.${key}`;
+        break;
+      case 'attribute':
+      default:
+        fieldPrefix = `attributes.${key}.slug`;
     }
+
+    // Gestion spéciale pour les ranges de meta
+    if (filterConfig.type === 'range' && filterConfig.searchType === 'meta') {
+      const [min, max] = value.split('-');
+      filterCondition = `${fieldPrefix} >= ${min} AND ${fieldPrefix} <= ${max}`;
+    }
+    // Gestion des valeurs multiples (OR)
+    else if (value.includes(',')) {
+      const values = value.split(',').map((v) => v.trim());
+      filterCondition = values.map((v) => `${fieldPrefix} = ${v}`).join(' OR ');
+      filterCondition = `(${filterCondition})`;
+    }
+    // Cas standard (égalité simple)
+    else {
+      filterCondition = `${fieldPrefix} = ${value}`;
+    }
+
+    meiliFilters.push(filterCondition);
   }
 
   // Combiner tous les filtres avec AND
   const filterString = meiliFilters.join(' AND ');
 
+  console.log({ filterString });
+
   const response = await fetch(
-    'https://meilisearch.automatisme-online.fr/indexes/product_index/search',
+    'https://meilisearch.automatisme-online.fr/indexes/product/search',
     {
       method: 'POST',
       headers: {
@@ -45,11 +72,11 @@ export const fetchMeiliProductsByCategory = async ({
         Authorization: `Bearer ${process.env.MEILISEARCH_API_KEY}`,
       },
       body: JSON.stringify({
-        q: query,
+        q: '', // On ne fait pas de recherche textuelle ici
         limit,
         offset,
-        ...(meiliFilters.length > 0 && { filter: filterString }),
-        facets,
+        filter: filterString,
+        facets: ['*'], // Spécifiez les champs pour lesquels vous voulez des facettes
       }),
     },
   );
@@ -62,7 +89,7 @@ export const fetchMeiliProductsByCategory = async ({
 
   return {
     products: result.hits,
-    facets: result.facetDistribution,
+    facets: result.facetDistribution || {},
     total: result.estimatedTotalHits,
   };
 };

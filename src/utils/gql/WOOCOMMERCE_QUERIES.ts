@@ -129,9 +129,16 @@ export const GET_SINGLE_CATEGORY = gql`
     singleCategory: productCategory(id: $id, idType: URI) {
       id
       uri
+      slug
       name
       description
       ${seoFields}
+      children(first: 50, where: {parent: null}) {
+        nodes {
+          name
+          uri
+        }
+      }
     }
   }
 `;

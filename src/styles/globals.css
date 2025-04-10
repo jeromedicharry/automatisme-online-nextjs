@@ -240,3 +240,30 @@ form ::placeholder {
 .contact textarea {
   min-height: 130px;
 }
+
+/* Override scroll bar */
+
+@layer components {
+  .scrollbar-custom {
+    scrollbar-width: thin; /* Pour Firefox */
+    scrollbar-color: #042B60 #FFF; /* Pour Firefox */
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px; /* Largeur de la scrollbar */
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: #FFF; /* Couleur de fond */
+    border-radius: 10px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: #042B60; /* Couleur du curseur */
+    border-radius: 10px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color: #4f46e5; /* Couleur au survol */
+  }
+}
