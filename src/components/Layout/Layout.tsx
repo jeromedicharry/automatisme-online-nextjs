@@ -11,6 +11,7 @@ import CartModal from '@/components/Modals/CartModal';
 // Types
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
+import ToTop from '../atoms/ToTop';
 
 interface LayoutProps {
   children?: ReactNode;
@@ -65,6 +66,7 @@ const Layout = ({
           themeSettings={themeSettings}
         />
         <CartModal />
+        <ToTop />
       </div>
     </>
   );
