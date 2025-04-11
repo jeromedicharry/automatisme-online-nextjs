@@ -25,6 +25,12 @@ import FilterSidebar from '@/components/filters/FilterSideBar';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 import SubcategoriesNav from '@/components/ProductCategory/SubcategoriesNav';
 import { perPage } from '@/components/filters/config';
+import CardInstallation from '@/components/cards/CardInstallation';
+import {
+  installationData,
+  useIntermediateCart,
+} from '@/stores/IntermediateCartContext';
+import { GET_INSTALLATION_CTA } from '@/utils/gql/WEBSITE_QUERIES';
 
 interface Filters {
   [key: string]: string;
@@ -39,6 +45,7 @@ const CategoryPage = ({
   footerMenu2,
   categoriesMenu,
   initialFacets,
+  installationData,
 }: {
   products: CardProductMeilisearchProps[];
   category: CategoryPageProps;
@@ -48,6 +55,7 @@ const CategoryPage = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
   initialFacets: any;
+  installationData: installationData;
 }) => {
   const router = useRouter();
   const [productSelection, setProductSelection] = useState(products || []);
@@ -56,9 +64,6 @@ const CategoryPage = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(products.length < total);
   const [facets, setFacets] = useState(initialFacets); // Ajouter un état pour les facettes
-
-  // Effet pour gérer les changements de filtres et la recherche
-  // Dans CategoryPage.tsx, modifiez le useEffect principal comme suit :
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -181,10 +186,17 @@ const CategoryPage = ({
               <span>TRIER</span>
             </div>
             <SubcategoriesNav subCategories={category?.children?.nodes} />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit">
-              {productSelection?.map((product: CardProductMeilisearchProps) => (
-                <CardProductMeilisearch key={product?.id} product={product} />
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch">
+              {productSelection?.map(
+                (product: CardProductMeilisearchProps, index) => (
+                  <React.Fragment key={product?.id}>
+                    <CardProductMeilisearch product={product} />
+                    {index === 1 && (
+                      <CardInstallation installation={installationData} />
+                    )}
+                  </React.Fragment>
+                ),
+              )}
             </div>
             {isLoading && <LoadingSpinner />}
 
@@ -226,6 +238,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const commonData = await fetchCommonData();
 
+  const installationDataRes = await client.query({
+    query: GET_INSTALLATION_CTA,
+  });
+
+  const installationData =
+    installationDataRes?.data?.themeSettings?.optionsFields
+      ?.installationCtaCard;
+
   const categorySlug = categoryData?.data?.singleCategory?.slug || '';
 
   const { products, total, facets } = await fetchMeiliProductsByCategory({
@@ -240,6 +260,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       products,
       total,
       initialFacets: facets,
+      installationData,
       ...commonData,
     },
     revalidate: 3600,

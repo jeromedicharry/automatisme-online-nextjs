@@ -9,7 +9,7 @@ export type AllowedFilter = {
   metaType?: 'number' | 'string'; // Pour les champs meta
 };
 
-export const perPage = 48;
+export const perPage = 50;
 
 export const allowedFilters: AllowedFilter[] = [
   // Taxonomies

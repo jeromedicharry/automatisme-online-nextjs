@@ -29,8 +29,6 @@ const AddToCart = ({
   const { openCartModal } = useIntermediateCart();
   const { refetchCart } = useCartOperations();
 
-  console.log({ product });
-
   const productId = product?.databaseId;
 
   const productQueryInput = {

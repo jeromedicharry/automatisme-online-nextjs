@@ -10,8 +10,8 @@ const CardInstallation = ({
   installation: installationData;
 }) => {
   return (
-    <div className="bg-secondary-light rounded-2xl overflow-hidden h-full flex flex-col justify-between">
-      <div className="h-[250px] w-full flex items-center justify-between overflow-hidden">
+    <div className="bg-secondary-light rounded-2xl overflow-hidden flex flex-col justify-between">
+      <div className="w-full flex items-center justify-between overflow-hidden">
         <Image
           src={
             installation?.image?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER
@@ -19,7 +19,7 @@ const CardInstallation = ({
           alt={installation?.title}
           width={300}
           height={250}
-          className="block h-full object-cover"
+          className="block h-full w-full object-cover"
         />
       </div>
       <div className="relative pt-[61px] pb-[55px] px-4 overflow-hidden">
@@ -34,15 +34,17 @@ const CardInstallation = ({
           dangerouslySetInnerHTML={{ __html: installation?.title }}
         />
         {installation?.ctaLabel && installation?.ctaSlug && (
-          <Cta
-            label={installation.ctaLabel}
-            slug={installation.ctaSlug}
-            size="default"
-            variant="primaryHollow"
-            additionalClass="relative mt-4 mb-20"
-          >
-            {installation.ctaLabel}
-          </Cta>
+          <div className="w-fit">
+            <Cta
+              label={installation.ctaLabel}
+              slug={installation.ctaSlug}
+              size="default"
+              variant="primaryHollow"
+              additionalClass="relative mt-4 mb-20"
+            >
+              {installation.ctaLabel}
+            </Cta>
+          </div>
         )}
       </div>
     </div>
