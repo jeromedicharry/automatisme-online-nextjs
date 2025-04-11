@@ -13,7 +13,6 @@ const useIsMobile = (): boolean => {
 
     return (): void => window.removeEventListener('resize', updateSize);
   }, []);
-  console.log('toto', isMobile);
 
   return isMobile;
 };

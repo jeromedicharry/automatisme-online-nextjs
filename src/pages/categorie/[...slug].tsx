@@ -24,6 +24,7 @@ import CardProductMeilisearch, {
 import FilterSidebar from '@/components/filters/FilterSideBar';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 import SubcategoriesNav from '@/components/ProductCategory/SubcategoriesNav';
+import { perPage } from '@/components/filters/config';
 
 interface Filters {
   [key: string]: string;
@@ -69,6 +70,7 @@ const CategoryPage = ({
       const validFilters: Filters = {};
       Object.entries(router.query).forEach(([key, value]) => {
         // Exclure les paramètres slug, page, etc.
+        console.log({ key, value });
         if (
           !['slug', 'page', 'search'].includes(key) &&
           typeof value === 'string'
@@ -81,7 +83,7 @@ const CategoryPage = ({
         const result = await fetchMeiliProductsByCategory({
           categorySlug: category?.slug || '',
           page: 1,
-          limit: 50,
+          limit: perPage,
           filters: validFilters,
         });
 
@@ -136,7 +138,7 @@ const CategoryPage = ({
       const result = await fetchMeiliProductsByCategory({
         categorySlug,
         page: nextPage,
-        limit: 50,
+        limit: perPage,
         filters: validFilters, // Passer les filtres actuels
       });
 
@@ -232,7 +234,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { products, total, facets } = await fetchMeiliProductsByCategory({
     categorySlug,
     page: 1,
-    limit: 50,
+    limit: perPage,
   });
 
   return {
@@ -257,7 +259,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const { data }: any = await client.query({
       query: GET_ALL_CATEGORIES_QUERY,
       variables: {
-        first: 50, // Récupérer 100 catégories par page (limité par l'API)
+        first: perPage, // Récupérer 100 catégories par page (limité par l'API)
         after,
       },
     });

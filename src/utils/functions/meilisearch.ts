@@ -1,9 +1,9 @@
-import { allowedFilters } from '@/components/filters/FilterSideBar';
+import { allowedFilters, perPage } from '@/components/filters/config';
 
 export const fetchMeiliProductsByCategory = async ({
   categorySlug,
   page = 1,
-  limit = 50,
+  limit = perPage,
   filters = {},
 }: {
   categorySlug: string;
