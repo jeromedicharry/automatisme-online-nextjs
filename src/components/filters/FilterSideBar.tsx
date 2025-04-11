@@ -387,7 +387,7 @@ const FilterSidebar = ({ facetDistribution }: any) => {
   };
 
   return (
-    <aside className="w-full md:w-[250px] xxl:w-[325px] text-primary md:sticky md:top-20 max-md:overflow-auto">
+    <aside className="w-full md:w-[250px] xl:w-[325px] text-primary md:sticky md:top-20 max-md:overflow-auto shrink-0">
       <div className="mb-4 flex justify-center">
         <button
           onClick={onResetFilters}

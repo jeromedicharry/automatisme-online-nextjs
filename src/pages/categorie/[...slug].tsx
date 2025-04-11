@@ -23,7 +23,7 @@ import CardProductMeilisearch, {
 } from '@/components/cards/CardProductMeilisearch';
 import FilterSidebar from '@/components/filters/FilterSideBar';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
-import Link from 'next/link';
+import SubcategoriesNav from '@/components/ProductCategory/SubcategoriesNav';
 
 interface Filters {
   [key: string]: string;
@@ -172,26 +172,14 @@ const CategoryPage = ({
         />
         <div className="flex flex-col items-start md:flex-row gap-4 mb-10 md:mb-16">
           <FilterSidebar facetDistribution={facets} />
-          <section className="w-full">
+          <section className="max-md:w-full overflow-hidden">
             <div className="flex justify-between mb-6 md:mb-4">
               <p className="text-sm md:text-base leading-general text-dark-grey">
                 {currentTotal} produits trouvés
               </p>
               <span>TRIER</span>
             </div>
-            {category?.children?.nodes?.length > 0 && (
-              <div className="flex justify-start items-start mb-6 md:mb-4 gap-2 overflow-x-auto scrollbar-custom pb-4 w-full">
-                {category?.children?.nodes?.map((child) => (
-                  <Link
-                    key={child?.uri}
-                    href={`${child?.uri}`}
-                    className="bg-white py-2 px-4 rounded-[4px] text-xs leading-general whitespace-nowrap text-dark-grey duration-300 hover:bg-primary hover:text-white"
-                  >
-                    {child?.name}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <SubcategoriesNav subCategories={category?.children?.nodes} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit">
               {productSelection?.map((product: CardProductMeilisearchProps) => (
                 <CardProductMeilisearch key={product?.id} product={product} />
