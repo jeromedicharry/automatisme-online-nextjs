@@ -21,6 +21,10 @@ export default function Header({
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  const handleLinkClick = () => {
+    setIsMenuOpen(false); // Ferme le menu après un clic sur un lien
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -252,7 +256,11 @@ export default function Header({
                         toggleSubMenu(item.name)
                       }
                     >
-                      <Link href={item.uri} className="font-bold text-primary">
+                      <Link
+                        href={item.uri}
+                        className="font-bold text-primary"
+                        onClick={handleLinkClick}
+                      >
                         {item.name}
                       </Link>
                       {item.children?.nodes?.length > 0 && (
@@ -270,7 +278,11 @@ export default function Header({
                         <div className="pl-4 py-2 text-primary">
                           {item.children.nodes.map((subItem) => (
                             <div key={subItem.uri}>
-                              <Link href={subItem.uri} className="block py-2">
+                              <Link
+                                href={subItem.uri}
+                                className="block py-2"
+                                onClick={handleLinkClick}
+                              >
                                 {subItem.name}
                               </Link>
                               {subItem.children?.nodes?.length > 0 && (
@@ -280,6 +292,7 @@ export default function Header({
                                       key={subSubItem.uri}
                                       href={subSubItem.uri}
                                       className="block py-2 text-sm"
+                                      onClick={handleLinkClick}
                                     >
                                       {subSubItem.name}
                                     </Link>
