@@ -54,7 +54,7 @@ export interface BlocFeaturedCategoriesProps {
 export interface CardProductProps {
   name: string;
   id: string;
-  databaseId?: string;
+  databaseId?: number;
   onSale: boolean;
   featured: boolean;
   slug: string;

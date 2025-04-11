@@ -7,6 +7,8 @@ import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import FavoriteButton from '../atoms/FavoriteButton';
 import useAuth from '@/hooks/useAuth';
 import Cta from '../atoms/Cta';
+import AddToCart from '../Product/AddToCart';
+import { CardProductProps } from '@/types/blocTypes';
 
 export interface CardProductMeilisearchProps {
   title: string;
@@ -34,6 +36,31 @@ const CardProductMeilisearch = ({
   product: CardProductMeilisearchProps;
 }) => {
   const { loggedIn, isPro } = useAuth();
+
+  // utils/productConverters.ts
+  const convertMeiliToWooProduct = (
+    meiliProduct: CardProductMeilisearchProps,
+  ): CardProductProps => ({
+    slug: meiliProduct.slug,
+    databaseId: meiliProduct.id,
+    id: meiliProduct.id.toString(),
+    name: meiliProduct.title,
+    featuredImage: {
+      node: {
+        sourceUrl:
+          meiliProduct.image || meiliProduct.thumbnail?.medium?.url || '',
+      },
+    },
+    price: meiliProduct.meta?.price || '',
+    regularPrice: meiliProduct.meta?.regular_price || '',
+    salePrice: '', // À adapter si disponible
+    sku: meiliProduct.meta?.sku || '',
+    uri: `/produit/${meiliProduct.slug}`,
+    isPro: meiliProduct.meta?._is_pro || false,
+    featured: meiliProduct.meta?._is_featured || false,
+    onSale: false, // À adapter selon besoin
+    hasProDiscount: false, // À adapter
+  });
   return (
     <article className="flex flex-col max-w-[250px] xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
@@ -94,8 +121,7 @@ const CardProductMeilisearch = ({
             variant="card"
           />
           <div className="mt-auto">
-            {/* <AddToCart product={product} /> */}
-            {/* Todo faire un addtocart dédiée pour meiliserach */}
+            <AddToCart product={convertMeiliToWooProduct(product)} />
           </div>
         </>
       )}
