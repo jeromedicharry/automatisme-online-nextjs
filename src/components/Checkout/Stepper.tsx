@@ -11,8 +11,6 @@ const Stepper = ({
   setCurrentStep: (step: stepTypes) => void;
   canProceed: boolean;
 }) => {
-  console.log({ currentStep });
-  console.log({ canProceed });
   return (
     <div className="flex justify-start max-md:flex-col max-md:items-stretch mt-6 md:w-fit gap-4 ml-auto">
       {currentStep === 'Addresses' && (

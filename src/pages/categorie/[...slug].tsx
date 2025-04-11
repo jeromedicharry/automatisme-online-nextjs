@@ -70,7 +70,6 @@ const CategoryPage = ({
       const validFilters: Filters = {};
       Object.entries(router.query).forEach(([key, value]) => {
         // Exclure les paramètres slug, page, etc.
-        console.log({ key, value });
         if (
           !['slug', 'page', 'search'].includes(key) &&
           typeof value === 'string'
@@ -211,8 +210,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = Array.isArray(params?.slug)
     ? `${params.slug.join('/')}`
     : params?.slug || '';
-
-  console.log({ slug }, 'tatatata');
 
   const categoryData = await client.query({
     query: GET_SINGLE_CATEGORY,

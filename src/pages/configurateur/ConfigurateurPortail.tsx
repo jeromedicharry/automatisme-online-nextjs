@@ -36,8 +36,6 @@ export default function ConfigurateurPortail({ setMessage }: any) {
   //   const [showContactForm, setShowContactForm] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  //   console.log({ products, showContactForm });
-
   // Chargement des données depuis l'URL
   useEffect(() => {
     if (!router.isReady) return;

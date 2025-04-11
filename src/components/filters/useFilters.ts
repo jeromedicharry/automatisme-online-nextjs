@@ -29,8 +29,6 @@ export const useFilters = () => {
 
     const newQuery = { ...query };
 
-    console.log({ newQuery });
-
     if (newValues.length > 0) {
       newQuery[key] = newValues.join(',');
     } else {

@@ -9,7 +9,6 @@ const ProductHeader = ({
   title: string;
   brand?: BrandStickerProps;
 }) => {
-  console.log({ brand });
   return (
     <header>
       <div className="flex text-xl leading-general text-primary justify-between lg:items-end gap-5">

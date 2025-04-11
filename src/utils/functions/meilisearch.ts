@@ -16,8 +16,6 @@ export const fetchMeiliProductsByCategory = async ({
   // Ajouter la catégorie comme filtre principal
   let meiliFilters = [`taxonomies.product_cat.slug = ${categorySlug}`];
 
-  console.log({ categorySlug });
-
   // Convertir les autres filtres au format Meilisearch
   for (const [key, value] of Object.entries(filters)) {
     const filterConfig = allowedFilters.find((f) => f.key === key);
@@ -60,8 +58,6 @@ export const fetchMeiliProductsByCategory = async ({
 
   // Combiner tous les filtres avec AND
   const filterString = meiliFilters.join(' AND ');
-
-  console.log({ filterString });
 
   const response = await fetch(
     'https://meilisearch.automatisme-online.fr/indexes/product/search',
