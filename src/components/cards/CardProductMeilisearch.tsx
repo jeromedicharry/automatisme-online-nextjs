@@ -19,7 +19,7 @@ export interface CardProductMeilisearchProps {
     sku: string;
     regular_price: string;
     _is_pro: boolean;
-    price: string;
+    _price: string;
     // todo attendre isFeatured slug et image et mettre à jour
     _is_featured: boolean;
   };
@@ -51,7 +51,7 @@ const CardProductMeilisearch = ({
           meiliProduct.image || meiliProduct.thumbnail?.medium?.url || '',
       },
     },
-    price: meiliProduct.meta?.price || '',
+    price: meiliProduct.meta?._price || '',
     regularPrice: meiliProduct.meta?.regular_price || '',
     salePrice: '', // À adapter si disponible
     sku: meiliProduct.meta?.sku || '',
@@ -116,7 +116,7 @@ const CardProductMeilisearch = ({
       ) : (
         <>
           <ProductPrice
-            price={parseFloat(product?.meta?.price || '0')}
+            price={parseFloat(product?.meta?._price || '0')}
             regularPrice={parseFloat(product?.meta?.regular_price || '0')}
             variant="card"
           />
