@@ -24,12 +24,9 @@ import CardProductMeilisearch, {
 import FilterSidebar from '@/components/filters/FilterSideBar';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 import SubcategoriesNav from '@/components/ProductCategory/SubcategoriesNav';
-import { perPage } from '@/components/filters/config';
+import { perPage, sortingOptions } from '@/components/filters/config';
 import CardInstallation from '@/components/cards/CardInstallation';
-import {
-  installationData,
-  useIntermediateCart,
-} from '@/stores/IntermediateCartContext';
+import { installationData } from '@/stores/IntermediateCartContext';
 import { GET_INSTALLATION_CTA } from '@/utils/gql/WEBSITE_QUERIES';
 
 interface Filters {
@@ -63,7 +60,7 @@ const CategoryPage = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(products.length < total);
-  const [facets, setFacets] = useState(initialFacets); // Ajouter un état pour les facettes
+  const [facets, setFacets] = useState(initialFacets);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -73,10 +70,12 @@ const CategoryPage = ({
 
       // Extraire uniquement les filtres valides de l'URL
       const validFilters: Filters = {};
+      // Récupérer le tri directement de l'URL chaque fois qu'on en a besoin
+      const sortValue = (router.query.sort as string) || ''; // récupère directement la valeur de tri ou '' par défaut
+
       Object.entries(router.query).forEach(([key, value]) => {
-        // Exclure les paramètres slug, page, etc.
         if (
-          !['slug', 'page', 'search'].includes(key) &&
+          !['slug', 'page', 'search', 'sort'].includes(key) && // on exclut 'sort' car on l'a déjà traité
           typeof value === 'string'
         ) {
           validFilters[key] = value;
@@ -89,6 +88,7 @@ const CategoryPage = ({
           page: 1,
           limit: perPage,
           filters: validFilters,
+          sort: sortValue,
         });
 
         setProductSelection(result.products);
@@ -128,9 +128,11 @@ const CategoryPage = ({
 
     // Extraire les filtres actuels de l'URL
     const validFilters: Filters = {};
+    const sortValue = (router.query.sort as string) || ''; // récupère directement la valeur de tri ou '' par défaut
+
     Object.entries(router.query).forEach(([key, value]) => {
       if (
-        !['slug', 'page', 'search'].includes(key) &&
+        !['slug', 'page', 'search', 'sort'].includes(key) && // on exclut 'sort' car on l'a déjà traité
         typeof value === 'string'
       ) {
         validFilters[key] = value;
@@ -143,7 +145,8 @@ const CategoryPage = ({
         categorySlug,
         page: nextPage,
         limit: perPage,
-        filters: validFilters, // Passer les filtres actuels
+        filters: validFilters,
+        sort: sortValue,
       });
 
       setProductSelection((prev) => [...prev, ...result.products]);
@@ -156,6 +159,32 @@ const CategoryPage = ({
     }
 
     setIsLoading(false);
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+
+    // Construire une nouvelle URL avec le tri sélectionné
+    const currentQuery = { ...router.query };
+
+    if (selectedValue) {
+      currentQuery.sort = selectedValue;
+    } else {
+      delete currentQuery.sort; // Supprimer le paramètre si pas de tri
+    }
+
+    // Réinitialiser la page à 1 lors d'un changement de tri
+    delete currentQuery.page;
+
+    // Naviguer vers la nouvelle URL avec le paramètre de tri
+    router.push(
+      {
+        pathname: router.pathname,
+        query: currentQuery,
+      },
+      undefined,
+      { shallow: true },
+    );
   };
 
   return (
@@ -183,7 +212,21 @@ const CategoryPage = ({
               <p className="text-sm md:text-base leading-general text-dark-grey">
                 {currentTotal} produits trouvés
               </p>
-              <span>TRIER</span>
+              <form className="flex items-center gap-4 sortForm">
+                <label htmlFor="sort">Trier par:</label>
+                <select
+                  name="sort"
+                  id="sort"
+                  value={(router.query.sort as string) || ''}
+                  onChange={handleSortChange}
+                >
+                  {sortingOptions.map((option, index) => (
+                    <option key={index} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </form>
             </div>
             <SubcategoriesNav subCategories={category?.children?.nodes} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch">

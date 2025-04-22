@@ -111,3 +111,14 @@ export const allowedFilters: AllowedFilter[] = [
     metaType: 'number',
   },
 ];
+
+export type sortingOption = {
+  label: string;
+  value: string;
+};
+
+export const sortingOptions: sortingOption[] = [
+  { label: 'Pertinence', value: '' },
+  { label: 'Prix croissant', value: 'meta._price:asc' },
+  { label: 'Prix décroissant', value: 'meta._price:desc' },
+];

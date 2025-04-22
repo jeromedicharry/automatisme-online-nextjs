@@ -1,15 +1,26 @@
 import { allowedFilters, perPage } from '@/components/filters/config';
 
+type MeiliRequestOptions = {
+  q: string;
+  limit: number;
+  offset: number;
+  filter: string;
+  facets: string[];
+  sort?: string[]; // Propriété optionnelle
+};
+
 export const fetchMeiliProductsByCategory = async ({
   categorySlug,
   page = 1,
   limit = perPage,
   filters = {},
+  sort = '',
 }: {
   categorySlug: string;
   page?: number;
   limit?: number;
   filters?: Record<string, string>;
+  sort?: string;
 }) => {
   const offset = (page - 1) * limit;
 
@@ -59,6 +70,19 @@ export const fetchMeiliProductsByCategory = async ({
   // Combiner tous les filtres avec AND
   const filterString = meiliFilters.join(' AND ');
 
+  let requestOptions: MeiliRequestOptions = {
+    q: '', // On ne fait pas de recherche textuelle ici
+    limit,
+    offset,
+    filter: filterString,
+    facets: ['*'], // Spécifiez les champs pour lesquels vous voulez des facettes
+  };
+
+  // Ajouter le tri uniquement s'il est défini et non vide
+  if (sort && sort.trim() !== '') {
+    requestOptions.sort = [sort];
+  }
+
   const response = await fetch(
     'https://meilisearch.automatisme-online.fr/indexes/product/search',
     {
@@ -67,13 +91,7 @@ export const fetchMeiliProductsByCategory = async ({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.MEILISEARCH_API_KEY}`,
       },
-      body: JSON.stringify({
-        q: '', // On ne fait pas de recherche textuelle ici
-        limit,
-        offset,
-        filter: filterString,
-        facets: ['*'], // Spécifiez les champs pour lesquels vous voulez des facettes
-      }),
+      body: JSON.stringify(requestOptions),
     },
   );
 
