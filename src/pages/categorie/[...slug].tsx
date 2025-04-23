@@ -28,6 +28,7 @@ import { perPage, sortingOptions } from '@/components/filters/config';
 import CardInstallation from '@/components/cards/CardInstallation';
 import { installationData } from '@/stores/IntermediateCartContext';
 import { GET_INSTALLATION_CTA } from '@/utils/gql/WEBSITE_QUERIES';
+import { set } from 'lodash';
 
 interface Filters {
   [key: string]: string;
@@ -42,6 +43,7 @@ const CategoryPage = ({
   footerMenu2,
   categoriesMenu,
   initialFacets,
+  initialHasPose,
   installationData,
 }: {
   products: CardProductMeilisearchProps[];
@@ -52,6 +54,7 @@ const CategoryPage = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
   initialFacets: any;
+  initialHasPose: boolean;
   installationData: installationData;
 }) => {
   const router = useRouter();
@@ -61,6 +64,7 @@ const CategoryPage = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(products.length < total);
   const [facets, setFacets] = useState(initialFacets);
+  const [hasPose, setHasPose] = useState(initialHasPose);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -114,8 +118,9 @@ const CategoryPage = ({
     setCurrentPage(1);
     setHasMore(products.length < total);
     setFacets(initialFacets);
+    setHasPose(initialHasPose);
     setCurrentTotal(total);
-  }, [products, total, initialFacets]);
+  }, [products, total, initialFacets, initialHasPose]);
 
   if (router.isFallback) {
     return <p>Chargement...</p>;
@@ -234,7 +239,7 @@ const CategoryPage = ({
                 (product: CardProductMeilisearchProps, index) => (
                   <React.Fragment key={product?.id}>
                     <CardProductMeilisearch product={product} />
-                    {index === 1 && (
+                    {hasPose && index === 1 && (
                       <CardInstallation installation={installationData} />
                     )}
                   </React.Fragment>
@@ -291,11 +296,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const categorySlug = categoryData?.data?.singleCategory?.slug || '';
 
-  const { products, total, facets } = await fetchMeiliProductsByCategory({
-    categorySlug,
-    page: 1,
-    limit: perPage,
-  });
+  const { products, total, facets, hasPose } =
+    await fetchMeiliProductsByCategory({
+      categorySlug,
+      page: 1,
+      limit: perPage,
+    });
 
   return {
     props: {
@@ -303,6 +309,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       products,
       total,
       initialFacets: facets,
+      initialHasPose: hasPose,
       installationData,
       ...commonData,
     },

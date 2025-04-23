@@ -30,8 +30,10 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
         <button
           onClick={resetFilters}
           disabled={!hasActiveFilters}
-          className={`text-center text-primary hover:text-secondary duration-300 underline ${
-            !hasActiveFilters ? 'opacity-40 cursor-not-allowed' : ''
+          className={`text-center text-primary underline ${
+            !hasActiveFilters
+              ? 'opacity-40 cursor-not-allowed'
+              : 'hover:text-secondary duration-300'
           }`}
         >
           Supprimer les filtres

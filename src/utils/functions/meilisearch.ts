@@ -101,9 +101,14 @@ export const fetchMeiliProductsByCategory = async ({
 
   const result = await response.json();
 
+  const hasPose = !!Object.keys(
+    result.facetDistribution['meta._has_pose'] || {},
+  ).length;
+
   return {
     products: result.hits,
     facets: result.facetDistribution || {},
     total: result.estimatedTotalHits,
+    hasPose,
   };
 };
