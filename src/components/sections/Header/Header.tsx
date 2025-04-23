@@ -9,7 +9,9 @@ import Container from '@/components/container';
 import { CategoryMenuProps } from '@/types/Categories';
 import { BulletSvg } from '../blocs/BlocAnchorsPicto';
 import useAuth from '@/hooks/useAuth';
-import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
+import DesktopParentCategorySubMenu from './DesktopParentCategorySubMenu';
+
+// Info desktop category menu has 3 variants getDisplayName, depending on ACF main category field
 
 export default function Header({
   categoriesMenu,
@@ -189,41 +191,12 @@ export default function Header({
                         </div>
                       )}
                     </Link>
-                    {item.children?.nodes?.length > 0 && (
-                      <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 shadow-card duration-300">
-                        <Container large>
-                          <BlocIntroSmall title={'Catégories'} />
-                          <ul className="flex flex-wrap gap-6 w-full max-w-7xl mx-auto">
-                            {item.children.nodes.map((subItem) => (
-                              <li key={subItem.name}>
-                                <Link
-                                  href={subItem.uri}
-                                  className="block font-bold text-primary hover:text-secondary"
-                                >
-                                  {subItem.name}
-                                </Link>
-                                {subItem.children?.nodes?.length > 0 && (
-                                  <ul className="mt-2 space-y-1">
-                                    {subItem.children.nodes.map(
-                                      (subSubItem) => (
-                                        <li key={subSubItem.name}>
-                                          <Link
-                                            href={subSubItem.uri}
-                                            className="block text-sm text-gray-600 hover:text-secondary"
-                                          >
-                                            {subSubItem.name}
-                                          </Link>
-                                        </li>
-                                      ),
-                                    )}
-                                  </ul>
-                                )}
-                              </li>
-                            ))}
-                          </ul>
-                        </Container>
-                      </div>
-                    )}
+                    <DesktopParentCategorySubMenu
+                      subcategories={item.children?.nodes}
+                      type={item.acfCategory?.menuType}
+                      brands={item.acfCategory?.brands?.nodes}
+                      image={item.image?.sourceUrl}
+                    />
                   </li>
                 ))}
               </ul>

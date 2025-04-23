@@ -45,6 +45,7 @@ module.exports = {
         'promo-slide-secondary-mobile': '282 / 98',
         'promo-slide-secondary-laptop': '315 / 161',
         'promo-slide-secondary-unique': '315 / 330',
+        'category-thumbnail': '192 / 160',
       },
       fontSize: {
         '5xl': ['3rem', { lineHeight: '1.2' }],

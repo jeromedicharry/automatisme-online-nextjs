@@ -208,15 +208,31 @@ export const GET_ALL_LEVEL_1_CATEGORIES = gql`
       nodes {
         name
         uri
-        children {
+        acfCategory {
+          menuType
+          brands(first: 100) {
+            nodes {
+              name
+              slug
+            }
+          }
+        }
+        image {
+          sourceUrl
+        }
+
+        children(first: 100) {
           nodes {
             name
             uri
-            children {
+            image {
+              sourceUrl
+            }
+            children(first: 100) {
               nodes {
                 uri
                 name
-                children {
+                children(first: 100) {
                   nodes {
                     uri
                     name
