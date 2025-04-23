@@ -229,7 +229,7 @@ const CategoryPage = ({
               </form>
             </div>
             <SubcategoriesNav subCategories={category?.children?.nodes} />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch max-md:max-w-[300px]">
               {productSelection?.map(
                 (product: CardProductMeilisearchProps, index) => (
                   <React.Fragment key={product?.id}>

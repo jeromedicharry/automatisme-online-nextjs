@@ -62,7 +62,7 @@ const CardProductMeilisearch = ({
     hasProDiscount: false, // À adapter
   });
   return (
-    <article className="flex flex-col max-w-[250px] xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
+    <article className="flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
         <Link
           href={`/nos-produits/${product?.slug}`}
