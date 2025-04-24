@@ -43,6 +43,12 @@ export interface ProductContentProps extends CardProductProps {
     }[];
   };
   brands: { nodes: BrandStickerProps[] } | { nodes: [] } | undefined;
+  upsell: {
+    nodes: CardProductProps[];
+  };
+  crossSell: {
+    nodes: CardProductProps[];
+  };
 }
 
 const ProductContent = ({

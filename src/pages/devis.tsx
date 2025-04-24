@@ -10,16 +10,19 @@ import { CategoryMenuProps } from '@/types/Categories';
 import { Wifi } from '@/components/SVG/Icons';
 import { useRouter } from 'next/router';
 import BlocIntroForm from '@/components/atoms/BlocIntroForm';
+import { ThemeSettingsProps } from '@/types/CptTypes';
 
 // import { CardProductProps } from '@/types/blocTypes';
 
 const Devis = ({
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
 }: {
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -38,6 +41,7 @@ const Devis = ({
       categoriesMenu={categoriesMenu}
       isBg
       excludeSeo
+      totalProducts={totalProducts}
     >
       <Container>
         <div className="md:max-w-[900px] mx-auto">

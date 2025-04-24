@@ -9,16 +9,19 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 import { Wifi } from '@/components/SVG/Icons';
 import BlocIntroForm from '@/components/atoms/BlocIntroForm';
+import { ThemeSettingsProps } from '@/types/CptTypes';
 
 // import { CardProductProps } from '@/types/blocTypes';
 
 const contactPage = ({
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
 }: {
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -33,6 +36,7 @@ const contactPage = ({
       categoriesMenu={categoriesMenu}
       isBg
       excludeSeo
+      totalProducts={totalProducts}
     >
       <Container>
         <div className="md:max-w-[700px] mx-auto">

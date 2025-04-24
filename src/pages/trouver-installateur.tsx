@@ -13,6 +13,7 @@ import { GET_INSTALLERS } from '@/utils/gql/WEBSITE_QUERIES';
 import EmptyElement from '@/components/EmptyElement';
 import { OrderSvg } from '@/components/SVG/Icons';
 import client from '@/utils/apollo/ApolloClient';
+import { ThemeSettingsProps } from '@/types/CptTypes';
 
 // Import dynamique de la carte pour éviter les erreurs SSR
 const InstallerMap = dynamic(
@@ -22,12 +23,14 @@ const InstallerMap = dynamic(
 
 const InstallerPage = ({
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
   installateurs, // On passe la liste complète des installateurs
 }: {
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -52,6 +55,7 @@ const InstallerPage = ({
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
+      totalProducts={totalProducts}
     >
       <Container>
         <BlocIntroLarge

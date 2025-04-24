@@ -17,14 +17,17 @@ import type { GetStaticProps } from 'next';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
+import { ThemeSettingsProps } from '@/types/CptTypes';
 
 const Panier = ({
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
 }: {
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -40,6 +43,7 @@ const Panier = ({
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
+      totalProducts={totalProducts}
     >
       <Container>
         {!cart?.products?.length ? (

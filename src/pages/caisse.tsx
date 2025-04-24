@@ -14,14 +14,17 @@ import { LargeCartSvg } from '@/components/SVG/Icons';
 import CartSummary from '@/components/Cart/CartSummary';
 import CheckoutSteps from '@/components/Checkout';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
+import { ThemeSettingsProps } from '@/types/CptTypes';
 
 const Caisse = ({
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
 }: {
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -56,6 +59,7 @@ const Caisse = ({
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
+      totalProducts={totalProducts}
     >
       <AuthModal
         isOpen={isModalOpen}

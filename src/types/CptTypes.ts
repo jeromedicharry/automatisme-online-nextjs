@@ -13,6 +13,7 @@ export interface PageInfoProps {
 
 export interface ThemeSettingsProps {
   contactPhone: string;
+  quantityInstallers: number;
   hours: string;
   paymentPictos: {
     picto: {
@@ -32,6 +33,9 @@ export interface ThemeSettingsProps {
   }[];
   sliderAdvices: CardConseilProps[];
   featuredFaq: FeaturedFaqProps;
+  contactTitle: string;
+  contactText: string;
+  // installationCard: INst
 }
 
 export interface PageProps {

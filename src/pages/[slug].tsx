@@ -23,6 +23,7 @@ import { PageProps, ThemeSettingsProps } from '@/types/CptTypes';
 const Page = ({
   page,
   themeSettings,
+  totalProducts,
   featuredFaq,
   footerMenu1,
   footerMenu2,
@@ -31,6 +32,7 @@ const Page = ({
 }: {
   page: PageProps;
   themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   featuredFaq: FeaturedFaqProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
@@ -53,6 +55,7 @@ const Page = ({
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
+      totalProducts={totalProducts}
     >
       <SimpleHero title={hero?.title || page?.title} subtitle={hero?.text} />
       <FlexibleContent

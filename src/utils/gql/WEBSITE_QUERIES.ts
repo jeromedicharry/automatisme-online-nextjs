@@ -34,6 +34,7 @@ export const GET_OPTIONS = gql`
     themeSettings {
       optionsFields {
         contactPhone
+        quantityInstallers
         hours
         paymentPictos {
           picto {

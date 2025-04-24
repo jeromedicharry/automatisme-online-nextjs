@@ -1,30 +1,37 @@
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from 'next';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import {
   FETCH_ALL_PRODUCTS_WITH_PAGINATION,
   GET_SINGLE_PRODUCT,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import client from '@/utils/apollo/ApolloClient';
-import ProductContent from '@/components/Product/ProductContent';
+import ProductContent, {
+  ProductContentProps,
+} from '@/components/Product/ProductContent';
 import Layout from '@/components/Layout/Layout';
 import Container from '@/components/container';
 import BreadCrumbs from '@/components/atoms/BreadCrumbs';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import ProductUpsells from '@/components/Product/ProductUpsells';
 import ProductCrossSells from '@/components/Product/ProductCrossSells';
-import { PageInfoProps } from '@/types/CptTypes';
+import { PageInfoProps, ThemeSettingsProps } from '@/types/CptTypes';
+import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
+import { CategoryMenuProps } from '@/types/Categories';
 
-const Product: NextPage = ({
+const Product = ({
   product,
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: {
+  product: ProductContentProps;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
+  footerMenu1: SimpleFooterMenuProps;
+  footerMenu2: SimpleFooterMenuProps;
+  categoriesMenu?: CategoryMenuProps[];
+}) => {
   return (
     <Layout
       meta={product.seo}
@@ -33,6 +40,7 @@ const Product: NextPage = ({
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
+      totalProducts={totalProducts}
     >
       <Container>
         <BreadCrumbs breadCrumbs={product.seo?.breadcrumbs} />

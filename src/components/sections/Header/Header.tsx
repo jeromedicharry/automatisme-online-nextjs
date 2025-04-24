@@ -15,8 +15,12 @@ import DesktopParentCategorySubMenu from './DesktopParentCategorySubMenu';
 
 export default function Header({
   categoriesMenu,
+  qtyInstallers,
+  totalProducts,
 }: {
   categoriesMenu?: CategoryMenuProps[];
+  qtyInstallers?: number;
+  totalProducts?: number;
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -143,11 +147,11 @@ export default function Header({
               <div className="flex items-center space-x-8 shrink-0">
                 <div className="flex flex-col justify-center items-center text-xs leading-general text-primary">
                   <div>
-                    <span className="text-secondary">4743</span>
+                    <span className="text-secondary">{totalProducts}</span>
                     <span> références</span>
                   </div>
                   <div>
-                    <span className="text-secondary">544</span>
+                    <span className="text-secondary">{qtyInstallers}</span>
                     <span> installateurs</span>
                   </div>
                 </div>
@@ -210,11 +214,11 @@ export default function Header({
             <div className="h-full w-full px-5 flex flex-col ">
               <div className="flex justify-around py-4 font-medium text-xl leading-general text-primary">
                 <div>
-                  <span className="text-secondary">4743</span>
+                  <span className="text-secondary">{totalProducts}</span>
                   <span> références</span>
                 </div>
                 <div>
-                  <span className="text-secondary">544</span>
+                  <span className="text-secondary">{qtyInstallers}</span>
                   <span> installateurs</span>
                 </div>
               </div>

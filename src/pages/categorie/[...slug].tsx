@@ -28,7 +28,6 @@ import { perPage, sortingOptions } from '@/components/filters/config';
 import CardInstallation from '@/components/cards/CardInstallation';
 import { installationData } from '@/stores/IntermediateCartContext';
 import { GET_INSTALLATION_CTA } from '@/utils/gql/WEBSITE_QUERIES';
-import { set } from 'lodash';
 
 interface Filters {
   [key: string]: string;
@@ -39,6 +38,7 @@ const CategoryPage = ({
   category,
   total,
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
@@ -50,6 +50,7 @@ const CategoryPage = ({
   category: CategoryPageProps;
   total: number;
   themeSettings: ThemeSettingsProps;
+  totalProducts: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -200,6 +201,7 @@ const CategoryPage = ({
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
+      totalProducts={totalProducts}
       isBg
     >
       <Container>

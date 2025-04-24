@@ -13,16 +13,19 @@ import {
 import EmptyElement from '@/components/EmptyElement';
 import { OrderSvg } from '@/components/SVG/Icons';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
+import { ThemeSettingsProps } from '@/types/CptTypes';
 
 type MainMotorisationType = 'portail' | 'porte-garage' | null;
 
 const MotorisationForm = ({
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
 }: {
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -40,6 +43,7 @@ const MotorisationForm = ({
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       excludeSeo
+      totalProducts={totalProducts}
     >
       <Container>
         <BlocIntroLarge title="Comment choisir mon kit de motorisation ?" />

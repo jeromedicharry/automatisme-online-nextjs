@@ -32,14 +32,17 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import Pro from '@/components/Account/pro';
+import { ThemeSettingsProps } from '@/types/CptTypes';
 
 const Compte = ({
   themeSettings,
+  totalProducts,
   footerMenu1,
   footerMenu2,
   categoriesMenu,
 }: {
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
@@ -123,6 +126,7 @@ const Compte = ({
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
+      totalProducts={totalProducts}
     >
       <div>
         <Container>

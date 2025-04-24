@@ -1,4 +1,8 @@
-import { allowedFilters, perPage } from '@/components/filters/config';
+import {
+  allowedFilters,
+  meilisearchUrl,
+  perPage,
+} from '@/components/filters/config';
 
 type MeiliRequestOptions = {
   q: string;
@@ -83,17 +87,14 @@ export const fetchMeiliProductsByCategory = async ({
     requestOptions.sort = [sort];
   }
 
-  const response = await fetch(
-    'https://meilisearch.automatisme-online.fr/indexes/product/search',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.MEILISEARCH_API_KEY}`,
-      },
-      body: JSON.stringify(requestOptions),
+  const response = await fetch(meilisearchUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.MEILISEARCH_API_KEY}`,
     },
-  );
+    body: JSON.stringify(requestOptions),
+  });
 
   if (!response.ok) {
     throw new Error('Erreur lors de la récupération depuis Meilisearch');
@@ -111,4 +112,26 @@ export const fetchMeiliProductsByCategory = async ({
     total: result.estimatedTotalHits,
     hasPose,
   };
+};
+
+export const getTotalProductsMeili = async () => {
+  const response = await fetch(meilisearchUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.MEILISEARCH_API_KEY}`,
+    },
+    body: JSON.stringify({
+      q: '',
+      limit: 0,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Erreur lors de la récupération depuis Meilisearch');
+  }
+
+  const result = await response.json();
+
+  return result.estimatedTotalHits;
 };

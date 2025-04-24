@@ -20,11 +20,12 @@ import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import SimpleHero from '@/components/sections/blocs/SimpleHero';
 import FlexibleContent from '@/components/sections/FlexibleContent';
 import HomePromoSection from '@/components/sections/Home/HomePromoSection';
-import { HomePageProps } from '@/types/CptTypes';
+import { HomePageProps, ThemeSettingsProps } from '@/types/CptTypes';
 
 const HomePage = ({
   page,
   themeSettings,
+  totalProducts,
   featuredFaq,
   footerMenu1,
   footerMenu2,
@@ -32,7 +33,8 @@ const HomePage = ({
   categoriesMenu,
 }: {
   page: HomePageProps;
-  themeSettings: any;
+  themeSettings: ThemeSettingsProps;
+  totalProducts?: number;
   featuredFaq: FeaturedFaqProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
@@ -52,6 +54,7 @@ const HomePage = ({
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       isHome
+      totalProducts={totalProducts}
     >
       {promoSection?.isShown ? (
         <>

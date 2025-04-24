@@ -122,3 +122,6 @@ export const sortingOptions: sortingOption[] = [
   { label: 'Prix croissant', value: 'meta._price:asc' },
   { label: 'Prix décroissant', value: 'meta._price:desc' },
 ];
+
+export const meilisearchUrl =
+  'https://meilisearch.automatisme-online.fr/indexes/product/search';

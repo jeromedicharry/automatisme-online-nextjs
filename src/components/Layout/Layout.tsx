@@ -25,6 +25,7 @@ interface LayoutProps {
   categoriesMenu?: CategoryMenuProps[];
   isBg?: boolean;
   excludeSeo?: boolean;
+  totalProducts?: number;
 }
 
 /**
@@ -45,13 +46,18 @@ const Layout = ({
   categoriesMenu,
   isBg = false,
   excludeSeo = false,
+  totalProducts,
 }: LayoutProps) => {
   return (
     <>
       <Meta meta={meta} uri={uri} excludeSeo={excludeSeo} />
       <div id="to-top"></div>
 
-      <Header categoriesMenu={categoriesMenu} />
+      <Header
+        categoriesMenu={categoriesMenu}
+        qtyInstallers={themeSettings?.quantityInstallers}
+        totalProducts={totalProducts}
+      />
       <div
         className={`min-h-screen flex flex-col font-primary ${
           isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'
