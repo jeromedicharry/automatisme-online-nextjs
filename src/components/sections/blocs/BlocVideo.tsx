@@ -12,7 +12,7 @@ const BlocVideo = ({ bloc }: { bloc: BlocVideoProps }) => {
     <Container>
       <section>
         <BlocIntroSmall title={bloc.title} />
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-12 md:mb-16">
+        <div className="relative w-full max-lg:aspect-video lg:h-[600px] rounded-lg overflow-hidden mb-12 md:mb-16">
           {isPlaying ? (
             <iframe
               className="w-full h-full"
