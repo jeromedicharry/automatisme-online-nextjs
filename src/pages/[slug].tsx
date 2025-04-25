@@ -61,9 +61,11 @@ const Page = ({
       <FlexibleContent
         blocs={pageBlocs}
         reassuranceItems={themeSettings?.reassurance}
+        reassuranceAccordion={themeSettings?.reassuranceAccordion}
         genericAdvices={themeSettings?.sliderAdvices}
         featuredFaq={featuredFaq}
         faqItems={faqItems}
+        categories={categoriesMenu}
       />
     </Layout>
   );
