@@ -1,14 +1,14 @@
 import React from 'react';
-import ProductDetailAccordionItem from './ProductDetailAccordionItem';
 import { ProCustomerSvg, QuestionMarkSvg } from '../SVG/Icons';
 import { ProductFaqItemProps } from './ProductContent';
+import AccordionItem from './AccordionItem';
 
 const ProductDetails = ({ faqItems }: { faqItems: ProductFaqItemProps[] }) => {
   //todo gérer la marque du produit
   // todo gérer la catégorie la plus basse du produit
   return (
     <>
-      <ProductDetailAccordionItem
+      <AccordionItem
         picto={<ProCustomerSvg />}
         title="Spécifications techniques"
       >
@@ -18,20 +18,17 @@ const ProductDetails = ({ faqItems }: { faqItems: ProductFaqItemProps[] }) => {
             __html: `<p>Spécifications techniques</p>`,
           }}
         />
-      </ProductDetailAccordionItem>
-      <ProductDetailAccordionItem
-        picto={<ProCustomerSvg />}
-        title="Garanties et assistance"
-      >
+      </AccordionItem>
+      <AccordionItem picto={<ProCustomerSvg />} title="Garanties et assistance">
         <div
           className="text-sm leading-general wysiwyg"
           dangerouslySetInnerHTML={{
             __html: `<p>Garanties et assistance: récupérer les infos sur la brand quand elle sera exposée sur le produit"</p>`,
           }}
         />
-      </ProductDetailAccordionItem>
+      </AccordionItem>
       {faqItems?.length > 0 && (
-        <ProductDetailAccordionItem
+        <AccordionItem
           picto={<QuestionMarkSvg />}
           title="Questions fréquentes sur le produit"
         >
@@ -46,7 +43,7 @@ const ProductDetails = ({ faqItems }: { faqItems: ProductFaqItemProps[] }) => {
               />
             </div>
           ))}
-        </ProductDetailAccordionItem>
+        </AccordionItem>
       )}
     </>
   );

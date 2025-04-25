@@ -134,17 +134,7 @@ export interface BlocConseilsFaqProps {
 }
 export interface BlocAccordionProps {
   __typename: 'AcfPageBlocsBlocAccordionLayout';
-  title: string;
-  subtitle: string;
-  accordion: {
-    title: string;
-    text: string;
-    picto: {
-      node: {
-        sourceUrl: string;
-      };
-    };
-  }[];
+  isShown: boolean;
 }
 export interface BlocSeoProps {
   __typename: 'AcfPageBlocsBlocSeoLayout';
@@ -181,6 +171,19 @@ export interface ReassuranceItemProps {
     };
   };
   link: string;
+}
+export interface ReassuranceAccordionItemsProps {
+  title: string;
+  text: string;
+  accordion: {
+    label: string;
+    picto: {
+      node: {
+        sourceUrl: string;
+      };
+    };
+    text: string;
+  }[];
 }
 
 export interface PictoAnchorBlocProps {

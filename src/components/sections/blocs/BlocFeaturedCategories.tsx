@@ -26,7 +26,7 @@ const BlocFeaturedCategories = ({
               <Link
                 key={key}
                 href={`/categories/${category.slug}`}
-                className="bloc group w-fill max-w-[168px] sm:max-w-[250px]"
+                className="bloc group w-fill max-w-[168px] sm:max-w-[250px] xxl:max-w-[325px]"
               >
                 <div className="px-3 py-2 bg-secondary-light rounded-[9px] group-hover:shadow-card duration-300 w-full h-[168px] md:h-[160px] flex items-center justify-center">
                   <Image

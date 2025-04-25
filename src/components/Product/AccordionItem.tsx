@@ -1,27 +1,37 @@
 import React, { useState } from 'react';
 import { Chevron } from '../SVG/Icons';
+import Image from 'next/image';
 
-interface ProductDetailAccordionItemProps {
-  picto: React.ReactNode;
+interface AccordionItemProps {
+  picto?: React.ReactNode;
+  pictoFromWP?: string;
   title: string;
   children: React.ReactNode;
+  noBorderBottom?: boolean;
 }
 
-const ProductDetailAccordionItem = ({
+const AccordionItem = ({
   picto,
+  pictoFromWP,
   title,
   children,
-}: ProductDetailAccordionItemProps) => {
+  noBorderBottom = false,
+}: AccordionItemProps) => {
   // todo recupérer la marque du produit puis recupérer ses specs techinques
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="pb-6 not-first:border-t mt-4 text-primary border-b border-primary">
+    <div
+      className={`pb-6 not-first:border-t mt-4 text-primary ${noBorderBottom ? '' : 'border-b border-primary'}`}
+    >
       <div
         className="flex items-center justify-between gap-4"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-4">
-          <div className="">{picto}</div>
+          {picto && <div className="">{picto}</div>}
+          {pictoFromWP && (
+            <Image src={pictoFromWP} alt={title} width={40} height={40} />
+          )}
           <h2 className="font-bold">{title}</h2>
         </div>
         <div
@@ -39,4 +49,4 @@ const ProductDetailAccordionItem = ({
   );
 };
 
-export default ProductDetailAccordionItem;
+export default AccordionItem;

@@ -17,10 +17,10 @@ export default function Container({
     <div
       className={`w-full mx-auto ${mobileFull ? '' : 'px-5'} md:px-6 ${
         large
-          ? 'lg:max-w-[1260px]'
+          ? 'lg:max-w-[1308px]'
           : small
-            ? 'max-w-[840px]'
-            : 'lg:max-w-[1060px]'
+            ? 'max-w-[888px]'
+            : 'lg:max-w-[1108px]'
       } xxl:max-w-[1408px]`}
     >
       {children}

@@ -68,6 +68,7 @@ const HomePage = ({
       <FlexibleContent
         blocs={pageBlocs}
         reassuranceItems={themeSettings?.reassurance}
+        reassuranceAccordion={themeSettings?.reassuranceAccordion}
         genericAdvices={themeSettings?.sliderAdvices}
         featuredFaq={featuredFaq}
         faqItems={faqItems}
@@ -90,7 +91,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const featuredFaq = page?.acfPage?.blocs?.some(
     (bloc: BlocType) => bloc.__typename === 'AcfPageBlocsBlocConseilsFaqLayout',
   )
-    ? commonData.themeSettings?.featuredFaq
+    ? commonData?.themeSettings?.featuredFaq
     : null;
 
   let faqItems = [];

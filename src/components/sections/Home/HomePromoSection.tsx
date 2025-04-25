@@ -18,7 +18,7 @@ const HomePromoSection = ({
   return (
     <section className="mb-12 md:mb-16">
       <Container>
-        <div className="flex flex-col gap-2 md:flex-row max-md:max-w-md mx-auto md:items-stretch">
+        <div className="flex flex-col gap-2 md:flex-row max-md:max-w-md mx-auto md:items-stretch lg:h-[330px] xxl:h-[342px]">
           <div className="mainPromoSlider md:max-w-[69.4%] md:shrink-1 overflow-hidden h-full">
             <Swiper
               slidesPerView={1}
@@ -31,7 +31,7 @@ const HomePromoSection = ({
             >
               {mainSlider.map((item, key) => (
                 <SwiperSlide key={key}>
-                  <Link href={item.slug || '/'} className="block">
+                  <Link href={item.slug || '/'} className="block h-full">
                     <Image
                       src={item.imageMobile?.node?.sourceUrl}
                       alt="Image promotionnelle Automatisme Online"
@@ -43,15 +43,15 @@ const HomePromoSection = ({
                       src={item.imageLaptop?.node?.sourceUrl}
                       alt="Image promotionnelle Automatisme Online"
                       width={1104}
-                      height={495}
-                      className="object-cover max-md:hidden aspect-promo-slide-main-laptop rounded-[13px] max-w-full"
+                      height={300}
+                      className="object-cover max-md:hidden w-full h-full rounded-[13px]"
                     />
                   </Link>
                 </SwiperSlide>
               ))}
             </Swiper>
           </div>
-          <div className="secondaryPromoSlider overflow-hidden md:max-w-[29.7%]">
+          <div className="secondaryPromoSlider overflow-hidden md:max-w-[29.7%] h-full">
             <Swiper
               breakpoints={{
                 0: {
@@ -69,11 +69,11 @@ const HomePromoSection = ({
                 clickable: true,
               }}
               modules={[Pagination]}
-              wrapperClass="md:flex md:flex-col md:gap-2"
+              wrapperClass={`h-full md:gap-2 ${secondarySlider.length === 1 ? '' : 'md:flex md:flex-col'}`}
             >
               {secondarySlider.map((item, key) => (
                 <SwiperSlide key={key}>
-                  <Link href={item.slug || '/'} className="block">
+                  <Link href={item.slug || '/'} className="block md:h-full">
                     <Image
                       src={item.imageMobile?.node?.sourceUrl}
                       alt="Image promotionnelle Automatisme Online"
@@ -84,9 +84,9 @@ const HomePromoSection = ({
                     <Image
                       src={item.imageLaptop?.node?.sourceUrl}
                       alt="Image promotionnelle Automatisme Online"
-                      width={600}
-                      height={600}
-                      className={`object-cover max-md:hidden rounded-[13px] ${secondarySlider.length === 1 ? 'aspect-promo-slide-secondary-unique' : 'aspect-promo-slide-secondary-laptop'}`}
+                      width={400}
+                      height={300}
+                      className={`object-cover max-md:hidden rounded-[13px] max-h-1/2 w-full`}
                     />
                   </Link>
                 </SwiperSlide>

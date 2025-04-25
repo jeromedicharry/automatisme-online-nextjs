@@ -4,6 +4,7 @@ import {
   CardConseilProps,
   FeaturedFaqProps,
   PromotionSlideProps,
+  ReassuranceAccordionItemsProps,
 } from './blocTypes';
 
 export interface PageInfoProps {
@@ -31,6 +32,7 @@ export interface ThemeSettingsProps {
     };
     link: string;
   }[];
+  reassuranceAccordion: ReassuranceAccordionItemsProps;
   sliderAdvices: CardConseilProps[];
   featuredFaq: FeaturedFaqProps;
   contactTitle: string;

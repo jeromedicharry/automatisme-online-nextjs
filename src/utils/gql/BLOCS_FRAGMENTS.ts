@@ -84,17 +84,7 @@ export const blocsFields = `
     }
     ... on AcfPageBlocsBlocAccordionLayout {
         __typename
-        title
-        subtitle
-        accordion {
-            title
-            text
-            picto {
-                node {
-                    sourceUrl
-                }
-            }
-        }
+        isShown
     }
     ... on AcfPageBlocsBlocSeoLayout {
         __typename

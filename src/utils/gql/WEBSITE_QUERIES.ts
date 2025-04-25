@@ -52,6 +52,19 @@ export const GET_OPTIONS = gql`
           }
           link
         }
+        reassuranceAccordion {
+          title
+          text
+          accordion {
+            label
+            picto {
+              node {
+                sourceUrl
+              }
+            }
+            text
+          }
+        }
         ${sliderAdvicesFields}
         ${FEATURED_FAQ}
         contactTitle

@@ -1,5 +1,7 @@
 import { BlocWysiWygProps } from '@/types/blocTypes';
 import Container from '../../container';
+import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
+import ExpandableText from '@/components/atoms/ExpandableText';
 // import { Fade } from "react-awesome-reveal";
 
 const BlocWysiwyg = ({ bloc }: { bloc: BlocWysiWygProps }) => {
@@ -9,12 +11,8 @@ const BlocWysiwyg = ({ bloc }: { bloc: BlocWysiWygProps }) => {
     <section className=" mb-16 md:mb-[104px]">
       <Container>
         {/* <Fade cascade triggerOnce damping={0.15}> */}
-        <div
-          className="wysiwyg post-content"
-          dangerouslySetInnerHTML={{
-            __html: bloc?.text,
-          }}
-        />
+        <BlocIntroSmall title={bloc.title} subtitle={bloc.subtitle} />
+        <ExpandableText text={bloc.text} />
         {/* </Fade> */}
       </Container>
     </section>

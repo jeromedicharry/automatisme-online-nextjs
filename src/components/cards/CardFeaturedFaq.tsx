@@ -32,16 +32,16 @@ const CardFeaturedFaq = ({
       href={`/questions-les-plus-frequentes/#${item?.faqItem?.nodes[0]?.databaseId}`}
       className="bg-secondary-light rounded-2xl overflow-hidden h-full flex flex-col justify-between"
     >
-      <div className="h-[163px] w-full flex items-center justify-between overflow-hidden">
+      <div className="h-[163px] w-full flex items-center justify-center overflow-hidden">
         <Image
           src={
             item?.faqItem?.nodes[0]?.featuredImage?.node?.sourceUrl ||
             PRODUCT_IMAGE_PLACEHOLDER
           }
           alt={item?.title}
-          width={250}
+          width={325}
           height={163}
-          className="aspect-card-featured-faq object-cover"
+          className="h-[163px] w-full object-cover"
         />
       </div>
       <div className="relative pt-[61px] pb-[55px] px-2 overflow-hidden">

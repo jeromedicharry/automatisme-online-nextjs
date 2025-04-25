@@ -47,7 +47,7 @@ html {
 /* Swiper slider override */
 
 .mainPromoSlider .swiper-slide {
-  max-width: 736px !important;
+  width: 100% !important;
   height: unset !important;
 }
 
@@ -61,6 +61,13 @@ html {
 .featured-products-slider .swiper-slide {
   max-width: 257px !important;
   height: unset !important;
+}
+
+@media screen and (min-width: 1420px) {
+  .featured-products-slider .swiper-slide {
+    max-width: 325px !important;
+  }
+  
 }
 .advice-slider .swiper-slide {
   height: unset !important;
@@ -83,6 +90,12 @@ html {
 .faq-slider .swiper-slide {
   max-width: 250px !important;
   height: 350px !important;
+}
+
+@media screen and (min-width: 1420px) {
+  .faq-slider .swiper-slide {
+    max-width: 325px !important;
+  }  
 }
 
 .intermediate-cart-products-slider .swiper-slide {
