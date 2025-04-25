@@ -14,7 +14,7 @@ const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
     <Container>
       <section className="bg-primary-light-alt px-2 pt-9 pb-4 relative rounded-2xl overflow-hidden mb-12 md:mb-16">
         <div className="absolute left-[-20px] bottom-[-20px] w-40 rotate-90">
-          <Wifi variant="bleu" />
+          <Wifi variant="bleu2" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 items-center lg:flex justify-center gap-y-12 gap-x-5 md:items-stretch mb-12 relative w-fit mx-auto">
           {items.map((item, index) => (
@@ -88,16 +88,16 @@ const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
           id={`anchor-${index + 1}`}
           key={index}
         >
-          <div className="md:shrink-1 lg:max-w-[420px] max-md:w-fit max-md:mx-auto relative">
+          <div className="md:shrink-1 lg:max-w-[420px] xxl:max-w-[555px] xxl:shrink-0 max-md:w-fit max-md:mx-auto relative">
             <Image
               src={
                 item.targetSection?.image?.node?.sourceUrl ||
                 PRODUCT_IMAGE_PLACEHOLDER
               }
               alt={item.targetSection?.title}
-              width={431}
-              height={420}
-              className="md:shrink-1 lg:min-h-[420px] h-full object-cover rounded-2xl"
+              width={550}
+              height={550}
+              className="md:shrink-1 lg:min-h-[420px] xxl:min-h-[555px] h-full object-cover rounded-2xl"
             />
             <span className="absolute top-[-24px] left-[-24px] text-xl font-bold w-12 h-12 rounded-full bg-secondary text-white flex items-center justify-center">
               {index + 1}

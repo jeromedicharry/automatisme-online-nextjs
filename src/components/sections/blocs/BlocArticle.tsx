@@ -13,7 +13,7 @@ const BlocArticle = ({ bloc }: { bloc: BlocArticleProps }) => {
         className={`scroll-m-6 max-md:max-w-md mx-auto mb-12 md:mb-16 rounded-2xl gap-5 overflow-hidden relative flex flex-col md:items-stretch lg:min-h-[500px] ${bloc.isImageLeft ? 'md:flex-row' : 'md:flex-row-reverse'} ${bloc.bgColor === 'Orange clair' ? 'bg-secondary-light' : 'bg-primary-light-alt'}`}
       >
         {bloc?.image?.node?.sourceUrl && (
-          <div className="w-full md:w-[340px]">
+          <div className="w-full md:w-[340px] xxl:w-[440px] shrink-0">
             <Image
               src={bloc?.image?.node?.sourceUrl}
               alt={bloc?.title}
@@ -24,12 +24,12 @@ const BlocArticle = ({ bloc }: { bloc: BlocArticleProps }) => {
           </div>
         )}
 
-        <div className="w-full md:w-[calc(100%-340px)] flex flex-col justify-center px-16 py-8 gap-4">
+        <div className="w-full flex flex-col justify-center px-16 py-8 gap-4">
           <div
             className={`max-w-[180px] absolute bottom-[-8px] ${bloc.isImageLeft ? 'right-[-8px]' : 'left-[-8px] rotate-90'}`}
           >
             <Wifi
-              variant={bloc.bgColor === 'Orange clair' ? 'orange' : 'bleu'}
+              variant={bloc.bgColor === 'Orange clair' ? 'orange' : 'bleu2'}
             />
           </div>
           {bloc.title && (
