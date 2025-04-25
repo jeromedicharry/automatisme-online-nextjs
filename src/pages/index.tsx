@@ -72,6 +72,7 @@ const HomePage = ({
         genericAdvices={themeSettings?.sliderAdvices}
         featuredFaq={featuredFaq}
         faqItems={faqItems}
+        categories={categoriesMenu}
       />
     </Layout>
   );

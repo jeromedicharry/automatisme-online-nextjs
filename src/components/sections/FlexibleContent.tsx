@@ -18,6 +18,8 @@ import { FaqItemProps } from '@/types/Faq';
 import BlocVideo from './blocs/BlocVideo';
 import BlocMosaique from './blocs/BlocMosaique';
 import BlocReassuranceAccordion from './BlocReassuranceAccordion';
+import BlocSeoCategories from './BlocSeoCategories';
+import { CategoryMenuProps } from '@/types/Categories';
 const BlocWysiwyg = dynamic(() => import('./blocs/BlocWysiwyg'));
 const BlocSpacer = dynamic(() => import('./blocs/BlocSpacer'));
 const BlocReassurance = dynamic(() => import('./blocs/BlocReassurance'));
@@ -29,6 +31,7 @@ interface FlexibleContentProps {
   genericAdvices: CardConseilProps[];
   featuredFaq: FeaturedFaqProps;
   faqItems: FaqItemProps[];
+  categories?: CategoryMenuProps[];
 }
 
 const FlexibleContent: React.FC<FlexibleContentProps> = ({
@@ -38,6 +41,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
   genericAdvices,
   featuredFaq,
   faqItems,
+  categories,
 }) => {
   if (blocs === null || blocs?.length === 0 || blocs === undefined) return null;
 
@@ -80,6 +84,10 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
         return <BlocVideo key={key} bloc={bloc} />;
       case 'AcfPageBlocsBlocMosaique3ImagesLayout':
         return <BlocMosaique key={key} bloc={bloc} />;
+      case 'AcfPageBlocsBlocSeoLayout':
+        return (
+          <BlocSeoCategories key={key} bloc={bloc} categories={categories} />
+        );
       case 'AcfPageBlocsBlocAccordionLayout':
         return bloc?.isShown ? (
           <BlocReassuranceAccordion

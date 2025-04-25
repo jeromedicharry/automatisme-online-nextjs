@@ -140,22 +140,6 @@ export interface BlocSeoProps {
   __typename: 'AcfPageBlocsBlocSeoLayout';
   title: string;
   subtitle: string;
-
-  seoItems: {
-    category: {
-      nodes: {
-        name: string;
-        slug: string;
-        uri: string;
-      }[];
-    };
-    products: {
-      nodes: {
-        uri: string;
-        slug: string;
-      }[];
-    };
-  }[];
 }
 export interface BlocAvisVerifiesProps {
   __typename: 'AcfPageBlocsBlocAvisVerifiesLayout';

@@ -90,29 +90,6 @@ export const blocsFields = `
         __typename
         title
         subtitle
-        seoItems {
-            category(first: 1) {
-                nodes {
-                    name
-                    slug
-                    uri
-                }
-            }
-            products {
-                nodes {
-                    uri
-                    slug
-                    ... on SimpleProduct {
-                        id
-                        name
-                        slug
-                        image {
-                            sourceUrl
-                        }
-                    }
-                }
-            }
-        }
     }
     ... on AcfPageBlocsBlocAvisVerifiesLayout {
         __typename
