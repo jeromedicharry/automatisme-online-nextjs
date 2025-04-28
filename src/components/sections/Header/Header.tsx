@@ -200,6 +200,8 @@ export default function Header({
                       type={item.acfCategory?.menuType}
                       brands={item.acfCategory?.brands?.nodes}
                       image={item.image?.sourceUrl}
+                      parentCategorySlug={item.uri}
+                      parentCategoryName={item.name}
                     />
                   </li>
                 ))}

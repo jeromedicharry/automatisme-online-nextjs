@@ -7,17 +7,23 @@ import {
 } from '@/types/Categories';
 import DefaultCategoryMenu from './DefaultCategoryMenu';
 import TelecommandesCategoryMenu from './TelecommandesCategoryMenu';
+import Cta from '@/components/atoms/Cta';
+import AccessoiresCategoryMenu from './AccessoiresCategoryMenu';
 
 const DesktopParentCategorySubMenu = ({
   subcategories,
   type,
   brands,
   image,
+  parentCategoryName,
+  parentCategorySlug,
 }: {
   subcategories: CategoryMenuProps[] | undefined;
   type?: ParentCategoryDesktopMenuType;
   brands?: BrandLink[];
   image?: string;
+  parentCategoryName: string;
+  parentCategorySlug: string;
 }) => {
   if (!subcategories || subcategories.length === 0) {
     return null;
@@ -25,7 +31,19 @@ const DesktopParentCategorySubMenu = ({
   return (
     <div className="absolute top-full left-[50%] -translate-x-[50%] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:flex w-screen bg-white p-6 xl:py-8 shadow-card duration-300 overflow-hidden rounded-b-lg">
       <Container large>
-        <BlocIntroSmall title={'Catégories'} />
+        <div className="flex justify-between items-start">
+          <BlocIntroSmall title={`${parentCategoryName}`} />
+          <div className="w-fit">
+            <Cta
+              slug={`${parentCategorySlug}`}
+              label="Voir tous le produits de cette catégorie"
+              variant="secondary"
+              size="small"
+            >
+              {'Voir tous le produits de cette catégorie'}
+            </Cta>
+          </div>
+        </div>
         {type === 'default' && (
           <DefaultCategoryMenu subcategories={subcategories} brands={brands} />
         )}
@@ -33,6 +51,13 @@ const DesktopParentCategorySubMenu = ({
           <TelecommandesCategoryMenu
             subcategories={subcategories}
             image={image}
+          />
+        )}
+        {type === 'accessoires' && (
+          <AccessoiresCategoryMenu
+            subcategories={subcategories}
+            image={image}
+            brands={brands}
           />
         )}
       </Container>

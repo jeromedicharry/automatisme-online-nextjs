@@ -1,9 +1,9 @@
-import { Chevron } from '@/components/SVG/Icons';
 import { BrandLink, CategoryMenuProps } from '@/types/Categories';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import Image from 'next/image';
 import Link from 'next/link';
 import BrandsList from './BrandsList';
+import AccordionSubcategory from './AccordionSubcategory';
 
 const DefaultCategoryMenu = ({
   subcategories,
@@ -55,36 +55,10 @@ const DefaultCategoryMenu = ({
           {subItem.children?.nodes?.length > 0 && (
             <ul className="mt-2 space-y-2">
               {subItem.children.nodes.map((subSubItem) => (
-                <li key={subSubItem.name}>
-                  <div className="flex items-center gap-2">
-                    <div className="text-secondary w-3 h-3 flex justify-center items-center rotate-180">
-                      <Chevron />
-                    </div>
-                    <Link
-                      href={subSubItem.uri}
-                      className="block text-xs leading-general text-dark-grey hover:text-secondary duration-300"
-                    >
-                      {subSubItem.name}
-                    </Link>
-                  </div>
-                  {subSubItem.children?.nodes?.length > 0 && (
-                    <ul className="ml-8 my-2 space-y-1">
-                      {subSubItem.children.nodes.map((subSubSubItem) => (
-                        <li
-                          key={subSubSubItem.name}
-                          className="list-disc text-dark-grey"
-                        >
-                          <Link
-                            href={subSubSubItem.uri}
-                            className="block text-xs leading-general text-dark-grey hover:text-secondary duration-300"
-                          >
-                            {subSubSubItem.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
+                <AccordionSubcategory
+                  key={subSubItem.name}
+                  subSubItem={subSubItem}
+                />
               ))}
             </ul>
           )}
