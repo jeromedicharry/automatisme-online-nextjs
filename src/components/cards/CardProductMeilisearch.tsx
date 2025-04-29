@@ -23,11 +23,7 @@ export interface CardProductMeilisearchProps {
     // todo attendre isFeatured slug et image et mettre à jour
     _is_featured: boolean;
   };
-  thumbnail: {
-    medium: {
-      url: string;
-    };
-  };
+  thumbnail_url: string;
 }
 
 const CardProductMeilisearch = ({
@@ -47,8 +43,7 @@ const CardProductMeilisearch = ({
     name: meiliProduct.title,
     featuredImage: {
       node: {
-        sourceUrl:
-          meiliProduct.image || meiliProduct.thumbnail?.medium?.url || '',
+        sourceUrl: meiliProduct.image || meiliProduct.thumbnail_url || '',
       },
     },
     price: meiliProduct.meta?._price || '',
@@ -61,6 +56,7 @@ const CardProductMeilisearch = ({
     onSale: false, // À adapter selon besoin
     hasProDiscount: false, // À adapter
   });
+
   return (
     <article className="flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
@@ -69,7 +65,7 @@ const CardProductMeilisearch = ({
           className="absolute inset-0 w-full flex items-center justify-center"
         >
           <Image
-            src={product?.thumbnail?.medium?.url || PRODUCT_IMAGE_PLACEHOLDER}
+            src={product?.thumbnail_url || PRODUCT_IMAGE_PLACEHOLDER}
             alt={product?.title}
             width={248}
             height={257}

@@ -63,7 +63,11 @@ const CartContents = () => {
       return;
     }
 
-    const updatedItems = getUpdatedItemsFromFormatted(products, newQty, cartKey);
+    const updatedItems = getUpdatedItemsFromFormatted(
+      products,
+      newQty,
+      cartKey,
+    );
 
     await updateCart({
       variables: {
@@ -78,7 +82,11 @@ const CartContents = () => {
   // Fonction pour supprimer un produit
   const handleRemoveProductClick = async (cartKey: string) => {
     if (cart?.products?.length) {
-      const updatedItems = getUpdatedItemsFromFormatted(cart.products, 0, cartKey);
+      const updatedItems = getUpdatedItemsFromFormatted(
+        cart.products,
+        0,
+        cartKey,
+      );
       await updateCart({
         variables: {
           input: {
@@ -107,9 +115,9 @@ const CartContents = () => {
         {cart.products.map((item) => (
           <div
             key={item.cartKey}
-            className="flex items-start justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300"
+            className="flex items-start justify-start p-4 gap-4 lg:gap-8 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300"
           >
-            <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
+            <div className="xs:flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
               <Image
                 src={item.image.sourceUrl || '/placeholder.png'}
                 alt={item.name || 'Produit Automatisme Online'}
@@ -118,41 +126,49 @@ const CartContents = () => {
                 className="aspect-square object-contain"
               />
             </div>
-            <div className="flex-grow mx-4 self-center">
-              <h2 className="font-bold text-primary">{item.name}</h2>
-              <p>Avis vérifiés</p>
-              <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
-                {item.price.toFixed(2)}€{' '}
-                <span className="absolute right-0 top-1 text-xs">
-                  {isPro ? 'HT' : 'TTC'}
-                </span>
-              </p>
-              <div className="text-dark-grey text-xs">
-                Expédition sous 10 jours
+            <div className="flex flex-col gap-4 lg:flex-row">
+              <div className="flex-grow lg:mx-4 self-center">
+                <h2 className="font-bold text-primary">{item.name}</h2>
+                <p>Avis vérifiés</p>
+                <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
+                  {item.price.toFixed(2)}€{' '}
+                  <span className="absolute right-0 top-1 text-xs">
+                    {isPro ? 'HT' : 'TTC'}
+                  </span>
+                </p>
+                <div className="text-dark-grey text-xs">
+                  Expédition sous 10 jours
+                </div>
               </div>
-            </div>
-            <div className="flex items-shrink">
-              <input
-                type="number"
-                min="1"
-                value={item.qty}
-                onChange={(event) =>
-                  handleQuantityChangeFormatted(event, item.cartKey, cart.products)
-                }
-                className="w-12 px-2 py-1 text-center border border-primary rounded-lg mr-2"
-              />
-              <Cta
-                slug="#"
-                label="Supprimer"
-                handleButtonClick={() => handleRemoveProductClick(item.cartKey)}
-                variant="secondaryHollow"
-                size="default"
-                additionalClass={`max-w-fit min-w-0 ${
-                  updateCartProcessing ? 'opacity-50 pointer-events-none' : ''
-                }`}
-              >
-                Supprimer
-              </Cta>
+              <div className="flex items-shrink w-fit">
+                <input
+                  type="number"
+                  min="1"
+                  value={item.qty}
+                  onChange={(event) =>
+                    handleQuantityChangeFormatted(
+                      event,
+                      item.cartKey,
+                      cart.products,
+                    )
+                  }
+                  className="w-12 px-2 py-1 text-center border border-primary rounded-lg mr-2"
+                />
+                <Cta
+                  slug="#"
+                  label="Supprimer"
+                  handleButtonClick={() =>
+                    handleRemoveProductClick(item.cartKey)
+                  }
+                  variant="secondaryHollow"
+                  size="default"
+                  additionalClass={`max-w-fit min-w-unset ${
+                    updateCartProcessing ? 'opacity-50 pointer-events-none' : ''
+                  }`}
+                >
+                  Supprimer
+                </Cta>
+              </div>
             </div>
           </div>
         ))}

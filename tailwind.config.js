@@ -25,6 +25,7 @@ module.exports = {
         cardhover: '0px 0px 10px -3px rgba(0, 0, 0, 0.45)',
       },
       screens: {
+        xs: '380px',
         xxl: '1420px', // Ajout ici pour que Tailwind le reconnaisse
       },
       container: {

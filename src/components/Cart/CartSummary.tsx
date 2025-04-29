@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Separator from '../atoms/Separator';
 import Link from 'next/link';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
+import CartReassurance from './CartReassurance';
 
 const CartSummary = ({
   isProSession,
@@ -24,32 +25,34 @@ const CartSummary = ({
   return (
     <>
       <BlocIntroSmall title="Récapitulatif" />
-      <div className="md:hidden p-6 bg-white rounded-lg shadow-card w-full">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <strong>Total panier</strong>
-            <div className="text-xl">
-              {isProSession ? 'HT: ' : 'TTC: '}
-              {cart.totalProductsPrice.toFixed(2)}€
+      {!isCheckout && (
+        <div className="md:hidden p-6 bg-white z-50 rounded-t-3xl shadow-card max-w-full fixed bottom-0  right-0 left-0">
+          <div className="flex items-center justify-between gap-4">
+            <div className="shrink-0">
+              <strong>Total panier</strong>
+              <div className="text-xl">
+                {isProSession ? 'HT: ' : 'TTC: '}
+                {cart.totalProductsPrice.toFixed(2)}€
+              </div>
             </div>
+            <Cta
+              slug="/caisse"
+              label="Continuer"
+              size="default"
+              variant="primary"
+              additionalClass="w-full max-w-[196px] mx-0"
+            >
+              Continuer
+            </Cta>
           </div>
-          <Cta
-            slug="/caisse"
-            label="Continuer"
-            size="default"
-            variant="primary"
-            additionalClass="w-full max-w-[196px] mx-0"
-          >
-            Continuer
-          </Cta>
         </div>
-      </div>
-      <div className="max-md:hidden p-4 bg-white rounded-lg shadow-card flex flex-col gap-4 items-stretch">
+      )}
+      <div className="p-4 bg-white rounded-lg shadow-card flex flex-col gap-4 items-stretch">
         {cart.products.map((product, index) => (
           <Link
             title="Voir le produit"
             href={`/nos-produits/${product.productId}`}
-            className="flex justify-between items-center"
+            className="flex justify-between items-center gap-2"
             key={index}
           >
             <Image
@@ -105,6 +108,7 @@ const CartSummary = ({
             </Cta>
           </>
         )}
+        <CartReassurance />
       </div>
     </>
   );

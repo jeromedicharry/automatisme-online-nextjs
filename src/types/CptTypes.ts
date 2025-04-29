@@ -12,17 +12,19 @@ export interface PageInfoProps {
   endCursor?: string | null | undefined;
 }
 
+export interface paymentPictoProps {
+  picto: {
+    node: {
+      sourceUrl: string;
+    };
+  };
+}
+
 export interface ThemeSettingsProps {
   contactPhone: string;
   quantityInstallers: number;
   hours: string;
-  paymentPictos: {
-    picto: {
-      node: {
-        sourceUrl: string;
-      };
-    };
-  }[];
+  paymentPictos: paymentPictoProps[];
   reassurance: {
     label: string;
     picto: {
