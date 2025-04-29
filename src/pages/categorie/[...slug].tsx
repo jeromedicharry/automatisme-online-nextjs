@@ -205,7 +205,9 @@ const CategoryPage = ({
       isBg
     >
       <Container>
-        <BreadCrumbs breadCrumbs={category?.seo?.breadcrumbs} />
+        <div className="mb-12 md:mb-16">
+          <BreadCrumbs breadCrumbs={category?.seo?.breadcrumbs} />
+        </div>
         <BlocIntroLarge
           title={category?.name}
           subtitle={category?.description}
