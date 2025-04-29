@@ -44,10 +44,7 @@ const Product = ({
     >
       <Container>
         <BreadCrumbs breadCrumbs={product.seo?.breadcrumbs} />
-        <ProductContent
-          product={product}
-          paymentPictos={themeSettings?.paymentPictos}
-        />
+        <ProductContent product={product} />
       </Container>
       <ProductUpsells upsellProducts={product?.upsell?.nodes} />
       <Container>

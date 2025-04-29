@@ -5,12 +5,17 @@ import ProductHeader from './ProductHeader';
 import ProductPrice from './ProductPrice';
 import AddToCart from './AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
-import Image from 'next/image';
-import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import ProductDetails from './ProductDetails';
 import FavoriteButton from '../atoms/FavoriteButton';
 import useAuth from '@/hooks/useAuth';
 import Cta from '../atoms/Cta';
+import {
+  PaymentApplePaySvg,
+  PaymentCBSvg,
+  PaymentGooglePaySvg,
+  PaymentPaypalSvg,
+} from '../Cart/CartReassurance';
+import ProductReassurance from './ProductReassurance';
 
 export interface BrandStickerProps {
   name: string;
@@ -51,13 +56,7 @@ export interface ProductContentProps extends CardProductProps {
   };
 }
 
-const ProductContent = ({
-  product,
-  paymentPictos,
-}: {
-  product: ProductContentProps;
-  paymentPictos: any;
-}) => {
+const ProductContent = ({ product }: { product: ProductContentProps }) => {
   const { loggedIn, isPro } = useAuth();
 
   const NotProConnectedAlternate = () => {
@@ -108,14 +107,14 @@ const ProductContent = ({
 
   return (
     <article className="my-12 md:my-16">
-      <div className="flex flex-col md:grid md:grid-cols-2 items-start justify-between gap-5 max-md:max-w-md mx-auto">
-        <div className="flex flex-col gap-5">
+      <div className="flex flex-col lg:flex-row xl:grid xl:grid-cols-2 items-center lg:items-start lg:justify-between gap-5 max-lg:max-w-xl mx-auto">
+        <div className="flex flex-col gap-5 w-full lg:max-w-[500px] xl:max-w-full">
           <ProductGalerie galleryImages={product.galleryImages} />
           <div className="description hidden md:block">
             <ProductDescription description={product?.description} />
           </div>
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 shrink-1">
           <div className="titre order-2 md:order-1">
             <ProductHeader
               title={product?.name}
@@ -127,14 +126,14 @@ const ProductContent = ({
               <NotProConnectedAlternate />
             ) : (
               <>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between lg:justify-start lg:items-start lg:flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
                   <ProductPrice
                     onSale={product?.onSale}
                     variant="productPage"
                     price={parseFloat(product?.price || '0')}
                     regularPrice={parseFloat(product?.regularPrice || '0')}
                   />
-                  <div className="max-md:hidden flex items-stretch gap-2 w-full justify-between mb-6">
+                  <div className="flex items-stretch gap-3 justify-between mb-6 w-fit">
                     {loggedIn && product?.databaseId !== undefined && (
                       <div className="shrink-0 basis-[45px] h-[45px] w-[45px] rounded-md flex justify-center items-center border border-primary">
                         <FavoriteButton
@@ -142,7 +141,11 @@ const ProductContent = ({
                         />
                       </div>
                     )}
-                    <AddToCart variant="primary" product={product}></AddToCart>
+                    <AddToCart
+                      variant="primary"
+                      product={product}
+                      isSingleProduct
+                    ></AddToCart>
                   </div>
                 </div>
                 <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
@@ -189,27 +192,17 @@ const ProductContent = ({
           <section className="description order-4 md:hidden">
             <ProductDescription description={product?.description} />
           </section>
-          <section className="reassurance order-5 md:order-3">
-            Réassurance
-          </section>
+          <ProductReassurance />
           <section className="videos order-6 md:order-4">Vidéos</section>
           <section className="details order-7 md:order-5">
             <ProductDetails faqItems={product?.acfProduct?.faq} />
             <div className="flex mt-8 md:mt-6 gap-4 items-center justify-between">
-              <span>Moyens de paiement sécurisés</span>
-              <div className="flex items-center gap-2 bg-primary">
-                {paymentPictos?.map((picto: any, index: number) => (
-                  <Image
-                    key={index}
-                    src={
-                      picto?.picto?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER
-                    }
-                    width={100}
-                    height={25}
-                    alt="Moyen de paiement"
-                    className="max-h-[25px] w-auto"
-                  />
-                ))}
+              <span className="max-sm:text-xs leading-general shrink-1">
+                Moyens de paiement sécurisés
+              </span>
+              <div className="flex gap-4 items-center text-primary">
+                <PaymentCBSvg /> <PaymentPaypalSvg /> <PaymentApplePaySvg />
+                <PaymentGooglePaySvg />
               </div>
             </div>
           </section>

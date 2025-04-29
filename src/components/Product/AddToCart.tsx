@@ -17,6 +17,7 @@ import { CardProductProps } from '@/types/blocTypes';
 const AddToCart = ({
   product,
   variant = 'primaryHollow',
+  isSingleProduct = false,
 }: {
   product: CardProductProps;
   variant?:
@@ -25,6 +26,7 @@ const AddToCart = ({
     | 'primaryWhite'
     | 'secondary'
     | 'secondaryHollow';
+  isSingleProduct?: boolean;
 }) => {
   const { openCartModal } = useIntermediateCart();
   const { refetchCart } = useCartOperations();
@@ -58,7 +60,7 @@ const AddToCart = ({
       variant={variant}
       size="large"
       slug="#"
-      additionalClass={`w-full ${
+      additionalClass={`${isSingleProduct ? '' : 'w-full'} ${
         addToCartLoading ? 'opacity-50 pointer-events-none' : ''
       }`}
     >

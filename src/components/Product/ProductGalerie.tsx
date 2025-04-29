@@ -29,14 +29,14 @@ const ProductGalerie = ({
         className="w-full"
       >
         {images.map((image, index) => (
-          <SwiperSlide key={index} className="flex justify-center">
-            <figure className="relative max-w-sm md:max-w-[520px] flex justify-center">
+          <SwiperSlide key={index} className="w-full product-gallery-item">
+            <figure className="relative max-w-sm xl:max-w-[520px] flex justify-center">
               <Image
                 src={image.sourceUrl}
                 width={600}
                 height={600}
                 alt={`Produit automatisme Online ${index + 1}`}
-                className="aspect-square max-w-[358px] object-contain lg:max-w-[420px] mx-auto"
+                className="aspect-square object-contain lg:max-w-[450px] mx-auto"
               />
             </figure>
           </SwiperSlide>
