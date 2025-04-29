@@ -125,3 +125,5 @@ export const sortingOptions: sortingOption[] = [
 
 export const meilisearchUrl =
   'https://meilisearch.automatisme-online.fr/indexes/product/search';
+export const meilisearchStatsUrl =
+  'https://meilisearch.automatisme-online.fr/indexes/product/stats';

@@ -1,5 +1,6 @@
 import {
   allowedFilters,
+  meilisearchStatsUrl,
   meilisearchUrl,
   perPage,
 } from '@/components/filters/config';
@@ -115,16 +116,12 @@ export const fetchMeiliProductsByCategory = async ({
 };
 
 export const getTotalProductsMeili = async () => {
-  const response = await fetch(meilisearchUrl, {
-    method: 'POST',
+  const response = await fetch(meilisearchStatsUrl, {
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${process.env.MEILISEARCH_API_KEY}`,
     },
-    body: JSON.stringify({
-      q: '',
-      limit: 0,
-    }),
   });
 
   if (!response.ok) {
@@ -133,5 +130,5 @@ export const getTotalProductsMeili = async () => {
 
   const result = await response.json();
 
-  return result.estimatedTotalHits;
+  return result.numberOfDocuments;
 };
