@@ -18,7 +18,7 @@ const HomePromoSection = ({
   return (
     <section className="mb-12 md:mb-16">
       <Container>
-        <div className="flex flex-col gap-2 md:flex-row max-md:max-w-md mx-auto md:items-stretch lg:h-[330px] xxl:h-[342px]">
+        <div className="flex flex-col gap-2 md:flex-row max-md:max-w-md mx-auto md:items-stretch lg:h-[330px] xxl:h-[420px]">
           <div className="mainPromoSlider md:max-w-[69.4%] md:shrink-1 overflow-hidden h-full">
             <Swiper
               slidesPerView={1}
@@ -44,7 +44,7 @@ const HomePromoSection = ({
                       alt="Image promotionnelle Automatisme Online"
                       width={1104}
                       height={300}
-                      className="object-cover max-md:hidden w-full h-full rounded-[13px]"
+                      className="object-cover max-md:hidden aspect-promo-slide-main-laptop rounded-[13px]"
                     />
                   </Link>
                 </SwiperSlide>
@@ -86,7 +86,7 @@ const HomePromoSection = ({
                       alt="Image promotionnelle Automatisme Online"
                       width={400}
                       height={300}
-                      className={`object-cover max-md:hidden rounded-[13px] max-h-1/2 w-full`}
+                      className={`object-cover max-md:hidden aspect-promo-slide-secondary-laptop rounded-[13px] max-h-1/2 w-full`}
                     />
                   </Link>
                 </SwiperSlide>
