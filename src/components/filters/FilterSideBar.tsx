@@ -46,8 +46,7 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
             const filter = allowedFilters.find((f) => f.label === label);
             if (!filter) return null;
 
-            const { key, searchType, metaType } = filter;
-            console.log({ metaType });
+            const { key, searchType } = filter;
             const isOpen =
               openSections[label] ??
               (searchType === 'taxonomy' && !isMobile) ??
