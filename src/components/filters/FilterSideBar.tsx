@@ -39,7 +39,7 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
           Supprimer les filtres
         </button>
       </div>
-      <div className="bloc max-md:flex max-md:gap-4 overflow-x-auto scrollbar-custom max-md:items-start max-md:justify-start max-md:pb-4">
+      <div className="flex flex-col max-md:flex-row max-md:gap-4 overflow-x-auto scrollbar-custom max-md:items-start max-md:justify-start max-md:pb-4">
         {Object.entries(formattedFacets)
           .filter(([, facet]) => facet.values.length > 0)
           .map(([label, facet]) => {
@@ -49,8 +49,10 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
             const { key, searchType } = filter;
             const isOpen =
               openSections[label] ??
-              (searchType === 'taxonomy' && !isMobile) ??
-              true;
+              (facet.type === 'range'
+                ? true
+                : searchType === 'taxonomy' && !isMobile);
+
             const selectedValues = (query[key] as string)?.split(',') ?? [];
 
             const handleValueChange = (value: string) =>

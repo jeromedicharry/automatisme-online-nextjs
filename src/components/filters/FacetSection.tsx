@@ -15,7 +15,7 @@ const FacetSection = ({
   children,
 }: FacetSectionProps) => {
   return (
-    <div className="md:mb-3">
+    <div className={`md:mb-3 ${label === 'Prix' ? 'order-first' : ''}`}>
       <button
         onClick={onToggle}
         className="md:w-full flex items-baseline text-left gap-2"

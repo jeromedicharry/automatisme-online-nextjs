@@ -12,7 +12,7 @@ const DefaultCategoryMenu = ({
   subcategories: CategoryMenuProps[];
   brands?: BrandLink[];
 }) => {
-  console.log({ brands });
+  // console.log({ brands });
 
   // Todo mettre les bonnes marques
   const brandsBis = [

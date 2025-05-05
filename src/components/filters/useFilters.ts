@@ -29,20 +29,23 @@ export const useFilters = () => {
 
     const newQuery = { ...query };
 
-    if (newValues.length > 0) {
-      newQuery[key] = newValues.join(',');
-    } else {
-      delete newQuery[key];
-    }
+    // Supprimer d'abord tous les paramètres liés à ce filtre
+    delete newQuery[key];
+    delete newQuery[`${key}_min`];
+    delete newQuery[`${key}_max`];
 
-    if (
-      filterType === 'range' &&
-      searchType === 'meta' &&
-      newValues.length > 0
-    ) {
-      const [min, max] = value.split('-');
-      newQuery[`${key}_min`] = min;
-      newQuery[`${key}_max`] = max;
+    if (newValues.length > 0) {
+      // Pour les filtres de type range, utiliser uniquement les paramètres _min et _max
+      if (filterType === 'range' && searchType === 'meta') {
+        const [min, max] = value.split('-');
+        newQuery[`${key}_min`] = min;
+        newQuery[`${key}_max`] = max;
+        // Ne pas ajouter le paramètre combiné pour éviter la duplication
+        // newQuery[key] = newValues.join(',');
+      } else {
+        // Pour les autres types de filtres, utiliser le format standard
+        newQuery[key] = newValues.join(',');
+      }
     }
 
     router.push(
@@ -54,6 +57,7 @@ export const useFilters = () => {
       { shallow: true },
     );
   };
+
   const toggleSection = (label: string) => {
     setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
   };
@@ -62,6 +66,11 @@ export const useFilters = () => {
     const newQuery = { ...query };
     allowedFilters.forEach((filter) => {
       delete newQuery[filter.key];
+      // Ajouter nettoyage des paramètres _min et _max
+      if (filter.type === 'range' && filter.searchType === 'meta') {
+        delete newQuery[`${filter.key}_min`];
+        delete newQuery[`${filter.key}_max`];
+      }
     });
     setOpenSections({});
     router.push(
