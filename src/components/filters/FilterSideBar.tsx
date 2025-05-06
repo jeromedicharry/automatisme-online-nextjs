@@ -20,18 +20,38 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
   const formattedFacets = formatFacets(facetDistribution);
   const isMobile = useIsMobile();
 
-  const hasActiveFilters = Object.keys(query).some((key) =>
-    allowedFilters.some((f) => f.key === key),
-  );
+  // Fonction améliorée pour détecter les filtres actifs, incluant les filtres de type range
+  const hasActiveFilters = () => {
+    // Vérifier les filtres standard
+    const hasStandardFilters = Object.keys(query).some((key) =>
+      allowedFilters.some((f) => f.key === key),
+    );
+
+    // Vérifier les filtres de type range avec suffixes _min et _max
+    const hasRangeFilters = Object.keys(query).some((key) => {
+      // Vérifier si la clé se termine par _min ou _max
+      if (key.endsWith('_min') || key.endsWith('_max')) {
+        // Extraire le nom de base du filtre (sans le suffixe)
+        const baseKey = key.replace(/_min$|_max$/, '');
+        // Vérifier si ce filtre de base existe dans allowedFilters
+        return allowedFilters.some(
+          (f) => f.key === baseKey && f.type === 'range',
+        );
+      }
+      return false;
+    });
+
+    return hasStandardFilters || hasRangeFilters;
+  };
 
   return (
-    <aside className="w-full md:w-[250px] xl:w-[325px] text-primary md:sticky md:top-20 max-md:overflow-auto shrink-0">
+    <aside className="w-full md:w-[250px] xl:w-[325px] text-primary md:sticky md:top-20 overflow-visible max-md:overflow-auto shrink-0">
       <div className="mb-4 flex justify-center">
         <button
           onClick={resetFilters}
-          disabled={!hasActiveFilters}
+          disabled={!hasActiveFilters()}
           className={`text-center text-primary underline ${
-            !hasActiveFilters
+            !hasActiveFilters()
               ? 'opacity-40 cursor-not-allowed'
               : 'hover:text-secondary duration-300'
           }`}
@@ -39,7 +59,7 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
           Supprimer les filtres
         </button>
       </div>
-      <div className="flex flex-col max-md:flex-row max-md:gap-4 overflow-x-auto scrollbar-custom max-md:items-start max-md:justify-start max-md:pb-4">
+      <div className="flex flex-col max-md:flex-row max-md:gap-4 max-md:overflow-x-auto scrollbar-custom max-md:items-start max-md:justify-start max-md:pb-4">
         {Object.entries(formattedFacets)
           .filter(([, facet]) => facet.values.length > 0)
           .map(([label, facet]) => {
@@ -49,7 +69,7 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
             const { key, searchType } = filter;
             const isOpen =
               openSections[label] ??
-              (facet.type === 'range'
+              (facet.type === 'range' && !isMobile
                 ? true
                 : searchType === 'taxonomy' && !isMobile);
 
@@ -76,8 +96,8 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
                 {facet.type === 'range' && searchType === 'meta' && (
                   <RangeFacet
                     values={facet.values}
-                    minValue={(query[`${key}_min`] as string) || ''}
-                    maxValue={(query[`${key}_max`] as string) || ''}
+                    minValue={query[`${key}_min`] as string | undefined}
+                    maxValue={query[`${key}_max`] as string | undefined}
                     onChange={handleValueChange}
                   />
                 )}

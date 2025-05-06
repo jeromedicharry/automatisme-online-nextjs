@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactSlider from 'react-slider';
 import { SimpleFacetValue } from './utils';
 import { calculerPrix } from '@/utils/functions/prices';
+import useAuth from '@/hooks/useAuth';
 
 type RangeFacetProps = {
   values: SimpleFacetValue[];
-  minValue: string;
-  maxValue: string;
+  minValue: string | undefined;
+  maxValue: string | undefined;
   onChange: (minMax: string) => void;
-  isProSession?: boolean; // Ajout d'une prop pour savoir si c'est une session pro
-  countryCode?: string; // Ajout d'une prop pour le code pays
 };
 
 const RangeFacet = ({
@@ -17,111 +16,147 @@ const RangeFacet = ({
   minValue,
   maxValue,
   onChange,
-  isProSession = false,
-  countryCode = 'FR',
 }: RangeFacetProps) => {
-  // Calculer les valeurs disponibles min et max depuis les facettes une seule fois
-  const availableMin =
-    values.length > 0 ? Math.min(...values.map((v) => parseFloat(v.name))) : 0;
-  const availableMax =
-    values.length > 0
-      ? Math.max(...values.map((v) => parseFloat(v.name)))
-      : 100;
+  const availableRangeRef = useRef({
+    min:
+      values.length > 0
+        ? Math.min(...values.map((v) => parseFloat(v.name)))
+        : 0,
+    max:
+      values.length > 0
+        ? Math.max(...values.map((v) => parseFloat(v.name)))
+        : 100,
+  });
 
-  // État local pour le slider
+  const { min: availableMin, max: availableMax } = availableRangeRef.current;
+  const { isPro, countryCode } = useAuth();
+
   const [sliderValues, setSliderValues] = useState<[number, number]>([
-    parseFloat(minValue) || availableMin,
-    parseFloat(maxValue) || availableMax,
+    minValue ? parseFloat(minValue) : availableMin,
+    maxValue ? parseFloat(maxValue) : availableMax,
   ]);
 
-  // État pour stocker les prix formatés (TTC)
   const [formattedPrices, setFormattedPrices] = useState<[string, string]>([
     `${sliderValues[0]}€`,
     `${sliderValues[1]}€`,
   ]);
 
-  // Mise à jour initiale uniquement lorsque les props minValue et maxValue changent
-  // depuis l'extérieur (pas lors des manipulations internes du slider)
+  const [formattedMinMaxPrices, setFormattedMinMaxPrices] = useState<
+    [string, string]
+  >([`${availableMin}€`, `${availableMax}€`]);
+
   useEffect(() => {
-    // Ne mettre à jour que si les valeurs externes ont vraiment changé et sont différentes des valeurs actuelles
-    const newMin = parseFloat(minValue);
-    const newMax = parseFloat(maxValue);
+    const newMin = minValue ? parseFloat(minValue) : undefined;
+    const newMax = maxValue ? parseFloat(maxValue) : undefined;
 
     if (
-      (!isNaN(newMin) && newMin !== sliderValues[0]) ||
-      (!isNaN(newMax) && newMax !== sliderValues[1])
+      newMin === undefined ||
+      isNaN(newMin) ||
+      newMax === undefined ||
+      isNaN(newMax)
     ) {
-      setSliderValues([
-        !isNaN(newMin) ? newMin : sliderValues[0],
-        !isNaN(newMax) ? newMax : sliderValues[1],
-      ]);
+      setSliderValues([availableMin, availableMax]);
+    } else {
+      setSliderValues([newMin, newMax]);
     }
-  }, [minValue, maxValue, sliderValues]);
+  }, [minValue, maxValue, availableMin, availableMax]);
 
-  // Effet pour mettre à jour les prix formatés quand les valeurs du slider changent
   useEffect(() => {
     async function updateFormattedPrices() {
       try {
         const minPrix = await calculerPrix(
           sliderValues[0],
-          isProSession,
-          countryCode,
+          isPro,
+          countryCode || 'FR',
         );
         const maxPrix = await calculerPrix(
           sliderValues[1],
-          isProSession,
-          countryCode,
+          isPro,
+          countryCode || 'FR',
         );
 
         setFormattedPrices([`${minPrix}€`, `${maxPrix}€`]);
       } catch (error) {
         console.error('Erreur lors du calcul des prix:', error);
-        // Fallback en cas d'erreur
         setFormattedPrices([`${sliderValues[0]}€`, `${sliderValues[1]}€`]);
       }
     }
 
     updateFormattedPrices();
-  }, [sliderValues, isProSession, countryCode]);
+  }, [sliderValues, isPro, countryCode]);
 
-  // Gestionnaire pour la fin du glissement
+  useEffect(() => {
+    async function updateMinMaxPrices() {
+      try {
+        const formattedMin = await calculerPrix(
+          availableMin,
+          isPro,
+          countryCode || 'FR',
+        );
+        const formattedMax = await calculerPrix(
+          availableMax,
+          isPro,
+          countryCode || 'FR',
+        );
+
+        setFormattedMinMaxPrices([`${formattedMin}€`, `${formattedMax}€`]);
+      } catch (error) {
+        console.error('Erreur lors du calcul des prix min/max:', error);
+        setFormattedMinMaxPrices([`${availableMin}€`, `${availableMax}€`]);
+      }
+    }
+
+    updateMinMaxPrices();
+  }, [isPro, countryCode]);
+
   const handleSliderChange = (value: [number, number]) => {
     setSliderValues(value);
-    onChange(`${value[0]}-${value[1]}`);
+    // Envoyer directement les valeurs formatées sans créer de paramètre combiné
+    onChange(`${value[0].toFixed(2)}-${value[1].toFixed(2)}`);
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        {/* Affichage des valeurs actuelles */}
-        <div className="flex justify-between text-sm text-dark-grey mb-1">
-          <span>{formattedPrices[0]}</span>
-          <span>{formattedPrices[1]}</span>
+    <div className="space-y-4 min-w-[150px]">
+      {/* Valeurs courantes affichées au-dessus des curseurs */}
+      <div className="relative h-6 overflow-visible">
+        {/* Valeur min avec décalage vers la droite */}
+        <div className="absolute top-0 transform -translate-x-1/2 ml-5">
+          <div className="bg-white text-xs px-2 py-1 rounded shadow-sm border whitespace-nowrap">
+            {formattedPrices[0]}
+          </div>
         </div>
 
-        {/* ReactSlider component */}
-        <div className="py-2">
-          <ReactSlider
-            className="h-3 flex items-center"
-            thumbClassName="w-4 h-4 bg-secondary rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-light-alt"
-            trackClassName="h-1 bg-primary rounded-full"
-            value={sliderValues}
-            min={availableMin}
-            max={availableMax}
-            onChange={setSliderValues}
-            onAfterChange={handleSliderChange}
-            // Ajout d'une étape pour le slider
-            step={(availableMax - availableMin) / 100}
-          />
+        {/* Valeur max avec décalage vers la gauche */}
+        <div
+          className="absolute top-0 transform -translate-x-1/2 -ml-5"
+          style={{
+            left: `${((sliderValues[1] - availableMin) / (availableMax - availableMin)) * 100}%`,
+          }}
+        >
+          <div className="bg-white text-xs px-2 py-1 rounded shadow-sm border whitespace-nowrap">
+            {formattedPrices[1]}
+          </div>
         </div>
       </div>
 
-      {/* {values.length > 0 && (
-        <div className="text-xs text-dark-grey">
-          Prix disponibles {isProSession ? 'HT' : 'TTC'}: {availableMin}€ -{' '}
-          {availableMax}€
-        </div>
-      )} */}
+      {/* Slider */}
+      <ReactSlider
+        className="h-3 flex items-center"
+        thumbClassName="w-4 h-4 bg-secondary rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-light-alt"
+        trackClassName="h-1 bg-primary rounded-full"
+        value={sliderValues}
+        min={availableMin}
+        max={availableMax}
+        onChange={setSliderValues}
+        onAfterChange={handleSliderChange}
+        step={(availableMax - availableMin) / 100}
+      />
+
+      {/* Plage totale disponible */}
+      <div className="flex justify-between text-xs text-gray-500">
+        <span>Min: {formattedMinMaxPrices[0]}</span>
+        <span>Max: {formattedMinMaxPrices[1]}</span>
+      </div>
     </div>
   );
 };
