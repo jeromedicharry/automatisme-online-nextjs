@@ -76,7 +76,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         product: data?.product,
         ...commonData,
       },
-      revalidate: false, //  requis pour que `res.revalidate(...)` fonctionne
+      revalidate: 60, //  requis pour que `res.revalidate(...)` fonctionne
     };
   } catch (error) {
     console.error('Erreur Apollo:', error);

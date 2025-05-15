@@ -115,7 +115,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       featuredFaq,
       faqItems,
     },
-    revalidate: false, //  requis pour que `res.revalidate(...)` fonctionne
+    revalidate: 60, //  requis pour que `res.revalidate(...)` fonctionne
   };
 };
 
