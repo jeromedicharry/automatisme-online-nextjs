@@ -111,10 +111,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       page: page?.data?.page,
-      ...commonData, // <- On passe toutes les valeurs retournées par `fetchCommonData`
+      ...commonData,
       featuredFaq,
       faqItems,
     },
+    revalidate: false, //  requis pour que `res.revalidate(...)` fonctionne
   };
 };
 
