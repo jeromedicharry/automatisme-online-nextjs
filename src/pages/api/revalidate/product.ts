@@ -26,10 +26,7 @@ export default async function handler(
 
     // Ajouter le chemin du produit spécifique s'il est fourni
     if (slug) {
-      paths.push(`/product/${slug}`);
-    } else {
-      // Sinon revalider la page d'index des produits
-      paths.push('/products');
+      paths.push(`/nos-produits/${slug}`);
     }
 
     console.log(`Revalidation de produit demandée pour: ${paths.join(', ')}`);
