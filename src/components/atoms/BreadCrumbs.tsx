@@ -8,7 +8,7 @@ const BreadCrumbs = ({ breadCrumbs }: any) => {
         if (breadCrumbs.length - 1 === key) {
           return (
             <div key={key}>
-              <span>{crumb.text}</span>
+              <span dangerouslySetInnerHTML={{ __html: crumb.text }} />
             </div>
           );
         }
