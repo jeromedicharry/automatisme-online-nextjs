@@ -93,7 +93,11 @@ export const GET_SINGLE_PRODUCT = gql`
  */
 export const FETCH_ALL_PRODUCTS_WITH_PAGINATION = gql`
   query FETCH_ALL_PRODUCTS_WITH_PAGINATION($first: Int!, $after: String) {
-    products(first: $first, after: $after) {
+    products(
+      first: $first
+      after: $after
+      where: { productVisibilityIn: "visible" }
+    ) {
       nodes {
         ... on SimpleProduct {
           uri

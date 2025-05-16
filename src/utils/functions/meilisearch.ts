@@ -29,8 +29,10 @@ export const fetchMeiliProductsByCategory = async ({
 }) => {
   const offset = (page - 1) * limit;
 
-  // Ajouter la catégorie comme filtre principal
-  let meiliFilters = [`taxonomies.product_cat.slug = ${categorySlug}`];
+  // Ajouter la catégorie comme filtre principal + seulement les produits visibles
+  let meiliFilters = [
+    `taxonomies.product_cat.slug = ${categorySlug} AND meta._visibility = visible`,
+  ];
 
   // Convertir les autres filtres au format Meilisearch
   for (const [key, value] of Object.entries(filters)) {
