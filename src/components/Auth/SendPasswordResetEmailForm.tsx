@@ -10,6 +10,10 @@ export const SEND_PASSWORD_RESET_EMAIL = gql`
         id
         email
       }
+      success
+      errors {
+        message
+      }
     }
   }
 `;
@@ -31,14 +35,22 @@ const SendPasswordResetEmailForm: React.FC<SendPasswordResetEmailFormProps> = ({
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [sendResetEmail, { loading }] = useMutation(SEND_PASSWORD_RESET_EMAIL, {
-    onCompleted: () => {
-      setIsSuccess(true);
-      setEmail('');
+    onCompleted: (data) => {
+      if (data.sendPasswordResetEmail.success) {
+        setIsSuccess(true);
+        setEmail('');
+      } else {
+        setFormErrors({
+          general:
+            data.sendPasswordResetEmail.errors?.message ||
+            'Aucun compte trouvé avec cette adresse email.',
+        });
+      }
     },
     onError: (error) => {
+      console.log(error);
       setFormErrors({
-        general:
-          error.message || 'Une erreur est survenue. Veuillez réessayer.',
+        general: 'Veuillez entrer une adresse email valide.',
       });
     },
   });
@@ -115,7 +127,7 @@ const SendPasswordResetEmailForm: React.FC<SendPasswordResetEmailFormProps> = ({
 
             {/* Erreur générale */}
             {formErrors.general && (
-              <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center">
                 {formErrors.general}
               </div>
             )}
