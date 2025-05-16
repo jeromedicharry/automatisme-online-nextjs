@@ -64,7 +64,7 @@ const InstallerPage = ({
         />
 
         <div className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 mb-16">
-          <div>
+          <div className="md:sticky md:top-10 lg:top-16 xxl:top-28 md:h-[calc(100vh-7rem)]">
             <InstallerMap
               installers={filteredInstallers}
               activeCardIndex={activeInstallerIndex}
@@ -73,7 +73,7 @@ const InstallerPage = ({
             />
           </div>
 
-          <div>
+          <div className="">
             <h2 className="text-sm sm:text-xl font-bold leading-general text-center mb-3 md:mb-6">
               {'Trouver votre installateur près de chez vous'}
             </h2>
