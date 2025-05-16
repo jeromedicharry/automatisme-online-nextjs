@@ -28,6 +28,8 @@ import { perPage, sortingOptions } from '@/components/filters/config';
 import CardInstallation from '@/components/cards/CardInstallation';
 import { installationData } from '@/stores/IntermediateCartContext';
 import { GET_INSTALLATION_CTA } from '@/utils/gql/WEBSITE_QUERIES';
+import EmptyElement from '@/components/EmptyElement';
+import { SearchSvg } from '@/components/sections/blocs/BlocFaq';
 
 interface Filters {
   [key: string]: string;
@@ -216,7 +218,7 @@ const CategoryPage = ({
         />
         <div className="flex flex-col items-start md:flex-row gap-4 mb-10 md:mb-16">
           <FilterSidebar facetDistribution={facets} />
-          <section className="max-md:w-full overflow-hidden">
+          <section className="max-md:w-full lg:flex-grow overflow-hidden">
             <div className="flex justify-between mb-6 md:mb-4">
               <p className="text-sm md:text-base leading-general text-dark-grey">
                 {currentTotal} produits trouvés
@@ -238,18 +240,38 @@ const CategoryPage = ({
               </form>
             </div>
             <SubcategoriesNav subCategories={category?.children?.nodes} />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch max-md:max-w-[300px]">
-              {productSelection?.map(
-                (product: CardProductMeilisearchProps, index) => (
-                  <React.Fragment key={product?.id}>
-                    <CardProductMeilisearch product={product} />
-                    {hasPose && index === 1 && (
-                      <CardInstallation installation={installationData} />
-                    )}
-                  </React.Fragment>
-                ),
-              )}
-            </div>
+            {productSelection?.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch max-md:max-w-[300px]">
+                {productSelection?.map(
+                  (product: CardProductMeilisearchProps, index) => (
+                    <React.Fragment key={product?.id}>
+                      <CardProductMeilisearch product={product} />
+                      {hasPose && index === 1 && (
+                        <CardInstallation installation={installationData} />
+                      )}
+                    </React.Fragment>
+                  ),
+                )}
+              </div>
+            ) : (
+              <>
+                <EmptyElement
+                  picto={<SearchSvg />}
+                  title="Aucun produit correspondant"
+                  subtitle="Supprimez les filtres et faites une nouvelle recherche"
+                />
+                <div className="flex mt-6 mb:mt-10 items-center">
+                  <Cta
+                    label="Contactez-nous pour une demande spécifique"
+                    slug="/contact"
+                    variant="primary"
+                    additionalClass="w-fit mx-auto"
+                  >
+                    Demandez-nous un conseil
+                  </Cta>
+                </div>
+              </>
+            )}
             {isLoading && <LoadingSpinner />}
 
             {hasMore && !isLoading ? (
