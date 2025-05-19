@@ -339,7 +339,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       installationData,
       ...commonData,
     },
-    revalidate: 3600,
+    revalidate: 36000,
   };
 };
 

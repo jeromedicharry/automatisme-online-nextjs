@@ -157,6 +157,6 @@ export const getStaticProps: GetStaticProps = async () => {
       ...commonData,
       installateurs, // On passe la liste complète en props
     },
-    revalidate: 3600,
+    revalidate: 36000,
   };
 };

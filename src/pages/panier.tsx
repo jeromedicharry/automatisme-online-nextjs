@@ -90,6 +90,6 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       ...commonData,
     },
-    revalidate: 60,
+    revalidate: 36000,
   };
 };
