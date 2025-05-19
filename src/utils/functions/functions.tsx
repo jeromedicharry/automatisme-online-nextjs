@@ -164,6 +164,7 @@ export const getFormattedCart = (
 
     const product: Product = {
       productId: givenProduct.databaseId,
+      slug: givenProduct.slug,
       cartKey: givenProductItem.key,
       name: givenProduct.name,
       qty: quantity,

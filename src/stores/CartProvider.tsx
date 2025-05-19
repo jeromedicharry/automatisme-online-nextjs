@@ -18,6 +18,7 @@ export interface Product {
   totalPrice: number;
   image: Image;
   productId: number;
+  slug: string;
 }
 
 export interface RootObject {
@@ -47,7 +48,7 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     const localCartData = localStorage.getItem('woocommerce-cart');
     if (localCartData) {
       try {

@@ -51,7 +51,7 @@ const CartSummary = ({
         {cart.products.map((product, index) => (
           <Link
             title="Voir le produit"
-            href={`/nos-produits/${product.productId}`}
+            href={`/nos-produits/${product.slug}`}
             className="flex justify-between items-center gap-2"
             key={index}
           >
