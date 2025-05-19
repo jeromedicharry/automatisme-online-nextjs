@@ -91,7 +91,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   let hasNextPage = true;
   let endCursor: string | undefined | null = null;
 
-  const maxProducts = 6000;
+  const maxProducts = 1500;
 
   while (hasNextPage && allProducts.length < maxProducts) {
     const {
