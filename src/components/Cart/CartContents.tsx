@@ -126,7 +126,7 @@ const CartContents = () => {
                 className="aspect-square object-contain"
               />
             </div>
-            <div className="flex flex-col gap-4 lg:flex-row">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
               <div className="flex-grow lg:mx-4 self-center">
                 <h2 className="font-bold text-primary">{item.name}</h2>
                 <p>Avis vérifiés</p>
