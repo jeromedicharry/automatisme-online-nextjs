@@ -57,6 +57,9 @@ export const GET_SINGLE_PRODUCT = gql`
         isPro
         hasPose
         isKit
+        backorders
+        restockingLeadTime
+        stockQuantity
         galleryImages {
           nodes {
             sourceUrl

@@ -1,4 +1,4 @@
-const ProductReassurance = () => {
+const ProductReassurance = ({ deliveryLabel }: { deliveryLabel: string }) => {
   return (
     <section className="reassurance order-5 md:order-3 py-4 border-t border-primary border-b text-primary grid grid-cols-2 gap-4">
       <div className="flex gap-2 items-center font-bold text-sm leading-general">
@@ -15,7 +15,7 @@ const ProductReassurance = () => {
         >
           <ExpeditionDurationSvg />
         </div>
-        Expédition sous xx jours
+        {deliveryLabel}
       </div>
     </section>
   );

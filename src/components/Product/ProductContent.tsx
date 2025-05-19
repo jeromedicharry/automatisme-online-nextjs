@@ -16,6 +16,7 @@ import {
   PaymentPaypalSvg,
 } from '../Cart/CartReassurance';
 import ProductReassurance from './ProductReassurance';
+import { getProductAvailability } from '@/utils/functions/deliveryTime';
 
 export interface BrandStickerProps {
   name: string;
@@ -38,6 +39,8 @@ export interface ProductContentProps extends CardProductProps {
   seo: SeoProps;
   slug: string;
   description: string;
+  backorders: 'YES' | 'NO';
+  restockingLeadTime: number;
   stockQuantity: number;
   acfProduct: {
     faq: ProductFaqItemProps[];
@@ -99,11 +102,16 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
   };
 
   // mettre sur mobile ajout favioris + ajout au panier
-  // todo mettre les bons pictos de paiement voir à les mettre en dur
   // todo voir à ajouter plusieurs produits à la volée
   // todo gérer les produits remplacés (à la place du prix, bouton vers le produit de remplacemnt)
   // todo gérer les produits pros (si pas pro, on n'affiche pas le prix, bouton avec lien vers le compte pour passer en pro)
   // todo gérer la réassurance : durée d'expédition dynamique selon produit ? + selon en stock ou pas
+
+  const { deliveryLabel, isSellable } = getProductAvailability({
+    stock: product.stockQuantity,
+    backorders: product.backorders,
+    restockingLeadTime: product.restockingLeadTime,
+  });
 
   return (
     <article className="my-12 md:my-16">
@@ -141,11 +149,17 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                         />
                       </div>
                     )}
-                    <AddToCart
-                      variant="primary"
-                      product={product}
-                      isSingleProduct
-                    ></AddToCart>
+                    {isSellable ? (
+                      <AddToCart
+                        variant="primary"
+                        product={product}
+                        isSingleProduct
+                      ></AddToCart>
+                    ) : (
+                      <p className="text-secondary border border-secondary rounded-md px-3 py-2">
+                        Produit indisponible pour le moment
+                      </p>
+                    )}
                   </div>
                 </div>
                 <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
@@ -192,7 +206,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
           <section className="description order-4 md:hidden">
             <ProductDescription description={product?.description} />
           </section>
-          <ProductReassurance />
+          <ProductReassurance deliveryLabel={deliveryLabel} />
           <section className="videos order-6 md:order-4">Vidéos</section>
           <section className="details order-7 md:order-5">
             <ProductDetails faqItems={product?.acfProduct?.faq} />
