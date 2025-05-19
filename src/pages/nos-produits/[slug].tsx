@@ -114,7 +114,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     endCursor = data?.products?.pageInfo?.endCursor;
   }
 
-  const paths = allProducts.map((product) => product.uri) || [];
+  const paths =
+    allProducts.map((product) => product.uri.replace(/\/$/, '')) || [];
 
   return {
     paths,

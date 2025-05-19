@@ -127,7 +127,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   // On enlève la page d'accueil qui sera traitée autrement (car elle a un slug en 'accueil' et on veut '/')
   return {
-    paths: allPages.map((page: any) => `/${page?.slug}/`) || [],
+    paths: allPages.map((page: any) => `/${page?.slug}`) || [],
     fallback: 'blocking',
   };
 };
