@@ -1,25 +1,45 @@
 import React from 'react';
-import { ProCustomerSvg, QuestionMarkSvg } from '../SVG/Icons';
-import { ProductFaqItemProps } from './ProductContent';
+import { ProCustomerSvg, QuestionMarkSvg, ShieldSvg } from '../SVG/Icons';
+import { ProductDocsProps, ProductFaqItemProps } from './ProductContent';
 import AccordionItem from './AccordionItem';
 
-const ProductDetails = ({ faqItems }: { faqItems: ProductFaqItemProps[] }) => {
+import ProductDoc from './ProductDoc';
+
+const ProductDetails = ({
+  faqItems,
+  productDocs,
+}: {
+  faqItems: ProductFaqItemProps[];
+  productDocs: ProductDocsProps;
+}) => {
   //todo gérer la marque du produit
-  // todo gérer la catégorie la plus basse du produit
+
   return (
     <>
-      <AccordionItem
-        picto={<ProCustomerSvg />}
-        title="Spécifications techniques"
-      >
-        <div
-          className="text-sm leading-general wysiwyg"
-          dangerouslySetInnerHTML={{
-            __html: `<p>Spécifications techniques</p>`,
-          }}
-        />
-      </AccordionItem>
-      <AccordionItem picto={<ProCustomerSvg />} title="Garanties et assistance">
+      {productDocs && (productDocs.noticeTech || productDocs.productNotice) && (
+        <AccordionItem
+          picto={<ProCustomerSvg />}
+          title="Spécifications techniques"
+        >
+          <div className="space-y-3">
+            {productDocs.noticeTech && (
+              <ProductDoc
+                title="Notice technique"
+                buttonLabel="Consulter la notice"
+                link={productDocs.noticeTech.node.mediaItemUrl}
+              />
+            )}
+            {productDocs.productNotice && (
+              <ProductDoc
+                title={"Notice d'installation"}
+                link={productDocs.productNotice.node.mediaItemUrl}
+                buttonLabel={'Consulter la notice'}
+              />
+            )}
+          </div>
+        </AccordionItem>
+      )}
+      <AccordionItem picto={<ShieldSvg />} title="Garanties et assistance">
         <div
           className="text-sm leading-general wysiwyg"
           dangerouslySetInnerHTML={{

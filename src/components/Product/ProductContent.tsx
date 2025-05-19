@@ -30,6 +30,19 @@ export interface ProductFaqItemProps {
   content: string;
 }
 
+export interface ProductDocsProps {
+  productNotice: {
+    node: {
+      mediaItemUrl: string;
+    };
+  };
+  noticeTech: {
+    node: {
+      mediaItemUrl: string;
+    };
+  };
+}
+
 export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
   isPro: boolean;
@@ -42,6 +55,7 @@ export interface ProductContentProps extends CardProductProps {
   backorders: 'YES' | 'NO';
   restockingLeadTime: number;
   stockQuantity: number;
+  acfProductDocs: ProductDocsProps;
   acfProduct: {
     faq: ProductFaqItemProps[];
   };
@@ -209,7 +223,10 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
           <ProductReassurance deliveryLabel={deliveryLabel} />
           <section className="videos order-6 md:order-4">Vidéos</section>
           <section className="details order-7 md:order-5">
-            <ProductDetails faqItems={product?.acfProduct?.faq} />
+            <ProductDetails
+              faqItems={product?.acfProduct?.faq}
+              productDocs={product.acfProductDocs}
+            />
             <div className="flex mt-8 md:mt-6 gap-4 items-center justify-between">
               <span className="max-sm:text-xs leading-general shrink-1">
                 Moyens de paiement sécurisés

@@ -66,6 +66,25 @@ export const GET_SINGLE_PRODUCT = gql`
           }
         }
 
+        acfProductDocs {
+          productNotice {
+            node {
+              mediaItemUrl
+            }
+          }
+          noticeTech {
+            node {
+              mediaItemUrl
+            }
+          }
+        }
+        acfProduct {
+          faq {
+            title
+            content
+          }
+        }
+
         upsell {
           nodes {
             ... on SimpleProduct {

@@ -41,7 +41,7 @@ const AccordionItem = ({
         </div>
       </div>
       <div
-        className={`px-4 ${isOpen ? 'max-h-[1000px] py-6 overflow-visible pointer-events-auto opacity-100 duration-300' : 'max-h-0 overflow-hidden pointer-events-none opacity-0'}`}
+        className={`${isOpen ? 'max-h-[1000px] pt-6 overflow-visible pointer-events-auto opacity-100 duration-300' : 'max-h-0 overflow-hidden pointer-events-none opacity-0'}`}
       >
         {children}
       </div>
