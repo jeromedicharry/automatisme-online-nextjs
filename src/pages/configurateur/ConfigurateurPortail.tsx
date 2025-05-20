@@ -1,6 +1,12 @@
 // pages/configurateur-portail.tsx
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import {
+  CoulissantSvg,
+  PortailSvg,
+  UnBattantSvg,
+} from '@/components/SVG/ConfigurateurIcons';
+import Image from 'next/image';
 // import ProductList from '../components/ProductList';
 // import ContactForm from '../components/ContactForm';
 
@@ -360,6 +366,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
             </h2>
             <div className="flex items-center gap-4">
               <div className="configurator-radio">
+                <PortailSvg />
                 <label className="">2 battants</label>
                 <input
                   type="radio"
@@ -371,6 +378,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                 />
               </div>
               <div className="configurator-radio">
+                <UnBattantSvg />
                 <label className="">1 battant</label>
                 <input
                   type="radio"
@@ -382,6 +390,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                 />
               </div>
               <div className="configurator-radio">
+                <CoulissantSvg />
                 <label className="">Coulissant</label>
                 <input
                   type="radio"
@@ -400,13 +409,27 @@ export default function ConfigurateurPortail({ setMessage }: any) {
         {state.portailType && (
           <div className="mt-6 md:mt-10">
             <h2 className="font-medium text-xl leading-general mb-4">
-              Dimensions du ventail
+              À savoir !
             </h2>
-            <em>
-              {
-                "Note importante : configuré pour un angle maximum d'ouverture de 100° et une prise au vent standard. En cas de ventaux pleins ou si vous souhaitez un angle d'ouverture supérieur, des solutions existent, n'hésitez pas à nous contacter au 03 67 70 00 00."
-              }
-            </em>
+            <div className="bg-white p-3 md:p-4 rounded mb-4 md:mb-6">
+              La configuration est prévue pour{' '}
+              <strong>
+                {
+                  'un angle d’ouverture de 100° maximum et une prise au vent standard.'
+                }
+              </strong>
+              En cas de{' '}
+              <strong>
+                {
+                  "vantaux pleins ou si vous souhaitez un angle d'ouverture supérieur"
+                }
+              </strong>
+              {", des solutions existent, n'hésitez pas à nous contacter au"}{' '}
+              <span className="font-bold text-secondary">03 67 70 00 00</span>
+            </div>
+            <h2 className="font-medium text-xl leading-general mb-4">
+              Dimensions du portail (en mm)
+            </h2>
 
             {state.portailType === '2battants' && (
               <>
@@ -423,13 +446,13 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="largeurGauche"
                         value={state.largeurGauche || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
                     <div>
                       <label className="block mb-1">
-                        Côté A gauche (en mm){' '}
+                        Cote A gauche (en mm){' '}
                         <span className="text-sm text-gray-500">(minimum)</span>
                       </label>
                       <input
@@ -437,13 +460,13 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="coteAGauche"
                         value={state.coteAGauche || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
                     <div>
                       <label className="block mb-1">
-                        Côté B gauche (en mm){' '}
+                        Cote B gauche (en mm){' '}
                         <span className="text-sm text-gray-500">(minimum)</span>
                       </label>
                       <input
@@ -451,13 +474,13 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="coteBGauche"
                         value={state.coteBGauche || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
                     <div>
                       <label className="block mb-1">
-                        Côté C gauche (en mm){' '}
+                        Cote C gauche (en mm){' '}
                         <span className="text-sm text-gray-500">(minimum)</span>
                       </label>
                       <input
@@ -465,7 +488,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="coteCGauche"
                         value={state.coteCGauche || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
@@ -483,13 +506,13 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="largeurDroite"
                         value={state.largeurDroite || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
                     <div>
                       <label className="block mb-1">
-                        Côté A droite (en mm){' '}
+                        Cote A droite (en mm){' '}
                         <span className="text-sm text-gray-500">(minimum)</span>
                       </label>
                       <input
@@ -497,13 +520,13 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="coteADroite"
                         value={state.coteADroite || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
                     <div>
                       <label className="block mb-1">
-                        Côté B droite (en mm){' '}
+                        Cote B droite (en mm){' '}
                         <span className="text-sm text-gray-500">(minimum)</span>
                       </label>
                       <input
@@ -511,13 +534,13 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="coteBDroite"
                         value={state.coteBDroite || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
                     <div>
                       <label className="block mb-1">
-                        Côté C droite (en mm){' '}
+                        Cote C droite (en mm){' '}
                         <span className="text-sm text-gray-500">(minimum)</span>
                       </label>
                       <input
@@ -525,11 +548,25 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                         name="coteCDroite"
                         value={state.coteCDroite || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 rounded"
                         required
                       />
                     </div>
                   </div>
+                </div>
+                <div className="flex flex-col gap-4 md:flex-row mt-6 md:mt-10 mb-6 md:mb-10">
+                  <Image
+                    src="/images/configurateur/2battants-1.jpg"
+                    alt="schema"
+                    width={380}
+                    height={205}
+                  />
+                  <Image
+                    src="/images/configurateur/2battants-2.jpg"
+                    alt="schema"
+                    width={380}
+                    height={205}
+                  />
                 </div>
                 <em className="mt-2 block">
                   {
@@ -540,64 +577,80 @@ export default function ConfigurateurPortail({ setMessage }: any) {
             )}
 
             {state.portailType === '1battant' && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block mb-1">
-                    Largeur (en mm){' '}
-                    <span className="text-sm text-gray-500">(maximum)</span>
-                  </label>
-                  <input
-                    type="number"
-                    name="largeur"
-                    value={state.largeur || ''}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                    required
+              <>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block mb-1">
+                      Largeur (en mm){' '}
+                      <span className="text-sm text-gray-500">(maximum)</span>
+                    </label>
+                    <input
+                      type="number"
+                      name="largeur"
+                      value={state.largeur || ''}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1">
+                      Cote A (en mm){' '}
+                      <span className="text-sm text-gray-500">(minimum)</span>
+                    </label>
+                    <input
+                      type="number"
+                      name="coteA"
+                      value={state.coteA || ''}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1">
+                      Cote B (en mm){' '}
+                      <span className="text-sm text-gray-500">(minimum)</span>
+                    </label>
+                    <input
+                      type="number"
+                      name="coteB"
+                      value={state.coteB || ''}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1">
+                      Cote C (en mm){' '}
+                      <span className="text-sm text-gray-500">(minimum)</span>
+                    </label>
+                    <input
+                      type="number"
+                      name="coteC"
+                      value={state.coteC || ''}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4 md:flex-row mt-6 md:mt-10 mb-6 md:mb-10">
+                  <Image
+                    src="/images/configurateur/2battants-1.jpg"
+                    alt="schema"
+                    width={380}
+                    height={205}
+                  />
+                  <Image
+                    src="/images/configurateur/2battants-2.jpg"
+                    alt="schema"
+                    width={380}
+                    height={205}
                   />
                 </div>
-                <div>
-                  <label className="block mb-1">
-                    Côté A (en mm){' '}
-                    <span className="text-sm text-gray-500">(minimum)</span>
-                  </label>
-                  <input
-                    type="number"
-                    name="coteA"
-                    value={state.coteA || ''}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1">
-                    Côté B (en mm){' '}
-                    <span className="text-sm text-gray-500">(minimum)</span>
-                  </label>
-                  <input
-                    type="number"
-                    name="coteB"
-                    value={state.coteB || ''}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1">
-                    Côté C (en mm){' '}
-                    <span className="text-sm text-gray-500">(minimum)</span>
-                  </label>
-                  <input
-                    type="number"
-                    name="coteC"
-                    value={state.coteC || ''}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                    required
-                  />
-                </div>
-              </div>
+              </>
             )}
 
             {state.portailType === 'coulissant' && (
