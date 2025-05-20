@@ -16,7 +16,7 @@ const BlocVideo = ({ bloc }: { bloc: BlocVideoProps }) => {
           {isPlaying ? (
             <iframe
               className="w-full h-full"
-              src={`https://www.youtube.com/embed/${bloc.videoId}?autoplay=1`}
+              src={`https://www.youtube-nocookie.com/embed/${bloc.videoId}?autoplay=1`}
               title="YouTube video"
               allow="autoplay; encrypted-media"
               allowFullScreen
