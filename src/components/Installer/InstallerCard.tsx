@@ -6,6 +6,8 @@ export interface InstallerCardProps {
   title: string;
   address: string;
   distance?: number;
+  phone?: string;
+  email?: string;
   variant?: 'list' | 'map';
 }
 
@@ -14,6 +16,8 @@ const InstallerCard = ({
   title,
   address,
   distance,
+  phone,
+  email,
   variant = 'list',
 }: InstallerCardProps) => {
   return (
@@ -34,6 +38,16 @@ const InstallerCard = ({
         className={`text-dark-grey ${variant === 'map' ? 'mb-8 text-sm leading-general' : 'mb-4'}`}
         dangerouslySetInnerHTML={{ __html: address }}
       />
+      {phone && (
+        <p className="text-sm leading-general text-dark-grey mb-1">
+          <a href={`tel:${phone}`}>{phone}</a>
+        </p>
+      )}
+      {email && (
+        <p className="text-sm leading-general text-dark-grey mb-2 duration-300 hover:text-secondary">
+          <a href={`mailto:${email}`}>{email}</a>
+        </p>
+      )}
       {distance !== undefined && variant === 'list' && (
         <p className="text-sm text-dark-grey mb-4">
           Distance: {Math.round(distance * 10) / 10} km

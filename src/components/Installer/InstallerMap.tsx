@@ -7,6 +7,8 @@ interface Installer {
   title: string;
   acfContent: {
     address: string;
+    phone?: string;
+    email?: string;
     geolocation: {
       latitude: number;
       longitude: number;
@@ -78,6 +80,8 @@ const InstallerMap: React.FC<InstallerMapProps> = ({
                 title={installers[activeCardIndex].title}
                 address={installers[activeCardIndex].acfContent.address}
                 distance={installers[activeCardIndex].distance}
+                phone={installers[activeCardIndex].acfContent?.phone}
+                email={installers[activeCardIndex].acfContent?.email}
                 variant="map"
                 id={installers[activeCardIndex].id}
               />

@@ -114,6 +114,8 @@ const InstallerPage = ({
                     title={installer.title}
                     address={installer.acfContent.address}
                     distance={installer.distance}
+                    phone={installer.acfContent.phone}
+                    email={installer.acfContent.email}
                     id={installer.id}
                   />
                 ))}
