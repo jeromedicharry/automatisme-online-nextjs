@@ -66,6 +66,11 @@ export const GET_SINGLE_PRODUCT = gql`
           }
         }
 
+        productBrands {
+          name
+          thumbnailUrl
+        }
+
         acfProductDocs {
           productNotice {
             node {

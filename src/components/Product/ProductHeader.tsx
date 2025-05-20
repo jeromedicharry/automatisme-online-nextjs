@@ -9,15 +9,16 @@ const ProductHeader = ({
   title: string;
   brand?: BrandStickerProps;
 }) => {
+  console.log({ brand });
   return (
     <header>
       <div className="flex text-xl leading-general text-primary justify-between lg:items-end gap-5">
         <h1>{title}</h1>
 
         <div className="h-fit">
-          {brand?.thumbnail?.sourceUrl ? (
+          {brand?.thumbnailUrl ? (
             <Image
-              src={brand?.thumbnail.sourceUrl}
+              src={brand?.thumbnailUrl}
               width={80}
               height={80}
               alt={brand?.name}

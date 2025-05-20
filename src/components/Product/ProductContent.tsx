@@ -20,9 +20,7 @@ import { getProductAvailability } from '@/utils/functions/deliveryTime';
 
 export interface BrandStickerProps {
   name: string;
-  thumbnail?: {
-    sourceUrl: string;
-  };
+  thumbnailUrl: string;
 }
 
 export interface ProductFaqItemProps {
@@ -64,7 +62,7 @@ export interface ProductContentProps extends CardProductProps {
       sourceUrl: string;
     }[];
   };
-  brands: { nodes: BrandStickerProps[] } | { nodes: [] } | undefined;
+  productBrands: BrandStickerProps[] | [];
   upsell: {
     nodes: CardProductProps[];
   };
@@ -140,7 +138,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
           <div className="titre order-2 md:order-1">
             <ProductHeader
               title={product?.name}
-              brand={product?.brands?.nodes[0]}
+              brand={product?.productBrands[0]}
             />
           </div>
           <section className="prix order-3 md:order-2">
