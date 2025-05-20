@@ -23,7 +23,8 @@ const CheckboxFacet = ({
               onChange={() => onChange(name)}
             />
             <span className="whitespace-nowrap">
-              {name} ({count})
+              {name === 'true' ? 'Oui' : name === 'false' ? 'Non' : name} (
+              {count})
             </span>
           </label>
         </li>
