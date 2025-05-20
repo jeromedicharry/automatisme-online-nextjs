@@ -33,10 +33,10 @@ const FacetSection = ({
       </button>
 
       <div
-        className={`mt-3 max-md:overflow-hidden duration-300 ease-in-out ${
+        className={`mt-3 overflow-hidden duration-300 ease-in-out ${
           isOpen
-            ? 'max-h-[600px] static'
-            : 'absolute max-h-0 pointer-events-none opacity-85'
+            ? 'max-h-[600px] opacity-100'
+            : 'max-h-0 pointer-events-none opacity-0'
         } transform origin-top`}
       >
         {children}

@@ -29,17 +29,10 @@ export const fetchMeiliProductsByCategory = async ({
 }) => {
   const offset = (page - 1) * limit;
 
-<<<<<<< HEAD
-  // Ajouter la catégorie comme filtre principal + seulement les produits visibles
-  let meiliFilters = [
+  const meiliFilters: string[] = [
     `taxonomies.product_cat.slug = ${categorySlug} AND meta._visibility = visible`,
   ];
-=======
-  const meiliFilters: string[] = [
-    `taxonomies.product_cat.slug = ${categorySlug}`,
-  ];
   const alreadyHandled = new Set<string>();
->>>>>>> feature-minmax-filters
 
   for (const [key, value] of Object.entries(filters)) {
     const filterConfig = allowedFilters.find(
