@@ -15,7 +15,7 @@ const FacetSection = ({
   children,
 }: FacetSectionProps) => {
   return (
-    <div className="md:mb-3">
+    <div className={`md:mb-3 ${label === 'Prix' ? 'lg:order-first' : ''}`}>
       <button
         onClick={onToggle}
         className="md:w-full flex items-baseline text-left gap-2"
@@ -33,7 +33,7 @@ const FacetSection = ({
       </button>
 
       <div
-        className={`mt-3 overflow-hidden duration-300 ease-in-out ${
+        className={`mt-3 max-md:overflow-hidden duration-300 ease-in-out ${
           isOpen
             ? 'max-h-[600px] static'
             : 'absolute max-h-0 pointer-events-none opacity-85'

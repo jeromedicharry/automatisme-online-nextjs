@@ -11,7 +11,7 @@ type MeiliRequestOptions = {
   offset: number;
   filter: string;
   facets: string[];
-  sort?: string[]; // Propriété optionnelle
+  sort?: string[];
 };
 
 export const fetchMeiliProductsByCategory = async ({
@@ -29,63 +29,76 @@ export const fetchMeiliProductsByCategory = async ({
 }) => {
   const offset = (page - 1) * limit;
 
+<<<<<<< HEAD
   // Ajouter la catégorie comme filtre principal + seulement les produits visibles
   let meiliFilters = [
     `taxonomies.product_cat.slug = ${categorySlug} AND meta._visibility = visible`,
   ];
+=======
+  const meiliFilters: string[] = [
+    `taxonomies.product_cat.slug = ${categorySlug}`,
+  ];
+  const alreadyHandled = new Set<string>();
+>>>>>>> feature-minmax-filters
 
-  // Convertir les autres filtres au format Meilisearch
   for (const [key, value] of Object.entries(filters)) {
-    const filterConfig = allowedFilters.find((f) => f.key === key);
+    const filterConfig = allowedFilters.find(
+      (f) => f.key === key.replace(/_min$|_max$/, ''),
+    );
     if (!filterConfig) continue;
 
-    let filterCondition: string;
+    const baseKey = key.replace(/_min$|_max$/, '');
+    if (alreadyHandled.has(baseKey)) continue;
 
-    // Déterminer le préfixe en fonction du type
-    let fieldPrefix: string;
+    let fieldPrefix = '';
     switch (filterConfig.searchType) {
       case 'taxonomy':
-        fieldPrefix = `taxonomies.${key}.slug`;
+        fieldPrefix = `taxonomies.${baseKey}.slug`;
         break;
       case 'meta':
-        fieldPrefix = `meta.${key}`;
+        fieldPrefix = `meta.${baseKey}`;
         break;
       case 'attribute':
       default:
-        fieldPrefix = `attributes.${key}.slug`;
+        fieldPrefix = `attributes.${baseKey}.slug`;
     }
 
-    // Gestion spéciale pour les ranges de meta
     if (filterConfig.type === 'range' && filterConfig.searchType === 'meta') {
-      const [min, max] = value.split('-');
-      filterCondition = `${fieldPrefix} >= ${min} AND ${fieldPrefix} <= ${max}`;
-    }
-    // Gestion des valeurs multiples (OR)
-    else if (value.includes(',')) {
-      const values = value.split(',').map((v) => v.trim());
-      filterCondition = values.map((v) => `${fieldPrefix} = ${v}`).join(' OR ');
-      filterCondition = `(${filterCondition})`;
-    }
-    // Cas standard (égalité simple)
-    else {
-      filterCondition = `${fieldPrefix} = ${value}`;
+      const min = filters[`${baseKey}_min`];
+      const max = filters[`${baseKey}_max`];
+
+      if (min && max) {
+        meiliFilters.push(
+          `${fieldPrefix} >= ${min} AND ${fieldPrefix} <= ${max}`,
+        );
+      } else if (min) {
+        meiliFilters.push(`${fieldPrefix} >= ${min}`);
+      } else if (max) {
+        meiliFilters.push(`${fieldPrefix} <= ${max}`);
+      }
+    } else if (value.includes(',')) {
+      const values = value
+        .split(',')
+        .map((v) => `${fieldPrefix} = ${v.trim()}`);
+      meiliFilters.push(`(${values.join(' OR ')})`);
+    } else if (!key.endsWith('_min') && !key.endsWith('_max')) {
+      meiliFilters.push(`${fieldPrefix} = ${value}`);
     }
 
-    meiliFilters.push(filterCondition);
+    alreadyHandled.add(baseKey);
   }
 
-  // Combiner tous les filtres avec AND
   const filterString = meiliFilters.join(' AND ');
+  console.log({ filterString });
 
-  let requestOptions: MeiliRequestOptions = {
-    q: '', // On ne fait pas de recherche textuelle ici
+  const requestOptions: MeiliRequestOptions = {
+    q: '',
     limit,
     offset,
     filter: filterString,
-    facets: ['*'], // Spécifiez les champs pour lesquels vous voulez des facettes
+    facets: ['*'],
   };
 
-  // Ajouter le tri uniquement s'il est défini et non vide
   if (sort && sort.trim() !== '') {
     requestOptions.sort = [sort];
   }
@@ -104,7 +117,6 @@ export const fetchMeiliProductsByCategory = async ({
   }
 
   const result = await response.json();
-
   const hasPose = !!Object.keys(
     result.facetDistribution['meta._has_pose'] || {},
   ).length;
@@ -131,6 +143,5 @@ export const getTotalProductsMeili = async () => {
   }
 
   const result = await response.json();
-
   return result.numberOfDocuments;
 };

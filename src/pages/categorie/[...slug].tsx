@@ -224,7 +224,9 @@ const CategoryPage = ({
                 {currentTotal} produits trouvés
               </p>
               <form className="flex items-center gap-4 sortForm">
-                <label htmlFor="sort">Trier par:</label>
+                <label htmlFor="sort" className="whitespace-nowrap">
+                  Trier par:
+                </label>
                 <select
                   name="sort"
                   id="sort"
