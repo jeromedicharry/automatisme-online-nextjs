@@ -110,6 +110,12 @@ export const allowedFilters: AllowedFilter[] = [
     searchType: 'meta',
     metaType: 'number',
   },
+  {
+    label: 'Installation disponible ?',
+    key: '_has_pose',
+    type: 'checkbox',
+    searchType: 'meta',
+  },
 ];
 
 export type sortingOption = {
