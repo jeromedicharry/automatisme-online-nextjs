@@ -17,6 +17,8 @@ import { PageInfoProps, ThemeSettingsProps } from '@/types/CptTypes';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
 import { CategoryMenuProps } from '@/types/Categories';
 
+import Script from 'next/script';
+
 const Product = ({
   product,
   themeSettings,
@@ -50,6 +52,12 @@ const Product = ({
       <Container>
         <ProductCrossSells crossSellProducts={product?.crossSell?.nodes} />
       </Container>
+      <Script
+        defer
+        strategy="afterInteractive"
+        src="https://widgets.rr.skeepers.io/product/076a2ab0-6d91-8ec4-1dc0-ff5c0501b805/14849b72-094b-478b-a7a8-23978e2bb2de.js"
+        charSet="utf-8"
+      />
     </Layout>
   );
 };
@@ -91,7 +99,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   let hasNextPage = true;
   let endCursor: string | undefined | null = null;
 
-  const maxProducts = 10;
+  const maxProducts = 1500;
 
   while (hasNextPage && allProducts.length < maxProducts) {
     const {

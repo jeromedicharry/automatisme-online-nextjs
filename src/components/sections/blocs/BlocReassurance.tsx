@@ -54,9 +54,7 @@ const BlocReassurance = ({
               </span>
             </Link>
           ))}
-          {bloc.isAvis && (
-            <AvisVerifiesReassurance mobileBgColor={mobileBgColor} />
-          )}
+          {bloc.isAvis && <AvisVerifiesReassurance />}
         </div>
       </section>
     </Container>

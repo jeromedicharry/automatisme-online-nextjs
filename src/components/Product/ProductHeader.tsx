@@ -9,7 +9,7 @@ const ProductHeader = ({
   title: string;
   brand?: BrandStickerProps;
 }) => {
-  console.log({ brand });
+  // Todo mettre ID produit vérofiés dynamiquement
   return (
     <header>
       <div className="flex text-xl leading-general text-primary justify-between lg:items-end gap-5">
@@ -31,7 +31,9 @@ const ProductHeader = ({
           )}
         </div>
       </div>
-      <div>Avis vérifiés</div>
+      <div className="mt-1">
+        <div className="skeepers_product__stars" data-product-id="531034"></div>
+      </div>
     </header>
   );
 };

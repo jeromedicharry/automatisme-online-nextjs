@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
-const AvisVerifiesReassurance = ({
-  mobileBgColor,
-}: {
-  mobileBgColor: string;
-}) => {
+const AvisVerifiesReassurance = () => {
+  const widgetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src =
+      'https://widgets.rr.skeepers.io/generated/076a2ab0-6d91-8ec4-1dc0-ff5c0501b805/72a2247a-deff-4d10-a282-7f7bf2ae6519.js';
+    script.async = true;
+    script.defer = true;
+    if (widgetRef.current) {
+      widgetRef.current.innerHTML = ''; // Nettoyage éventuel
+      widgetRef.current.appendChild(script);
+    }
+  }, []);
+
   return (
     <div
-      className={`flex rounded-[3px] ${mobileBgColor} md:bg-white px-[6px] py-[5px]`}
+      className={`flex rounded-[3px]`}
+      // className={`flex rounded-[3px] ${mobileBgColor} md:bg-white px-[6px] py-[5px]`}
     >
       <div className="md:w-full flex justify-between items-center">
         <div className="flex gap-1 items-center">
-          <LogoAvis color="blue" />
-          <span className="text-[0.375rem]">
-            Avis
-            <br /> Vérifiés
-          </span>
+          {/* <LogoAvis color="blue" /> */}
+          <div id="72a2247a-deff-4d10-a282-7f7bf2ae6519" ref={widgetRef}></div>
         </div>
       </div>
     </div>

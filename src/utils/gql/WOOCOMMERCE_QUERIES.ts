@@ -29,6 +29,8 @@ export const PRODUCT_CARD_FRAGMENT = `
 
 // isKit
 
+// restockingLeadTime
+
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
     product(id: $id, idType: SLUG) {
@@ -58,7 +60,6 @@ export const GET_SINGLE_PRODUCT = gql`
         hasPose
         isKit
         backorders
-        restockingLeadTime
         stockQuantity
         galleryImages {
           nodes {
@@ -67,8 +68,10 @@ export const GET_SINGLE_PRODUCT = gql`
         }
 
         productBrands {
-          name
-          thumbnailUrl
+          nodes {
+            name
+            thumbnailUrl
+          }
         }
 
         acfProductDocs {

@@ -30,6 +30,8 @@ import { installationData } from '@/stores/IntermediateCartContext';
 import { GET_INSTALLATION_CTA } from '@/utils/gql/WEBSITE_QUERIES';
 import EmptyElement from '@/components/EmptyElement';
 import { SearchSvg } from '@/components/sections/blocs/BlocFaq';
+import BlocReassurance from '@/components/sections/blocs/BlocReassurance';
+import { BlocReassuranceProps } from '@/types/blocTypes';
 
 interface Filters {
   [key: string]: string;
@@ -68,6 +70,12 @@ const CategoryPage = ({
   const [hasMore, setHasMore] = useState(products.length < total);
   const [facets, setFacets] = useState(initialFacets);
   const [hasPose, setHasPose] = useState(initialHasPose);
+
+  const blocReassuranceFix = {
+    __typename: 'AcfPageBlocsBlocReassuranceLayout',
+    type: 'Fond blanc',
+    isAvis: true,
+  };
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -289,6 +297,10 @@ const CategoryPage = ({
             ) : null}
           </section>
         </div>
+        <BlocReassurance
+          reassuranceItems={themeSettings?.reassurance}
+          bloc={blocReassuranceFix as BlocReassuranceProps}
+        />
       </Container>
     </Layout>
   );

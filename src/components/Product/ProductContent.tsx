@@ -62,7 +62,7 @@ export interface ProductContentProps extends CardProductProps {
       sourceUrl: string;
     }[];
   };
-  productBrands: BrandStickerProps[] | [];
+  productBrands: { nodes: BrandStickerProps[] };
   upsell: {
     nodes: CardProductProps[];
   };
@@ -138,7 +138,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
           <div className="titre order-2 md:order-1">
             <ProductHeader
               title={product?.name}
-              brand={product?.productBrands[0]}
+              brand={product?.productBrands?.nodes[0]}
             />
           </div>
           <section className="prix order-3 md:order-2">
@@ -218,9 +218,9 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
           <section className="description order-4 md:hidden">
             <ProductDescription description={product?.description} />
           </section>
-          <ProductReassurance deliveryLabel={deliveryLabel} />
-          <section className="videos order-6 md:order-4">Vidéos</section>
+          {/* <section className="videos order-6 md:order-4">Vidéos</section> */}
           <section className="details order-7 md:order-5">
+            <ProductReassurance deliveryLabel={deliveryLabel} />
             <ProductDetails
               faqItems={product?.acfProduct?.faq}
               productDocs={product.acfProductDocs}
