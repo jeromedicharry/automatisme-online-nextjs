@@ -12,27 +12,8 @@ const DefaultCategoryMenu = ({
   subcategories: CategoryMenuProps[];
   brands?: BrandLink[];
 }) => {
-  // console.log({ brands });
+  console.log({ brands });
 
-  // Todo mettre les bonnes marques
-  const brandsBis = [
-    {
-      name: 'Beninca',
-      slug: 'beninca',
-    },
-    {
-      name: 'BFT',
-      slug: 'bft',
-    },
-    {
-      name: 'Came',
-      slug: 'came',
-    },
-    {
-      name: 'Cardin',
-      slug: 'cardin',
-    },
-  ];
   return (
     <ul className="flex gap-6 w-full items-stretch">
       {subcategories.map((subItem) => (
@@ -64,7 +45,7 @@ const DefaultCategoryMenu = ({
           )}
         </li>
       ))}
-      <BrandsList brands={brandsBis} />
+      <BrandsList brands={brands} />
     </ul>
   );
 };
