@@ -22,6 +22,7 @@ interface LayoutProps {
   footerMenu2?: SimpleFooterMenuProps | undefined;
   themeSettings?: any;
   isHome?: boolean;
+  isBrand?: boolean;
   categoriesMenu?: CategoryMenuProps[];
   isBg?: boolean;
   excludeSeo?: boolean;
@@ -43,6 +44,7 @@ const Layout = ({
   footerMenu2,
   themeSettings,
   isHome = false,
+  isBrand = false,
   categoriesMenu,
   isBg = false,
   excludeSeo = false,
@@ -60,7 +62,11 @@ const Layout = ({
       />
       <div
         className={`min-h-screen flex flex-col font-primary ${
-          isHome ? 'pt-[128px] md:pt-[200px]' : 'pt-[140px] md:pt-[187px]'
+          isHome
+            ? 'pt-[128px] md:pt-[200px]'
+            : isBrand
+              ? 'pt-[112px] md:pt-[116px] lg:pt-[152px]'
+              : 'pt-[140px] md:pt-[187px]'
         } ${isBg ? 'bg-primary-light' : ''}`}
       >
         <main className="grow shrink-0 text-primary font-primary">

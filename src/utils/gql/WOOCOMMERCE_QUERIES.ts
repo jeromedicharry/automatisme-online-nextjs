@@ -119,7 +119,7 @@ export const GET_SINGLE_PRODUCT = gql`
 `;
 
 /**
- * Fetch first 200 Woocommerce products from GraphQL
+ * Fetch first all Woocommerce products from GraphQL
  */
 export const FETCH_ALL_PRODUCTS_WITH_PAGINATION = gql`
   query FETCH_ALL_PRODUCTS_WITH_PAGINATION($first: Int!, $after: String) {
@@ -331,6 +331,74 @@ export const GET_TAX_RATES = gql`
       nodes {
         rate
         country
+      }
+    }
+  }
+`;
+
+/**
+ * Fetch first all Woocommerce products from GraphQL
+ */
+export const FETCH_ALL_BRANDS_WITH_PAGINATION = gql`
+  query FETCH_ALL_BRANDS_WITH_PAGINATION($first: Int!, $after: String) {
+    productBrands(first: $first, after: $after) {
+      nodes {
+        uri
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
+export const FETCH_SINGLE_BRAND = gql`
+  query FETCH_SINGLE_BRAND($id: ID!, $idType: ProductBrandIdType = SLUG) {
+    productBrand(id: $id, idType: $idType) {
+      slug
+      uri
+      name
+      ${seoFields}
+      description
+      thumbnailUrl
+      acfBrand {
+        hero {
+          globalNote
+          image {
+            node {
+              sourceUrl
+            }
+          }
+          notes {
+            label
+            note
+          }
+        }
+        bolcSav {
+          title
+          text
+          isImageLeft
+          image {
+            node {
+              sourceUrl
+            }
+          }
+          showNote
+        }
+      }
+      posts(first: 2) {
+        nodes {
+          featuredImage {
+            node {
+              sourceUrl(size: MEDIUM)
+            }
+          }
+          title
+          date
+          excerpt
+          slug
+        }
       }
     }
   }
