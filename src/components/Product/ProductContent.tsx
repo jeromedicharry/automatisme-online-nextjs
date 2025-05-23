@@ -49,6 +49,7 @@ export interface ProductContentProps extends CardProductProps {
   hasPose: boolean;
   isKit: boolean;
   uri: string;
+  installationPrice: number;
   seo: SeoProps;
   slug: string;
   description: string;
@@ -165,17 +166,14 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                         />
                       </div>
                     )}
-                    <AddToCart
-                      variant="primary"
-                      product={product}
-                      addInstallation={
-                        product?.hasPose ? addInstallation : false
-                      }
-                    ></AddToCart>
+
                     {isSellable ? (
                       <AddToCart
                         variant="primary"
                         product={product}
+                        addInstallation={
+                          product?.hasPose ? addInstallation : false
+                        }
                         isSingleProduct
                       ></AddToCart>
                     ) : (
@@ -190,7 +188,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                 </p>
               </>
             )}
-            {product?.hasPose && (
+            {product?.hasPose && product?.installationPrice && (
               <div className="mt-8 md:mt-6">
                 <p className="mb-4 font-bold">{"Choix de l'option"}</p>
                 <div className="flex w-full md:w-fit gap-4 items-stretch">
@@ -209,7 +207,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                       </div>
                       <p>Avec installation</p>
                       <div className="text-dark-grey font-normal">
-                        (+550€ TTC)
+                        (+{product?.installationPrice} TTC)
                       </div>
                     </span>
                   </label>

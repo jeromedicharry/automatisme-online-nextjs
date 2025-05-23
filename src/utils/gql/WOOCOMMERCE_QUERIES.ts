@@ -57,9 +57,11 @@ export const GET_SINGLE_PRODUCT = gql`
         id
         stockQuantity
         sku
+        installationPrice
         productRef
         isPro
         hasPose
+        poseCategory
         isKit
         backorders
         stockQuantity
