@@ -10,31 +10,25 @@ export function getProductAvailability({
   deliveryLabel: string;
   isSellable: boolean;
 } {
-  if (backorders === 'YES') {
-    if (stock > 0) {
-      return {
-        deliveryLabel: 'Expédié sous 1 à 2 JOURS',
-        isSellable: true,
-      };
-    } else {
-      const min = Math.max(restockingLeadTime - 2, 1);
-      const max = restockingLeadTime;
-      return {
-        deliveryLabel: `Expédié sous ${min} à ${max} JOURS`,
-        isSellable: true,
-      };
-    }
-  } else {
-    if (stock > 0) {
-      return {
-        deliveryLabel: 'Expédié sous 1 à 2 JOURS',
-        isSellable: true,
-      };
-    } else {
-      return {
-        deliveryLabel: 'Produit actuellement indisponible',
-        isSellable: false,
-      };
-    }
+  if (stock > 0) {
+    return {
+      deliveryLabel: 'Expédié sous 1 à 2 JOURS',
+      isSellable: true,
+    };
   }
+
+  if (backorders === 'YES') {
+    const leadingTime = restockingLeadTime || 20;
+    const min = Math.max(leadingTime - 2, 1);
+    const max = leadingTime;
+    return {
+      deliveryLabel: `Expédié sous ${min} à ${max} JOURS`,
+      isSellable: true,
+    };
+  }
+
+  return {
+    deliveryLabel: 'Produit actuellement indisponible',
+    isSellable: false,
+  };
 }

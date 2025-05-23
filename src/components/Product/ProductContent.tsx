@@ -177,8 +177,8 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                         isSingleProduct
                       ></AddToCart>
                     ) : (
-                      <p className="text-secondary border border-secondary rounded-md px-3 py-2">
-                        Produit indisponible pour le moment
+                      <p className="text-secondary border border-secondary rounded-md px-3 py-2 flex items-center">
+                        Produit en rupture de stock
                       </p>
                     )}
                   </div>

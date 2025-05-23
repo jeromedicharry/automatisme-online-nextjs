@@ -82,7 +82,6 @@ export const fetchMeiliProductsByCategory = async ({
   }
 
   const filterString = meiliFilters.join(' AND ');
-  console.log({ filterString });
 
   const requestOptions: MeiliRequestOptions = {
     q: '',

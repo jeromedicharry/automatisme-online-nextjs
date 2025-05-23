@@ -8,9 +8,15 @@ import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import FavoriteButton from '../atoms/FavoriteButton';
 import useAuth from '@/hooks/useAuth';
 import Cta from '../atoms/Cta';
+import { getProductAvailability } from '@/utils/functions/deliveryTime';
 
 const Cardproduct = ({ product }: { product: CardProductProps }) => {
   const { loggedIn, isPro } = useAuth();
+  const { isSellable } = getProductAvailability({
+    stock: product.stockQuantity,
+    backorders: product.backorders,
+    restockingLeadTime: product.restockingLeadTime,
+  });
   return (
     <article className="flex flex-col max-w-[250px] xxl:w-[325px] xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
@@ -51,7 +57,7 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
       <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
         {product?.sku}
       </p>
-      <p className="mb-[10px]">Widget Avis vérifiés</p>
+      {/* <p className="mb-[10px]">Widget Avis vérifiés</p> */}
       {product?.isPro && !isPro ? (
         <div className="mt-auto">
           <Cta
@@ -71,9 +77,15 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
             regularPrice={parseFloat(product?.regularPrice || '0')}
             variant="card"
           />
-          <div className="mt-auto">
-            <AddToCart product={product} />
-          </div>
+          {isSellable ? (
+            <div className="mt-auto">
+              <AddToCart product={product} />
+            </div>
+          ) : (
+            <p className="text-secondary border border-secondary rounded-md px-3 py-3 flex items-center mt-auto">
+              En rupture de stock
+            </p>
+          )}
         </>
       )}
     </article>

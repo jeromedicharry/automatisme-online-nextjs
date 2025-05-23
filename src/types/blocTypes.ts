@@ -72,6 +72,9 @@ export interface CardProductProps {
   regularPrice: string;
   sku: string;
   uri: string;
+  stockQuantity: number;
+  backorders: 'YES' | 'NO';
+  restockingLeadTime: number;
 }
 
 export interface BlocFeaturedProductsProps {

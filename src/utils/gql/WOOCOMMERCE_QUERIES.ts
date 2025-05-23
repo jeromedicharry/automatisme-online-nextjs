@@ -1,6 +1,8 @@
 import { gql } from '@apollo/client';
 import { seoFields } from './SEO';
 
+// todo restockingLeadTime
+
 export const PRODUCT_CARD_FRAGMENT = `
   databaseId
   slug
@@ -19,6 +21,8 @@ export const PRODUCT_CARD_FRAGMENT = `
   isPro
   hasPose
   isKit
+  stockQuantity
+  backorders
 `;
 
 // todo gérer les brands
@@ -30,7 +34,7 @@ export const PRODUCT_CARD_FRAGMENT = `
 
 // isKit
 
-// restockingLeadTime
+// todo restockingLeadTime
 
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
@@ -56,6 +60,7 @@ export const GET_SINGLE_PRODUCT = gql`
         price(format: RAW)
         id
         stockQuantity
+        backorders
         sku
         installationPrice
         productRef
@@ -63,7 +68,6 @@ export const GET_SINGLE_PRODUCT = gql`
         hasPose
         poseCategory
         isKit
-        backorders
         stockQuantity
         galleryImages {
           nodes {

@@ -9,6 +9,7 @@ import useAuth from '@/hooks/useAuth';
 import Cta from '../atoms/Cta';
 import AddToCart from '../Product/AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
+import { getProductAvailability } from '@/utils/functions/deliveryTime';
 
 export interface CardProductMeilisearchProps {
   title: string;
@@ -22,6 +23,10 @@ export interface CardProductMeilisearchProps {
     _price: string;
     // todo attendre isFeatured slug et image et mettre à jour
     _is_featured: boolean;
+    _stock: number;
+    _backorders: 'YES' | 'NO';
+    _restocking_lead_time: number;
+    _product_ref: string;
   };
   thumbnail_url: string;
 }
@@ -55,8 +60,16 @@ const CardProductMeilisearch = ({
     featured: meiliProduct.meta?._is_featured || false,
     onSale: false, // À adapter selon besoin
     hasProDiscount: false, // À adapter
+    stockQuantity: meiliProduct.meta?._stock || 0,
+    backorders: meiliProduct.meta?._backorders || 'NO',
+    restockingLeadTime: meiliProduct.meta?._restocking_lead_time || 0,
   });
 
+  const { isSellable } = getProductAvailability({
+    stock: product.meta._stock,
+    backorders: product.meta._backorders,
+    restockingLeadTime: product.meta._restocking_lead_time,
+  });
   return (
     <article className="flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
@@ -94,9 +107,9 @@ const CardProductMeilisearch = ({
       </Link>
 
       <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
-        {product?.meta?.sku || 'Référence produit'}
+        {product?.meta?._product_ref || 'Référence produit'}
       </p>
-      <p className="mb-[10px]">Widget Avis vérifiés</p>
+      {/* <p className="mb-[10px]">Widget Avis vérifiés</p> */}
       {product?.meta?._is_pro && !isPro ? (
         <div className="mt-auto">
           <Cta
@@ -111,14 +124,22 @@ const CardProductMeilisearch = ({
         </div>
       ) : (
         <>
-          <ProductPrice
-            price={parseFloat(product?.meta?._price || '0')}
-            regularPrice={parseFloat(product?.meta?.regular_price || '0')}
-            variant="card"
-          />
-          <div className="mt-auto">
-            <AddToCart product={convertMeiliToWooProduct(product)} />
+          <div className="mb-3">
+            <ProductPrice
+              price={parseFloat(product?.meta?._price || '0')}
+              regularPrice={parseFloat(product?.meta?.regular_price || '0')}
+              variant="card"
+            />
           </div>
+          {isSellable ? (
+            <div className="mt-auto">
+              <AddToCart product={convertMeiliToWooProduct(product)} />
+            </div>
+          ) : (
+            <p className="text-secondary border border-secondary rounded-md px-3 py-3 flex items-center mt-auto">
+              En rupture de stock
+            </p>
+          )}
         </>
       )}
     </article>
