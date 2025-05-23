@@ -5,11 +5,12 @@ import { BrandStickerProps } from './ProductContent';
 const ProductHeader = ({
   title,
   brand,
+  productRef,
 }: {
   title: string;
   brand?: BrandStickerProps;
+  productRef?: string;
 }) => {
-  // Todo mettre ID produit vérofiés dynamiquement
   return (
     <header>
       <div className="flex text-xl leading-general text-primary justify-between lg:items-end gap-5">
@@ -32,7 +33,10 @@ const ProductHeader = ({
         </div>
       </div>
       <div className="mt-1">
-        <div className="skeepers_product__stars" data-product-id="531034"></div>
+        <div
+          className="skeepers_product__stars"
+          data-product-id={productRef}
+        ></div>
       </div>
     </header>
   );

@@ -3,6 +3,7 @@ import { seoFields } from './SEO';
 
 export const PRODUCT_CARD_FRAGMENT = `
   databaseId
+  slug
   name
   onSale
   featured
@@ -56,6 +57,7 @@ export const GET_SINGLE_PRODUCT = gql`
         id
         stockQuantity
         sku
+        productRef
         isPro
         hasPose
         isKit

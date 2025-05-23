@@ -43,6 +43,7 @@ export interface ProductDocsProps {
 
 export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
+  productRef: string;
   isPro: boolean;
   hasPose: boolean;
   isKit: boolean;
@@ -139,6 +140,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
             <ProductHeader
               title={product?.name}
               brand={product?.productBrands?.nodes[0]}
+              productRef={product?.productRef}
             />
           </div>
           <section className="prix order-3 md:order-2">
