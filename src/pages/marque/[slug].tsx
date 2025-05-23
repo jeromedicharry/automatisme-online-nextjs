@@ -15,6 +15,11 @@ import { CategoryMenuProps } from '@/types/Categories';
 import { BrandContentProps } from '@/types/Brands';
 import Hero from '@/components/Brand/Hero';
 import BlocSAV from '@/components/Brand/BlocSav';
+import { PostCard } from '@/types/Posts';
+import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
+import Container from '@/components/container';
+// import Cta from '@/components/atoms/Cta';
+import BlocFeaturedProducts from '@/components/sections/blocs/BlocFeaturedProducts';
 
 const BrandPage = ({
   brand,
@@ -31,6 +36,17 @@ const BrandPage = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
+  const FeaturedProductsData = {
+    title: `L'univers produit de ${brand.name}`,
+    subtitle: '',
+    products: brand.products,
+    __typename: 'AcfPageBlocsBlocFeaturedProductsLayout' as const,
+    image: {
+      node: {
+        sourceUrl: '',
+      },
+    },
+  };
   return (
     <Layout
       meta={brand.seo}
@@ -51,7 +67,7 @@ const BrandPage = ({
         globalNote={brand.acfBrand.hero.globalNote}
         notes={brand.acfBrand.hero.notes}
       />
-      <div className="space-y-8">
+      <div className="space-y-8 mb-10 md:mb-16">
         {brand.acfBrand.bolcSav &&
           brand.acfBrand.bolcSav.text &&
           brand.acfBrand.bolcSav.image && (
@@ -60,7 +76,50 @@ const BrandPage = ({
               note={brand.acfBrand.hero.globalNote}
             />
           )}
+
+        {brand?.posts?.nodes?.length > 0 && (
+          <>
+            <Container>
+              <BlocIntroSmall
+                title={`Les derniers articles de ${brand.name}`}
+              />
+            </Container>
+            <div className="space-y-8">
+              {brand.posts.nodes.map((post: PostCard, key) => {
+                const bloc = {
+                  title: post.title,
+                  text: post.excerpt,
+                  image: {
+                    node: {
+                      sourceUrl: post.featuredImage?.node?.sourceUrl,
+                    },
+                  },
+                  slug: post.slug,
+                  isImageLeft: true,
+                  showNote: false,
+                  date: post.date,
+                  brand: brand.name,
+                };
+                if (key >= 2) {
+                  return null;
+                }
+                return <BlocSAV key={post.slug} bloc={bloc} slug={post.slug} />;
+              })}
+            </div>
+            {/* todo mettre le bon lien / logique pour la page de tous les articles de la marque */}
+            {/* <Container>
+              <Cta
+                variant="primary"
+                label={`Tous les articles de ${brand.name}`}
+                slug={`/marque/${brand.slug}`}
+              >
+                Voir tous les articles de {brand.name}
+              </Cta>
+            </Container> */}
+          </>
+        )}
       </div>
+      <BlocFeaturedProducts bloc={FeaturedProductsData} />
     </Layout>
   );
 };

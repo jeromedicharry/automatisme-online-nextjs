@@ -26,22 +26,24 @@ const BlocFeaturedProducts = ({
           <BlocIntroSmall title={bloc.title} subtitle={bloc.subtitle} />
 
           <div className="bg-primary-light md:flex rounded-t-xl md:rounded-2xl overflow-hidden">
-            <div className="shrink-0">
-              <Image
-                src={bloc.image?.node?.sourceUrl}
-                alt={bloc.title}
-                width={380}
-                height={579}
-                className="max-md:hidden aspect-card-featured-laptop h-full object-cover"
-              ></Image>
-              <Image
-                src={bloc.image?.node?.sourceUrl}
-                alt={bloc.title}
-                width={700}
-                height={408}
-                className="md:hidden aspect-card-featured-mobile object-cover"
-              ></Image>
-            </div>
+            {bloc.image?.node?.sourceUrl && (
+              <div className="shrink-0">
+                <Image
+                  src={bloc.image?.node?.sourceUrl}
+                  alt={bloc.title}
+                  width={380}
+                  height={579}
+                  className="max-md:hidden aspect-card-featured-laptop h-full object-cover"
+                ></Image>
+                <Image
+                  src={bloc.image?.node?.sourceUrl}
+                  alt={bloc.title}
+                  width={700}
+                  height={408}
+                  className="md:hidden aspect-card-featured-mobile object-cover"
+                ></Image>
+              </div>
+            )}
             <div className="pl-2 pr-4 pt-4 pb-12 overflow-hidden relative">
               <Swiper
                 spaceBetween={20}

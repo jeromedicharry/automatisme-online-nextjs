@@ -2,6 +2,8 @@ import Container from '@/components/container';
 
 import Image from 'next/image';
 import { Star } from '../atoms/AvisVerifiesReassurance';
+import Cta from '../atoms/Cta';
+import { formatDate } from '@/utils/functions/functions';
 
 interface BlocSAVProps {
   image: {
@@ -13,9 +15,19 @@ interface BlocSAVProps {
   text: string;
   isImageLeft: boolean;
   showNote: boolean;
+  date?: string;
+  brand?: string;
 }
 
-const BlocSAV = ({ bloc, note }: { bloc: BlocSAVProps; note: number }) => {
+const BlocSAV = ({
+  bloc,
+  note,
+  slug = '',
+}: {
+  bloc: BlocSAVProps;
+  note?: number;
+  slug?: string;
+}) => {
   return (
     <Container>
       <article
@@ -46,12 +58,18 @@ const BlocSAV = ({ bloc, note }: { bloc: BlocSAVProps; note: number }) => {
             />
           )}
 
+          {bloc.date && (
+            <div className="text-sm text-dark-grey leading-general font-bold">
+              Actualités {bloc.brand} - {formatDate(bloc.date)}
+            </div>
+          )}
+
           {bloc.text && (
             <div
               dangerouslySetInnerHTML={{
                 __html: bloc.text,
               }}
-              className="wysiwyg relative"
+              className="wysiwyg"
             />
           )}
 
@@ -71,6 +89,18 @@ const BlocSAV = ({ bloc, note }: { bloc: BlocSAVProps; note: number }) => {
                   <Star color="orange" />
                 </div>
               </div>
+            </div>
+          )}
+
+          {slug && (
+            <div className="w-fit mt-8 lg:mt-12">
+              <Cta
+                slug={`/articles/${slug}`}
+                label="Lire cet article"
+                variant="primaryHollow"
+              >
+                {"Lire l' article"}
+              </Cta>
             </div>
           )}
         </div>

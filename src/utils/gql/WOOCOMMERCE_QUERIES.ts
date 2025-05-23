@@ -400,6 +400,14 @@ export const FETCH_SINGLE_BRAND = gql`
           slug
         }
       }
+
+      products(first: 8) {
+        nodes {
+          ... on SimpleProduct {
+            ${PRODUCT_CARD_FRAGMENT}
+          }
+        }
+      }
     }
   }
 `;

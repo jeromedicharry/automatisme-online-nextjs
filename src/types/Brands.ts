@@ -1,5 +1,6 @@
 import { IMeta } from '@/components/Layout/Meta';
 import { PostsList } from './Posts';
+import { CardProductProps } from './blocTypes';
 
 export interface BrandContentProps {
   slug: string;
@@ -34,4 +35,7 @@ export interface BrandContentProps {
     };
   };
   posts: PostsList;
+  products: {
+    nodes: CardProductProps[];
+  };
 }
