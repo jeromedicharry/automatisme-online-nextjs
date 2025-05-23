@@ -14,6 +14,7 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 import { BrandContentProps } from '@/types/Brands';
 import Hero from '@/components/Brand/Hero';
+import BlocSAV from '@/components/Brand/BlocSav';
 
 const BrandPage = ({
   brand,
@@ -30,7 +31,6 @@ const BrandPage = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
-  console.log('breadcrumbs', brand.seo.breadcrumbs);
   return (
     <Layout
       meta={brand.seo}
@@ -51,6 +51,16 @@ const BrandPage = ({
         globalNote={brand.acfBrand.hero.globalNote}
         notes={brand.acfBrand.hero.notes}
       />
+      <div className="space-y-8">
+        {brand.acfBrand.bolcSav &&
+          brand.acfBrand.bolcSav.text &&
+          brand.acfBrand.bolcSav.image && (
+            <BlocSAV
+              bloc={brand.acfBrand.bolcSav}
+              note={brand.acfBrand.hero.globalNote}
+            />
+          )}
+      </div>
     </Layout>
   );
 };

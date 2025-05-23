@@ -5,7 +5,6 @@ import { slugify } from '@/utils/functions/functions';
 import Image from 'next/image';
 
 const BlocArticle = ({ bloc }: { bloc: BlocArticleProps }) => {
-  // todo manage mobile
   return (
     <Container>
       <article
@@ -24,7 +23,7 @@ const BlocArticle = ({ bloc }: { bloc: BlocArticleProps }) => {
           </div>
         )}
 
-        <div className="w-full flex flex-col justify-center px-16 py-8 gap-4">
+        <div className="w-full flex flex-col justify-center px-6 py-6 md:px-8 lg:px-16 md:py-8 gap-4">
           <div
             className={`max-w-[180px] absolute bottom-[-8px] ${bloc.isImageLeft ? 'right-[-8px]' : 'left-[-8px] rotate-90'}`}
           >

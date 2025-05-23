@@ -180,7 +180,7 @@ html {
   margin-bottom: 0.5rem;
   padding-left: 1rem;
   background-image: url('/images/bullet.svg');
-  background-position: left center;
+  background-position: left 4px;
   background-size: 9px;
   background-repeat: no-repeat;
 }
