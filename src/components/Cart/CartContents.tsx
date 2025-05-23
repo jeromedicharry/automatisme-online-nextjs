@@ -15,6 +15,7 @@ import {
 } from '@/utils/gql/GQL_MUTATIONS';
 import { useCartOperations } from '@/hooks/useCartOperations';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
+import Link from 'next/link';
 
 // Nouvelle fonction adaptée pour les produits formatés
 const getUpdatedItemsFromFormatted = (
@@ -154,13 +155,15 @@ const CartContents = () => {
           <div key={item.cartKey}>
             <div className="flex items-start relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
               <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
-                <Image
-                  src={item.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
-                  alt={item.name || 'Produit Automatisme Online'}
-                  width={200}
-                  height={200}
-                  className="aspect-square object-contain"
-                />
+                <Link href={`/produits/${item.slug}`}>
+                  <Image
+                    src={item.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
+                    alt={item.name || 'Produit Automatisme Online'}
+                    width={200}
+                    height={200}
+                    className="aspect-square object-contain"
+                  />
+                </Link>
               </div>
               <div className="flex-grow mx-4 self-center">
                 <h2 className="font-bold text-primary">{item.name}</h2>
