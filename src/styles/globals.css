@@ -176,13 +176,20 @@ html {
   margin-bottom: 0;
 }
 
-.wysiwyg li {
+.wysiwyg ul li {
   margin-bottom: 0.5rem;
   padding-left: 1rem;
   background-image: url('/images/bullet.svg');
   background-position: left 4px;
   background-size: 9px;
   background-repeat: no-repeat;
+}
+.wysiwyg ol {
+  margin-left: 20px;
+}
+.wysiwyg ol li {
+  list-style: number;
+  margin-bottom: 0.5rem;
 }
 .wysiwyg li:last-child {
   margin-bottom: 1rem;

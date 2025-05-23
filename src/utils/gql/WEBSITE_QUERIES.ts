@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 import { blocsFields, sliderAdvicesFields } from './BLOCS_FRAGMENTS';
 import { seoFields } from './SEO';
+import { POST_CARD_FRAGMENT } from './WOOCOMMERCE_QUERIES';
 
 // Elements globaux
 
@@ -295,6 +296,48 @@ export const GET_INSTALLERS = gql`
           email
           phone
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
+export const GET_SINGLE_POST = gql`
+  query GET_SINGLE_POST($id: ID!) {
+    post(id: $id, idType: SLUG) {
+      
+      title
+      slug
+      ${seoFields}
+      date
+      content
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
+      productBrands {
+        nodes {
+          name
+          posts(first: 3) {
+            nodes {
+              ${POST_CARD_FRAGMENT}
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_ALL_POSTS_WITH_PAGINATION = gql`
+  query FETCH_ALL_POSTS_WITH_PAGINATION($first: Int!, $after: String) {
+    posts(first: $first, after: $after) {
+      nodes {
+        slug
       }
       pageInfo {
         hasNextPage

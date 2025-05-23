@@ -365,6 +365,18 @@ export const FETCH_ALL_BRANDS_WITH_PAGINATION = gql`
   }
 `;
 
+export const POST_CARD_FRAGMENT = `
+  featuredImage {
+    node {
+      sourceUrl(size: MEDIUM)
+    }
+  }
+  title
+  date
+  excerpt
+  slug
+`;
+
 export const FETCH_SINGLE_BRAND = gql`
   query FETCH_SINGLE_BRAND($id: ID!, $idType: ProductBrandIdType = SLUG) {
     productBrand(id: $id, idType: $idType) {
@@ -401,15 +413,7 @@ export const FETCH_SINGLE_BRAND = gql`
       }
       posts(first: 2) {
         nodes {
-          featuredImage {
-            node {
-              sourceUrl(size: MEDIUM)
-            }
-          }
-          title
-          date
-          excerpt
-          slug
+          ${POST_CARD_FRAGMENT}
         }
       }
 

@@ -31,7 +31,7 @@ const BlocSAV = ({
   return (
     <Container>
       <article
-        className={`scroll-m-6 max-md:max-w-md mx-auto mb-12 md:mb-16 rounded-2xl gap-5 overflow-hidden relative flex flex-col md:items-stretch lg:min-h-[500px] ${bloc.isImageLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+        className={`scroll-m-6 max-md:max-w-md mx-auto mb-12 md:mb-16 rounded-2xl gap-5 overflow-visible relative flex flex-col md:items-stretch lg:min-h-[500px] ${bloc.isImageLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}
       >
         {bloc?.image?.node?.sourceUrl && (
           <div className="w-full md:w-[340px] xxl:w-[440px] shrink-0">
@@ -95,7 +95,7 @@ const BlocSAV = ({
           {slug && (
             <div className="w-fit mt-8 lg:mt-12">
               <Cta
-                slug={`/articles/${slug}`}
+                slug={`/blog/${slug}`}
                 label="Lire cet article"
                 variant="primaryHollow"
               >
