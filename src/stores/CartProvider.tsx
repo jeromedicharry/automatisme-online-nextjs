@@ -19,7 +19,6 @@ export interface Product {
   totalPrice: number;
   image: Image;
   productId: number;
-  slug: string;
   hasPose?: boolean; // Indique si le produit est éligible à l'installation
   addInstallation?: boolean; // Indique si l'installation est sélectionnée
   installationPrice?: number; // Prix de l'installation

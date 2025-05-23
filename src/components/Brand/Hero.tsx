@@ -39,7 +39,9 @@ const Hero = ({
                     className="max-h-[90px] max-w-[250px] object-cover"
                   />
                 ) : (
-                  title
+                  <div className="font-bold text-xl md:text-3xl leading-general">
+                    {title}
+                  </div>
                 )}
               </h1>
               <div
@@ -77,13 +79,18 @@ const Hero = ({
           </div>
         </div>
       </Container>
-      <Image
-        src={image}
-        width={1000}
-        height={1000}
-        alt={title}
-        className="lg:absolute top-0 right-0 h-full object-cover lg:w-2/5 xl:w-1/3 xl:max-w-[576px]"
-      />
+
+      {image ? (
+        <Image
+          src={image}
+          width={1000}
+          height={1000}
+          alt={title}
+          className="lg:absolute top-0 right-0 h-full object-cover lg:w-2/5 xl:w-1/3 xl:max-w-[576px]"
+        />
+      ) : (
+        <div className="bg-secondary-light lg:absolute top-0 right-0 h-full object-cover lg:w-2/5 xl:w-1/3 xl:max-w-[576px]"></div>
+      )}
     </section>
   );
 };

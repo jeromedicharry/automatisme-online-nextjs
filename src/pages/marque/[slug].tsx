@@ -63,7 +63,7 @@ const BrandPage = ({
         description={brand.description}
         logo={brand.thumbnailUrl}
         breadCrumbs={brand.seo?.breadcrumbs || []}
-        image={brand.acfBrand.hero.image.node.sourceUrl}
+        image={brand.acfBrand.hero.image?.node?.sourceUrl}
         globalNote={brand.acfBrand.hero.globalNote}
         notes={brand.acfBrand.hero.notes}
       />
