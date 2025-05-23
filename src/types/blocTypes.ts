@@ -64,6 +64,7 @@ export interface CardProductProps {
     };
   };
   isKit?: boolean;
+  hasPose?: boolean;
   price: string;
   salePrice: string;
   isPro: boolean;

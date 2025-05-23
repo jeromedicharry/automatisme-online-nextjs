@@ -22,7 +22,7 @@ interface IntermediateCartContextType {
   openCartModal: (product: any) => void;
   closeCartModal: () => void;
   relatedProducts: CardProductProps[];
-  isKit: boolean;
+  hasPose: boolean;
   installationData?: installationData | null;
 }
 
@@ -39,7 +39,7 @@ export const InterMediateCartProvider: React.FC<{
   const [relatedProducts, setRelatedProducts] = useState<CardProductProps[]>(
     [],
   );
-  const [isKit, setIsKit] = useState(false);
+  const [hasPose, setHasPose] = useState(false);
   const [installationData, setInstallationData] = useState(null);
 
   const openCartModal = useCallback(async (product: CardProductProps) => {
@@ -51,8 +51,9 @@ export const InterMediateCartProvider: React.FC<{
       },
     });
     const related = sideData?.data?.product?.upsell?.nodes || [];
-    const isKit = sideData?.data?.product?.isKit || false;
-    if (isKit) {
+    const hasPose = sideData?.data?.product?.hasPose || false;
+
+    if (hasPose) {
       const installationDataRes = await client.query({
         query: GET_INSTALLATION_CTA,
       });
@@ -65,7 +66,7 @@ export const InterMediateCartProvider: React.FC<{
       setInstallationData(null);
     }
     setRelatedProducts(related);
-    setIsKit(isKit);
+    setHasPose(hasPose);
     setIsCartModalOpen(true);
   }, []);
 
@@ -73,7 +74,7 @@ export const InterMediateCartProvider: React.FC<{
     setIsCartModalOpen(false);
     setCurrentAddedProduct(null);
     setRelatedProducts([]);
-    setIsKit(false);
+    setHasPose(false);
   }, []);
 
   return (
@@ -84,7 +85,7 @@ export const InterMediateCartProvider: React.FC<{
         openCartModal,
         closeCartModal,
         relatedProducts,
-        isKit,
+        hasPose,
         installationData,
       }}
     >

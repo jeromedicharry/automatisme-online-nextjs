@@ -12,6 +12,7 @@ interface Image {
 
 export interface Product {
   cartKey: string;
+  slug: string;
   name: string;
   qty: number;
   price: number;
@@ -19,6 +20,9 @@ export interface Product {
   image: Image;
   productId: number;
   slug: string;
+  hasPose?: boolean; // Indique si le produit est éligible à l'installation
+  addInstallation?: boolean; // Indique si l'installation est sélectionnée
+  installationPrice?: number; // Prix de l'installation
 }
 
 export interface RootObject {
@@ -59,7 +63,6 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
       }
     }
   }, []);
-
   return (
     <CartContext.Provider value={{ cart, setCart }}>
       {children}

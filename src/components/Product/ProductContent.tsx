@@ -17,6 +17,7 @@ import {
 } from '../Cart/CartReassurance';
 import ProductReassurance from './ProductReassurance';
 import { getProductAvailability } from '@/utils/functions/deliveryTime';
+import { useState } from 'react';
 
 export interface BrandStickerProps {
   name: string;
@@ -74,6 +75,7 @@ export interface ProductContentProps extends CardProductProps {
 
 const ProductContent = ({ product }: { product: ProductContentProps }) => {
   const { loggedIn, isPro } = useAuth();
+  const [addInstallation, setAddInstallation] = useState(true);
 
   const NotProConnectedAlternate = () => {
     if (!loggedIn) {
@@ -117,8 +119,8 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
   // mettre sur mobile ajout favioris + ajout au panier
   // todo voir à ajouter plusieurs produits à la volée
   // todo gérer les produits remplacés (à la place du prix, bouton vers le produit de remplacemnt)
-  // todo gérer les produits pros (si pas pro, on n'affiche pas le prix, bouton avec lien vers le compte pour passer en pro)
   // todo gérer la réassurance : durée d'expédition dynamique selon produit ? + selon en stock ou pas
+  // todo gérer l'ajout au panier avec installation
 
   const { deliveryLabel, isSellable } = getProductAvailability({
     stock: product.stockQuantity,
@@ -163,6 +165,13 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                         />
                       </div>
                     )}
+                    <AddToCart
+                      variant="primary"
+                      product={product}
+                      addInstallation={
+                        product?.hasPose ? addInstallation : false
+                      }
+                    ></AddToCart>
                     {isSellable ? (
                       <AddToCart
                         variant="primary"
@@ -191,6 +200,8 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                       name="option"
                       value="option1"
                       className="hidden peer"
+                      checked={addInstallation}
+                      onChange={() => setAddInstallation(true)}
                     />
                     <span className="block relative font-bold px-5 py-3 border border-primary rounded-md peer-checked:bg-primary-light duration-300 md:min-w-[220px]">
                       <div className="absolute font-normal bg-secondary text-white text-xs leading-general px-1 py-1/2 rounded-[3px] top-0 -translate-y-1/2 right-4">
@@ -208,6 +219,8 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                       name="option"
                       value="option2"
                       className="hidden peer"
+                      checked={!addInstallation}
+                      onChange={() => setAddInstallation(false)}
                     />
                     <span className="flex items-center px-5 py-3 font-bold border h-full border-primary rounded-md peer-checked:bg-primary-light duration-300 md:min-w-[220px]">
                       Sans installation

@@ -9,8 +9,12 @@ import Cta from '../atoms/Cta';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 
 // Utils
-import { UPDATE_CART } from '@/utils/gql/GQL_MUTATIONS';
+import {
+  UPDATE_CART,
+  UPDATE_CART_ITEM_INSTALLATION,
+} from '@/utils/gql/GQL_MUTATIONS';
 import { useCartOperations } from '@/hooks/useCartOperations';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 // Nouvelle fonction adaptée pour les produits formatés
 const getUpdatedItemsFromFormatted = (
@@ -45,6 +49,15 @@ const CartContents = () => {
       },
     },
   );
+
+  const [
+    updateCartItemInstallation,
+    { loading: updateInstallationProcessing },
+  ] = useMutation(UPDATE_CART_ITEM_INSTALLATION, {
+    onCompleted: async () => {
+      await refetchCart();
+    },
+  });
 
   // Fonction pour gérer le changement de quantité d'un produit
   const handleQuantityChangeFormatted = async (
@@ -98,6 +111,31 @@ const CartContents = () => {
     }
   };
 
+  // Nouvelle fonction pour gérer l'ajout/suppression d'installation
+  const handleInstallationToggle = async (
+    cartKey: string,
+    currentInstallationStatus?: boolean,
+  ) => {
+    if (updateInstallationProcessing) {
+      return;
+    }
+
+    try {
+      await updateCartItemInstallation({
+        variables: {
+          clientMutationId: uuidv4(),
+          cartItemKey: cartKey,
+          addInstallation: !currentInstallationStatus,
+        },
+      });
+
+      // 🚀 Après la mise à jour, récupère à nouveau le panier
+      refetchCart();
+    } catch (error) {
+      console.error('Erreur mise à jour installation:', error);
+    }
+  };
+
   // Vérification si le panier est chargé
   if (!cart || !cart.products) {
     return (
@@ -113,21 +151,18 @@ const CartContents = () => {
 
       <div className="flex flex-col gap-6">
         {cart.products.map((item) => (
-          <div
-            key={item.cartKey}
-            className="flex items-start justify-start p-4 gap-4 lg:gap-8 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300"
-          >
-            <div className="xs:flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
-              <Image
-                src={item.image.sourceUrl || '/placeholder.png'}
-                alt={item.name || 'Produit Automatisme Online'}
-                width={200}
-                height={200}
-                className="aspect-square object-contain"
-              />
-            </div>
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:w-full">
-              <div className="flex-grow lg:mx-4 self-center">
+          <div key={item.cartKey}>
+            <div className="flex items-start relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
+              <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
+                <Image
+                  src={item.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
+                  alt={item.name || 'Produit Automatisme Online'}
+                  width={200}
+                  height={200}
+                  className="aspect-square object-contain"
+                />
+              </div>
+              <div className="flex-grow mx-4 self-center">
                 <h2 className="font-bold text-primary">{item.name}</h2>
                 <p>Avis vérifiés</p>
                 <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
@@ -140,7 +175,7 @@ const CartContents = () => {
                   Expédition sous 10 jours
                 </div>
               </div>
-              <div className="flex items-shrink w-fit">
+              <div className="flex items-shrink">
                 <input
                   type="number"
                   min="1"
@@ -162,14 +197,78 @@ const CartContents = () => {
                   }
                   variant="secondaryHollow"
                   size="default"
-                  additionalClass={`max-w-fit min-w-unset ${
+                  additionalClass={`max-w-fit min-w-0 ${
                     updateCartProcessing ? 'opacity-50 pointer-events-none' : ''
                   }`}
                 >
                   Supprimer
                 </Cta>
               </div>
+              {item.hasPose && !item.addInstallation && (
+                <div className="absolute right-4 bottom-4">
+                  <Cta
+                    slug="#"
+                    variant={`primary`}
+                    label={`${"Ajouter une prestation d'installation"}`}
+                    handleButtonClick={() =>
+                      handleInstallationToggle(
+                        item.cartKey,
+                        item.addInstallation ?? false,
+                      )
+                    }
+                  >
+                    {"Ajouter une prestation d'installation"}
+                  </Cta>
+                </div>
+              )}
             </div>
+            {item.addInstallation && item.installationPrice && (
+              <div className="flex items-start relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
+                <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
+                  <Image
+                    src={PRODUCT_IMAGE_PLACEHOLDER}
+                    alt={item.name || 'Installation Automatisme Online'}
+                    width={200}
+                    height={200}
+                    className="aspect-square object-contain"
+                  />
+                </div>
+                <div className="flex-grow mx-4 self-center">
+                  <h2 className="text-primary">
+                    <div className="font-bold">
+                      {"Prestation d'installation pour "}
+                    </div>
+                    <div className="text-dark-grey font-medium truncate max-w-[250px]">
+                      {`${item.name}`}
+                    </div>
+                    <div className="text-secondary font-bold">{`Quantité x ${item.qty}`}</div>
+                  </h2>
+                  <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
+                    {item.installationPrice.toFixed(2)}€{' '}
+                    <span className="absolute right-0 top-1 text-xs">
+                      {/* {isPro ? 'HT' : 'TTC'} */}
+                    </span>
+                  </p>
+                </div>
+                {item.hasPose && item.addInstallation && (
+                  <div className="absolute right-4 bottom-4">
+                    <Cta
+                      slug="#"
+                      variant={'primaryHollow'}
+                      label={`${"Supprimer la prestation d'installation"}`}
+                      handleButtonClick={() =>
+                        handleInstallationToggle(
+                          item.cartKey,
+                          item.addInstallation ?? false,
+                        )
+                      }
+                    >
+                      {"Supprimer la prestation d'installation"}
+                    </Cta>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

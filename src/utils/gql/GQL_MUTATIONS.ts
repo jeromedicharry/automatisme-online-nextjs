@@ -47,3 +47,32 @@ export const UPDATE_CART = gql`
     }
   }
 `;
+
+export const UPDATE_CART_ITEM_INSTALLATION = gql`
+  mutation UpdateCartItemInstallation(
+    $cartItemKey: String!
+    $addInstallation: Boolean!
+  ) {
+    updateCartItemInstallation(
+      input: { cartItemKey: $cartItemKey, addInstallation: $addInstallation }
+    ) {
+      success
+      message
+      cart {
+        contents {
+          nodes {
+            key
+            addInstallation
+            installationPrice
+            product {
+              node {
+                name
+              }
+            }
+          }
+        }
+        total
+      }
+    }
+  }
+`;

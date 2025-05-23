@@ -22,7 +22,7 @@ export const useCartOperations = () => {
     },
     onError: () => {
       console.error('Erreur lors de la récupération du panier');
-    }
+    },
   });
 
   // Effet pour gérer la connexion
@@ -37,6 +37,6 @@ export const useCartOperations = () => {
   return {
     cart,
     refetchCart: refetch,
-    isPro
+    isPro,
   };
 };

@@ -20,7 +20,7 @@ const CartModal: React.FC = () => {
     closeCartModal,
     currentAddedProduct,
     relatedProducts,
-    isKit,
+    hasPose,
     installationData,
   } = useIntermediateCart();
 
@@ -57,56 +57,55 @@ const CartModal: React.FC = () => {
           )}
 
           {/* Produits associés */}
-          {isKit ||
-            (relatedProducts.length > 0 && (
-              <div className="intermediate-cart-products-slider">
-                <h2 className="text-xl font-medium leading-general border-l-[3px] border-secondary pl-2 text-primary">
-                  {'Fréquemment acheté ensemble'}
-                </h2>
-                <div className="overflow-hidden relative pb-12 lg:pb-16">
-                  <Swiper
-                    spaceBetween={20}
-                    modules={[Navigation]}
-                    breakpoints={{
-                      0: {
-                        slidesPerView: 1.2,
-                      },
-                      540: {
-                        slidesPerView: 'auto',
-                      },
-                    }}
-                    autoHeight={false}
-                    navigation={{ nextEl: '.next', prevEl: '.prev' }}
-                    wrapperClass="px-2 pt-4 pb-5 flex item-stretch"
-                  >
-                    {isKit && installationData && (
-                      <SwiperSlide>
-                        <CardInstallation installation={installationData} />
-                      </SwiperSlide>
-                    )}
-                    {relatedProducts.map((product, key) => (
-                      <SwiperSlide key={key}>
-                        <Cardproduct product={product} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                  <nav className="navigation flex gap-3 absolute right-4 md:right-6 bottom-5">
-                    <SliderPrevNextButton
-                      type="prev"
-                      variant="white"
-                      ariaLabel="Produits précédents"
-                      classSelector="prev"
-                    />
-                    <SliderPrevNextButton
-                      type="next"
-                      variant="primary"
-                      ariaLabel="Produits suivants"
-                      classSelector="next"
-                    />
-                  </nav>
-                </div>
+          {(hasPose || relatedProducts.length > 0) && (
+            <div className="intermediate-cart-products-slider">
+              <h2 className="text-xl font-medium leading-general border-l-[3px] border-secondary pl-2 text-primary">
+                {'Fréquemment acheté ensemble'}
+              </h2>
+              <div className="overflow-hidden relative pb-6">
+                <Swiper
+                  spaceBetween={20}
+                  modules={[Navigation]}
+                  breakpoints={{
+                    0: {
+                      slidesPerView: 1.2,
+                    },
+                    540: {
+                      slidesPerView: 'auto',
+                    },
+                  }}
+                  autoHeight={false}
+                  navigation={{ nextEl: '.next', prevEl: '.prev' }}
+                  wrapperClass="px-2 pt-4 pb-2 flex item-stretch"
+                >
+                  {hasPose && installationData && (
+                    <SwiperSlide>
+                      <CardInstallation installation={installationData} />
+                    </SwiperSlide>
+                  )}
+                  {relatedProducts.map((product, key) => (
+                    <SwiperSlide key={key}>
+                      <Cardproduct product={product} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <nav className="navigation flex gap-3 absolute right-4 md:right-6 bottom-5">
+                  <SliderPrevNextButton
+                    type="prev"
+                    variant="white"
+                    ariaLabel="Produits précédents"
+                    classSelector="prev"
+                  />
+                  <SliderPrevNextButton
+                    type="next"
+                    variant="primary"
+                    ariaLabel="Produits suivants"
+                    classSelector="next"
+                  />
+                </nav>
               </div>
-            ))}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="mt-auto flex flex-col gap-2 md:flex-row">

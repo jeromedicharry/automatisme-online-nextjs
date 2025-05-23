@@ -238,6 +238,7 @@ export const PRODUCT_CART_ITEM = `product {
     }
     ... on SimpleProduct {
       price(format: RAW)
+      hasPose
     }
   }
 }
@@ -254,6 +255,8 @@ export const GET_CART = gql`
           total(format: RAW)
           subtotal(format: RAW)
           subtotalTax(format: RAW)
+          installationPrice
+          addInstallation
         }
       }
 
@@ -296,6 +299,7 @@ export const GET_RELATED_PRODUCT_SIDE_DATA = gql`
   query GET_PRODUCT_SIDE_DATA ($id: ID!, $idType: ProductIdTypeEnum = DATABASE_ID) {
     product(id: $id, idType: $idType) {
       ... on SimpleProduct {
+        hasPose
         upsell {
           nodes {
             ... on SimpleProduct {

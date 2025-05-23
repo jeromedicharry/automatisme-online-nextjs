@@ -11,13 +11,17 @@ import { useIntermediateCart } from '@/stores/IntermediateCartContext';
 import { useCartOperations } from '@/hooks/useCartOperations';
 
 // GraphQL
-import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
+import {
+  ADD_TO_CART,
+  UPDATE_CART_ITEM_INSTALLATION,
+} from '@/utils/gql/GQL_MUTATIONS';
 import { CardProductProps } from '@/types/blocTypes';
 
 const AddToCart = ({
   product,
   variant = 'primaryHollow',
   isSingleProduct = false,
+  addInstallation = false,
 }: {
   product: CardProductProps;
   variant?:
@@ -26,6 +30,7 @@ const AddToCart = ({
     | 'primaryWhite'
     | 'secondary'
     | 'secondaryHollow';
+  addInstallation?: boolean;
   isSingleProduct?: boolean;
 }) => {
   const { openCartModal } = useIntermediateCart();
@@ -38,11 +43,41 @@ const AddToCart = ({
     productId,
   };
 
+  // Mutation pour ajouter l'installation après ajout au panier
+  const [updateCartItemInstallation] = useMutation(
+    UPDATE_CART_ITEM_INSTALLATION,
+    {
+      onCompleted: async () => {
+        await refetchCart();
+      },
+    },
+  );
+
+  // Gestion de l'ajout d'installation après ajout au panier
+  const handleAddInstallation = async (cartKey: string) => {
+    try {
+      await updateCartItemInstallation({
+        variables: {
+          clientMutationId: uuidv4(),
+          cartItemKey: cartKey,
+          addInstallation: true,
+        },
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de l'installation:", error);
+    }
+  };
+
   const [addToCart, { loading: addToCartLoading }] = useMutation(ADD_TO_CART, {
     variables: {
       input: productQueryInput,
     },
-    onCompleted: async () => {
+    onCompleted: async (data) => {
+      // Si on a sélectionné l'installation et que le produit a été ajouté avec succès
+      if (addInstallation && data?.addToCart?.cartItem?.key) {
+        await handleAddInstallation(data.addToCart.cartItem.key);
+      }
+
       await refetchCart();
       openCartModal(product);
     },
@@ -56,7 +91,9 @@ const AddToCart = ({
   return (
     <Cta
       handleButtonClick={handleAddToCart}
-      label="Ajouter au panier"
+      label={
+        addInstallation ? 'AJOUTER AVEC INSTALLATION' : 'AJOUTER AU PANIER'
+      }
       variant={variant}
       size="large"
       slug="#"
@@ -64,7 +101,7 @@ const AddToCart = ({
         addToCartLoading ? 'opacity-50 pointer-events-none' : ''
       }`}
     >
-      AJOUTER AU PANIER
+      {addInstallation ? 'AJOUTER AVEC INSTALLATION' : 'AJOUTER AU PANIER'}
     </Cta>
   );
 };

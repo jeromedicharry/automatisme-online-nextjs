@@ -36,6 +36,7 @@ interface IProductNode {
   productId: number;
   price: string;
   upsell: { nodes: IProduct[] };
+  hasPose?: boolean;
 }
 
 interface IProduct {
@@ -51,6 +52,8 @@ export interface IProductRootObject {
   quantity: number;
   total: string;
   subtotal: string;
+  addInstallation?: boolean;
+  installationPrice?: number;
 }
 
 type TUpdatedItems = { key: string; quantity: number }[];
@@ -81,6 +84,7 @@ interface IFormattedCartProps {
     total: string;
     subtotal: string;
     totalTax: string;
+    feeTotal?: string;
   };
 }
 
@@ -181,6 +185,11 @@ export const getFormattedCart = (
             srcSet: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
             title: givenProduct.name,
           },
+      addInstallation: givenProductItem.addInstallation,
+      installationPrice: givenProductItem?.installationPrice
+        ? givenProductItem?.installationPrice * givenProductItem?.quantity
+        : 0,
+      hasPose: givenProduct.hasPose,
       // upsell: givenProduct.upsell || { nodes: [] },
     };
 
