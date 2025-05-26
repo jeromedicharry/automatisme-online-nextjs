@@ -33,9 +33,9 @@ export interface BrandContentProps {
       };
       showNote: boolean;
     };
+    featuredProducts: {
+      nodes: CardProductProps[];
+    };
   };
   posts: PostsList;
-  products: {
-    nodes: CardProductProps[];
-  };
 }

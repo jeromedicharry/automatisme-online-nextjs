@@ -411,18 +411,18 @@ export const FETCH_SINGLE_BRAND = gql`
           }
           showNote
         }
+
+        featuredProducts {
+          nodes {
+            ... on SimpleProduct {
+            ${PRODUCT_CARD_FRAGMENT}
+            }
+          }
+        }
       }
       posts(first: 2) {
         nodes {
           ${POST_CARD_FRAGMENT}
-        }
-      }
-
-      products(first: 8) {
-        nodes {
-          ... on SimpleProduct {
-            ${PRODUCT_CARD_FRAGMENT}
-          }
         }
       }
     }

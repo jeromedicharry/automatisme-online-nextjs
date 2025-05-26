@@ -39,7 +39,7 @@ const BrandPage = ({
   const FeaturedProductsData = {
     title: `L'univers produit de ${brand.name}`,
     subtitle: '',
-    products: brand.products,
+    products: brand.acfBrand.featuredProducts || [],
     __typename: 'AcfPageBlocsBlocFeaturedProductsLayout' as const,
     image: {
       node: {
