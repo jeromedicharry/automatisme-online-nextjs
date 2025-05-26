@@ -9,6 +9,7 @@ import { Navigation } from 'swiper/modules';
 
 import Cardproduct from '@/components/cards/CardProduct';
 import SliderPrevNextButton from '@/components/atoms/SliderPrevNextButton';
+import Script from 'next/script';
 
 const BlocFeaturedProducts = ({
   bloc,
@@ -84,6 +85,12 @@ const BlocFeaturedProducts = ({
           </div>
         </div>
       </section>
+      <Script
+        defer
+        strategy="afterInteractive"
+        src="https://widgets.rr.skeepers.io/product/076a2ab0-6d91-8ec4-1dc0-ff5c0501b805/14849b72-094b-478b-a7a8-23978e2bb2de.js"
+        charSet="utf-8"
+      />
     </Container>
   );
 };

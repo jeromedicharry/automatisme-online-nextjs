@@ -32,6 +32,7 @@ import EmptyElement from '@/components/EmptyElement';
 import { SearchSvg } from '@/components/sections/blocs/BlocFaq';
 import BlocReassurance from '@/components/sections/blocs/BlocReassurance';
 import { BlocReassuranceProps } from '@/types/blocTypes';
+import Script from 'next/script';
 
 interface Filters {
   [key: string]: string;
@@ -302,6 +303,12 @@ const CategoryPage = ({
           bloc={blocReassuranceFix as BlocReassuranceProps}
         />
       </Container>
+      <Script
+        defer
+        strategy="afterInteractive"
+        src="https://widgets.rr.skeepers.io/product/076a2ab0-6d91-8ec4-1dc0-ff5c0501b805/14849b72-094b-478b-a7a8-23978e2bb2de.js"
+        charSet="utf-8"
+      />
     </Layout>
   );
 };

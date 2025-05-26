@@ -75,6 +75,7 @@ export interface CardProductProps {
   stockQuantity: number;
   backorders: 'YES' | 'NO';
   restockingLeadTime: number;
+  productRef: string;
 }
 
 export interface BlocFeaturedProductsProps {

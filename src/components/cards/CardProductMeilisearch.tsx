@@ -63,6 +63,7 @@ const CardProductMeilisearch = ({
     stockQuantity: meiliProduct.meta?._stock || 0,
     backorders: meiliProduct.meta?._backorders || 'NO',
     restockingLeadTime: meiliProduct.meta?._restocking_lead_time || 0,
+    productRef: meiliProduct.meta?._product_ref || '',
   });
 
   const { isSellable } = getProductAvailability({
@@ -109,7 +110,14 @@ const CardProductMeilisearch = ({
       <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
         {product?.meta?._product_ref || 'Référence produit'}
       </p>
-      {/* <p className="mb-[10px]">Widget Avis vérifiés</p> */}
+      {product?.meta?._product_ref && (
+        <div className="">
+          <div
+            className="skeepers_product__stars"
+            data-product-id={product?.meta?._product_ref}
+          ></div>
+        </div>
+      )}
       {product?.meta?._is_pro && !isPro ? (
         <div className="mt-auto">
           <Cta

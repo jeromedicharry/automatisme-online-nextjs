@@ -57,7 +57,14 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
       <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
         {product?.sku}
       </p>
-      {/* <p className="mb-[10px]">Widget Avis vérifiés</p> */}
+      {product?.productRef && (
+        <div className="">
+          <div
+            className="skeepers_product__stars"
+            data-product-id={product?.productRef}
+          ></div>
+        </div>
+      )}
       {product?.isPro && !isPro ? (
         <div className="mt-auto">
           <Cta

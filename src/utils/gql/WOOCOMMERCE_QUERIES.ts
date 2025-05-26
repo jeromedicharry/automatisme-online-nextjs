@@ -23,6 +23,7 @@ export const PRODUCT_CARD_FRAGMENT = `
   isKit
   stockQuantity
   backorders
+  productRef
 `;
 
 // todo gérer les brands
