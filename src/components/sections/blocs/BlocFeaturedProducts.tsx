@@ -16,7 +16,13 @@ const BlocFeaturedProducts = ({
 }: {
   bloc: BlocFeaturedProductsProps;
 }) => {
-  if (!bloc || !bloc.products || bloc.products.nodes.length === 0) return null;
+  if (
+    !bloc ||
+    !bloc.products ||
+    !bloc.products.nodes ||
+    bloc.products.nodes.length === 0
+  )
+    return null;
 
   // todo manage link slug
   // todo manage arrows design and logic active inactive hover etc + make a component for arrows nav
