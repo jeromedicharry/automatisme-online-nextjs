@@ -10,6 +10,7 @@ import { CategoryMenuProps } from '@/types/Categories';
 import { Wifi } from '@/components/SVG/Icons';
 import BlocIntroForm from '@/components/atoms/BlocIntroForm';
 import { ThemeSettingsProps } from '@/types/CptTypes';
+import ContactForm from '@/components/CF7Forms/Contact';
 
 // import { CardProductProps } from '@/types/blocTypes';
 
@@ -52,62 +53,7 @@ const contactPage = ({
                 title={themeSettings?.contactTitle || 'Contactez-nous'}
               />
             </div>
-            <form action="" className="space-y-3 contact">
-              <div className="grid md:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  placeholder="Nom *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-                <input
-                  type="text"
-                  name="firstName"
-                  id="firstName"
-                  placeholder="Prénom"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                />
-              </div>
-              <div className="">
-                <input
-                  type="tel"
-                  name="phone"
-                  id="phone"
-                  placeholder="Téléphone *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-              </div>
-              <div className="">
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Email"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-              </div>
-              <div className="">
-                <textarea
-                  name="message"
-                  id="message"
-                  placeholder="Message"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="bg-secondary py-2 px-4 rounded-sm text-white text-sm font-bold"
-                >
-                  Envoyer
-                </button>
-              </div>
-            </form>
+            <ContactForm />
           </div>
           <div
             className="my-16 wysiwyg"
