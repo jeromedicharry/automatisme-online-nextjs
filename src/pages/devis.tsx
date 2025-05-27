@@ -11,6 +11,7 @@ import { Wifi } from '@/components/SVG/Icons';
 import { useRouter } from 'next/router';
 import BlocIntroForm from '@/components/atoms/BlocIntroForm';
 import { ThemeSettingsProps } from '@/types/CptTypes';
+import DevisInstaller from '@/components/CF7Forms/DevisInstaller';
 
 // import { CardProductProps } from '@/types/blocTypes';
 
@@ -55,108 +56,7 @@ const Devis = ({
                 subtitle="nous lui envoyons votre demande et vous recontacterons en moins de 48h"
               />
             </div>
-            <form action="" className="space-y-3 contact">
-              <div className="grid md:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  placeholder="Nom *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-                <input
-                  type="text"
-                  name="firstName"
-                  id="firstName"
-                  placeholder="Prénom *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-                <input
-                  type="text"
-                  name="company"
-                  id="company"
-                  placeholder="Société"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                />
-                <input
-                  type="text"
-                  name="role"
-                  id="role"
-                  placeholder="Fonction"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                />
-                <input
-                  type="tel"
-                  name="phone"
-                  id="phone"
-                  placeholder="Téléphone *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Email *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-                <input
-                  type="text"
-                  name="address"
-                  id="address"
-                  placeholder="Adresse *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-                <input
-                  type="text"
-                  name="code"
-                  id="code"
-                  placeholder="Code postal *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-
-                <input
-                  type="text"
-                  name="city"
-                  id="city"
-                  placeholder="Ville *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                />
-                <select
-                  name="country"
-                  id="country"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                >
-                  <option value="">Pays *</option>
-                  <option value="france">France</option>
-                  <option value="belgique">Belgique</option>
-                </select>
-              </div>
-              <div className="">
-                <textarea
-                  name="message"
-                  id="message"
-                  placeholder="Quel produit souhaitez vous faire installer / réviser ? *"
-                  className="py-2 px-4 border rounded-sm bg:white w-full placeholder:text-placeholder-grey"
-                  required
-                />
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="bg-secondary py-2 px-4 rounded-sm text-white text-sm font-bold"
-                >
-                  Envoyer
-                </button>
-              </div>
-            </form>
+            <DevisInstaller installerId={installerId as string} />
           </div>
           <div
             className="my-16 wysiwyg"

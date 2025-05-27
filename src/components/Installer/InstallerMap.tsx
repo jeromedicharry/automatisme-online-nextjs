@@ -3,7 +3,7 @@ import { Map, Marker, Overlay } from 'pigeon-maps';
 import InstallerCard from './InstallerCard';
 
 interface Installer {
-  id: string;
+  databaseId: number;
   title: string;
   acfContent: {
     address: string;
@@ -83,7 +83,7 @@ const InstallerMap: React.FC<InstallerMapProps> = ({
                 phone={installers[activeCardIndex].acfContent?.phone}
                 email={installers[activeCardIndex].acfContent?.email}
                 variant="map"
-                id={installers[activeCardIndex].id}
+                installerId={installers[activeCardIndex].databaseId}
               />
               <button
                 className="absolute top-2 right-2 text-sm text-primary duration-300 hover:text-secondary"

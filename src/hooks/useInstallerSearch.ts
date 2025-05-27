@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export interface Installer {
-  id: string;
+  databaseId: number;
   title: string;
   acfContent: {
     address: string;

@@ -34,7 +34,7 @@ const InstallerPage = ({
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
-  installateurs: Installer[];
+  installateurs: (Installer & { distance?: number })[];
 }) => {
   const {
     filteredInstallers,
@@ -116,7 +116,7 @@ const InstallerPage = ({
                     distance={installer.distance}
                     phone={installer.acfContent.phone}
                     email={installer.acfContent.email}
-                    id={installer.id}
+                    installerId={installer.databaseId}
                   />
                 ))}
               </div>
