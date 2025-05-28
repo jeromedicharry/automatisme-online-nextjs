@@ -65,6 +65,8 @@ export const GET_SINGLE_PRODUCT = gql`
           }
         }
 
+        ecoTaxValue
+
         productBrands {
           nodes {
             name

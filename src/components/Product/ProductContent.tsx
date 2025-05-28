@@ -45,6 +45,7 @@ export interface ProductDocsProps {
 export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
   productRef: string;
+  ecoTaxValue?: number;
   isPro: boolean;
   hasPose: boolean;
   isKit: boolean;
@@ -183,6 +184,13 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                     )}
                   </div>
                 </div>
+                {isSellable &&
+                  product.ecoTaxValue &&
+                  product.ecoTaxValue > 0 && (
+                    <em className="text-sm text-dark-grey leading-general mb-3 block mt-[-8px]">
+                      Eco-Taxe incluse : {product.ecoTaxValue} €
+                    </em>
+                  )}
                 <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
                   Payer en 3 versements sans frais.
                 </p>
