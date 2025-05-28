@@ -48,7 +48,6 @@ const HomePage = ({
   return (
     <Layout
       meta={page?.seo}
-      uri={page?.uri}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}

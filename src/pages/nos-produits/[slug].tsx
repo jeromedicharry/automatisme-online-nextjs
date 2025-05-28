@@ -38,7 +38,6 @@ const Product = ({
     <Layout
       meta={product.seo}
       categoriesMenu={categoriesMenu}
-      uri={product?.uri}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}

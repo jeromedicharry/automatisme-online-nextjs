@@ -208,7 +208,6 @@ const CategoryPage = ({
     <Layout
       meta={category?.seo}
       categoriesMenu={categoriesMenu}
-      uri={category?.uri}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}

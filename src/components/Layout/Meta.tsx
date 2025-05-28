@@ -124,6 +124,7 @@ export default function Meta({
       <title>{meta?.title}</title>
       <meta name="description" content={meta?.metaDesc} />
       {parsedCleanHead}
+      {/* Le canonicale vient de yoast pour toutes les pages générées via wordpress, il est mis manuellement ici pour les pages en dur */}
       {uri && <link rel="canonical" href={canonical}></link>}
     </Head>
   );

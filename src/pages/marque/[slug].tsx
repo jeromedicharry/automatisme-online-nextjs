@@ -51,7 +51,6 @@ const BrandPage = ({
     <Layout
       meta={brand.seo}
       categoriesMenu={categoriesMenu}
-      uri={brand?.uri}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}

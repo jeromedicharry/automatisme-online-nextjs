@@ -39,7 +39,6 @@ const SinglePost = ({
     <Layout
       meta={post.seo}
       categoriesMenu={categoriesMenu}
-      uri={'/blog/' + post?.slug}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}

@@ -54,7 +54,7 @@ const Caisse = ({
     <Layout
       meta={{ title: 'Caisse' }}
       title="Caisse"
-      uri="/checkout"
+      uri="/panier"
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}

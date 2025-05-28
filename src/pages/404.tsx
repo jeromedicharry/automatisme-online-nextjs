@@ -28,7 +28,6 @@ const NotFound = ({
   return (
     <Layout
       meta={{ title: 'NotFound - Automatisme Online' }}
-      uri={'/NotFound'}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
       themeSettings={themeSettings}

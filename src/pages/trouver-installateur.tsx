@@ -48,7 +48,11 @@ const InstallerPage = ({
 
   return (
     <Layout
-      meta={{ title: 'Trouver un installateur Automatisme Online' }}
+      meta={{
+        title: 'Trouver un installateur Automatisme Online',
+        metaDesc:
+          'Trouver un installateur Automatisme Online de confiance dans votre ville ou votre région',
+      }}
       title="Trouver un installateur Automatisme Online"
       uri="/trouver-installateur"
       footerMenu1={footerMenu1}

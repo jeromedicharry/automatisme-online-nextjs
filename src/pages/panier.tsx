@@ -38,6 +38,7 @@ const Panier = ({
     <Layout
       meta={{
         title: 'Mon panier',
+        metaDesc: 'Panier Automatisme Online',
       }}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}

@@ -35,7 +35,11 @@ const MotorisationForm = ({
 
   return (
     <Layout
-      meta={{ title: 'Configurateur de motorisation Automatisme Online' }}
+      meta={{
+        title: 'Configurateur de motorisation Automatisme Online',
+        metaDesc:
+          'Trouver le kit de motorisation le plus adapté à votre portail ou à votre porte de garage',
+      }}
       title="Configurateur de motorisation Automatisme Online"
       uri="/configurateur"
       footerMenu1={footerMenu1}
