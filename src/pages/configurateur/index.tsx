@@ -14,6 +14,7 @@ import EmptyElement from '@/components/EmptyElement';
 import { OrderSvg } from '@/components/SVG/Icons';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 import { ThemeSettingsProps } from '@/types/CptTypes';
+import ConfigurateurPorteGarage from './ConfigurateurPorteGarage';
 
 type MainMotorisationType = 'portail' | 'porte-garage' | null;
 
@@ -91,9 +92,11 @@ const MotorisationForm = ({
               <ConfigurateurPortail setMessage={setMessage} />
             )}
 
-            {type === 'porte-garage' && <h1>POrte de garage</h1>}
+            {type === 'porte-garage' && (
+              <ConfigurateurPorteGarage setMessage={setMessage} />
+            )}
           </section>
-          <aside className="md:w-[400px] xl:w-[500px] md:sticky md:top-[140px] md:p-6 lg:p-8 h-fit">
+          <aside className="md:w-[300px] xl:w-[350px] xxl:w-[500px] md:sticky md:top-[140px] md:p-6 lg:p-8 h-fit">
             <h3 className="font-bold text-lg md:text-2xl leading-general pb-[1.25em] border-b border-primary mb-[1.25em]">
               Récapitulatif
             </h3>

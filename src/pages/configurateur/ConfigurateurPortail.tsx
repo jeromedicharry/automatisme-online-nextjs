@@ -11,7 +11,7 @@ import Image from 'next/image';
 // import ContactForm from '../components/ContactForm';
 
 type PortailType = '2battants' | '1battant' | 'coulissant';
-type UsageType = 'domestique' | 'collectif';
+type UsageType = 'domestique' | 'collectif' | 'industriel';
 
 export interface PortailConfiguratorState {
   usage: UsageType | null;
@@ -38,9 +38,6 @@ export default function ConfigurateurPortail({ setMessage }: any) {
     portailType: null,
     installation: null,
   });
-  //   const [products, setProducts] = useState<any[]>([]);
-  //   const [showContactForm, setShowContactForm] = useState<boolean>(false);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   // Chargement des données depuis l'URL
   useEffect(() => {
@@ -177,8 +174,11 @@ export default function ConfigurateurPortail({ setMessage }: any) {
 
     msg = (
       <>
-        {msg} Je souhaite <span>{state.installation ? '' : 'ne pas '}</span>le
-        faire installer par un professionnel.
+        {msg} Je souhaite{' '}
+        <span>
+          {state.installation ? '' : 'ne pas '}le faire installer par un
+          professionnel.
+        </span>
       </>
     );
 
@@ -295,11 +295,73 @@ export default function ConfigurateurPortail({ setMessage }: any) {
     return false;
   };
 
+  const buildUrlAndRedirect = () => {
+    const baseUrl = '/categorie/motorisation-de-portail';
+    const params = new URLSearchParams();
+
+    // Usage mapping
+    if (state.usage) {
+      const usageMapping: Record<string, string> = {
+        domestique: 'residentiel',
+        industriel: 'industriel',
+        collectif: 'collectif',
+      };
+      params.set('usage', usageMapping[state.usage]);
+    }
+
+    // Portal type
+    if (state.portailType) {
+      params.set('portailType', state.portailType);
+    }
+
+    // Installation
+    if (state.installation !== null) {
+      params.set('_has_pose', String(state.installation));
+    }
+
+    // Dimensional facets for 2battants
+    if (state.portailType === '2battants') {
+      if (state.largeurGauche)
+        params.set('largeurGaucheMin', String(state.largeurGauche));
+      if (state.coteAGauche)
+        params.set('coteAGaucheMin', String(state.coteAGauche));
+      if (state.coteBGauche)
+        params.set('coteBGaucheMax', String(state.coteBGauche));
+      if (state.coteCGauche)
+        params.set('coteCGaucheMin', String(state.coteCGauche));
+
+      if (state.largeurDroite)
+        params.set('largeurDroiteMin', String(state.largeurDroite));
+      if (state.coteADroite)
+        params.set('coteADroiteMin', String(state.coteADroite));
+      if (state.coteBDroite)
+        params.set('coteBDroiteMax', String(state.coteBDroite));
+      if (state.coteCDroite)
+        params.set('coteCDroiteMin', String(state.coteCDroite));
+    }
+    // Dimensional facets for 1battant
+    else if (state.portailType === '1battant') {
+      if (state.largeur) params.set('largeurMin', String(state.largeur));
+      if (state.coteA) params.set('coteAMin', String(state.coteA));
+      if (state.coteB) params.set('coteBMax', String(state.coteB));
+      if (state.coteC) params.set('coteCMin', String(state.coteC));
+    }
+    // Dimensional facets for coulissant
+    else if (state.portailType === 'coulissant') {
+      if (state.largeur) params.set('largeurMin', String(state.largeur));
+      if (state.coteA) params.set('coteAMin', String(state.coteA));
+      if (state.coteB) params.set('coteBMax', String(state.coteB));
+      if (state.coteC) params.set('coteCMin', String(state.coteC));
+    }
+
+    const searchUrl = `${baseUrl}?${params.toString()}`;
+    router.push(searchUrl);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid()) {
-      setIsSubmitted(true);
-      //   fetchProducts();
+      buildUrlAndRedirect();
     }
   };
 
@@ -345,12 +407,23 @@ export default function ConfigurateurPortail({ setMessage }: any) {
               />
             </div>
             <div className="configurator-radio">
-              <label htmlFor="porte-garage">Collectif / Industriel</label>
+              <label htmlFor="porte-garage">Collectif</label>
               <input
                 type="radio"
                 name="usage"
                 value="collectif"
                 checked={state.usage === 'collectif'}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="configurator-radio">
+              <label htmlFor="porte-garage">Industriel</label>
+              <input
+                type="radio"
+                name="usage"
+                value="industriel"
+                checked={state.usage === 'industriel'}
                 onChange={handleChange}
                 required
               />
@@ -366,7 +439,10 @@ export default function ConfigurateurPortail({ setMessage }: any) {
             </h2>
             <div className="flex items-center gap-4">
               <div className="configurator-radio">
-                <PortailSvg />
+                <div className="shrink-0">
+                  <PortailSvg />
+                </div>
+
                 <label className="">2 battants</label>
                 <input
                   type="radio"
@@ -378,7 +454,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                 />
               </div>
               <div className="configurator-radio">
-                <UnBattantSvg />
+                <div className="shrink-0">
+                  <UnBattantSvg />
+                </div>
                 <label className="">1 battant</label>
                 <input
                   type="radio"
@@ -390,7 +468,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                 />
               </div>
               <div className="configurator-radio">
-                <CoulissantSvg />
+                <div className="shrink-0">
+                  <CoulissantSvg />
+                </div>
                 <label className="">Coulissant</label>
                 <input
                   type="radio"
@@ -439,7 +519,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Largeur gauche (en mm){' '}
-                        <span className="text-sm text-gray-500">(maximum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (maximum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -453,7 +535,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Cote A gauche (en mm){' '}
-                        <span className="text-sm text-gray-500">(minimum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (minimum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -467,7 +551,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Cote B gauche (en mm){' '}
-                        <span className="text-sm text-gray-500">(minimum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (maximum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -481,7 +567,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Cote C gauche (en mm){' '}
-                        <span className="text-sm text-gray-500">(minimum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (minimum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -499,7 +587,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Largeur droite (en mm){' '}
-                        <span className="text-sm text-gray-500">(maximum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (maximum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -513,7 +603,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Cote A droite (en mm){' '}
-                        <span className="text-sm text-gray-500">(minimum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (minimum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -527,7 +619,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Cote B droite (en mm){' '}
-                        <span className="text-sm text-gray-500">(minimum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (maximum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -541,7 +635,9 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     <div>
                       <label className="block mb-1">
                         Cote C droite (en mm){' '}
-                        <span className="text-sm text-gray-500">(minimum)</span>
+                        <span className="text-sm text-dark-grey">
+                          (minimum)
+                        </span>
                       </label>
                       <input
                         type="number"
@@ -560,12 +656,14 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                     alt="schema"
                     width={380}
                     height={205}
+                    className="max-md:w-full max-xxl:w-1/2"
                   />
                   <Image
                     src="/images/configurateur/2battants-2.jpg"
                     alt="schema"
                     width={380}
                     height={205}
+                    className="max-md:w-full max-xxl:w-1/2"
                   />
                 </div>
                 <em className="mt-2 block">
@@ -582,7 +680,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                   <div>
                     <label className="block mb-1">
                       Largeur (en mm){' '}
-                      <span className="text-sm text-gray-500">(maximum)</span>
+                      <span className="text-sm text-dark-grey">(maximum)</span>
                     </label>
                     <input
                       type="number"
@@ -596,7 +694,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                   <div>
                     <label className="block mb-1">
                       Cote A (en mm){' '}
-                      <span className="text-sm text-gray-500">(minimum)</span>
+                      <span className="text-sm text-dark-grey">(minimum)</span>
                     </label>
                     <input
                       type="number"
@@ -610,7 +708,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                   <div>
                     <label className="block mb-1">
                       Cote B (en mm){' '}
-                      <span className="text-sm text-gray-500">(minimum)</span>
+                      <span className="text-sm text-dark-grey">(maximum)</span>
                     </label>
                     <input
                       type="number"
@@ -624,7 +722,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                   <div>
                     <label className="block mb-1">
                       Cote C (en mm){' '}
-                      <span className="text-sm text-gray-500">(minimum)</span>
+                      <span className="text-sm text-dark-grey">(minimum)</span>
                     </label>
                     <input
                       type="number"
@@ -658,7 +756,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
                 <div>
                   <label className="block mb-1">
                     Largeur (en mm){' '}
-                    <span className="text-sm text-gray-500">(maximum)</span>
+                    <span className="text-sm text-dark-grey">(maximum)</span>
                   </label>
                   <input
                     type="number"
@@ -717,27 +815,6 @@ export default function ConfigurateurPortail({ setMessage }: any) {
           </button>
         </div>
       </form>
-
-      {/* Résultats */}
-      {isSubmitted && (
-        <div className="mt-10 space-y-8">
-          <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
-            <h2 className="text-xl font-semibold mb-4">
-              Liste des produits à afficher. Si vide, formulaire prérempli avec
-              le message
-            </h2>
-          </div>
-
-          {/* {products.length > 0 ? (
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Produits recommandés</h2>
-              <ProductList products={products} />
-            </div>
-          ) : showContactForm ? (
-            <ContactForm message={message} />
-          ) : null} */}
-        </div>
-      )}
     </div>
   );
 }
