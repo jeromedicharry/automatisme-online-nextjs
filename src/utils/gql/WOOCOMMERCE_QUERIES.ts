@@ -1,8 +1,6 @@
 import { gql } from '@apollo/client';
 import { seoFields } from './SEO';
 
-// todo restockingLeadTime
-
 export const PRODUCT_CARD_FRAGMENT = `
   databaseId
   slug
@@ -23,19 +21,9 @@ export const PRODUCT_CARD_FRAGMENT = `
   isKit
   stockQuantity
   backorders
+  restockingLeadTime
   productRef
 `;
-
-// todo gérer les brands
-// brands(first: 1) {
-//   nodes {
-//     name
-//   }
-// }
-
-// isKit
-
-// todo restockingLeadTime
 
 export const GET_SINGLE_PRODUCT = gql`
   query Product($id: ID!) {
@@ -62,6 +50,7 @@ export const GET_SINGLE_PRODUCT = gql`
         id
         stockQuantity
         backorders
+        restockingLeadTime
         sku
         installationPrice
         productRef
