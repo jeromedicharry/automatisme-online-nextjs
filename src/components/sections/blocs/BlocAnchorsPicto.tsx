@@ -9,7 +9,6 @@ import Link from 'next/link';
 const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
   if (!bloc || !bloc.items || bloc.items.length === 0) return null;
   const { items, cta, infoBloc, infoText } = bloc;
-  // todo mobile version
   return (
     <Container>
       <section className="bg-primary-light-alt px-2 pt-9 pb-4 relative rounded-2xl overflow-hidden mb-12 md:mb-16">

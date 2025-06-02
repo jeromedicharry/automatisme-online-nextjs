@@ -6,17 +6,16 @@ import Cta from '../atoms/Cta';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 const CardQuestionCta = ({ question }: { question: QuestionCtaCardProps }) => {
-  // todo mobile
   return (
-    <div className="flex rounded-2xl overflow-hidden max-w-[520px]">
+    <div className="flex rounded-2xl overflow-hidden md:max-w-[520px]">
       <Image
         src={question?.image?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
         alt={question.subtitle}
         width={520}
         height={480}
-        className="w-1/2 object-cover shrink-1"
+        className="w-1/3 max-sm:w-[140px] object-cover shrink-1 md:w-1/2"
       />
-      <div className="bg-secondary-light relative p-8 w-1/2 overflow-hidden flex flex-col justify-between">
+      <div className="bg-secondary-light relative p-6 sm:p-8 w-2/3 md:w-1/2 grow-1 overflow-hidden flex flex-col justify-between">
         <div className="absolute bottom-[-6px] left-[-6px] w-1/2 rotate-90">
           <Wifi variant="orange" />
         </div>
@@ -24,7 +23,7 @@ const CardQuestionCta = ({ question }: { question: QuestionCtaCardProps }) => {
           <div className="font-medium text-xl leading-general">
             {question.title}
           </div>
-          <em className="font-medium text-secondary text-xl leading-general">
+          <em className="font-medium text-secondary text-xl leading-general block max-md:mb-10">
             {question.subtitle}
           </em>
         </div>

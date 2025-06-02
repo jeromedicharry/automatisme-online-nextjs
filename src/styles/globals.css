@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* todo: clean + add helvetica font styles + files */
 /* Fonts */
 @font-face {
   font-family: 'HelveticaNeue';

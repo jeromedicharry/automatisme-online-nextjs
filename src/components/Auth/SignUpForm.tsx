@@ -30,8 +30,6 @@ const REGISTER_USER = gql`
   }
 `;
 
-// todo: voir à gérer le SIret + TVA à la création du compte pro
-
 export default function SignUpForm({
   setFormStatus,
   handleCloseModal,

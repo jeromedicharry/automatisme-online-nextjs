@@ -18,8 +18,6 @@ import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { CategoryMenuProps } from '@/types/Categories';
 import { PageProps, ThemeSettingsProps } from '@/types/CptTypes';
 
-// todo typer une page
-
 const Page = ({
   page,
   themeSettings,

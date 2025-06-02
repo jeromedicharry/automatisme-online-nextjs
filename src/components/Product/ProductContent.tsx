@@ -118,11 +118,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
     return null;
   };
 
-  // mettre sur mobile ajout favioris + ajout au panier
-  // todo voir à ajouter plusieurs produits à la volée
   // todo gérer les produits remplacés (à la place du prix, bouton vers le produit de remplacemnt)
-  // todo gérer la réassurance : durée d'expédition dynamique selon produit ? + selon en stock ou pas
-  // todo gérer l'ajout au panier avec installation
 
   const { deliveryLabel, isSellable } = getProductAvailability({
     stock: product.stockQuantity,

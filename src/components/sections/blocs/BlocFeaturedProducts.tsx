@@ -24,8 +24,6 @@ const BlocFeaturedProducts = ({
   )
     return null;
 
-  // todo manage link slug
-  // todo manage arrows design and logic active inactive hover etc + make a component for arrows nav
   return (
     <Container>
       <section className="mb-12 md:mb-16 featured-products-slider">

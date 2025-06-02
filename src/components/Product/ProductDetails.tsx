@@ -12,8 +12,6 @@ const ProductDetails = ({
   faqItems: ProductFaqItemProps[];
   productDocs: ProductDocsProps;
 }) => {
-  //todo gérer la marque du produit
-
   return (
     <>
       {productDocs && (productDocs.noticeTech || productDocs.productNotice) && (

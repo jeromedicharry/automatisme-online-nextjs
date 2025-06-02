@@ -17,7 +17,6 @@ const AccordionItem = ({
   children,
   noBorderBottom = false,
 }: AccordionItemProps) => {
-  // todo recupérer la marque du produit puis recupérer ses specs techinques
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div

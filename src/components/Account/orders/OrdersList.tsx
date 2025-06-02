@@ -1,5 +1,3 @@
-import Cta from '@/components/atoms/Cta';
-import { Chevron } from '@/components/SVG/Icons';
 import { OrderProps } from '@/types/orderTypes';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import { formatDate, GetStatusName } from '@/utils/functions/functions';
@@ -8,8 +6,6 @@ import Link from 'next/link';
 import React from 'react';
 
 const OrdersList = ({ orders }: { orders: OrderProps[] }) => {
-  // todo gérer la page de détail et le suivi de commande
-  // todo gérer le retour d'un article
   return (
     <div className="flex flex-col gap-6 text-sm">
       {orders.map((order) => (
@@ -87,7 +83,7 @@ const OrdersList = ({ orders }: { orders: OrderProps[] }) => {
               </div>
             )}
           </div>
-          <div>
+          {/* <div>
             <Cta
               label="Détails de la commande"
               handleButtonClick={() => {}}
@@ -106,7 +102,7 @@ const OrdersList = ({ orders }: { orders: OrderProps[] }) => {
                 <Chevron />
               </div>
             </a>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

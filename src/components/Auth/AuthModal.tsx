@@ -6,8 +6,6 @@ import SignUpForm from '@/components/Auth/SignUpForm';
 import SendPasswordResetEmailForm from '@/components/Auth/SendPasswordResetEmailForm';
 import { FormStatusProps } from '@/hooks/useAuthModal';
 
-//todo gérer le reset email
-
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;

@@ -14,8 +14,6 @@ const BlocFeaturedCategories = ({
   if (!bloc || !bloc.categories || bloc.categories.nodes.length === 0)
     return null;
 
-  // todo manage link slug
-  // manage image size (need image first)
   return (
     <Container>
       <section className="mb-12 md:mb-16">

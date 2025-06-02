@@ -2,7 +2,6 @@ import { ArrowBigUpDashIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 const ToTop = () => {
-  //todo: afficher le composant uniquement quand on a scrollé
   const [show, setShow] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
