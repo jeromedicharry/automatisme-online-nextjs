@@ -20,7 +20,7 @@ const Orders = ({
   const [allOrders, setAllOrders] = useState<any[]>([]);
   const [hasMoreOrders, setHasMoreOrders] = useState<boolean>(false);
   const [endCursor, setEndCursor] = useState<string | null>(null);
-  const perPage = 1;
+  const perPage = 10;
 
   const { loading, error, fetchMore } = useQuery(GET_CUSTOMER_ORDERS, {
     variables: { id: user?.id, first: perPage, after: null },

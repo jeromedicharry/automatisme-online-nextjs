@@ -42,3 +42,5 @@ next-env.d.ts
 /playwright-report/
 /playwright/.cache/
 
+
+src/adyen-custom-integration/

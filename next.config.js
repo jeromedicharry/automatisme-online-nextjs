@@ -29,6 +29,7 @@ const nextConfig = {
     REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
     MEILISEARCH_API_KEY: process.env.MEILISEARCH_API_KEY,
     CF7_API_URL: process.env.CF7_API_URL,
+    ADYEN_CLIENT_KEY: process.env.ADYEN_CLIENT_KEY,
   },
 };
 

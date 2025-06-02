@@ -148,3 +148,32 @@ export const UPGRADE_TO_PRO_CUSTOMER = gql`
     }
   }
 `;
+
+export const GET_ORDER_BY_ID = gql`
+  query GetOrderById($id: ID!) {
+    order(id: $id, idType: DATABASE_ID) {
+      id
+      orderNumber
+      date
+      status
+      total(format: RAW)
+      lineItems {
+        nodes {
+          product {
+            node {
+              id
+              name
+              sku
+              slug
+              featuredImage {
+                node {
+                  sourceUrl
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

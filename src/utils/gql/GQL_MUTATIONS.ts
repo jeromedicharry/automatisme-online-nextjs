@@ -16,6 +16,13 @@ export const CHECKOUT_MUTATION = gql`
     checkout(input: $input) {
       result
       redirect
+      order {
+        id
+        databaseId
+        total(format: RAW)
+        currency
+        adyenReference
+      }
     }
   }
 `;
@@ -44,6 +51,14 @@ export const UPDATE_CART = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const GET_ORDER_GLOBAL_ID = gql`
+  query GetOrderGlobalId($databaseId: ID!) {
+    order(id: $databaseId, idType: DATABASE_ID) {
+      id
     }
   }
 `;

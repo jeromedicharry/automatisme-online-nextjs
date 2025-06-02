@@ -12,7 +12,6 @@ const DefaultCategoryMenu = ({
   subcategories: CategoryMenuProps[];
   brands?: BrandLink[];
 }) => {
-  console.log({ brands });
 
   return (
     <ul className="flex gap-6 w-full items-stretch">

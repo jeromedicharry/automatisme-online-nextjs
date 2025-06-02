@@ -1,4 +1,6 @@
 import React, { useState, useEffect, createContext, ReactNode } from 'react';
+import { useMutation } from '@apollo/client';
+import { ADD_TO_CART } from '@/utils/gql/GQL_MUTATIONS';
 
 interface ICartProviderProps {
   children: ReactNode;
@@ -37,17 +39,20 @@ export type TRootObjectNull = RootObject | null | undefined;
 interface ICartContext {
   cart: RootObject | null | undefined;
   setCart: React.Dispatch<React.SetStateAction<TRootObjectNull>>;
+  resyncFromLocalStorage: () => Promise<void>;
 }
 
 const CartState = {
   cart: null,
   setCart: () => {},
+  resyncFromLocalStorage: async () => {}
 };
 
 export const CartContext = createContext<ICartContext>(CartState);
 
 export const CartProvider = ({ children }: ICartProviderProps) => {
   const [cart, setCart] = useState<RootObject | null>();
+  const [addToCartMutation] = useMutation(ADD_TO_CART);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -62,8 +67,36 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
       }
     }
   }, []);
+  const resyncFromLocalStorage = async () => {
+    const localCartData = localStorage.getItem('woocommerce-cart');
+    if (localCartData) {
+      try {
+        const cartData: RootObject = JSON.parse(localCartData);
+        // 1. Mettre à jour le state local
+        setCart(cartData);
+        // 2. Resynchroniser avec le backend
+        for (const item of cartData.products) {
+          await addToCartMutation({
+            variables: {
+              input: {
+                productId: item.productId,
+                quantity: item.qty
+              }
+            }
+          });
+          // Ajouter l'installation si nécessaire
+          if (item.addInstallation) {
+            // TODO: Appeler la mutation pour ajouter l'installation
+          }
+        }
+      } catch (error) {
+        console.error('Error resyncing cart:', error);
+      }
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cart, setCart }}>
+    <CartContext.Provider value={{ cart, setCart, resyncFromLocalStorage }}>
       {children}
     </CartContext.Provider>
   );
