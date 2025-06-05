@@ -14,6 +14,7 @@ import EmptyElement from '@/components/EmptyElement';
 import { OrderSvg } from '@/components/SVG/Icons';
 import client from '@/utils/apollo/ApolloClient';
 import { ThemeSettingsProps } from '@/types/CptTypes';
+import LoadingSpinner from '@/components/atoms/LoadingSpinner';
 
 // Import dynamique de la carte pour éviter les erreurs SSR
 const InstallerMap = dynamic(
@@ -90,9 +91,14 @@ const InstallerPage = ({
             )}
 
             {isLoading && (
-              <p className="text-center mb-8">
-                {"Recherche d'installateurs en cours..."}
-              </p>
+              <div>
+                <p className="text-center mb-8">
+                  {"Recherche d'installateurs en cours..."}
+                </p>
+                <div className="mb-6 md:mb-10">
+                  <LoadingSpinner />
+                </div>
+              </div>
             )}
             {error && <p className="text-red-500 text-center">{error}</p>}
 
