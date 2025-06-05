@@ -70,10 +70,7 @@ const BrandPage = ({
         {brand.acfBrand.bolcSav &&
           brand.acfBrand.bolcSav.text &&
           brand.acfBrand.bolcSav.image && (
-            <BlocSAV
-              bloc={brand.acfBrand.bolcSav}
-              note={brand.acfBrand.hero.globalNote}
-            />
+            <BlocSAV bloc={brand.acfBrand.bolcSav} />
           )}
 
         {brand?.posts?.nodes?.length > 0 && (
