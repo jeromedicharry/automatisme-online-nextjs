@@ -3,7 +3,6 @@ import { createContext, useContext, ReactNode } from 'react';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { getFormattedCart } from '@/utils/functions/functions';
 import { CartContext } from '@/stores/CartProvider';
-import useAuth from './useAuth';
 
 interface CartProviderProps {
   children: ReactNode;
@@ -19,12 +18,11 @@ export const CartOperationsContext = createContext<CartContextType>({
 
 export const CartProvider = ({ children }: CartProviderProps) => {
   const { setCart } = useContext(CartContext);
-  const { isPro } = useAuth();
 
   const { refetch } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
     onCompleted: (data) => {
-      const updatedCart = getFormattedCart(data, isPro);
+      const updatedCart = getFormattedCart(data);
       if (!updatedCart || !updatedCart.products.length) {
         localStorage.removeItem('woocommerce-cart');
         setCart(null);

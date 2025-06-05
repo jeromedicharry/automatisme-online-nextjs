@@ -56,7 +56,6 @@ export interface CardProductProps {
   id: string;
   databaseId?: number;
   onSale: boolean;
-  featured: boolean;
   slug: string;
   featuredImage: {
     node: {
@@ -76,6 +75,9 @@ export interface CardProductProps {
   backorders: 'YES' | 'NO';
   restockingLeadTime: number;
   productRef: string;
+  acfFeatured: {
+    isFeatured: boolean;
+  };
 }
 
 export interface BlocFeaturedProductsProps {

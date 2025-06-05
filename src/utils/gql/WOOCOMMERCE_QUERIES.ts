@@ -23,6 +23,9 @@ export const PRODUCT_CARD_FRAGMENT = `
   backorders
   restockingLeadTime
   productRef
+  acfFeatured {
+    isFeatured
+  }
 `;
 
 export const GET_SINGLE_PRODUCT = gql`
@@ -41,6 +44,9 @@ export const GET_SINGLE_PRODUCT = gql`
           title
           content
         }
+      }
+      acfFeatured {
+        isFeatured
       }
       name
       ... on SimpleProduct {

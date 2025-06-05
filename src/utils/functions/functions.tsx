@@ -131,15 +131,12 @@ export const trimmedStringToLength = (input: string, length: number) => {
  * @param {String} data Cart data
  */
 
-export const getFormattedCart = (
-  data: IFormattedCartProps,
-  isProSession?: boolean,
-) => {
+export const getFormattedCart = (data: IFormattedCartProps) => {
   const formattedCart: RootObject = {
     products: [],
     totalProductsCount: 0,
     totalProductsPrice: 0,
-    totalTax: 20,
+    totalTax: parseFloat(data.cart.totalTax || '0'),
   };
 
   if (!data || !data.cart || !data.cart.contents) {
@@ -160,8 +157,6 @@ export const getFormattedCart = (
     const quantity = givenProductItem.quantity;
 
     // Get price values directly from GraphQL response
-    const unitPriceHT = parseFloat(givenProduct.price); // Price HT from product
-    const lineSubtotal = parseFloat(givenProductItem.subtotal); // Subtotal HT
     const lineTotal = parseFloat(givenProductItem.total); // Total TTC
 
     // Calculate unit price with tax
@@ -173,8 +168,8 @@ export const getFormattedCart = (
       cartKey: givenProductItem.key,
       name: givenProduct.name,
       qty: quantity,
-      price: isProSession ? unitPriceHT : unitPriceTTC, // HT for pro, TTC for others
-      totalPrice: isProSession ? lineSubtotal : lineTotal, // Subtotal HT for pro, Total TTC for others
+      price: unitPriceTTC, // Toujours TTC
+      totalPrice: lineTotal, // Toujours TTC
       image: givenProduct.image?.sourceUrl
         ? {
             sourceUrl: givenProduct.image.sourceUrl,
@@ -203,13 +198,12 @@ export const getFormattedCart = (
   formattedCart.totalProductsCount = totalProductsCount;
 
   // Use cart level totals directly from GraphQL
-  const cartSubtotal = parseFloat(data.cart.subtotal); // Total HT
   const cartTotal = parseFloat(data.cart.total); // Total TTC
-  const cartTotalTax = parseFloat(data.cart.totalTax); // Total TTC
+  const cartTotalTax = parseFloat(data.cart.totalTax); // Total TVA
 
-  // Set total price based on user type
-  formattedCart.totalProductsPrice = isProSession ? cartSubtotal : cartTotal;
-  formattedCart.totalTax = isProSession ? 0 : cartTotalTax;
+  // Utiliser les totaux de WooCommerce
+  formattedCart.totalProductsPrice = cartTotal; // Toujours TTC
+  formattedCart.totalTax = cartTotalTax; // TVA selon les règles WooCommerce
 
   return formattedCart;
 };

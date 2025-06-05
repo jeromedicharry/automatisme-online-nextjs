@@ -61,6 +61,9 @@ export interface ProductContentProps extends CardProductProps {
   acfProduct: {
     faq: ProductFaqItemProps[];
   };
+  acfFeatured: {
+    isFeatured: boolean;
+  };
   galleryImages: {
     nodes: {
       sourceUrl: string;
@@ -137,6 +140,11 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
         </div>
         <div className="flex flex-col gap-5 shrink-1">
           <div className="titre order-2 md:order-1">
+            {product?.acfFeatured?.isFeatured && (
+              <span className="w-fit px-[10px] rounded-[6px] h-[28px] flex items-center justify-center bg-primary-light text-base leading-general font-bold">
+                Choix AO
+              </span>
+            )}
             <ProductHeader
               title={product?.name}
               brand={product?.productBrands?.nodes[0]}

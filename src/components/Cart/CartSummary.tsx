@@ -8,13 +8,7 @@ import Separator from '../atoms/Separator';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import CartReassurance from './CartReassurance';
 
-const CartSummary = ({
-  isProSession,
-  isCheckout = false,
-}: {
-  isProSession: boolean;
-  isCheckout?: boolean;
-}) => {
+const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   const { cart } = useContext(CartContext);
 
   // Todo gérer la TVA pour l'installation
@@ -43,9 +37,9 @@ const CartSummary = ({
         <div className="flex flex-col gap-4">
           <div className="w-full">
             <strong>Total panier</strong>
-            <div className="text-xl">
-              {isProSession ? 'HT: ' : 'TTC: '}
-              {grandTotal.toFixed(2)}€
+            <div className="text-xl">TTC: {grandTotal.toFixed(2)}€</div>
+            <div className="text-sm text-dark-grey">
+              Total HT: {(grandTotal - cart.totalTax).toFixed(2)}€
             </div>
             {totalInstallationCost > 0 && (
               <div className="text-sm text-dark-grey">
@@ -131,17 +125,9 @@ const CartSummary = ({
         <Separator />
         <div>
           <div className="flex text-primary font-bold justify-between gap-6 items-center">
-            <p>Sous-total produits {isProSession ? 'HT' : 'TTC'}</p>
-            <p>{cart.totalProductsPrice.toFixed(2)}€</p>
+            <p>Total HT</p>
+            <p>{(cart.totalProductsPrice - cart.totalTax).toFixed(2)}€</p>
           </div>
-
-          {/* Affichage du grand total incluant les installations */}
-          {totalInstallationCost > 0 && (
-            <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
-              <p>Total {isProSession ? 'HT' : 'TTC'}</p>
-              <p>{grandTotal.toFixed(2)}€</p>
-            </div>
-          )}
 
           <div className="flex text-primary justify-between gap-6 items-center mt-1">
             <p>
@@ -152,8 +138,37 @@ const CartSummary = ({
               ).toFixed(1)}
               %)
             </p>
-            <p>{isProSession ? '0€' : `${cart.totalTax.toFixed(2)}€`}</p>
+            <p>{cart.totalTax.toFixed(2)}€</p>
           </div>
+
+          <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
+            <p>Total TTC</p>
+            <p>{cart.totalProductsPrice.toFixed(2)}€</p>
+          </div>
+
+          {/* Affichage du grand total incluant les installations */}
+          {totalInstallationCost > 0 && (
+            <>
+              <div className="flex text-primary justify-between gap-6 items-center mt-1">
+                <p>Installation HT</p>
+                <p>
+                  {(
+                    totalInstallationCost -
+                    totalInstallationCost * 0.2
+                  ).toFixed(2)}
+                  €
+                </p>
+              </div>
+              <div className="flex text-primary justify-between gap-6 items-center mt-1">
+                <p>TVA Installation (20%)</p>
+                <p>{(totalInstallationCost * 0.2).toFixed(2)}€</p>
+              </div>
+              <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
+                <p>Total TTC avec installation</p>
+                <p>{grandTotal.toFixed(2)}€</p>
+              </div>
+            </>
+          )}
         </div>
         {!isCheckout && (
           <>

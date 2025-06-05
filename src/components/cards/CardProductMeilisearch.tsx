@@ -21,7 +21,6 @@ export interface CardProductMeilisearchProps {
     regular_price: string;
     _is_pro: boolean;
     _price: string;
-    // todo attendre isFeatured slug et image et mettre à jour
     _is_featured: boolean;
     _stock: number;
     _backorders: 'YES' | 'NO';
@@ -57,7 +56,7 @@ const CardProductMeilisearch = ({
     sku: meiliProduct.meta?.sku || '',
     uri: `/produit/${meiliProduct.slug}`,
     isPro: meiliProduct.meta?._is_pro || false,
-    featured: meiliProduct.meta?._is_featured || false,
+    acfFeatured: { isFeatured: meiliProduct.meta?._is_featured || false },
     onSale: false, // À adapter selon besoin
     hasProDiscount: false, // À adapter
     stockQuantity: meiliProduct.meta?._stock || 0,
@@ -71,6 +70,9 @@ const CardProductMeilisearch = ({
     backorders: product.meta._backorders,
     restockingLeadTime: product.meta._restocking_lead_time,
   });
+
+  console.log(product.title, ' meta : ', product?.meta);
+  // console.log(product.title, ' isfeatured : ', product?.meta?._is_featured);
   return (
     <article className="flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
