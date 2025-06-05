@@ -400,7 +400,7 @@ export const FETCH_SINGLE_BRAND = gql`
               sourceUrl
             }
           }
-          showNote
+          savNote
         }
 
         featuredProducts {

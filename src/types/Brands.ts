@@ -31,7 +31,7 @@ export interface BrandContentProps {
           sourceUrl: string;
         };
       };
-      showNote: boolean;
+      savNote: number;
     };
     featuredProducts: {
       nodes: CardProductProps[];

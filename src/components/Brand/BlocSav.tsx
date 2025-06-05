@@ -14,18 +14,16 @@ interface BlocSAVProps {
   title: string;
   text: string;
   isImageLeft: boolean;
-  showNote: boolean;
+  savNote: number;
   date?: string;
   brand?: string;
 }
 
 const BlocSAV = ({
   bloc,
-  note,
   slug = '',
 }: {
   bloc: BlocSAVProps;
-  note?: number;
   slug?: string;
 }) => {
   return (
@@ -73,14 +71,17 @@ const BlocSAV = ({
             />
           )}
 
-          {note && (
+          {bloc.savNote && (
             <div className="flex gap-4 md:gap-8 max-md:flex-col md:items-end">
               <div className="font-bold text-secondary">
                 {'Indice de confiance Automatisme Online'}
               </div>
 
               <div>
-                <p className="text-5xl font-bold text-center">{note}</p>
+                <p className="text-5xl font-bold text-center">
+                  {' '}
+                  {Number(bloc.savNote).toFixed(1)}
+                </p>
                 <div className="flex gap-1 w-fit mx-auto">
                   <Star color="orange" />
                   <Star color="orange" />
