@@ -36,7 +36,7 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
           />
         </Link>
         <div className="bg-white flex justify-between items-center relative">
-          {product?.featured && (
+          {product?.acfFeatured?.isFeatured && (
             <span className="px-[6px] rounded-[2px] h-[21px] flex items-center justify-center bg-primary-light text-xs leading-general font-bold">
               Choix AO
             </span>
