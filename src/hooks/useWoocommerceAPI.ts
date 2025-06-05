@@ -25,23 +25,11 @@ export default function useWoocommerceAPI() {
         throw new Error('Panier ou utilisateur non disponible');
       }
 
-      console.log('Appel mutation checkout avec:', {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      });
-
       const { data } = await checkoutMutation({
         variables: {
           input: {
-            billing: {
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-              country: 'FR',
-            },
             paymentMethod: 'bacs',
-            isPaid: false,
+            isPaid: false
           },
         },
       });
