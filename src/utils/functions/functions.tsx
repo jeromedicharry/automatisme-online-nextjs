@@ -6,6 +6,7 @@ import { RootObject, Product } from '@/stores/CartProvider';
 
 import { ChangeEvent } from 'react';
 import { COUNTRIES_LIST } from '../constants/COUNTRIES_LIST';
+import { PRODUCT_IMAGE_PLACEHOLDER } from '../constants/PLACHOLDERS';
 // import { IVariationNodes } from '@/components/Product/AddToCart';
 
 /* Interface for products*/
@@ -181,8 +182,8 @@ export const getFormattedCart = (
             title: givenProduct.image.title,
           }
         : {
-            sourceUrl: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
-            srcSet: process.env.NEXT_PUBLIC_PLACEHOLDER_SMALL_IMAGE_URL,
+            sourceUrl: PRODUCT_IMAGE_PLACEHOLDER,
+            srcSet: PRODUCT_IMAGE_PLACEHOLDER,
             title: givenProduct.name,
           },
       addInstallation: givenProductItem.addInstallation,

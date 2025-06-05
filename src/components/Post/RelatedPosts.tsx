@@ -28,7 +28,6 @@ const RelatedPosts = ({
               },
               slug: post.slug,
               isImageLeft: true,
-              showNote: false,
               date: post.date,
               brand: post?.productBrands?.nodes[0]?.name,
             };

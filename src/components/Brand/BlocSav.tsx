@@ -14,7 +14,7 @@ interface BlocSAVProps {
   title: string;
   text: string;
   isImageLeft: boolean;
-  savNote: number;
+  savNote?: number;
   date?: string;
   brand?: string;
 }
