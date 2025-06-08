@@ -131,7 +131,10 @@ export const trimmedStringToLength = (input: string, length: number) => {
  * @param {String} data Cart data
  */
 
-export const getFormattedCart = (data: IFormattedCartProps) => {
+export const getFormattedCart = (
+  data: IFormattedCartProps,
+  isPro?: boolean,
+) => {
   const formattedCart: RootObject = {
     products: [],
     totalProductsCount: 0,
@@ -158,9 +161,11 @@ export const getFormattedCart = (data: IFormattedCartProps) => {
 
     // Get price values directly from GraphQL response
     const lineTotal = parseFloat(givenProductItem.total); // Total TTC
+    const lineSubtotal = parseFloat(givenProductItem.subtotal); // Total HT
 
-    // Calculate unit price with tax
+    // Calculate unit prices
     const unitPriceTTC = quantity > 0 ? lineTotal / quantity : 0;
+    const unitPriceHT = quantity > 0 ? lineSubtotal / quantity : 0;
 
     const product: Product = {
       productId: givenProduct.databaseId,
@@ -168,8 +173,8 @@ export const getFormattedCart = (data: IFormattedCartProps) => {
       cartKey: givenProductItem.key,
       name: givenProduct.name,
       qty: quantity,
-      price: unitPriceTTC, // Toujours TTC
-      totalPrice: lineTotal, // Toujours TTC
+      price: isPro ? unitPriceHT : unitPriceTTC, // HT pour pro, TTC pour autres
+      totalPrice: isPro ? lineSubtotal : lineTotal, // HT pour pro, TTC pour autres
       image: givenProduct.image?.sourceUrl
         ? {
             sourceUrl: givenProduct.image.sourceUrl,

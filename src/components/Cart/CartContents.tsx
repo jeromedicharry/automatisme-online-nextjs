@@ -167,7 +167,6 @@ const CartContents = () => {
               </div>
               <div className="flex-grow mx-4 self-center">
                 <h2 className="font-bold text-primary">{item.name}</h2>
-                <p>Avis vérifiés</p>
                 <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
                   {item.price.toFixed(2)}€{' '}
                   <span className="absolute right-0 top-1 text-xs">
@@ -249,7 +248,7 @@ const CartContents = () => {
                   <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
                     {item.installationPrice.toFixed(2)}€{' '}
                     <span className="absolute right-0 top-1 text-xs">
-                      {/* {isPro ? 'HT' : 'TTC'} */}
+                      {isPro ? 'HT' : 'TTC'}
                     </span>
                   </p>
                 </div>

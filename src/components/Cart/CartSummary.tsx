@@ -7,9 +7,11 @@ import Cta from '../atoms/Cta';
 import Separator from '../atoms/Separator';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import CartReassurance from './CartReassurance';
+import { useCartOperations } from '@/hooks/useCartOperations';
 
 const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   const { cart } = useContext(CartContext);
+  const { isPro } = useCartOperations();
 
   // Todo gérer la TVA pour l'installation
 
@@ -67,7 +69,7 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
             <Link
               title="Voir le produit"
               href={`/nos-produits/${product.slug}`}
-              className="flex justify-between items-center mb-2"
+              className="flex gap-1 justify-between items-center mb-2"
             >
               <Image
                 src={product.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
@@ -82,7 +84,12 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                   Qté: {product.qty}
                 </span>
               </div>
-              <div className="font-bold">{product.totalPrice.toFixed(2)}€</div>
+              <div className="font-bold relative pr-7">
+                {product.totalPrice.toFixed(2)}€
+                <span className="absolute right-0 top-0 text-xs">
+                  {isPro ? 'HT' : 'TTC'}
+                </span>
+              </div>
             </Link>
 
             {/* Installation si présente */}
@@ -96,8 +103,11 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                     {"Frais d'installation"}
                   </div>
                 </div>
-                <div className="font-bold text-primary">
+                <div className="font-bold text-primary relative pr-7">
                   {product.installationPrice.toFixed(2)}€
+                  <span className="absolute right-0 top-0 text-xs">
+                    {isPro ? 'HT' : 'TTC'}
+                  </span>
                 </div>
               </div>
             )}
@@ -117,7 +127,12 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           <>
             <div className="text-dark-grey flex justify-between gap-6 items-center">
               <p>Total installation</p>
-              <data>{totalInstallationCost.toFixed(2)}€</data>
+              <data className="relative pr-7">
+                {totalInstallationCost.toFixed(2)}€
+                <span className="absolute right-0 top-0 text-xs">
+                  {isPro ? 'HT' : 'TTC'}
+                </span>
+              </data>
             </div>
           </>
         )}
