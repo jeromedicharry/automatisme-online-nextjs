@@ -39,7 +39,7 @@ const Caisse = ({
     user,
   } = useAuthModal();
 
-  const { cart, isPro } = useCartOperations();
+  const { cart } = useCartOperations();
 
   // Ouvrir automatiquement la modale si l'utilisateur n'est pas connecté
   useEffect(() => {
@@ -90,7 +90,7 @@ const Caisse = ({
 
                 {/* CartSummary en sticky à droite en desktop */}
                 <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] lg:top-20 self-start lg:shrink-1">
-                  <CartSummary isProSession={isPro} isCheckout />
+                  <CartSummary isCheckout />
                 </aside>
               </div>
             </>

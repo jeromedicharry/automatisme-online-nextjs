@@ -32,7 +32,7 @@ const Panier = ({
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
-  const { cart, isPro } = useCartOperations();
+  const { cart } = useCartOperations();
 
   return (
     <Layout
@@ -69,7 +69,7 @@ const Panier = ({
 
               {/* CartSummary en sticky à droite en desktop */}
               <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] lg:top-20 self-start lg:shrink-1">
-                <CartSummary isProSession={isPro} />
+                <CartSummary />
               </aside>
             </div>
             <div className="py-6 lg:py-10 xl:py-16">
