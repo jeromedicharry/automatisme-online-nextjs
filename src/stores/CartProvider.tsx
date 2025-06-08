@@ -24,6 +24,7 @@ export interface Product {
   hasPose?: boolean; // Indique si le produit est éligible à l'installation
   addInstallation?: boolean; // Indique si l'installation est sélectionnée
   installationPrice?: number; // Prix de l'installation
+  deliveryLabel?: string; // Délai de livraison calculé à l'ajout au panier
 }
 
 export interface RootObject {

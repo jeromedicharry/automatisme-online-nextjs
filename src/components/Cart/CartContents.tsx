@@ -155,7 +155,7 @@ const CartContents = () => {
           <div key={item.cartKey}>
             <div className="flex items-start relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
               <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
-                <Link href={`/produits/${item.slug}`}>
+                <Link href={`/nos-produits/${item.slug}`}>
                   <Image
                     src={item.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
                     alt={item.name || 'Produit Automatisme Online'}
@@ -174,7 +174,7 @@ const CartContents = () => {
                   </span>
                 </p>
                 <div className="text-dark-grey text-xs">
-                  Expédition sous 10 jours
+                  {item.deliveryLabel}
                 </div>
               </div>
               <div className="flex items-shrink">

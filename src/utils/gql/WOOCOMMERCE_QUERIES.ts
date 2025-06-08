@@ -1,4 +1,23 @@
 import { gql } from '@apollo/client';
+
+export interface IImage {
+  __typename: string;
+  id: string;
+  sourceUrl?: string;
+  srcSet?: string;
+  altText: string;
+  title: string;
+}
+
+export interface IGalleryImages {
+  __typename: string;
+  nodes: IImage[];
+}
+
+export interface IProduct {
+  __typename: string;
+  node: IProductNode;
+}
 import { seoFields } from './SEO';
 
 export const PRODUCT_CARD_FRAGMENT = `
@@ -231,6 +250,24 @@ export const GET_PRODUCTS_FROM_CATEGORY = gql`
   }
 `;
 
+export interface IProductNode {
+  __typename: string;
+  id: string;
+  databaseId: number;
+  name: string;
+  type: string;
+  slug: string;
+  image: IImage;
+  galleryImages: IGalleryImages;
+  productId: number;
+  price: string;
+  upsell: { nodes: IProduct[] };
+  hasPose?: boolean;
+  stockQuantity?: number;
+  backorders?: 'YES' | 'NO';
+  restockingLeadTime?: number;
+}
+
 export const PRODUCT_CART_ITEM = `product {
   node {
     id
@@ -243,6 +280,9 @@ export const PRODUCT_CART_ITEM = `product {
     ... on SimpleProduct {
       price(format: RAW)
       hasPose
+      stockQuantity
+      backorders
+      restockingLeadTime
     }
   }
 }

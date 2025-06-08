@@ -7,6 +7,7 @@ import { RootObject, Product } from '@/stores/CartProvider';
 import { ChangeEvent } from 'react';
 import { COUNTRIES_LIST } from '../constants/COUNTRIES_LIST';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '../constants/PLACHOLDERS';
+import { getProductAvailability } from './deliveryTime';
 // import { IVariationNodes } from '@/components/Product/AddToCart';
 
 /* Interface for products*/
@@ -191,6 +192,11 @@ export const getFormattedCart = (
         ? givenProductItem?.installationPrice * givenProductItem?.quantity
         : 0,
       hasPose: givenProduct.hasPose,
+      deliveryLabel: getProductAvailability({
+        stock: (givenProduct as any).stockQuantity,
+        backorders: (givenProduct as any).backorders,
+        restockingLeadTime: (givenProduct as any).restockingLeadTime
+      }).deliveryLabel
       // upsell: givenProduct.upsell || { nodes: [] },
     };
 
