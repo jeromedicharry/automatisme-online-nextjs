@@ -33,6 +33,7 @@ import { SearchSvg } from '@/components/sections/blocs/BlocFaq';
 import BlocReassurance from '@/components/sections/blocs/BlocReassurance';
 import { BlocReassuranceProps } from '@/types/blocTypes';
 import Script from 'next/script';
+import BlocConseilFAQ from '@/components/sections/blocs/BlocConseilFAQ';
 
 interface Filters {
   [key: string]: string;
@@ -303,6 +304,19 @@ const CategoryPage = ({
         <BlocReassurance
           reassuranceItems={themeSettings?.reassurance}
           bloc={blocReassuranceFix as BlocReassuranceProps}
+        />
+        <BlocConseilFAQ
+          bloc={{
+            __typename: 'AcfPageBlocsBlocConseilsFaqLayout',
+            title: themeSettings?.sliderAdviceTitle,
+            text: themeSettings?.sliderAdviceText,
+
+            isSpecificContent: false,
+            sliderAdvices: [],
+            featuredFaq: themeSettings?.featuredFaq,
+          }}
+          featuredFaq={themeSettings?.featuredFaq}
+          genericAdvices={themeSettings?.sliderAdvices}
         />
       </Container>
       <Script

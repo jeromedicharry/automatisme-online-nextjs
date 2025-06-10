@@ -1,6 +1,7 @@
 import { PRODUCT_CARD_FRAGMENT } from './WOOCOMMERCE_QUERIES';
 
 export const sliderAdvicesFields = `
+
 sliderAdvices {
     bgColor
     title

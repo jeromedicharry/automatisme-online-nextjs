@@ -66,6 +66,8 @@ export const GET_OPTIONS = gql`
             text
           }
         }
+        sliderAdviceTitle
+        sliderAdviceText
         ${sliderAdvicesFields}
         ${FEATURED_FAQ}
         contactTitle

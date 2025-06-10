@@ -35,6 +35,8 @@ export interface ThemeSettingsProps {
     link: string;
   }[];
   reassuranceAccordion: ReassuranceAccordionItemsProps;
+  sliderAdviceTitle: string;
+  sliderAdviceText: string;
   sliderAdvices: CardConseilProps[];
   featuredFaq: FeaturedFaqProps;
   contactTitle: string;
