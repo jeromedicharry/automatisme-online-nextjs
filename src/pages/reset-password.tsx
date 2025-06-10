@@ -133,6 +133,7 @@ const PasswordReset = ({
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label="Afficher le mot de passe"
+                    tabIndex={-1} // Exclut de la navigation au clavier
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
@@ -152,6 +153,7 @@ const PasswordReset = ({
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                     aria-label="Afficher le mot de passe"
+                    tabIndex={-1} // Exclut de la navigation au clavier
                   >
                     {showConfirmPassword ? (
                       <EyeOff size={20} />

@@ -3,6 +3,7 @@ import Cta from '@/components/atoms/Cta';
 import { Chevron } from '@/components/SVG/Icons';
 import { useMutation } from '@apollo/client';
 import { SEND_PASSWORD_RESET_EMAIL } from '@/components/Auth/SendPasswordResetEmailForm';
+import { LOG_OUT } from '@/components/Auth/Logout';
 
 const SendResetPasswordField = ({ email }: { email: string }) => {
   const [formErrors, setFormErrors] = useState<{
@@ -16,14 +17,29 @@ const SendResetPasswordField = ({ email }: { email: string }) => {
     setIsEditing(!isEditing);
   };
 
+  const [logOut] = useMutation(LOG_OUT);
+
   const [sendResetEmail, { loading }] = useMutation(SEND_PASSWORD_RESET_EMAIL, {
-    onCompleted: () => {
-      setIsSuccess(true);
+    onCompleted: async (data) => {
+      if (data.sendPasswordResetEmail.success) {
+        setIsSuccess(true);
+        // Déconnexion après l'envoi réussi de l'email
+        try {
+          await logOut();
+        } catch (error) {
+          console.error('Erreur lors de la déconnexion:', error);
+        }
+      } else {
+        setFormErrors({
+          general:
+            'La demande de réinitialisation a échoué. Veuillez réessayer.',
+        });
+      }
     },
     onError: (error) => {
       setFormErrors({
         general:
-          error.message || 'Une erreur est survenue. Veuillez réessayer.',
+          error?.message || 'Une erreur est survenue. Veuillez réessayer.',
       });
     },
   });
@@ -79,7 +95,7 @@ const SendResetPasswordField = ({ email }: { email: string }) => {
         className={`mt-2 flex items-start justify-between gap-4 transition-all transform duration-300 ease-out ${isEditing ? 'max-h-[300px]' : 'opacity-0 pointer-events-none max-h-0'}`}
       >
         <div>
-          <p>Changer le mot de passe pour le compte de :</p>
+          <p>Envoyer un email de changement de mot de passe pour :</p>
           <strong> {email}</strong>
           {loading && (
             <p className="text-lg p-4 border border-primary text-balance mt-5">
@@ -87,7 +103,7 @@ const SendResetPasswordField = ({ email }: { email: string }) => {
             </p>
           )}
           {isSuccess && (
-            <p className="text-lg p-4 border border-primary font-medium text-balance mt-5">
+            <p className="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded mt-3">
               Votre demande de réinitialisation de mot de passe a été envoyée
               avec succès. Vous allez recevoir un email vous invitant à le
               réinitaliser.

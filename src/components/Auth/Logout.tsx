@@ -3,7 +3,7 @@ import { useMutation, gql } from '@apollo/client';
 import { Chevron, LogoutSvg } from '../SVG/Icons';
 import { useCartOperations } from '@/hooks/useCartOperations';
 
-const LOG_OUT = gql`
+export const LOG_OUT = gql`
   mutation logOut {
     logout(input: {}) {
       status
@@ -22,7 +22,7 @@ export default function LogOut() {
       localStorage.removeItem('woo-session');
       // Création d'un nouveau panier anonyme
       refetchCart().catch(console.error);
-    }
+    },
   });
 
   const handleLogout = () => {

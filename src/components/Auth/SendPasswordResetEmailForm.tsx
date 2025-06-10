@@ -6,13 +6,11 @@ import { ArrowLeft } from 'lucide-react';
 export const SEND_PASSWORD_RESET_EMAIL = gql`
   mutation SendPasswordResetEmail($email: String!) {
     sendPasswordResetEmail(input: { username: $email }) {
+      success
+      clientMutationId
       user {
         id
         email
-      }
-      success
-      errors {
-        message
       }
     }
   }
