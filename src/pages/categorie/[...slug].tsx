@@ -334,50 +334,75 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ? `${params.slug.join('/')}`
     : params?.slug || '';
 
-  const categoryData = await client.query({
-    query: GET_SINGLE_CATEGORY,
-    variables: {
-      id: '/categorie/' + slug,
-    },
-  });
+  try {
+    const categoryData = await client.query({
+      query: GET_SINGLE_CATEGORY,
+      variables: {
+        id: '/categorie/' + slug,
+      },
+    });
 
-  if (!categoryData) {
+    if (!categoryData?.data?.singleCategory) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const commonData = await fetchCommonData();
+
+    const installationDataRes = await client.query({
+      query: GET_INSTALLATION_CTA,
+    });
+
+    const installationData =
+      installationDataRes?.data?.themeSettings?.optionsFields
+        ?.installationCtaCard;
+
+    const categorySlug = categoryData?.data?.singleCategory?.slug || '';
+
+    try {
+      const { products, total, facets, hasPose } =
+        await fetchMeiliProductsByCategory({
+          categorySlug,
+          page: 1,
+          limit: perPage,
+        });
+
+      return {
+        props: {
+          category: categoryData.data.singleCategory,
+          products,
+          total,
+          initialFacets: facets,
+          initialHasPose: hasPose,
+          installationData,
+          ...commonData,
+        },
+        revalidate: 36000,
+      };
+    } catch (meilisearchError) {
+      console.error('Erreur Meilisearch:', meilisearchError);
+      // En cas d'erreur Meilisearch, on retourne quand même la page avec des produits vides
+      return {
+        props: {
+          category: categoryData.data.singleCategory,
+          products: [],
+          total: 0,
+          initialFacets: {},
+          initialHasPose: false,
+          installationData,
+          ...commonData,
+        },
+        revalidate: 36000,
+      };
+    }
+  } catch (error) {
+    console.error('Erreur Apollo:', error);
     return {
       notFound: true,
     };
   }
 
-  const commonData = await fetchCommonData();
-
-  const installationDataRes = await client.query({
-    query: GET_INSTALLATION_CTA,
-  });
-
-  const installationData =
-    installationDataRes?.data?.themeSettings?.optionsFields
-      ?.installationCtaCard;
-
-  const categorySlug = categoryData?.data?.singleCategory?.slug || '';
-
-  const { products, total, facets, hasPose } =
-    await fetchMeiliProductsByCategory({
-      categorySlug,
-      page: 1,
-      limit: perPage,
-    });
-
-  return {
-    props: {
-      category: categoryData.data.singleCategory,
-      products,
-      total,
-      initialFacets: facets,
-      initialHasPose: hasPose,
-      installationData,
-      ...commonData,
-    },
-    revalidate: 36000,
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {

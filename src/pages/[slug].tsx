@@ -77,7 +77,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       variables: { id: params?.slug },
     })) || null;
 
-  if (!page) {
+  if (!page?.data?.page) {
     return {
       notFound: true,
     };
