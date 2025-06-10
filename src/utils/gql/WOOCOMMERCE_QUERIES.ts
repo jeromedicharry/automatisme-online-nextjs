@@ -1,4 +1,6 @@
 import { gql } from '@apollo/client';
+import { seoFields } from './SEO';
+import { CART_SHIPPING_FRAGMENT } from './fragments';
 
 export interface IImage {
   __typename: string;
@@ -18,7 +20,6 @@ export interface IProduct {
   __typename: string;
   node: IProductNode;
 }
-import { seoFields } from './SEO';
 
 export const PRODUCT_CARD_FRAGMENT = `
   databaseId
@@ -478,15 +479,19 @@ export const FETCH_SINGLE_BRAND = gql`
 // `;
 
 export const GET_CART_SHIPPING_METHODS = gql`
-  query GET_CART_SHIPPING_METHODS {
+  query GetCartShippingMethods {
     cart {
-      shippingMethods {
-        nodes {
-          id
-          label
-          cost(format: RAW)
-        }
-      }
+      ...CartShippingFields
     }
   }
+  ${CART_SHIPPING_FRAGMENT}
+`;
+
+export const GET_CART_SHIPPING_INFO = gql`
+  query GetCartShippingInfo {
+    cart {
+      ...CartShippingFields
+    }
+  }
+  ${CART_SHIPPING_FRAGMENT}
 `;

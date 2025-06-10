@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { CART_SHIPPING_FRAGMENT } from './fragments';
 import { ADDRESS_FIELDS } from './CUSTOMER_QUERIES';
 
 export const ADD_TO_CART = gql`
@@ -100,18 +101,26 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
   }
 `;
 
-export const UPDATE_CART_SHIPPING_METHOD = gql`
-  mutation UpdateCartShippingMethod($shippingMethodId: String!) {
-    updateCartShippingMethod(input: { shippingMethodId: $shippingMethodId }) {
+export const UPDATE_SHIPPING_METHOD = gql`
+  mutation UpdateShippingMethod($input: UpdateShippingMethodInput!) {
+    updateShippingMethod(input: $input) {
       cart {
-        shippingMethods {
+        ...CartShippingFields
+        total
+        subtotal
+        contents {
           nodes {
-            id
-            label
-            cost(format: RAW)
+            key
+            quantity
+            total
+            subtotal
+            subtotalTax
+            installationPrice
+            addInstallation
           }
         }
       }
     }
   }
+  ${CART_SHIPPING_FRAGMENT}
 `;

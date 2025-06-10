@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useQuery } from '@apollo/client';
 import { CartContext } from '@/stores/CartProvider';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import Cta from '../atoms/Cta';
@@ -8,10 +9,28 @@ import Separator from '../atoms/Separator';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import CartReassurance from './CartReassurance';
 import { useCartOperations } from '@/hooks/useCartOperations';
+import { GET_CART_SHIPPING_METHODS, GET_CART_SHIPPING_INFO } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
 const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   const { cart } = useContext(CartContext);
   const { isPro } = useCartOperations();
+
+  const { data: shippingMethodsData } = useQuery(GET_CART_SHIPPING_METHODS);
+  const { data: shippingInfoData } = useQuery(GET_CART_SHIPPING_INFO);
+
+  interface ShippingMethod {
+    cost: string;
+    methodId: string;
+    label: string;
+    instanceId: number;
+  }
+
+  const selectedShippingMethod = shippingMethodsData?.cart?.availableShippingMethods[0]?.rates?.find(
+    (method: ShippingMethod) => {
+      const chosenMethod = shippingInfoData?.cart?.chosenShippingMethods[0];
+      return chosenMethod && `${method.methodId}:${method.instanceId}` === chosenMethod;
+    }
+  );
 
   // Todo gérer la TVA pour l'installation
 
@@ -117,8 +136,11 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
         <Separator />
         <div>
           <div className="text-dark-grey flex justify-between gap-6 items-center">
-            <p>Livraison choisie</p>
-            <data>xx, xx€</data>
+            <p>{selectedShippingMethod ? selectedShippingMethod.label : 'Livraison non sélectionnée'}</p>
+            <data className="relative pr-7">
+              {selectedShippingMethod ? `${selectedShippingMethod.cost}€` : '-'}
+              {selectedShippingMethod && <span className="absolute right-0 top-0 text-xs">{isPro ? 'HT' : 'TTC'}</span>}
+            </data>
           </div>
         </div>
 
