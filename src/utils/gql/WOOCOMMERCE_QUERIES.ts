@@ -465,3 +465,14 @@ export const FETCH_SINGLE_BRAND = gql`
     }
   }
 `;
+
+// export const GET_ALL_PRODUCTS_REDIRECTS = gql`
+//   query GET_ALL_PRODUCTS_REDIRECTS {
+//     products(first: 100) {
+//       nodes {
+//         uri
+
+//       }
+//     }
+//   }
+// `;

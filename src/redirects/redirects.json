@@ -1,0 +1,12 @@
+[
+  {
+    "source": "/ancien-produit-1.html",
+    "destination": "/nos-produits/nouveau-produit-1", 
+    "permanent": true
+  },
+  {
+    "source": "/ancien-produit-2.html",
+    "destination": "/nos-produits/nouveau-produit-2", 
+    "permanent": true
+  }
+]
