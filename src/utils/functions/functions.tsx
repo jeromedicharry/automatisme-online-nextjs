@@ -141,6 +141,9 @@ export const getFormattedCart = (
     totalProductsCount: 0,
     totalProductsPrice: 0,
     totalTax: parseFloat(data.cart.totalTax || '0'),
+    subtotal: parseFloat(data.cart.subtotal || '0'),
+    total: parseFloat(data.cart.total || '0'),
+    shippingTax: 0, // Cette valeur sera mise à jour par la query GET_CART
   };
 
   if (!data || !data.cart || !data.cart.contents) {
