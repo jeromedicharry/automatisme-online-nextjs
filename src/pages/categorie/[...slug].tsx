@@ -270,6 +270,9 @@ const CategoryPage = ({
                   title="Aucun produit correspondant"
                   subtitle="Supprimez les filtres et faites une nouvelle recherche"
                 />
+                <div className="text-xl md:text-2xl text-center text-secondary font-bold mt-6 md:mt-10">
+                  Vous ne trouvez pas ce que vous recherchez ?
+                </div>
                 <div className="flex mt-6 mb:mt-10 items-center">
                   <Cta
                     label="Contactez-nous pour une demande spécifique"
