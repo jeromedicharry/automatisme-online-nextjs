@@ -1,14 +1,21 @@
 import { useState, useContext } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useApolloClient } from '@apollo/client';
 import { CHECKOUT_MUTATION } from '@/utils/gql/GQL_MUTATIONS';
+import { GET_CUSTOMER_ADDRESSES } from '@/utils/gql/CUSTOMER_QUERIES';
 import { CartContext } from '@/stores/CartProvider';
 import useAuth from './useAuth';
+
+const cleanAddressData = (address: any) => {
+  const { ...cleanAddress } = address;
+  return cleanAddress;
+};
 
 export default function useWoocommerceAPI() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { cart } = useContext(CartContext);
   const { user } = useAuth();
+  const client = useApolloClient();
 
   const [checkoutMutation] = useMutation(CHECKOUT_MUTATION);
   //   const [updateOrderStatusMutation] = useMutation(UPDATE_ORDER_STATUS);
@@ -25,13 +32,34 @@ export default function useWoocommerceAPI() {
         throw new Error('Panier ou utilisateur non disponible');
       }
 
+      // Récupérer les adresses du client
+      const { data: addressData } = await client.query({
+        query: GET_CUSTOMER_ADDRESSES,
+        variables: { id: user.id },
+      });
+
+      console.log('Adresses client:', addressData);
+
+      if (!addressData?.customer?.billing || !addressData?.customer?.shipping) {
+        throw new Error('Adresses de facturation ou livraison manquantes');
+      }
+
       const { data } = await checkoutMutation({
         variables: {
           input: {
             paymentMethod: 'bacs',
-            isPaid: false
+            isPaid: false,
+            billing: cleanAddressData(addressData.customer.billing),
+            shipping: cleanAddressData(addressData.customer.shipping),
           },
         },
+      });
+
+      console.log('Données envoyées au checkout:', {
+        paymentMethod: 'bacs',
+        isPaid: false,
+        billing: addressData.customer.billing,
+        shipping: addressData.customer.shipping,
       });
 
       console.log('Réponse mutation:', data);

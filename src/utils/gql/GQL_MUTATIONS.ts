@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { ADDRESS_FIELDS } from './CUSTOMER_QUERIES';
 
 export const ADD_TO_CART = gql`
   mutation ($input: AddToCartInput!) {
@@ -22,6 +23,13 @@ export const CHECKOUT_MUTATION = gql`
         total(format: RAW)
         currency
         adyenReference
+        billing {
+          ${ADDRESS_FIELDS}
+          email
+        }
+        shipping {
+          ${ADDRESS_FIELDS}
+        }
       }
     }
   }

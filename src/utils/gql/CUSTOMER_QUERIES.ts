@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const ADDRESS_FIELDS = `
+export const ADDRESS_FIELDS = `
   address1
   address2
   city
