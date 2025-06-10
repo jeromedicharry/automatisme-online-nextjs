@@ -14,7 +14,7 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 import { ThemeSettingsProps } from '@/types/CptTypes';
 import Cta from '@/components/atoms/Cta';
-import { GetStaticProps } from 'next';
+import type { GetServerSideProps } from 'next';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 
 const ConfirmationPage = ({
@@ -38,18 +38,6 @@ const ConfirmationPage = ({
   });
 
   const renderContent = () => {
-    if (!order_id) {
-      return (
-        <EmptyElement
-          picto={<OrderSvg />}
-          title="Commande introuvable"
-          subtitle="L'identifiant de commande est manquant"
-          ctaLabel="Retour à la boutique"
-          ctaSlug="/"
-          ctaType="primary"
-        />
-      );
-    }
 
     if (loading) {
       return <AccountLoader text="Chargement de votre commande..." />;
@@ -131,13 +119,22 @@ const ConfirmationPage = ({
 
 export default ConfirmationPage;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { order_id } = query;
+
+  if (!order_id) {
+    return {
+      notFound: true, // Redirige vers la page 404
+    };
+  }
+
   const commonData = await fetchCommonData();
 
   return {
     props: {
       ...commonData,
     },
-    revalidate: 36000,
   };
 };
+
+

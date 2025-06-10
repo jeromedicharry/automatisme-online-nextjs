@@ -99,3 +99,19 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
     }
   }
 `;
+
+export const UPDATE_CART_SHIPPING_METHOD = gql`
+  mutation UpdateCartShippingMethod($shippingMethodId: String!) {
+    updateCartShippingMethod(input: { shippingMethodId: $shippingMethodId }) {
+      cart {
+        shippingMethods {
+          nodes {
+            id
+            label
+            cost(format: RAW)
+          }
+        }
+      }
+    }
+  }
+`;

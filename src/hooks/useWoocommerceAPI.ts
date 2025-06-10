@@ -6,7 +6,13 @@ import { CartContext } from '@/stores/CartProvider';
 import useAuth from './useAuth';
 
 const cleanAddressData = (address: any) => {
-  const { ...cleanAddress } = address;
+  // Créer un nouvel objet sans __typename
+  const cleanAddress = Object.keys(address).reduce((acc, key) => {
+    if (key !== '__typename') {
+      acc[key] = address[key];
+    }
+    return acc;
+  }, {} as any);
   return cleanAddress;
 };
 

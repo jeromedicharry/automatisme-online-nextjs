@@ -476,3 +476,17 @@ export const FETCH_SINGLE_BRAND = gql`
 //     }
 //   }
 // `;
+
+export const GET_CART_SHIPPING_METHODS = gql`
+  query GET_CART_SHIPPING_METHODS {
+    cart {
+      shippingMethods {
+        nodes {
+          id
+          label
+          cost(format: RAW)
+        }
+      }
+    }
+  }
+`;
