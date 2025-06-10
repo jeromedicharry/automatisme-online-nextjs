@@ -9,7 +9,11 @@ import Separator from '../atoms/Separator';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import CartReassurance from './CartReassurance';
 import { useCartOperations } from '@/hooks/useCartOperations';
-import { GET_CART_SHIPPING_METHODS, GET_CART_SHIPPING_INFO } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import {
+  GET_CART_SHIPPING_METHODS,
+  GET_CART_SHIPPING_INFO,
+  GET_CART,
+} from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
 const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   const { cart } = useContext(CartContext);
@@ -17,6 +21,7 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
 
   const { data: shippingMethodsData } = useQuery(GET_CART_SHIPPING_METHODS);
   const { data: shippingInfoData } = useQuery(GET_CART_SHIPPING_INFO);
+  const { data: cartData } = useQuery(GET_CART);
 
   interface ShippingMethod {
     cost: string;
@@ -25,12 +30,16 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
     instanceId: number;
   }
 
-  const selectedShippingMethod = shippingMethodsData?.cart?.availableShippingMethods[0]?.rates?.find(
-    (method: ShippingMethod) => {
-      const chosenMethod = shippingInfoData?.cart?.chosenShippingMethods[0];
-      return chosenMethod && `${method.methodId}:${method.instanceId}` === chosenMethod;
-    }
-  );
+  const selectedShippingMethod =
+    shippingMethodsData?.cart?.availableShippingMethods[0]?.rates?.find(
+      (method: ShippingMethod) => {
+        const chosenMethod = shippingInfoData?.cart?.chosenShippingMethods[0];
+        return (
+          chosenMethod &&
+          `${method.methodId}:${method.instanceId}` === chosenMethod
+        );
+      },
+    );
 
   // Todo gérer la TVA pour l'installation
 
@@ -46,8 +55,12 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
     return total;
   }, 0);
 
-  // Calcul du coût total (produits + installations)
-  const grandTotal = cart.totalProductsPrice + totalInstallationCost;
+  // Calcul du coût total (produits + installations + livraison)
+  const shippingCost = selectedShippingMethod
+    ? parseFloat(selectedShippingMethod.cost)
+    : 0;
+  const cartTotal = parseFloat((cartData?.cart?.total || 0).toString());
+  const grandTotal = cartTotal + totalInstallationCost + shippingCost;
 
   return (
     <>
@@ -136,10 +149,18 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
         <Separator />
         <div>
           <div className="text-dark-grey flex justify-between gap-6 items-center">
-            <p>{selectedShippingMethod ? selectedShippingMethod.label : 'Livraison non sélectionnée'}</p>
+            <p>
+              {selectedShippingMethod
+                ? selectedShippingMethod.label
+                : 'Livraison non sélectionnée'}
+            </p>
             <data className="relative pr-7">
               {selectedShippingMethod ? `${selectedShippingMethod.cost}€` : '-'}
-              {selectedShippingMethod && <span className="absolute right-0 top-0 text-xs">{isPro ? 'HT' : 'TTC'}</span>}
+              {selectedShippingMethod && (
+                <span className="absolute right-0 top-0 text-xs">
+                  {isPro ? 'HT' : 'TTC'}
+                </span>
+              )}
             </data>
           </div>
         </div>
@@ -162,25 +183,30 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
         <Separator />
         <div>
           <div className="flex text-primary font-bold justify-between gap-6 items-center">
-            <p>Total HT</p>
-            <p>{(cart.totalProductsPrice - cart.totalTax).toFixed(2)}€</p>
+            <p>Total Produits HT</p>
+            <p>
+              {parseFloat((cartData?.cart?.subtotal || 0).toString()).toFixed(
+                2,
+              )}
+              €
+            </p>
           </div>
 
           <div className="flex text-primary justify-between gap-6 items-center mt-1">
+            <p>TVA Produits</p>
             <p>
-              Dont TVA (
-              {(
-                (cart.totalTax * 100) /
-                (cart.totalProductsPrice - cart.totalTax)
-              ).toFixed(1)}
-              %)
+              {parseFloat((cartData?.cart?.totalTax || 0).toString()).toFixed(
+                2,
+              )}
+              €
             </p>
-            <p>{cart.totalTax.toFixed(2)}€</p>
           </div>
 
           <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
-            <p>Total TTC</p>
-            <p>{cart.totalProductsPrice.toFixed(2)}€</p>
+            <p>Total Panier TTC</p>
+            <p>
+              {parseFloat((cartData?.cart?.total || 0).toString()).toFixed(2)}€
+            </p>
           </div>
 
           {/* Affichage du grand total incluant les installations */}
@@ -200,6 +226,37 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                 <p>TVA Installation (20%)</p>
                 <p>{(totalInstallationCost * 0.2).toFixed(2)}€</p>
               </div>
+              {selectedShippingMethod && (
+                <>
+                  <div className="flex text-primary justify-between gap-6 items-center mt-2">
+                    <p>Livraison HT ({selectedShippingMethod.label})</p>
+                    <p>
+                      {(
+                        parseFloat(selectedShippingMethod.cost) -
+                        parseFloat(
+                          (cartData?.cart?.shippingTax || 0).toString(),
+                        )
+                      ).toFixed(2)}
+                      €
+                    </p>
+                  </div>
+                  {cartData?.cart?.shippingTax > 0 && (
+                    <div className="flex text-primary justify-between gap-6 items-center mt-1">
+                      <p>TVA Livraison</p>
+                      <p>
+                        {parseFloat(
+                          (cartData?.cart?.shippingTax || 0).toString(),
+                        ).toFixed(2)}
+                        €
+                      </p>
+                    </div>
+                  )}
+                  <div className="flex text-primary justify-between gap-6 items-center mt-1">
+                    <p>Livraison TTC</p>
+                    <p>{selectedShippingMethod.cost}€</p>
+                  </div>
+                </>
+              )}
               <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
                 <p>Total TTC avec installation</p>
                 <p>{grandTotal.toFixed(2)}€</p>

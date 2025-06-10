@@ -32,6 +32,9 @@ export interface RootObject {
   totalProductsCount: number;
   totalProductsPrice: number;
   totalTax: number;
+  subtotal: number;
+  total: number;
+  shippingTax: number;
 }
 
 export type TRootObject = RootObject | string | null | undefined;
