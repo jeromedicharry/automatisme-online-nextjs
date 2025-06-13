@@ -36,11 +36,11 @@ const DesktopParentCategorySubMenu = ({
           <div className="w-fit">
             <Cta
               slug={`${parentCategorySlug}`}
-              label="Voir tous le produits de cette catégorie"
+              label="Voir les produits"
               variant="secondary"
               size="small"
             >
-              {'Voir tous le produits de cette catégorie'}
+              {'Voir les produits'}
             </Cta>
           </div>
         </div>
