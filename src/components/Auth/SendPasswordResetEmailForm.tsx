@@ -2,6 +2,7 @@ import React, { useState, Dispatch, SetStateAction } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { FormStatusProps } from '@/hooks/useAuthModal';
 import { ArrowLeft } from 'lucide-react';
+import { CloseSvg } from '../SVG/Icons';
 
 export const SEND_PASSWORD_RESET_EMAIL = gql`
   mutation SendPasswordResetEmail($email: String!) {
@@ -93,7 +94,7 @@ const SendPasswordResetEmailForm: React.FC<SendPasswordResetEmailFormProps> = ({
           className="absolute top-0 left-0 text-primary hover:text-black text-xl"
           type="button"
         >
-          X
+          <CloseSvg />
         </button>
 
         <h2 className="text-2xl font-bold text-center text-primary mb-6">

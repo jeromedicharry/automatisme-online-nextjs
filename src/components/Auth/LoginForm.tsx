@@ -4,7 +4,7 @@ import { GET_USER } from '@/hooks/useAuth';
 import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
 import { AuthFormProps } from '@/types/auth';
-import { CheckMedalSvg, Chevron } from '../SVG/Icons';
+import { CheckMedalSvg, Chevron, CloseSvg } from '../SVG/Icons';
 import { Eye, EyeOff } from 'lucide-react';
 
 const LOG_IN = gql`
@@ -125,6 +125,8 @@ export default function LogInForm({
     if (handleCloseModal) handleCloseModal();
   }
 
+  const isFormIncomplete = !email || !password;
+
   return (
     <div className="flex w-full h-full items-center justify-center relative p-6 md:p-12">
       {/* Bouton de fermeture */}
@@ -134,7 +136,7 @@ export default function LogInForm({
           className="absolute top-0 left-0 text-primary hover:text-black text-xl"
           type="button"
         >
-          X
+          <CloseSvg />
         </button>
         <h2 className="text-2xl font-bold text-center mb-6">Se connecter</h2>
 
@@ -203,8 +205,8 @@ export default function LogInForm({
 
           <button
             type="submit"
-            className="w-full bg-primary duration-300 hover:bg-primary-dark text-white min-h-[43px] rounded-[5px] min-w-[170px] text-base leading-general px-4 py-2 gap-2"
-            disabled={loading}
+            className={`w-full font-bold duration-300 min-h-[43px] rounded-[5px] min-w-[170px] text-base leading-general px-4 py-2 gap-2 ${isFormIncomplete ? 'bg-greyhover cursor-not-allowed text-primary' : 'bg-primary text-white hover:bg-primary-dark'}`}
+            disabled={isFormIncomplete || loading}
           >
             {loading ? 'Connexion...' : 'Me connecter'}
           </button>
@@ -219,6 +221,8 @@ export default function LogInForm({
             slug="#"
             label="Créer un compte"
             variant="secondary"
+            isFull
+            disabled={loading}
             handleButtonClick={(e) => {
               e.preventDefault();
               setRegisterType('customer');

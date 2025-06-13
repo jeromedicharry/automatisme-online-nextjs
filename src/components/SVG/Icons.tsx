@@ -423,6 +423,33 @@ const ShieldSvg = () => {
   );
 };
 
+const CloseSvg = () => {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <line
+        x1="0.353553"
+        y1="0.646447"
+        x2="10.3536"
+        y2="10.6464"
+        stroke="currentColor"
+      />
+      <line
+        y1="-0.5"
+        x2="14.1421"
+        y2="-0.5"
+        transform="matrix(-0.707107 0.707107 0.707107 0.707107 11 1)"
+        stroke="currentColor"
+      />
+    </svg>
+  );
+};
+
 export {
   CheckMedalSvg,
   Chevron,
@@ -443,4 +470,5 @@ export {
   Wifi,
   LockSvg,
   ShieldSvg,
+  CloseSvg,
 };

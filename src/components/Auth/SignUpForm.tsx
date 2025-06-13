@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Cta from '../atoms/Cta';
 import { AuthFormProps } from '@/types/auth';
-import { CheckMedalSvg } from '../SVG/Icons';
+import { CheckMedalSvg, CloseSvg } from '../SVG/Icons';
 import ToggleSwitch from '../atoms/ToggleSwitch';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
@@ -149,12 +149,12 @@ export default function SignUpForm({
   if (wasSignUpSuccessful) {
     return (
       <div className="flex h-full w-full items-center justify-center relative p-6 md:p-12">
-        <div className="relative flex flex-col justify-center h-full w-full">
+        <div className="relative flex flex-col justify-center text-center h-full w-full">
           <button
             onClick={handleClose}
             className="absolute top-0 left-0 text-primary hover:text-black text-xl"
           >
-            X
+            <CloseSvg />
           </button>
           <div className="bg-white rounded-xl max-w-md w-full flex flex-col gap-4">
             <h2 className="text-2xl font-semibold mb-4 text-primary text-center">
@@ -181,13 +181,16 @@ export default function SignUpForm({
               handleButtonClick={() => handleCloseAfterSuccess()}
               variant="primaryHollow"
             >
-              je me connecte
+              Je me connecte
             </Cta>
           </div>
         </div>
       </div>
     );
   }
+
+  const hasMinimumLength = formData?.password?.length >= 8;
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>-]/.test(formData?.password);
 
   return (
     <div className="flex h-full w-full items-center justify-center relative p-6 md:p-12">
@@ -197,7 +200,7 @@ export default function SignUpForm({
           onClick={handleClose}
           className="absolute top-0 left-0 text-primary hover:text-black text-xl"
         >
-          X
+          <CloseSvg />
         </button>
 
         <h2 className="text-2xl font-bold mb-1 text-primary">
@@ -292,13 +295,17 @@ export default function SignUpForm({
 
           <ul className="mt-6 text-xs text-primary">
             <li className="flex items-center gap-2">
-              <span className="w-6 h-6 flex items-center text-primary">
+              <span
+                className={`w-6 h-6 duration-300 flex items-center ${hasMinimumLength ? 'text-primary' : 'text-dark-grey'}`}
+              >
                 <CheckMedalSvg />
               </span>
               8 caractères minimum
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-6 h-6 flex items-center text-primary">
+              <span
+                className={`w-6 h-6 duration-300 flex items-center ${hasSpecialChar ? 'text-primary' : 'text-dark-grey'}`}
+              >
                 <CheckMedalSvg />
               </span>
               1 caractère spécial
