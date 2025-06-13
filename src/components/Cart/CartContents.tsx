@@ -224,7 +224,7 @@ const CartContents = () => {
                 </div>
               )}
             </div>
-            {item.addInstallation && item.installationPrice && (
+            {item.addInstallation ? (
               <div className="flex items-start relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
                 <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
                   <Image
@@ -246,7 +246,7 @@ const CartContents = () => {
                     <div className="text-secondary font-bold">{`Quantité x ${item.qty}`}</div>
                   </h2>
                   <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
-                    {item.installationPrice.toFixed(2)}€{' '}
+                    {item.installationPrice?.toFixed(2)}€{' '}
                     <span className="absolute right-0 top-1 text-xs">
                       {isPro ? 'HT' : 'TTC'}
                     </span>
@@ -270,7 +270,7 @@ const CartContents = () => {
                   </div>
                 )}
               </div>
-            )}
+            ) : null}
           </div>
         ))}
       </div>

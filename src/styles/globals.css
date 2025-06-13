@@ -218,6 +218,11 @@ html {
   }
 }
 
+/* Avis vérifiés */
+.review__header {
+  margin-bottom: 0 !important;
+}
+
 
 .modal-content {
   animation-duration: 0.5s;

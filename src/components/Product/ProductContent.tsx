@@ -18,6 +18,7 @@ import {
 import ProductReassurance from './ProductReassurance';
 import { getProductAvailability } from '@/utils/functions/deliveryTime';
 import { useState } from 'react';
+import AddInstallation from '@/AddInstallation';
 
 export interface BrandStickerProps {
   name: string;
@@ -130,18 +131,18 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
   });
 
   return (
-    <article className="my-12 md:my-16">
-      <div className="flex flex-col lg:flex-row xl:grid xl:grid-cols-2 items-center lg:items-start lg:justify-between gap-5 max-lg:max-w-xl mx-auto">
+    <article className="mb-12 mt-2 md:mt-16 md:mb-16">
+      <div className="flex flex-col lg:flex-row xl:grid xl:grid-cols-2 items-center lg:items-start lg:justify-between gap-5 max-lg:max-w-xxl mx-auto">
         <div className="flex flex-col gap-5 w-full lg:max-w-[500px] xl:max-w-full">
           <ProductGalerie galleryImages={product.galleryImages} />
           <div className="description hidden md:block">
             <ProductDescription description={product?.description} />
           </div>
         </div>
-        <div className="flex flex-col gap-5 shrink-1">
+        <div className="flex flex-col gap-5 shrink-1 lg:sticky lg:top-48">
           <div className="titre order-2 md:order-1">
             {product?.acfFeatured?.isFeatured && (
-              <span className="w-fit px-[10px] rounded-[6px] h-[28px] flex items-center justify-center bg-primary-light text-base leading-general font-bold">
+              <span className="w-fit px-[10px] mb-1 rounded-[6px] h-[28px] flex items-center justify-center bg-primary-light text-base leading-general font-bold">
                 Choix AO
               </span>
             )}
@@ -163,6 +164,13 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                     price={parseFloat(product?.price || '0')}
                     regularPrice={parseFloat(product?.regularPrice || '0')}
                   />
+                  <div className="md:hidden max-md: mb-4">
+                    <AddInstallation
+                      installationPrice={product?.installationPrice || 0}
+                      addInstallation={addInstallation}
+                      setAddInstallation={setAddInstallation}
+                    />
+                  </div>
                   <div className="flex items-stretch gap-3 justify-between mb-6 w-fit">
                     {loggedIn && product?.databaseId !== undefined && (
                       <div className="shrink-0 basis-[45px] h-[45px] w-[45px] rounded-md flex justify-center items-center border border-primary">
@@ -189,54 +197,24 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                   </div>
                 </div>
                 {isSellable &&
-                  product.ecoTaxValue &&
-                  product.ecoTaxValue > 0 && (
-                    <em className="text-sm text-dark-grey leading-general mb-3 block mt-[-8px]">
-                      Eco-Taxe incluse : {product.ecoTaxValue} €
-                    </em>
-                  )}
+                product.ecoTaxValue &&
+                product.ecoTaxValue > 0 ? (
+                  <em className="text-sm text-dark-grey leading-general mb-3 block mt-[-8px]">
+                    Eco-Taxe incluse : {product.ecoTaxValue} €
+                  </em>
+                ) : null}
                 <p className="mt-2 md:mt-1 font-bold text-sm md:font-normal md:text-base leading-general">
                   Payer en 3 versements sans frais.
                 </p>
               </>
             )}
             {product?.hasPose && product?.installationPrice && (
-              <div className="mt-8 md:mt-6">
-                <p className="mb-4 font-bold">{"Choix de l'option"}</p>
-                <div className="flex w-full md:w-fit gap-4 items-stretch">
-                  <label className="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="option"
-                      value="option1"
-                      className="hidden peer"
-                      checked={addInstallation}
-                      onChange={() => setAddInstallation(true)}
-                    />
-                    <span className="block relative font-bold px-5 py-3 border border-primary rounded-md peer-checked:bg-primary-light duration-300 md:min-w-[220px]">
-                      <div className="absolute font-normal bg-secondary text-white text-xs leading-general px-1 py-1/2 rounded-[3px] top-0 -translate-y-1/2 right-4">
-                        Recommandé
-                      </div>
-                      <p>Avec installation</p>
-                      <div className="text-dark-grey font-normal">
-                        (+{product?.installationPrice} TTC)
-                      </div>
-                    </span>
-                  </label>
-                  <label className="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="option"
-                      value="option2"
-                      className="hidden peer"
-                      checked={!addInstallation}
-                      onChange={() => setAddInstallation(false)}
-                    />
-                    <span className="flex items-center px-5 py-3 font-bold border h-full border-primary rounded-md peer-checked:bg-primary-light duration-300 md:min-w-[220px]">
-                      Sans installation
-                    </span>
-                  </label>
-                </div>
+              <div className="max-md:hidden mt-8 md:mt-6">
+                <AddInstallation
+                  installationPrice={product.installationPrice}
+                  addInstallation={addInstallation}
+                  setAddInstallation={setAddInstallation}
+                />
               </div>
             )}
           </section>

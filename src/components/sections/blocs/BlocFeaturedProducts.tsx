@@ -10,11 +10,14 @@ import { Navigation } from 'swiper/modules';
 import Cardproduct from '@/components/cards/CardProduct';
 import SliderPrevNextButton from '@/components/atoms/SliderPrevNextButton';
 import Script from 'next/script';
+import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 
 const BlocFeaturedProducts = ({
   bloc,
+  isProductPage = false,
 }: {
   bloc: BlocFeaturedProductsProps;
+  isProductPage?: boolean;
 }) => {
   if (
     !bloc ||
@@ -28,8 +31,9 @@ const BlocFeaturedProducts = ({
     <Container>
       <section className="mb-12 md:mb-16 featured-products-slider">
         <div className="max-md:max-w-md mx-auto xl:w-full">
-          <BlocIntroSmall title={bloc.title} subtitle={bloc.subtitle} />
-
+          {!isProductPage && (
+            <BlocIntroSmall title={bloc.title} subtitle={bloc.subtitle} />
+          )}
           <div className="bg-primary-light md:flex rounded-t-xl md:rounded-2xl overflow-hidden">
             {bloc.image?.node?.sourceUrl && (
               <div className="shrink-0">
@@ -49,7 +53,10 @@ const BlocFeaturedProducts = ({
                 ></Image>
               </div>
             )}
-            <div className="pl-2 pr-4 pt-4 pb-12 overflow-hidden relative">
+            <div className="pl-2 pr-4 pt-4 pb-12 overflow-hidden relative mx-auto">
+              {isProductPage && (
+                <BlocIntroLarge title={bloc.title} subtitle={bloc.subtitle} />
+              )}
               <Swiper
                 spaceBetween={20}
                 modules={[Navigation]}
@@ -63,7 +70,7 @@ const BlocFeaturedProducts = ({
                 }}
                 autoHeight={false}
                 navigation={{ nextEl: '.next', prevEl: '.prev' }}
-                wrapperClass="px-2 pt-4 pb-8 md:pb-8 flex item-stretch"
+                wrapperClass={`px-2 pt-4 pb-8 md:pb-8 flex item-stretch ${isProductPage && bloc.products.nodes.length < 3 ? 'lg:justify-center' : ''}`}
               >
                 {bloc.products.nodes.map((product, key) => (
                   <SwiperSlide key={key}>

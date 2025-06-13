@@ -46,7 +46,7 @@ const FavoriteButton = ({ productId }: { productId: number }) => {
       className={`favorite-button ${isFavorite ? 'is-favorite' : ''}`}
       title={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
     >
-      {isLoading ? '⏳' : isFavorite ? <HeartFilled /> : <Heart />}
+      {isFavorite ? <HeartFilled /> : <Heart />}
     </button>
   );
 };

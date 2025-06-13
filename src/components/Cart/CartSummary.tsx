@@ -1,12 +1,10 @@
 import { useContext } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useQuery } from '@apollo/client';
 import { CartContext } from '@/stores/CartProvider';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import Cta from '../atoms/Cta';
 import Separator from '../atoms/Separator';
-import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 import CartReassurance from './CartReassurance';
 import { useCartOperations } from '@/hooks/useCartOperations';
 import {
@@ -103,13 +101,6 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
               href={`/nos-produits/${product.slug}`}
               className="flex gap-1 justify-between items-center mb-2"
             >
-              <Image
-                src={product.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
-                alt={product.name || 'Produit automatisme online'}
-                width={80}
-                height={80}
-                className="max-w-[60px] aspect-square object-contain shrink-0"
-              />
               <div className="font-bold shrink-1 overflow-hidden text-ellipsis break-words whitespace-pre-line line-clamp-2">
                 {product.name}
                 <span className="block font-normal text-sm text-dark-grey">
@@ -125,24 +116,24 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
             </Link>
 
             {/* Installation si présente */}
-            {product.addInstallation && product.installationPrice && (
+            {product.addInstallation ? (
               <div className="flex justify-between items-center mb-2 text-sm">
                 <div className="flex items-center">
-                  <div className="flex items-center justify-center w-[60px] h-[60px]">
+                  {/* <div className="flex items-center justify-center w-[60px] h-[60px]">
                     <div className="w-[20px] h-[20px] bg-secondary rounded-full"></div>
-                  </div>
+                  </div> */}
                   <div className="font-bold shrink-1 overflow-hidden text-ellipsis break-words whitespace-pre-line line-clamp-2">
                     {"Frais d'installation"}
                   </div>
                 </div>
                 <div className="font-bold text-primary relative pr-7">
-                  {product.installationPrice.toFixed(2)}€
+                  {product.installationPrice?.toFixed(2)}€
                   <span className="absolute right-0 top-0 text-xs">
                     {isPro ? 'HT' : 'TTC'}
                   </span>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         ))}
 

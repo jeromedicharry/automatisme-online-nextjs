@@ -36,7 +36,7 @@ const ProductGalerie = ({
                 width={600}
                 height={600}
                 alt={`Produit automatisme Online ${index + 1}`}
-                className="aspect-square object-contain lg:max-w-[450px] mx-auto"
+                className="aspect-square object-contain lg:max-w-[450px] mx-auto max-md:max-w-[280px]"
               />
             </figure>
           </SwiperSlide>

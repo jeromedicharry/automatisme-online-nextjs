@@ -13,10 +13,20 @@ const ProductHeader = ({
 }) => {
   return (
     <header>
-      <div className="flex text-xl leading-general text-primary justify-between lg:items-end gap-5">
-        <h1>{title}</h1>
+      <div className="flex text-xl leading-general text-primary justify-between lg:items-center gap-5">
+        <div>
+          <h1 className="text-2xl leading-general font-bold lg:max-w-[500px]">
+            {title}
+          </h1>
+          <div className="">
+            <div
+              className="skeepers_product__stars"
+              data-product-id={productRef}
+            ></div>
+          </div>
+        </div>
 
-        <div className="h-fit">
+        <div className="h-fit lg:self-end">
           {brand?.thumbnailUrl ? (
             <Image
               src={brand?.thumbnailUrl}
@@ -31,12 +41,6 @@ const ProductHeader = ({
             </span>
           )}
         </div>
-      </div>
-      <div className="mt-1">
-        <div
-          className="skeepers_product__stars"
-          data-product-id={productRef}
-        ></div>
       </div>
     </header>
   );

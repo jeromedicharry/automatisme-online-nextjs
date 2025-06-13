@@ -18,6 +18,7 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 
 import Script from 'next/script';
+import BlocReassuranceAccordion from '@/components/sections/BlocReassuranceAccordion';
 
 const Product = ({
   product,
@@ -44,13 +45,18 @@ const Product = ({
       totalProducts={totalProducts}
     >
       <Container>
-        <BreadCrumbs breadCrumbs={product.seo?.breadcrumbs} />
+        <div className="max-md:hidden">
+          <BreadCrumbs breadCrumbs={product.seo?.breadcrumbs} />
+        </div>
         <ProductContent product={product} />
       </Container>
       <ProductUpsells upsellProducts={product?.upsell?.nodes} />
       <Container>
         <ProductCrossSells crossSellProducts={product?.crossSell?.nodes} />
       </Container>
+      <BlocReassuranceAccordion
+        reassuranceAccordion={themeSettings.reassuranceAccordion}
+      />
       <Script
         defer
         strategy="afterInteractive"

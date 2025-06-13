@@ -1,5 +1,5 @@
 // Gère la modale du panier intermédiaire quand on ajoute un produit au panier
-import React from 'react';
+import React, { useContext } from 'react';
 import Modal from './Modal';
 import { useIntermediateCart } from '@/stores/IntermediateCartContext';
 import { SuccessBadgeSvg } from '../SVG/Icons';
@@ -13,6 +13,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import CardInstallation from '../cards/CardInstallation';
+import { CartContext } from '@/stores/CartProvider';
 
 const CartModal: React.FC = () => {
   const {
@@ -23,6 +24,15 @@ const CartModal: React.FC = () => {
     hasPose,
     installationData,
   } = useIntermediateCart();
+  const { cart } = useContext(CartContext);
+
+  // Vérifie si l'installation est déjà dans le panier pour ce produit
+  const hasInstallationInCart =
+    cart?.products?.some(
+      (product) =>
+        product.productId === currentAddedProduct?.databaseId &&
+        product.addInstallation,
+    ) ?? false;
 
   // todo fix card height + check if we use related or upsell + check mobile
 
@@ -57,7 +67,7 @@ const CartModal: React.FC = () => {
           )}
 
           {/* Produits associés */}
-          {(hasPose || relatedProducts.length > 0) && (
+          {(hasPose && !hasInstallationInCart) || relatedProducts.length > 0 ? (
             <div className="intermediate-cart-products-slider">
               <h2 className="text-xl font-medium leading-general border-l-[3px] border-secondary pl-2 text-primary">
                 {'Fréquemment acheté ensemble'}
@@ -78,7 +88,7 @@ const CartModal: React.FC = () => {
                   navigation={{ nextEl: '.next', prevEl: '.prev' }}
                   wrapperClass="px-2 pt-4 pb-2 flex item-stretch"
                 >
-                  {hasPose && installationData && (
+                  {hasPose && installationData && !hasInstallationInCart && (
                     <SwiperSlide>
                       <CardInstallation installation={installationData} />
                     </SwiperSlide>
@@ -105,7 +115,7 @@ const CartModal: React.FC = () => {
                 </nav>
               </div>
             </div>
-          )}
+          ) : null}
 
           {/* Actions */}
           <div className="mt-auto flex flex-col gap-2 md:flex-row">

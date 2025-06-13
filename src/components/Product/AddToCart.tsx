@@ -92,7 +92,7 @@ const AddToCart = ({
     <Cta
       handleButtonClick={handleAddToCart}
       label={
-        addInstallation ? 'AJOUTER AVEC INSTALLATION' : 'AJOUTER AU PANIER'
+        addInstallation ? 'Ajouter avec installation' : 'AJOUTER AU PANIER'
       }
       variant={variant}
       size="large"
@@ -101,7 +101,7 @@ const AddToCart = ({
         addToCartLoading ? 'opacity-50 pointer-events-none' : ''
       }`}
     >
-      {addInstallation ? 'AJOUTER AVEC INSTALLATION' : 'AJOUTER AU PANIER'}
+      {addInstallation ? 'Ajouter avec installation' : 'Ajouter au panier'}
     </Cta>
   );
 };

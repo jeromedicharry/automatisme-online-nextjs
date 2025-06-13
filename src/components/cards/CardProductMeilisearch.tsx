@@ -18,7 +18,7 @@ export interface CardProductMeilisearchProps {
   image: string;
   meta: {
     sku: string;
-    regular_price: string;
+    _regular_price: string;
     _is_pro: boolean;
     _price: string;
     _is_featured: boolean;
@@ -51,7 +51,7 @@ const CardProductMeilisearch = ({
       },
     },
     price: meiliProduct.meta?._price || '',
-    regularPrice: meiliProduct.meta?.regular_price || '',
+    regularPrice: meiliProduct.meta?._regular_price || '',
     salePrice: '', // À adapter si disponible
     sku: meiliProduct.meta?.sku || '',
     uri: `/produit/${meiliProduct.slug}`,
@@ -71,7 +71,6 @@ const CardProductMeilisearch = ({
     restockingLeadTime: product.meta._restocking_lead_time,
   });
 
-  // console.log(product.title, ' isfeatured : ', product?.meta?._is_featured);
   return (
     <article className="flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
@@ -137,7 +136,7 @@ const CardProductMeilisearch = ({
             <div className="mb-3">
               <ProductPrice
                 price={parseFloat(product?.meta?._price || '0')}
-                regularPrice={parseFloat(product?.meta?.regular_price || '0')}
+                regularPrice={parseFloat(product?.meta?._regular_price || '0')}
                 variant="card"
               />
             </div>
