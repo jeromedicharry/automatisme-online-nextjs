@@ -58,7 +58,7 @@ html {
 }
 
 .featured-products-slider .swiper-slide {
-  max-width: 257px !important;
+  width: clamp(250px, 87%, 325px) !important;
   height: unset !important;
 }
 
@@ -160,6 +160,7 @@ html {
 
 .wysiwyg a {
   color: #E94E1B;
+  font-weight: 700;
   transition: all 0.3s ease-in-out;
   text-decoration: underline;
 }

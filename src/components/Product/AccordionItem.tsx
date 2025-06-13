@@ -20,16 +20,22 @@ const AccordionItem = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
-      className={`pb-6 not-first:border-t mt-4 text-primary ${noBorderBottom ? '' : 'border-b border-primary'}`}
+      className={`pb-6 not-first:border-t mt-3 md:mt-4 text-primary ${noBorderBottom ? '' : 'border-b border-primary'}`}
     >
       <div
         className="flex items-center justify-between gap-4"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-4">
-          {picto && <div className="">{picto}</div>}
+          {picto && <div className="w-6 h-6 md:w-10 md:h-10">{picto}</div>}
           {pictoFromWP && (
-            <Image src={pictoFromWP} alt={title} width={40} height={40} />
+            <Image
+              src={pictoFromWP}
+              alt={title}
+              width={40}
+              height={40}
+              className="w-6 h-6 md:w-10 md:h-10"
+            />
           )}
           <h2 className="font-bold">{title}</h2>
         </div>

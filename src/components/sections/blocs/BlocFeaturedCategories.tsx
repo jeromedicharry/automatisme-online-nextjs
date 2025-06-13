@@ -35,7 +35,7 @@ const BlocFeaturedCategories = ({
                     className="max-w-full max-h-full object-cover"
                   />
                 </div>
-                <h3 className="mt-[10px] font-medium text-sm leading-general group-hover:text-secondary duration-300">
+                <h3 className="mt-[10px] font-bold text-sm md:text-base leading-general group-hover:text-secondary duration-300">
                   {category.name}
                 </h3>
               </Link>

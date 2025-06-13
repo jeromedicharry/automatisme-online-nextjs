@@ -35,8 +35,10 @@ const Footer = ({
     <footer className="bg-primary py-10">
       <Container>
         <div className="flex md:flex-wrap flex-col md:flex-row items-center md:items-start md:justify-between gap-10 md:gap-6 max-md:max-w-md mx-auto">
-          <div className="flex flex-col gap-14 md:gap-6 max-sm:items-center">
-            <Logo isFooter />
+          <div className="flex flex-col gap-14 md:gap-6 max-sm:items-stretch max-sm:w-full">
+            <div className="self-center">
+              <Logo isFooter />
+            </div>
             <Newsletter />
           </div>
           <SimpleFooterMenu menu={menu1} />

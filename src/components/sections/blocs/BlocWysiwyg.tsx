@@ -12,7 +12,7 @@ const BlocWysiwyg = ({ bloc }: { bloc: BlocWysiWygProps }) => {
       <Container>
         {/* <Fade cascade triggerOnce damping={0.15}> */}
         <BlocIntroSmall title={bloc.title} subtitle={bloc.subtitle} />
-        <ExpandableText text={bloc.text} />
+        <ExpandableText variant="grey" text={bloc.text} />
         {/* </Fade> */}
       </Container>
     </section>

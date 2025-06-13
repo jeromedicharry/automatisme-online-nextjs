@@ -11,13 +11,13 @@ const Logo = ({ isFooter = false }) => {
     <Link href="/" className="block z-10" title="Home page">
       <div className={`transition duration-300}`}>
         <div
-          className={`${isFooter ? 'max-w-[240px]' : 'max-w-[121px] md:max-w-[138px]'}`}
+          className={`${isFooter ? 'w-[240px]' : 'max-w-[121px] md:max-w-[138px]'}`}
         >
           <Image
             src={src}
             alt="Logo automatisme online"
             width={276}
-            height={73}
+            height={74}
             className="block w-full object-cover"
           />
         </div>

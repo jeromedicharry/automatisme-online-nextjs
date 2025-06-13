@@ -18,11 +18,11 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
     restockingLeadTime: product.restockingLeadTime,
   });
   return (
-    <article className="flex flex-col max-w-[250px] xxl:w-[325px] xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
+    <article className="flex flex-col xxl:w-[325px] xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
         <Link
           href={`/nos-produits/${product?.slug}`}
-          className="absolute inset-0 w-full flex items-center justify-center"
+          className="absolute inset-0 w-full flex items-center justify-center py-2 md:py-4"
         >
           <Image
             src={
@@ -54,47 +54,49 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
         </h3>
       </Link>
 
-      <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
-        {product?.sku}
-      </p>
-      {product?.productRef && (
-        <div className="">
-          <div
-            className="skeepers_product__stars"
-            data-product-id={product?.productRef}
-          ></div>
-        </div>
-      )}
-      {product?.isPro && !isPro ? (
-        <div className="mt-auto">
-          <Cta
-            variant="secondary"
-            slug="/compte"
-            size="default"
-            isFull
-            label="Passer mon compte en pro"
-          >
-            Passer mon compte en pro
-          </Cta>
-        </div>
-      ) : (
-        <>
-          <ProductPrice
-            price={parseFloat(product?.price || '0')}
-            regularPrice={parseFloat(product?.regularPrice || '0')}
-            variant="card"
-          />
-          {isSellable ? (
-            <div className="mt-auto">
-              <AddToCart product={product} />
-            </div>
-          ) : (
-            <p className="text-secondary border border-secondary rounded-md px-3 py-3 flex items-center mt-auto">
-              En rupture de stock
-            </p>
-          )}
-        </>
-      )}
+      <div className="mt-auto">
+        <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
+          {product?.sku}
+        </p>
+        {product?.productRef && (
+          <div className="">
+            <div
+              className="skeepers_product__stars"
+              data-product-id={product?.productRef}
+            ></div>
+          </div>
+        )}
+        {product?.isPro && !isPro ? (
+          <div className="mt-4 md:mt-6">
+            <Cta
+              variant="secondary"
+              slug="/compte"
+              size="default"
+              isFull
+              label="Passer mon compte en pro"
+            >
+              Passer mon compte en pro
+            </Cta>
+          </div>
+        ) : (
+          <>
+            <ProductPrice
+              price={parseFloat(product?.price || '0')}
+              regularPrice={parseFloat(product?.regularPrice || '0')}
+              variant="card"
+            />
+            {isSellable ? (
+              <div className="mt-4 md:mt-6">
+                <AddToCart product={product} />
+              </div>
+            ) : (
+              <p className="text-secondary border border-secondary rounded-md px-3 py-3 flex items-center mt-4 md:mt-6">
+                En rupture de stock
+              </p>
+            )}
+          </>
+        )}
+      </div>
     </article>
   );
 };

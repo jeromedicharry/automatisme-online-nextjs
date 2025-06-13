@@ -55,7 +55,7 @@ const BlocFeaturedProducts = ({
                 modules={[Navigation]}
                 breakpoints={{
                   0: {
-                    slidesPerView: 1.2,
+                    slidesPerView: 'auto',
                   },
                   540: {
                     slidesPerView: 'auto',
@@ -63,7 +63,7 @@ const BlocFeaturedProducts = ({
                 }}
                 autoHeight={false}
                 navigation={{ nextEl: '.next', prevEl: '.prev' }}
-                wrapperClass="px-2 pt-4 pb-5 md:pb-8 flex item-stretch"
+                wrapperClass="px-2 pt-4 pb-8 md:pb-8 flex item-stretch"
               >
                 {bloc.products.nodes.map((product, key) => (
                   <SwiperSlide key={key}>

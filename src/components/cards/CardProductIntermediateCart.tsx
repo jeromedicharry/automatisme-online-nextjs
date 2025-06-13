@@ -34,7 +34,6 @@ const CardproductIntermediateCart = ({
           <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
             {product?.sku || 'Référence produit'}
           </p>
-          <p className="">Widget Avis vérifiés</p>
         </div>
       </Link>
     </article>

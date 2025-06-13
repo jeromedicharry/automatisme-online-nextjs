@@ -6,9 +6,9 @@ const Newsletter = () => {
     <form>
       <label
         htmlFor="newsletter"
-        className="text-white text-sm md:text-base leading-general font-bold"
+        className="text-white text-sm md:text-base leading-general font-bold block text-center md:text-left"
       >
-        Recevez notre newsletter
+        Abonnez-vous à notre newsletter
       </label>
       <div className="relative mt-2">
         <input

@@ -71,14 +71,13 @@ const CardProductMeilisearch = ({
     restockingLeadTime: product.meta._restocking_lead_time,
   });
 
-  console.log(product.title, ' meta : ', product?.meta);
   // console.log(product.title, ' isfeatured : ', product?.meta?._is_featured);
   return (
     <article className="flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[239px]">
         <Link
           href={`/nos-produits/${product?.slug}`}
-          className="absolute inset-0 w-full flex items-center justify-center"
+          className="absolute inset-0 w-full flex items-center justify-center py-2 md:py-4"
         >
           <Image
             src={product?.thumbnail_url || PRODUCT_IMAGE_PLACEHOLDER}
@@ -109,49 +108,51 @@ const CardProductMeilisearch = ({
         </h3>
       </Link>
 
-      <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
-        {product?.meta?._product_ref || 'Référence produit'}
-      </p>
-      {product?.meta?._product_ref && (
-        <div className="">
-          <div
-            className="skeepers_product__stars"
-            data-product-id={product?.meta?._product_ref}
-          ></div>
-        </div>
-      )}
-      {product?.meta?._is_pro && !isPro ? (
-        <div className="mt-auto">
-          <Cta
-            variant="secondary"
-            slug="/compte"
-            size="default"
-            isFull
-            label="Passer mon compte en pro"
-          >
-            Passer mon compte en pro
-          </Cta>
-        </div>
-      ) : (
-        <>
-          <div className="mb-3">
-            <ProductPrice
-              price={parseFloat(product?.meta?._price || '0')}
-              regularPrice={parseFloat(product?.meta?.regular_price || '0')}
-              variant="card"
-            />
+      <div className="mt-auto">
+        <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
+          {product?.meta?._product_ref || 'Référence produit'}
+        </p>
+        {product?.meta?._product_ref && (
+          <div className="">
+            <div
+              className="skeepers_product__stars"
+              data-product-id={product?.meta?._product_ref}
+            ></div>
           </div>
-          {isSellable ? (
-            <div className="mt-auto">
-              <AddToCart product={convertMeiliToWooProduct(product)} />
+        )}
+        {product?.meta?._is_pro && !isPro ? (
+          <div className="mt-4 md:mt-6">
+            <Cta
+              variant="secondary"
+              slug="/compte"
+              size="default"
+              isFull
+              label="Passer mon compte en pro"
+            >
+              Passer mon compte en pro
+            </Cta>
+          </div>
+        ) : (
+          <>
+            <div className="mb-3">
+              <ProductPrice
+                price={parseFloat(product?.meta?._price || '0')}
+                regularPrice={parseFloat(product?.meta?.regular_price || '0')}
+                variant="card"
+              />
             </div>
-          ) : (
-            <p className="text-secondary border border-secondary rounded-md px-3 py-3 flex items-center mt-auto">
-              En rupture de stock
-            </p>
-          )}
-        </>
-      )}
+            {isSellable ? (
+              <div className="mt-4 md:mt-6">
+                <AddToCart product={convertMeiliToWooProduct(product)} />
+              </div>
+            ) : (
+              <p className="text-secondary border border-secondary rounded-md px-3 py-3 flex items-center mt-4 md:mt-6">
+                En rupture de stock
+              </p>
+            )}
+          </>
+        )}
+      </div>
     </article>
   );
 };

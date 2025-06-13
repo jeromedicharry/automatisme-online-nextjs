@@ -40,7 +40,7 @@ const Cta = ({
     primary:
       'bg-primary text-white hover:bg-primary-dark border-primary hover:border-primary-dark',
     primaryHollow:
-      'border border-primary text-primary hover:bg-primary hover:text-white',
+      'border border-primary  bg-primary text-white lg:text-primary lg:bg-transparent hover:bg-primary hover:text-white',
     secondary:
       'bg-secondary text-white hover:bg-secondary-dark border-secondary hover:border-secondary-dark',
     secondaryHollow:

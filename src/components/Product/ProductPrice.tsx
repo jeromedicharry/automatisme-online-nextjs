@@ -64,7 +64,7 @@ const ProductPrice = ({
           >
             {isPro ? 'HT' : 'TTC'}
           </span>
-          <data className={`pr-1 text-[0.75em]`}>
+          <data className={`pr-1 text-[0.85em]`}>
             {priceWithVAT.toFixed(2)}
           </data>
           €
@@ -73,7 +73,6 @@ const ProductPrice = ({
           <p className="text-dark-grey line-through mb-4 text-base">
             <data>{regularPriceWithVAT.toFixed(2)}</data>
             <span>€</span>
-            {/* <span>{isPro ? ' HT' : ' TTC'}</span> */}
           </p>
         )}
       </div>
