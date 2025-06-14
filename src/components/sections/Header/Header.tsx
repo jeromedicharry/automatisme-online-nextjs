@@ -52,6 +52,24 @@ export default function Header({
     );
   };
 
+  useEffect(() => {
+    const body = document.body;
+    if (isMenuOpen) {
+      const scrollBarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      body.style.overflow = 'hidden';
+      body.style.paddingRight = `${scrollBarWidth}px`;
+    } else {
+      body.style.overflow = '';
+      body.style.paddingRight = '';
+    }
+
+    return () => {
+      body.style.overflow = '';
+      body.style.paddingRight = '';
+    };
+  }, [isMenuOpen]);
+
   const { isPro } = useAuth();
 
   return (
