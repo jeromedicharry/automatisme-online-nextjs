@@ -10,6 +10,7 @@ import { CategoryMenuProps } from '@/types/Categories';
 import { BulletSvg } from '../blocs/BlocAnchorsPicto';
 import useAuth from '@/hooks/useAuth';
 import DesktopParentCategorySubMenu from './DesktopParentCategorySubMenu';
+import Cta from '@/components/atoms/Cta';
 
 // Info desktop category menu has 3 variants getDisplayName, depending on ACF main category field
 
@@ -226,64 +227,163 @@ export default function Header({
               </div>
 
               <nav className="py-4">
-                {categoriesMenu?.map((item) => (
-                  <div key={item.name} className="">
-                    <div
-                      className="flex justify-between items-center py-4 border-b border-primary"
-                      onClick={() =>
-                        item.children?.nodes?.length > 0 &&
-                        toggleSubMenu(item.name)
-                      }
-                    >
-                      <Link
-                        href={item.uri}
-                        className="font-bold text-primary"
-                        onClick={handleLinkClick}
-                      >
-                        {item.name}
-                      </Link>
-                      {item.children?.nodes?.length > 0 && (
-                        <div className={`text-secondary`}>
-                          <div
-                            className={`duration-300 ${expandedItems.includes(item.name) ? 'rotate-90' : ''}`}
-                          >
-                            <BulletSvg />
-                          </div>
+                {/* Page niveau 1 - Liste des catégories mères */}
+                {!expandedItems.length && (
+                  <>
+                    {categoriesMenu?.map((item) => (
+                      <div key={item.name} className="">
+                        <div
+                          className="flex justify-between items-center py-4 border-b border-primary cursor-pointer"
+                          onClick={() =>
+                            item.children?.nodes?.length > 0 &&
+                            toggleSubMenu(item.name)
+                          }
+                        >
+                          <span className="font-bold text-primary">
+                            {item.name}
+                          </span>
+                          {item.children?.nodes?.length > 0 && (
+                            <div className="text-secondary">
+                              <BulletSvg />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    {item.children?.nodes?.length > 0 &&
-                      expandedItems.includes(item.name) && (
-                        <div className="pl-4 py-2 text-primary">
-                          {item.children.nodes.map((subItem) => (
-                            <div key={subItem.uri}>
-                              <Link
-                                href={subItem.uri}
-                                className="block py-2"
-                                onClick={handleLinkClick}
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {/* Page niveau 2 - Catégorie mère sélectionnée + ses enfants */}
+                {expandedItems.length === 1 && (
+                  <>
+                    {categoriesMenu?.map((item) => {
+                      if (!expandedItems.includes(item.name)) return null;
+
+                      return (
+                        <div key={item.name}>
+                          {/* Bouton retour */}
+                          <div className="flex justify-between items-center pb-10">
+                            <button
+                              onClick={() => toggleSubMenu(item.name)}
+                              className="flex items-center gap-2 text-secondary font-bold"
+                            >
+                              <div className="text-secondary rotate-180">
+                                <BulletSvg />
+                              </div>
+                              Retour
+                            </button>
+                          </div>
+
+                          {/* Bouton "Voir tout" pour la catégorie niveau 1 */}
+                          <div className="w-fit py-4">
+                            <Cta
+                              slug={item.uri}
+                              variant="secondary"
+                              label="Voir tout"
+                            >
+                              Voir tout dans les produits
+                            </Cta>
+                          </div>
+
+                          {/* Liste des catégories niveau 2 */}
+                          {item.children?.nodes?.map((subItem) => (
+                            <div key={subItem.name}>
+                              <div
+                                className="flex justify-between items-center py-4 border-b border-primary cursor-pointer"
+                                onClick={() =>
+                                  subItem.children?.nodes?.length > 0
+                                    ? toggleSubMenu(
+                                        `${item.name}-${subItem.name}`,
+                                      )
+                                    : null
+                                }
                               >
-                                {subItem.name}
-                              </Link>
-                              {subItem.children?.nodes?.length > 0 && (
-                                <div className="pl-4">
-                                  {subItem.children.nodes.map((subSubItem) => (
-                                    <Link
-                                      key={subSubItem.uri}
-                                      href={subSubItem.uri}
-                                      className="block py-2 text-sm"
-                                      onClick={handleLinkClick}
-                                    >
-                                      {subSubItem.name}
-                                    </Link>
-                                  ))}
-                                </div>
-                              )}
+                                {subItem.children?.nodes?.length > 0 ? (
+                                  <span className="font-bold text-primary">
+                                    {subItem.name}
+                                  </span>
+                                ) : (
+                                  <Link
+                                    href={subItem.uri}
+                                    className="font-bold text-primary"
+                                    onClick={handleLinkClick}
+                                  >
+                                    {subItem.name}
+                                  </Link>
+                                )}
+                                {subItem.children?.nodes?.length > 0 && (
+                                  <div className="text-secondary">
+                                    <BulletSvg />
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           ))}
                         </div>
-                      )}
-                  </div>
-                ))}
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* Page niveau 3 - Sous-catégorie sélectionnée + ses enfants */}
+                {expandedItems.length === 2 && (
+                  <>
+                    {categoriesMenu?.map((item) => {
+                      if (!expandedItems.includes(item.name)) return null;
+
+                      return item.children?.nodes?.map((subItem) => {
+                        if (
+                          !expandedItems.includes(
+                            `${item.name}-${subItem.name}`,
+                          )
+                        )
+                          return null;
+
+                        return (
+                          <div key={subItem.name}>
+                            {/* Bouton retour */}
+                            <div className="flex justify-between items-center pb-10">
+                              <button
+                                onClick={() =>
+                                  toggleSubMenu(`${item.name}-${subItem.name}`)
+                                }
+                                className="flex items-center gap-2 text-secondary font-bold"
+                              >
+                                <div className="text-secondary rotate-180">
+                                  <BulletSvg />
+                                </div>
+                                Retour
+                              </button>
+                            </div>
+
+                            {/* Bouton "Voir tout" pour la catégorie niveau 2 */}
+                            <div className="w-fit py-4">
+                              <Cta slug={subItem.uri} label="Voir tout">
+                                Voir tout les produits
+                              </Cta>
+                            </div>
+
+                            {/* Liste des catégories niveau 3 (liens finaux) */}
+                            {subItem.children?.nodes?.map((subSubItem) => (
+                              <div
+                                key={subSubItem.name}
+                                className="flex justify-between items-center py-4 border-b border-primary"
+                              >
+                                <Link
+                                  href={subSubItem.uri}
+                                  className="font-bold text-primary"
+                                  onClick={handleLinkClick}
+                                >
+                                  {subSubItem.name}
+                                </Link>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      });
+                    })}
+                  </>
+                )}
               </nav>
 
               <div className="pt-4 mt-auto">
