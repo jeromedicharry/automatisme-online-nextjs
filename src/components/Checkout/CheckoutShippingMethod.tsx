@@ -2,7 +2,10 @@ import React, { useEffect, useCallback } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import { UPDATE_SHIPPING_METHOD } from '@/utils/gql/GQL_MUTATIONS';
-import { GET_CART_SHIPPING_METHODS, GET_CART_SHIPPING_INFO } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import {
+  GET_CART_SHIPPING_METHODS,
+  GET_CART_SHIPPING_INFO,
+} from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
 interface ShippingMethod {
   methodId: string;
@@ -18,13 +21,17 @@ const CheckoutShippingMethod = ({
 }) => {
   const [chosenMethod, setChosenMethod] = React.useState<string>('');
 
-  const { data: shippingMethodsData, loading: loadingMethods, refetch: refetchMethods } = useQuery(GET_CART_SHIPPING_METHODS);
+  const {
+    data: shippingMethodsData,
+    loading: loadingMethods,
+    refetch: refetchMethods,
+  } = useQuery(GET_CART_SHIPPING_METHODS);
   const { data: cartData } = useQuery(GET_CART_SHIPPING_INFO);
 
   const [updateShippingMethod] = useMutation(UPDATE_SHIPPING_METHOD, {
     refetchQueries: [
       { query: GET_CART_SHIPPING_METHODS },
-      { query: GET_CART_SHIPPING_INFO }
+      { query: GET_CART_SHIPPING_INFO },
     ],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
@@ -33,38 +40,45 @@ const CheckoutShippingMethod = ({
     },
   });
 
-  const handleMethodChange = useCallback(async (methodId: string, instanceId: number) => {
-    try {
-      const methodIdentifier = `${methodId}:${instanceId}`;
-      console.log('Sending mutation with input:', methodIdentifier);
-      const response = await updateShippingMethod({
-        variables: {
-          input: {
-            shippingMethods: [methodIdentifier],
+  const handleMethodChange = useCallback(
+    async (methodId: string, instanceId: number) => {
+      try {
+        const methodIdentifier = `${methodId}:${instanceId}`;
+        console.log('Sending mutation with input:', methodIdentifier);
+        const response = await updateShippingMethod({
+          variables: {
+            input: {
+              shippingMethods: [methodIdentifier],
+            },
           },
-        },
-      });
-      console.log('Raw mutation response:', response);
-      setChosenMethod(methodIdentifier);
-    } catch (error) {
-      console.error('Error updating shipping method:', error);
-    }
-  }, [updateShippingMethod]);
+        });
+        console.log('Raw mutation response:', response);
+        setChosenMethod(methodIdentifier);
+      } catch (error) {
+        console.error('Error updating shipping method:', error);
+      }
+    },
+    [updateShippingMethod],
+  );
 
   // Définir la méthode standard par défaut ou utiliser celle déjà sélectionnée
   useEffect(() => {
     if (!loadingMethods && cartData && shippingMethodsData) {
       const currentMethod = cartData?.cart?.chosenShippingMethods[0];
       console.log('Current shipping method:', currentMethod);
-      
+
       if (currentMethod) {
         // Si une méthode est déjà sélectionnée, on la conserve
         setChosenMethod(currentMethod);
-      } else if (shippingMethodsData?.cart?.availableShippingMethods[0]?.rates) {
+      } else if (
+        shippingMethodsData?.cart?.availableShippingMethods[0]?.rates
+      ) {
         // Sinon, on applique la méthode standard
-        const standardMethod = shippingMethodsData.cart.availableShippingMethods[0].rates.find(
-          (method: ShippingMethod) => method.methodId === 'flat_rate' && method.instanceId === 2
-        );
+        const standardMethod =
+          shippingMethodsData.cart.availableShippingMethods[0].rates.find(
+            (method: ShippingMethod) =>
+              method.methodId === 'flat_rate' && method.instanceId === 2,
+          );
         if (standardMethod) {
           handleMethodChange('flat_rate', 2);
         }
@@ -103,7 +117,7 @@ const CheckoutShippingMethod = ({
   };
 
   return (
-    <section className="mt-10 md:mt-8">
+    <section className="mt-2 md:mt-8">
       <BlocIntroSmall title="Sélectionnez votre méthode de livraison" />
       <div className="mt-4 flex flex-col gap-6">
         {shippingMethods.map((method: ShippingMethod) => (
@@ -115,7 +129,9 @@ const CheckoutShippingMethod = ({
                 ? 'border-2 border-secondary bg-gray-50'
                 : 'border-breadcrumb-grey'
             } ${method.methodId === 'flat_rate' && method.instanceId === 2 ? 'order-1' : ''} ${
-              method.methodId === 'flat_rate' && method.instanceId === 3 ? 'order-2' : ''
+              method.methodId === 'flat_rate' && method.instanceId === 3
+                ? 'order-2'
+                : ''
             } ${method.methodId === 'local_pickup' && method.instanceId === 1 ? 'order-4' : ''}`}
           >
             <div className="flex items-center h-5">
@@ -123,8 +139,12 @@ const CheckoutShippingMethod = ({
                 id={`${method.methodId}_${method.instanceId}`}
                 name="shipping_method"
                 type="radio"
-                checked={chosenMethod === `${method.methodId}:${method.instanceId}`}
-                onChange={() => handleMethodChange(method.methodId, method.instanceId)}
+                checked={
+                  chosenMethod === `${method.methodId}:${method.instanceId}`
+                }
+                onChange={() =>
+                  handleMethodChange(method.methodId, method.instanceId)
+                }
                 className="w-5 h-5 text-primary border-primary focus:ring-secondary accent-secondary"
               />
             </div>

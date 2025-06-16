@@ -4,13 +4,13 @@ import CartContents from '@/components/Cart/CartContents';
 import CartSummary from '@/components/Cart/CartSummary';
 import DeliveryChoices from '@/components/Cart/DeliveryChoices';
 import Container from '@/components/container';
-import CartUpsellProducts from '@/components/Cart/CartUpsellProducts';
 import Separator from '@/components/atoms/Separator';
 import EmptyElement from '@/components/EmptyElement';
 import { LargeCartSvg } from '@/components/SVG/Icons';
 
 // Hooks
 import { useCartOperations } from '@/hooks/useCartOperations';
+import { useEffect, useState } from 'react';
 
 // Types
 import type { GetStaticProps } from 'next';
@@ -18,6 +18,10 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { ThemeSettingsProps } from '@/types/CptTypes';
+import { GET_CROSSSELL_PRODUCT_SIDE_DATA } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import client from '@/utils/apollo/ApolloClient';
+import { CardProductProps } from '@/types/blocTypes';
+import BlocFeaturedProducts from '@/components/sections/blocs/BlocFeaturedProducts';
 
 const Panier = ({
   themeSettings,
@@ -33,6 +37,66 @@ const Panier = ({
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   const { cart } = useCartOperations();
+  const [crossSellProducts, setCrossSellProducts] = useState<
+    CardProductProps[]
+  >([]);
+
+  useEffect(() => {
+    const fetchCrossSellProducts = async () => {
+      if (!cart?.products?.length) return;
+
+      // Récupérer les cross-sells pour chaque produit du panier
+      const crossSellPromises = cart.products.map((product) =>
+        client.query({
+          query: GET_CROSSSELL_PRODUCT_SIDE_DATA,
+          variables: {
+            id: product.productId,
+            idType: 'DATABASE_ID',
+          },
+        }),
+      );
+
+      try {
+        const results = await Promise.all(crossSellPromises);
+
+        // Extraire tous les produits cross-sell
+        const allCrossSells = results
+          .flatMap((result) => result.data.product?.crossSell?.nodes || [])
+          .filter(Boolean);
+
+        // Éliminer les doublons en utilisant le databaseId
+        const uniqueCrossSells = allCrossSells.reduce(
+          (acc: CardProductProps[], current: CardProductProps) => {
+            const exists = acc.find(
+              (item) => item.databaseId === current.databaseId,
+            );
+            if (!exists) {
+              acc.push(current);
+            }
+            return acc;
+          },
+          [],
+        );
+
+        // Exclure les produits qui sont déjà dans le panier et limiter à 6 produits
+        const cartProductIds = cart.products.map((p) => p.productId);
+        const filteredCrossSells = uniqueCrossSells
+          .filter(
+            (product: CardProductProps) =>
+              product.databaseId &&
+              !cartProductIds.includes(product.databaseId),
+          )
+          .slice(0, 6);
+
+        setCrossSellProducts(filteredCrossSells);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des cross-sells:', error);
+        setCrossSellProducts([]);
+      }
+    };
+
+    fetchCrossSellProducts();
+  }, [cart?.products]);
 
   return (
     <Layout
@@ -45,39 +109,57 @@ const Panier = ({
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       totalProducts={totalProducts}
+      isBg
     >
-      <Container>
-        {!cart?.products?.length ? (
-          <EmptyElement
-            picto={<LargeCartSvg />}
-            title="Votre panier est vide"
-            subtitle="Ajoutez des produits à votre panier pour passer commande"
-            ctaLabel="Voir nos produits"
-            ctaSlug="/"
-            ctaType="primary"
-          />
-        ) : (
-          <>
-            <div className="relative flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10 xl:gap-16 max-lg:max-w-xl mx-auto mt-6 lg:mt-12">
-              {/* Conteneur principal */}
-              <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10 xl:gap-16">
-                <CartContents />
-                <Separator />
-                <DeliveryChoices />
-                <Separator />
-              </div>
+      <div className="pb-10 md:pb-16">
+        <Container>
+          {!cart?.products?.length ? (
+            <EmptyElement
+              picto={<LargeCartSvg />}
+              title="Votre panier est vide"
+              subtitle="Ajoutez des produits à votre panier pour passer commande"
+              ctaLabel="Voir nos produits"
+              ctaSlug="/"
+              ctaType="primary"
+            />
+          ) : (
+            <>
+              <div className="relative flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10 xl:gap-8 max-lg:max-w-xl mx-auto mt-6 lg:mt-12">
+                {/* Conteneur principal */}
+                <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10 xl:gap-16">
+                  <CartContents />
+                  <Separator />
+                  <DeliveryChoices />
+                </div>
 
-              {/* CartSummary en sticky à droite en desktop */}
-              <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] lg:top-20 self-start lg:shrink-1">
-                <CartSummary />
-              </aside>
-            </div>
-            <div className="py-6 lg:py-10 xl:py-16">
-              <CartUpsellProducts />
-            </div>
-          </>
-        )}
-      </Container>
+                {/* CartSummary en sticky à droite en desktop */}
+                <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] xxl:max-w-[440px] lg:top-20 self-start lg:shrink-1">
+                  <CartSummary />
+                </aside>
+              </div>
+            </>
+          )}
+        </Container>
+      </div>
+      <div className="py-6 lg:py-10 xl:py-16 bg-white">
+        <Container>
+          <BlocFeaturedProducts
+            bloc={{
+              __typename: 'AcfPageBlocsBlocFeaturedProductsLayout',
+              title: 'Complétez votre panier',
+              subtitle: '',
+              image: {
+                node: {
+                  sourceUrl: '',
+                },
+              },
+              products: {
+                nodes: crossSellProducts,
+              },
+            }}
+          />
+        </Container>
+      </div>
     </Layout>
   );
 };

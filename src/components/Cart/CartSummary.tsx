@@ -12,6 +12,7 @@ import {
   GET_CART_SHIPPING_INFO,
   GET_CART,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import CartReassuranceBis from './CartReassuranceBis';
 
 const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   const { cart } = useContext(CartContext);
@@ -85,6 +86,7 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
             size="default"
             variant="primary"
             isFull
+            disabled={!selectedShippingMethod}
           >
             Continuer
           </Cta>
@@ -270,6 +272,9 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           </>
         )}
         <CartReassurance />
+      </div>
+      <div className="max-md-hidden mt-4">
+        <CartReassuranceBis />
       </div>
     </>
   );

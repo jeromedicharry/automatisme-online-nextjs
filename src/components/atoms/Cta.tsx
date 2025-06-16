@@ -53,7 +53,8 @@ const Cta = ({
     secondary:
       'bg-secondary text-white hover:bg-secondary-dark border-secondary hover:border-secondary-dark',
     secondaryHollow:
-      'border border-secondary text-secondary hover:bg-secondary hover:text-white',
+      'border border-secondary bg-secondary text-white lg:text-secondary lg:bg-transparent hover:bg-secondary hover:text-white',
+
     primaryWhite:
       'bg-white text-primary border border-white hover:bg-greyhover',
   };

@@ -153,61 +153,69 @@ const CartContents = () => {
       <div className="flex flex-col gap-6">
         {cart.products.map((item) => (
           <div key={item.cartKey}>
-            <div className="flex items-start relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
-              <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
-                <Link href={`/nos-produits/${item.slug}`}>
-                  <Image
-                    src={item.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
-                    alt={item.name || 'Produit Automatisme Online'}
-                    width={200}
-                    height={200}
-                    className="aspect-square object-contain"
-                  />
-                </Link>
-              </div>
-              <div className="flex-grow mx-4 self-center">
-                <h2 className="font-bold text-primary">{item.name}</h2>
-                <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
-                  {item.price.toFixed(2)}€{' '}
-                  <span className="absolute right-0 top-1 text-xs">
-                    {isPro ? 'HT' : 'TTC'}
-                  </span>
-                </p>
-                <div className="text-dark-grey text-xs">
-                  {item.deliveryLabel}
+            <div className="relative">
+              <div className="flex items-start gap-4 relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
+                <div className="flex-shrink-0 flex w-24 xl:w-[136px] relative justify-center items-center self-center">
+                  <Link href={`/nos-produits/${item.slug}`}>
+                    <Image
+                      src={item.image.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
+                      alt={item.name || 'Produit Automatisme Online'}
+                      width={200}
+                      height={200}
+                      className="aspect-square object-contain"
+                    />
+                  </Link>
+                </div>
+                <div className="xl:flex xl:w-full xl:justify-between items-start w-full">
+                  <div className="xl:flex-grow xl:mx-4 self-center">
+                    <h2 className="font-bold text-primary text-sm xl:text-base leading-general xxl:max-w-[300px]">
+                      {item.name}
+                    </h2>
+                    <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
+                      {item.price.toFixed(2)}€{' '}
+                      <span className="absolute right-0 top-1 text-xs">
+                        {isPro ? 'HT' : 'TTC'}
+                      </span>
+                    </p>
+                    <div className="text-dark-grey text-xs">
+                      {item.deliveryLabel}
+                    </div>
+                  </div>
+                  <div className="w-fit flex items-shrink max-xl:mt-6 lg:ml-auto">
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.qty}
+                      onChange={(event) =>
+                        handleQuantityChangeFormatted(
+                          event,
+                          item.cartKey,
+                          cart.products,
+                        )
+                      }
+                      className="w-12 px-2 py-1 text-center border border-primary rounded-lg mr-2"
+                    />
+                    <Cta
+                      slug="#"
+                      label="Supprimer"
+                      handleButtonClick={() =>
+                        handleRemoveProductClick(item.cartKey)
+                      }
+                      variant="secondaryHollow"
+                      size="default"
+                      additionalClass={`max-w-fit min-w-0 ${
+                        updateCartProcessing
+                          ? 'opacity-50 pointer-events-none'
+                          : ''
+                      }`}
+                    >
+                      Supprimer
+                    </Cta>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-shrink">
-                <input
-                  type="number"
-                  min="1"
-                  value={item.qty}
-                  onChange={(event) =>
-                    handleQuantityChangeFormatted(
-                      event,
-                      item.cartKey,
-                      cart.products,
-                    )
-                  }
-                  className="w-12 px-2 py-1 text-center border border-primary rounded-lg mr-2"
-                />
-                <Cta
-                  slug="#"
-                  label="Supprimer"
-                  handleButtonClick={() =>
-                    handleRemoveProductClick(item.cartKey)
-                  }
-                  variant="secondaryHollow"
-                  size="default"
-                  additionalClass={`max-w-fit min-w-0 ${
-                    updateCartProcessing ? 'opacity-50 pointer-events-none' : ''
-                  }`}
-                >
-                  Supprimer
-                </Cta>
-              </div>
               {item.hasPose && !item.addInstallation && (
-                <div className="absolute right-4 bottom-4">
+                <div className="absolute right-4 bottom-4 max-xl:static max-xl:mt-6">
                   <Cta
                     slug="#"
                     variant={`primary`}
@@ -218,6 +226,7 @@ const CartContents = () => {
                         item.addInstallation ?? false,
                       )
                     }
+                    isFull
                   >
                     {"Ajouter une prestation d'installation"}
                   </Cta>
@@ -225,35 +234,39 @@ const CartContents = () => {
               )}
             </div>
             {item.addInstallation ? (
-              <div className="flex items-start relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
-                <div className="flex-shrink-0 flex w-[136px] relative justify-center items-center self-center">
-                  <Image
-                    src={PRODUCT_IMAGE_PLACEHOLDER}
-                    alt={item.name || 'Installation Automatisme Online'}
-                    width={200}
-                    height={200}
-                    className="aspect-square object-contain"
-                  />
-                </div>
-                <div className="flex-grow mx-4 self-center">
-                  <h2 className="text-primary">
-                    <div className="font-bold">
-                      {"Prestation d'installation pour "}
+              <div className="relative">
+                <div className="flex items-start gap-4 relative justify-between p-4 bg-white rounded-lg shadow-card hover:shadow-cardhover mb-4 duration-300">
+                  <div className="flex-shrink-0 flex w-24 xl:w-[136px] relative justify-center items-center self-center">
+                    <Image
+                      src={PRODUCT_IMAGE_PLACEHOLDER}
+                      alt={item.name || 'Installation Automatisme Online'}
+                      width={200}
+                      height={200}
+                      className="aspect-square object-contain"
+                    />
+                  </div>
+                  <div className="xl:flex xl:w-full xl:justify-between items-start w-full">
+                    <div className="xl:flex-grow xl:mx-4 self-center">
+                      <h2 className="font-bold text-primary text-sm xl:text-base leading-general xxl:max-w-[300px]">
+                        <div className="font-bold">
+                          {"Prestation d'installation pour "}
+                        </div>
+                        <div className="text-dark-grey font-medium max-w-[250px]">
+                          {`${item.name}`}
+                        </div>
+                        <div className="text-secondary font-bold">{`Quantité x ${item.qty}`}</div>
+                      </h2>
+                      <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
+                        {item.installationPrice?.toFixed(2)}€{' '}
+                        <span className="absolute right-0 top-1 text-xs">
+                          {isPro ? 'HT' : 'TTC'}
+                        </span>
+                      </p>
                     </div>
-                    <div className="text-dark-grey font-medium truncate max-w-[250px]">
-                      {`${item.name}`}
-                    </div>
-                    <div className="text-secondary font-bold">{`Quantité x ${item.qty}`}</div>
-                  </h2>
-                  <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
-                    {item.installationPrice?.toFixed(2)}€{' '}
-                    <span className="absolute right-0 top-1 text-xs">
-                      {isPro ? 'HT' : 'TTC'}
-                    </span>
-                  </p>
+                  </div>
                 </div>
                 {item.hasPose && item.addInstallation && (
-                  <div className="absolute right-4 bottom-4">
+                  <div className="absolute max-xl:static max-xl:mt-4 right-4 bottom-4">
                     <Cta
                       slug="#"
                       variant={'primaryHollow'}
@@ -264,6 +277,7 @@ const CartContents = () => {
                           item.addInstallation ?? false,
                         )
                       }
+                      isFull
                     >
                       {"Supprimer la prestation d'installation"}
                     </Cta>
