@@ -73,9 +73,9 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
               slug="/compte"
               size="default"
               isFull
-              label="Passer mon compte en pro"
+              label="Créer un compte pro"
             >
-              Passer mon compte en pro
+              Créer un compte pro
             </Cta>
           </div>
         ) : (

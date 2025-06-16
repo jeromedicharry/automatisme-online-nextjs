@@ -11,6 +11,7 @@ const Cta = ({
   isFull,
   additionalClass,
   disabled = false,
+  isMeili = false,
 }: {
   children?: React.ReactNode;
   handleButtonClick?: (e: React.MouseEvent) => void;
@@ -26,11 +27,14 @@ const Cta = ({
   isFull?: boolean;
   additionalClass?: string;
   disabled?: boolean;
+  isMeili?: boolean;
 }) => {
   const buttonClass = `
   ${size !== 'mobile-header' ? 'whitespace-nowrap' : 'whitespace-normal'}
   flex items-center justify-center font-bold transition duration-300 ease-in-out rounded-[5px] lg:min-w-[170px] border
 `;
+
+  const isMeiliClass = isMeili ? 'max-md:text-sm' : '';
 
   const sizeClass =
     size === 'large'
@@ -58,7 +62,7 @@ const Cta = ({
     <Link
       href={slug}
       title={label}
-      className={`${buttonClass} ${sizeClass} ${variantClasses[variant]} ${additionalClass} ${isFull ? 'w-full' : 'w-fit mx-auto'}`}
+      className={`${buttonClass} ${isMeiliClass} ${sizeClass} ${variantClasses[variant]} ${additionalClass} ${isFull ? 'w-full' : 'w-fit mx-auto'}`}
       onClick={handleButtonClick}
       aria-disabled={disabled}
     >

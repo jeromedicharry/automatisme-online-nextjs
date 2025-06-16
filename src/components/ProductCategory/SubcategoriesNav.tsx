@@ -12,7 +12,7 @@ const SubcategoriesNav = ({
 
   return (
     <nav>
-      <ul className="flex justify-start items-start mb-6 md:mb-4 gap-2 overflow-x-auto scrollbar-custom pb-4">
+      <ul className="flex justify-start items-start mb-6 md:mb-4 gap-2 overflow-x-auto scrollbar-custom pb-4 pt-2">
         {subCategories.map((child) => (
           <li key={child?.uri}>
             <Link

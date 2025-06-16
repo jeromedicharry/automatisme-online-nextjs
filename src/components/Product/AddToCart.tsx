@@ -22,6 +22,7 @@ const AddToCart = ({
   variant = 'primaryHollow',
   isSingleProduct = false,
   addInstallation = false,
+  isMeili = false,
 }: {
   product: CardProductProps;
   variant?:
@@ -32,6 +33,7 @@ const AddToCart = ({
     | 'secondaryHollow';
   addInstallation?: boolean;
   isSingleProduct?: boolean;
+  isMeili?: boolean;
 }) => {
   const { openCartModal } = useIntermediateCart();
   const { refetchCart } = useCartOperations();
@@ -100,6 +102,7 @@ const AddToCart = ({
       additionalClass={`${isSingleProduct ? '' : 'w-full'} ${
         addToCartLoading ? 'opacity-50 pointer-events-none' : ''
       }`}
+      isMeili={isMeili}
     >
       {addInstallation ? 'Ajouter avec installation' : 'Ajouter au panier'}
     </Cta>

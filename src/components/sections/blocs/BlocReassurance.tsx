@@ -38,7 +38,7 @@ const BlocReassurance = ({
         className={`w-full rounded-2xl md:rounded-[13px] py-8 md:p-[10px] ${bgColor} ${mobileBgColor} ${isFooter ? '' : 'mb-12 md:mb-16'}`}
       >
         <div
-          className={`grid grid-cols-2 gap-2 md:gap-4 max-md:max-w-md mx-auto lg:flex ${isFooter ? 'justify-between' : 'justify-around'}`}
+          className={`grid grid-cols-2 gap-x-2 gap-y-4 md:gap-x-4 max-md:max-w-md mx-auto lg:flex ${isFooter ? 'justify-between' : 'justify-around'}`}
         >
           {items.map((item, index) => (
             <Link

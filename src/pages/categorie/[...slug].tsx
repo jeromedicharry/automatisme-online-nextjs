@@ -252,7 +252,7 @@ const CategoryPage = ({
             </div>
             <SubcategoriesNav subCategories={category?.children?.nodes} />
             {productSelection?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch max-md:max-w-[300px]">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto w-fit items-stretch">
                 {productSelection?.map(
                   (product: CardProductMeilisearchProps, index) => (
                     <React.Fragment key={product?.id}>
@@ -402,7 +402,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       notFound: true,
     };
   }
-
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {

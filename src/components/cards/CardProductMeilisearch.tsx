@@ -72,8 +72,8 @@ const CardProductMeilisearch = ({
   });
 
   return (
-    <article className="flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
-      <div className="relative min-h-[239px]">
+    <article className="card-product-meilisearch flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
+      <div className="relative min-h-[80px] md:min-h-[239px]">
         <Link
           href={`/nos-produits/${product?.slug}`}
           className="absolute inset-0 w-full flex items-center justify-center py-2 md:py-4"
@@ -102,13 +102,13 @@ const CardProductMeilisearch = ({
         </div>
       </div>
       <Link href={`/nos-produits/${product?.slug}`} className="group">
-        <h3 className="mt-4 mb-1 font-bold text-base leading-general duration-300 group-hover:text-secondary">
+        <h3 className="mt-2 md:mt-4 mb-1 font-bold text-sm md:text-base leading-general duration-300 group-hover:text-secondary">
           {product?.title}
         </h3>
       </Link>
 
       <div className="mt-auto">
-        <p className="text-dark-grey uppercase text-base leading-general mb-[10px]">
+        <p className="text-dark-grey uppercase text-sm md:text-base leading-general mb-[10px]">
           {product?.meta?._product_ref || 'Référence produit'}
         </p>
         {product?.meta?._product_ref && (
@@ -126,9 +126,9 @@ const CardProductMeilisearch = ({
               slug="/compte"
               size="default"
               isFull
-              label="Passer mon compte en pro"
+              label="Créer un compte pro"
             >
-              Passer mon compte en pro
+              Créer un compte pro
             </Cta>
           </div>
         ) : (
@@ -138,11 +138,15 @@ const CardProductMeilisearch = ({
                 price={parseFloat(product?.meta?._price || '0')}
                 regularPrice={parseFloat(product?.meta?._regular_price || '0')}
                 variant="card"
+                isMeili
               />
             </div>
             {isSellable ? (
               <div className="mt-4 md:mt-6">
-                <AddToCart product={convertMeiliToWooProduct(product)} />
+                <AddToCart
+                  product={convertMeiliToWooProduct(product)}
+                  isMeili
+                />
               </div>
             ) : (
               <p className="text-secondary border border-secondary rounded-md px-3 py-3 flex items-center mt-4 md:mt-6">

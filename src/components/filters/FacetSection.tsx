@@ -15,10 +15,10 @@ const FacetSection = ({
   children,
 }: FacetSectionProps) => {
   return (
-    <div className={`md:mb-3 ${label === 'Prix' ? 'lg:order-first' : ''}`}>
+    <div className={`mb-3 xl:mb-4 ${label === 'Prix' ? 'lg:order-first' : ''}`}>
       <button
         onClick={onToggle}
-        className="md:w-full flex items-baseline text-left gap-2"
+        className="w-full flex items-baseline text-left gap-2"
       >
         <p className="font-bold max-md:text-sm leading-general whitespace-nowrap">
           {label}
@@ -33,7 +33,7 @@ const FacetSection = ({
       </button>
 
       <div
-        className={`mt-3 overflow-hidden duration-300 ease-in-out ${
+        className={`mt-2 overflow-hidden duration-300 ease-in-out ${
           isOpen
             ? 'max-h-[600px] opacity-100'
             : 'max-h-0 pointer-events-none opacity-0'

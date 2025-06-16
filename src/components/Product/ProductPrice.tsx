@@ -12,6 +12,7 @@ interface ProductPriceProps {
   variant: 'card' | 'productPage';
   isProSession?: boolean;
   isProProduct?: boolean;
+  isMeili?: boolean;
 }
 
 // attention aux types string number sur les prices Todo
@@ -20,6 +21,7 @@ const ProductPrice = ({
   price,
   regularPrice,
   variant = 'card',
+  isMeili = false,
   // isProProduct = false,
 }: ProductPriceProps) => {
   const [priceWithVAT, setPriceWithVAT] = useState<number>(price);
@@ -52,12 +54,14 @@ const ProductPrice = ({
   }, [isPro, price, regularPrice, countryCode]);
 
   return (
-    <div className="flex items-center gap-2 xxl:gap-4">
+    <div
+      className={`flex items-center gap-2 xxl:gap-4 ${isMeili ? 'max-md:gap-1' : ''}`}
+    >
       <div
         className={`flex flex-col ${variant === 'productPage' ? 'items-start' : 'items-center'}`}
       >
         <p
-          className={`font-bold ${variant === 'productPage' ? 'text-5xl xl:text-4xl xxl:text-5xl pr-[42px] xl:pr-[35px] xxl:pr-[42px]' : 'text-2xl pr-7'} leading-general relative w-fit mb-1`}
+          className={`font-bold ${variant === 'productPage' ? 'text-5xl xl:text-4xl xxl:text-5xl pr-[42px] xl:pr-[35px] xxl:pr-[42px]' : isMeili ? 'max-md:text-xl max-md:pr-6 text-2xl pr-7' : 'text-2xl pr-7'} leading-general relative w-fit mb-1`}
         >
           <span
             className={`absolute text-[0.5em] font-bold right-0 top-[0.25em] xl:top-0 xxl:top-[0.25em]`}
@@ -70,7 +74,9 @@ const ProductPrice = ({
           €
         </p>
         {regularPrice !== price ? (
-          <p className="text-dark-grey line-through mb-4 text-base">
+          <p
+            className={`text-dark-grey line-through mb-4 text-base ${isMeili ? 'max-md:text-sm' : ''}`}
+          >
             <data>{regularPriceWithVAT.toFixed(2)}</data>
             <span>€</span>
             <span className="text-sm align-top leading-relaxed">

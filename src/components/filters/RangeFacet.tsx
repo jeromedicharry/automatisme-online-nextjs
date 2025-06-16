@@ -37,13 +37,13 @@ const RangeFacet = ({
   ]);
 
   const [formattedPrices, setFormattedPrices] = useState<[string, string]>([
-    `${sliderValues[0]}€`,
-    `${sliderValues[1]}€`,
+    `${Math.round(sliderValues[0])}€`,
+    `${Math.round(sliderValues[1])}€`,
   ]);
 
   const [formattedMinMaxPrices, setFormattedMinMaxPrices] = useState<
     [string, string]
-  >([`${availableMin}€`, `${availableMax}€`]);
+  >([`${Math.round(availableMin)}€`, `${Math.round(availableMax)}€`]);
 
   useEffect(() => {
     const newMin = minValue ? parseFloat(minValue) : undefined;
@@ -75,10 +75,16 @@ const RangeFacet = ({
           countryCode || 'FR',
         );
 
-        setFormattedPrices([`${minPrix}€`, `${maxPrix}€`]);
+        setFormattedPrices([
+          `${Math.round(minPrix)}€`,
+          `${Math.round(maxPrix)}€`,
+        ]);
       } catch (error) {
         console.error('Erreur lors du calcul des prix:', error);
-        setFormattedPrices([`${sliderValues[0]}€`, `${sliderValues[1]}€`]);
+        setFormattedPrices([
+          `${Math.round(sliderValues[0])}€`,
+          `${Math.round(sliderValues[1])}€`,
+        ]);
       }
     }
 
@@ -99,10 +105,16 @@ const RangeFacet = ({
           countryCode || 'FR',
         );
 
-        setFormattedMinMaxPrices([`${formattedMin}€`, `${formattedMax}€`]);
+        setFormattedMinMaxPrices([
+          `${Math.round(formattedMin)}€`,
+          `${Math.round(formattedMax)}€`,
+        ]);
       } catch (error) {
         console.error('Erreur lors du calcul des prix min/max:', error);
-        setFormattedMinMaxPrices([`${availableMin}€`, `${availableMax}€`]);
+        setFormattedMinMaxPrices([
+          `${Math.round(availableMin)}€`,
+          `${Math.round(availableMax)}€`,
+        ]);
       }
     }
 
@@ -115,24 +127,42 @@ const RangeFacet = ({
     onChange(`${value[0].toFixed(2)}-${value[1].toFixed(2)}`);
   };
 
+  // Calculer les positions des valeurs courantes en pourcentage
+  const minPosition =
+    ((sliderValues[0] - availableMin) / (availableMax - availableMin)) * 100;
+  const maxPosition =
+    ((sliderValues[1] - availableMin) / (availableMax - availableMin)) * 100;
+
+  // Fonction pour déterminer le style de positionnement des valeurs courantes
+  const getMinValueStyle = () => {
+    if (minPosition <= 10) {
+      // Si le curseur est très à gauche, aligner la valeur à gauche
+      return { left: '0%', transform: 'translateX(0)' };
+    }
+    return { left: `${minPosition}%`, transform: 'translateX(-50%)' };
+  };
+
+  const getMaxValueStyle = () => {
+    if (maxPosition >= 90) {
+      // Si le curseur est très à droite, aligner la valeur à droite
+      return { right: '0%', transform: 'translateX(0)' };
+    }
+    return { left: `${maxPosition}%`, transform: 'translateX(-50%)' };
+  };
+
   return (
     <div className="space-y-4 min-w-[150px]">
       {/* Valeurs courantes affichées au-dessus des curseurs */}
       <div className="relative h-6 overflow-visible">
-        {/* Valeur min avec décalage vers la droite */}
-        <div className="absolute top-0 transform -translate-x-1/2 ml-5">
+        {/* Valeur min */}
+        <div className="absolute top-0" style={getMinValueStyle()}>
           <div className="bg-white text-xs px-2 py-1 rounded shadow-sm border whitespace-nowrap">
             {formattedPrices[0]}
           </div>
         </div>
 
-        {/* Valeur max avec décalage vers la gauche */}
-        <div
-          className="absolute top-0 transform -translate-x-1/2 -ml-5"
-          style={{
-            left: `${((sliderValues[1] - availableMin) / (availableMax - availableMin)) * 100}%`,
-          }}
-        >
+        {/* Valeur max */}
+        <div className="absolute top-0" style={getMaxValueStyle()}>
           <div className="bg-white text-xs px-2 py-1 rounded shadow-sm border whitespace-nowrap">
             {formattedPrices[1]}
           </div>
