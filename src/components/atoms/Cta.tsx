@@ -16,7 +16,7 @@ const Cta = ({
   handleButtonClick?: (e: React.MouseEvent) => void;
   label: string;
   slug: string;
-  size?: 'default' | 'large' | 'small';
+  size?: 'default' | 'large' | 'small' | 'mobile-header';
   variant?:
     | 'primary'
     | 'secondary'
@@ -27,14 +27,19 @@ const Cta = ({
   additionalClass?: string;
   disabled?: boolean;
 }) => {
-  const buttonClass =
-    'whitespace-nowrap flex items-center justify-center font-bold transition duration-300 ease-in-out rounded-[5px] lg:min-w-[170px] border';
+  const buttonClass = `
+  ${size !== 'mobile-header' ? 'whitespace-nowrap' : 'whitespace-normal'}
+  flex items-center justify-center font-bold transition duration-300 ease-in-out rounded-[5px] lg:min-w-[170px] border
+`;
+
   const sizeClass =
     size === 'large'
       ? 'text-base leading-general px-12 py-3 gap-4 whitespace-nowrap'
       : size === 'small'
         ? 'text-xs leading-general px-2 py-1 gap-[2px] min-h-[24px] min-w-fit'
-        : 'text-base leading-general px-4 py-2 gap-2 min-h-[43px]';
+        : size === 'mobile-header'
+          ? 'text-clamp leading-general px-[0.75em] py-3 gap-[2px] min-h-[24px] w-full truncate '
+          : 'text-base leading-general px-4 py-2 gap-2 min-h-[43px]';
 
   const variantClasses = {
     primary:

@@ -8,7 +8,6 @@ import Cart from './Cart';
 import Container from '@/components/container';
 import { CategoryMenuProps } from '@/types/Categories';
 import { BulletSvg } from '../blocs/BlocAnchorsPicto';
-import useAuth from '@/hooks/useAuth';
 import DesktopParentCategorySubMenu from './DesktopParentCategorySubMenu';
 import Cta from '@/components/atoms/Cta';
 
@@ -70,8 +69,6 @@ export default function Header({
     };
   }, [isMenuOpen]);
 
-  const { isPro } = useAuth();
-
   return (
     <header
       className={`fixed w-full top-0 z-50 transform transition-transform duration-300 ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`}
@@ -82,7 +79,7 @@ export default function Header({
           href="/compte"
           className="w-1/2 bg-primary py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
         >
-          Mon espace {isPro ? 'professionel' : 'client'}
+          Mon espace client
           <div className="max-w-1">
             <BulletSvg />
           </div>
@@ -296,10 +293,11 @@ export default function Header({
                           <div className="w-fit py-4">
                             <Cta
                               slug={item.uri}
-                              variant="secondary"
                               label="Voir tout"
+                              variant="primaryHollow"
+                              size="mobile-header"
                             >
-                              Voir tout dans les produits
+                              {item.name}
                             </Cta>
                           </div>
 
@@ -376,8 +374,13 @@ export default function Header({
 
                             {/* Bouton "Voir tout" pour la catégorie niveau 2 */}
                             <div className="w-fit py-4">
-                              <Cta slug={subItem.uri} label="Voir tout">
-                                Voir tout les produits
+                              <Cta
+                                slug={subItem.uri}
+                                label="Voir tout"
+                                variant="primaryHollow"
+                                size="mobile-header"
+                              >
+                                {subItem.name}
                               </Cta>
                             </div>
 
