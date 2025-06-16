@@ -22,9 +22,9 @@ const CardInstallation = ({
           className="block h-full w-full object-cover"
         />
       </div>
-      <div className="relative pt-[32px] pb-[55px] px-4 overflow-hidden">
+      <div className="relative pt-[32px] pb-[25px] sm:pb-[55px] px-4 overflow-hidden">
         <div
-          className={`absolute max-w-[90px] bottom-[-5px] left-[-5px] rotate-90`}
+          className={`absolute max-w-[70px] sm:max-w-[90px] bottom-[-5px] left-[-5px] rotate-90`}
         >
           <Wifi variant={'orange'} />
         </div>

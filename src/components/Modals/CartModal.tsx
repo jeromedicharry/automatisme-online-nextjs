@@ -38,7 +38,7 @@ const CartModal: React.FC = () => {
 
   return (
     <Modal isOpen={isCartModalOpen} onClose={closeCartModal} size="half-screen">
-      <div className="min-h-full flex flex-col">
+      <div className="min-h-full flex flex-col bg-primary-light">
         {/* En-tête */}
         <div className="bg-primary text-white py-2 md:py-4">
           <Container>
@@ -72,7 +72,7 @@ const CartModal: React.FC = () => {
               <h2 className="text-xl font-medium leading-general border-l-[3px] border-secondary pl-2 text-primary">
                 {'Fréquemment acheté ensemble'}
               </h2>
-              <div className="overflow-hidden relative pb-6">
+              <div className="overflow-hidden relative md:pb-6">
                 <Swiper
                   spaceBetween={20}
                   modules={[Navigation]}
@@ -120,7 +120,7 @@ const CartModal: React.FC = () => {
           {/* Actions */}
           <div className="mt-auto flex flex-col gap-2 md:flex-row">
             <Cta
-              variant="primaryHollow"
+              variant="primaryWhite"
               label="Continuer mes recherches"
               handleButtonClick={closeCartModal}
               slug="#"
