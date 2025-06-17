@@ -7,7 +7,7 @@ import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
 
 const CardQuestionCta = ({ question }: { question: QuestionCtaCardProps }) => {
   return (
-    <div className="flex rounded-2xl overflow-hidden md:max-w-[520px]">
+    <div className="flex rounded-2xl overflow-hidden md:basis-1/2 md:max-h-[240px]">
       <Image
         src={question?.image?.node?.sourceUrl || PRODUCT_IMAGE_PLACEHOLDER}
         alt={question.subtitle}
