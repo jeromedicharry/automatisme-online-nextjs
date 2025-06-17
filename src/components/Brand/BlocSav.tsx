@@ -43,7 +43,7 @@ const BlocSAV = ({
           </div>
         )}
 
-        <div className="w-full flex flex-col justify-center md:px-6 md:py-6 lg:px-16 lg:py-8 gap-4">
+        <div className="w-full flex flex-col justify-center md:px-6 md:py-6 lg:px-10 xxl:px-12 lg:py-8 gap-4">
           <div
             className={`max-w-[180px] absolute bottom-[-8px] ${bloc.isImageLeft ? 'right-[-8px]' : 'left-[-8px] rotate-90'}`}
           ></div>
@@ -52,13 +52,13 @@ const BlocSAV = ({
               dangerouslySetInnerHTML={{
                 __html: bloc.title,
               }}
-              className="font-bold text-4xl md:text-5xl leading-general text-balance"
+              className="font-bold text-4xl lg:text-[2.375rem] leading-general text-balance"
             />
           )}
 
           {bloc.date && (
-            <div className="text-sm text-dark-grey leading-general font-bold">
-              Actualités {bloc.brand} - {formatDate(bloc.date)}
+            <div className="text-sm text-dark-grey leading-general font-medium">
+              Actualités {bloc.brand} - {formatDate(bloc.date, '/')}
             </div>
           )}
 
@@ -94,13 +94,14 @@ const BlocSAV = ({
           )}
 
           {slug && (
-            <div className="w-fit mt-8 lg:mt-12">
+            <div className="mt-8 lg:mt-12 w-[300px]">
               <Cta
                 slug={`/blog/${slug}`}
                 label="Lire cet article"
                 variant="primaryHollow"
+                isFull
               >
-                {"Lire l' article"}
+                {"Lire l'article"}
               </Cta>
             </div>
           )}

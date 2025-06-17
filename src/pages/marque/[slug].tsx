@@ -81,7 +81,7 @@ const BrandPage = ({
               />
             </Container>
             <div className="space-y-8">
-              {brand.posts.nodes.map((post: PostCard, key) => {
+              {brand.posts.nodes.map((post: PostCard) => {
                 const bloc = {
                   title: post.title,
                   text: post.excerpt,
@@ -96,9 +96,7 @@ const BrandPage = ({
                   date: post.date,
                   brand: brand.name,
                 };
-                if (key >= 2) {
-                  return null;
-                }
+
                 return <BlocSAV key={post.slug} bloc={bloc} slug={post.slug} />;
               })}
             </div>

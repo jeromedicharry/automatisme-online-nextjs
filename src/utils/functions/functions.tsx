@@ -198,8 +198,8 @@ export const getFormattedCart = (
       deliveryLabel: getProductAvailability({
         stock: (givenProduct as any).stockQuantity,
         backorders: (givenProduct as any).backorders,
-        restockingLeadTime: (givenProduct as any).restockingLeadTime
-      }).deliveryLabel
+        restockingLeadTime: (givenProduct as any).restockingLeadTime,
+      }).deliveryLabel,
       // upsell: givenProduct.upsell || { nodes: [] },
     };
 
@@ -398,12 +398,12 @@ export const isProRole = (roles?: { name: string }[]): boolean => {
   return roles?.some((role) => role.name === 'pro_customer') ?? false;
 };
 
-export const formatDate = (dateString: string) => {
+export const formatDate = (dateString: string, separator: '.' | '/' = '.') => {
   const date = new Date(dateString);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+  return `${day}${separator}${month}${separator}${year}`;
 };
 
 export type OrderStatus =

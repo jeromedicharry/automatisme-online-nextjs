@@ -68,8 +68,8 @@ const InstallerPage = ({
           subtitle="Entrez votre ville, trouvez les installateurs à moins de 50km chez vous. Nous vous mettrons en relation."
         />
 
-        <div className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 mb-16">
-          <div className="md:sticky md:top-10 lg:top-16 xxl:top-28 md:h-[calc(100vh-7rem)]">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-8 mb-16">
+          <div className="lg:h-[calc(100vh-7rem)]">
             <InstallerMap
               installers={filteredInstallers}
               activeCardIndex={activeInstallerIndex}
@@ -79,13 +79,13 @@ const InstallerPage = ({
           </div>
 
           <div className="">
-            <h2 className="text-sm sm:text-xl font-bold leading-general text-center mb-3 md:mb-6">
+            <h2 className="text-sm sm:text-xl font-bold leading-general text-center mb-3 lg:mb-6">
               {'Trouver votre installateur près de chez vous'}
             </h2>
             <InstallerSearch onSearch={searchInstallers} />
 
             {filteredInstallers.length === 0 && searchCenter && (
-              <p className="md:hidden text-center mb-8 p-4 border border-primary text-balance">
+              <p className="lg:hidden text-center mb-8 p-4 border border-primary text-balance">
                 {"Nous n'avons pas trouvé d'installateur dans votre ville."}
               </p>
             )}
@@ -95,14 +95,14 @@ const InstallerPage = ({
                 <p className="text-center mb-8">
                   {"Recherche d'installateurs en cours..."}
                 </p>
-                <div className="mb-6 md:mb-10">
+                <div className="mb-6 lg:mb-10">
                   <LoadingSpinner />
                 </div>
               </div>
             )}
             {error && <p className="text-red-500 text-center">{error}</p>}
 
-            <div className="max-md:hidden">
+            <div className="max-lg:hidden">
               {!searchCenter && (
                 <EmptyElement
                   picto={<OrderSvg />}
@@ -117,7 +117,7 @@ const InstallerPage = ({
                   subtitle="Nous n'avons pas trouvé d'installateur dans votre ville."
                 />
               )}
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid lg:grid-cols-2 gap-4 lg:max-h-[546px] lg:overflow-auto lg:pr-2 lg:scrollbar-custom">
                 {filteredInstallers.map((installer, index) => (
                   <InstallerCard
                     key={index}

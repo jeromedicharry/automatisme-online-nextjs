@@ -13,10 +13,7 @@ const BreadCrumbs = ({ breadCrumbs }: any) => {
           );
         }
         return (
-          <div
-            key={key}
-            className="flex gap-3 items-center text-breadcrumb-grey"
-          >
+          <div key={key} className="flex gap-3 items-center text-dark-grey">
             <Link
               className="hover:text-primary duration-300"
               href={makeRelativeLink(crumb.url)}
