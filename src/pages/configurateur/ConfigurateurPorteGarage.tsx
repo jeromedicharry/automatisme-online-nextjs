@@ -71,29 +71,36 @@ export default function ConfigurateurPorteGarage({ setMessage }: any) {
 
   // Générer le message
   useEffect(() => {
-    if (!isFormValid()) return;
-
     let msg = (
       <>
-        Je souhaite faire motoriser une porte de garage{' '}
-        <span>
-          {state.porteType === 'sectionnelle' && 'sectionnelle'}
-          {state.porteType === 'ressort' && 'basculante à ressort'}
-          {state.porteType === 'contrepoids' && 'à contrepoids'}
-        </span>
-        . Ses dimensions sont <span>{state.hauteur}m</span> x{' '}
-        <span>{state.surface}m</span> et son poids est de{' '}
-        <span>{state.poids}kg</span>.{' '}
-      </>
-    );
-
-    msg = (
-      <>
-        {msg} Je souhaite{' '}
-        <span>
-          {state.installation ? '' : 'ne pas '}la faire installer par un
-          professionnel.
-        </span>
+        Je souhaite faire motoriser une porte de garage
+        {state.porteType && (
+          <>
+            {' '}
+            <span>
+              {state.porteType === 'sectionnelle' && 'sectionnelle'}
+              {state.porteType === 'ressort' && 'basculante à ressort'}
+              {state.porteType === 'contrepoids' && 'à contrepoids'}
+            </span>
+          </>
+        )}
+        {state.hauteur && state.surface && state.poids && (
+          <>
+            . Ses dimensions sont <span>{state.hauteur}m</span> x{' '}
+            <span>{state.surface}m</span> et son poids est de{' '}
+            <span>{state.poids}kg</span>.
+          </>
+        )}
+        {state.installation !== null && state.installation !== undefined && (
+          <>
+            {' '}
+            Je souhaite{' '}
+            <span>
+              {state.installation ? '' : 'ne pas '}la faire installer par un
+              professionnel.
+            </span>
+          </>
+        )}
       </>
     );
 

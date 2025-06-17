@@ -129,58 +129,83 @@ export default function ConfigurateurPortail({ setMessage }: any) {
   }, [state, router.isReady]);
 
   // Générer le message
-  // Générer le message
   useEffect(() => {
-    if (!isFormValid()) return;
-
     let msg = (
       <>
-        Je souhaite faire motoriser un portail pour un usage{' '}
-        <span>
-          {state.usage === 'domestique' ? 'domestique' : 'collectif/industriel'}
-        </span>
-        .{' '}
+        Je souhaite faire motoriser un portail
+        {state.usage && (
+          <>
+            {' '}
+            pour un usage{' '}
+            <span>
+              {state.usage === 'domestique'
+                ? 'domestique'
+                : 'collectif/industriel'}
+            </span>
+            .
+          </>
+        )}
       </>
     );
 
     if (state.portailType === '2battants') {
       msg = (
         <>
-          {msg}
-          Ce dernier a <span>2 battants</span>. Les dimensions du ventail sont :
-          battant gauche <span>{state.largeurGauche}mm</span> x{' '}
-          <span>{state.coteAGauche}mm</span>, battant droit{' '}
-          <span>{state.largeurDroite}mm</span> x{' '}
-          <span>{state.coteADroite}mm</span>.{' '}
+          {msg} Ce dernier a <span>2 battants</span>.
+          {state.largeurGauche &&
+            state.coteAGauche &&
+            state.largeurDroite &&
+            state.coteADroite && (
+              <>
+                {' '}
+                Les dimensions du ventail sont : battant gauche{' '}
+                <span>{state.largeurGauche}mm</span> x{' '}
+                <span>{state.coteAGauche}mm</span>, battant droit{' '}
+                <span>{state.largeurDroite}mm</span> x{' '}
+                <span>{state.coteADroite}mm</span>.
+              </>
+            )}
         </>
       );
     } else if (state.portailType === '1battant') {
       msg = (
         <>
-          {msg}
-          Ce dernier a <span>1 battant</span>. Les dimensions du ventail sont :{' '}
-          <span>{state.largeur}mm</span> x <span>{state.coteA}mm</span>.{' '}
+          {msg} Ce dernier a <span>1 battant</span>.
+          {state.largeur && state.coteA && (
+            <>
+              {' '}
+              Les dimensions du ventail sont : <span>
+                {state.largeur}mm
+              </span> x <span>{state.coteA}mm</span>.
+            </>
+          )}
         </>
       );
     } else if (state.portailType === 'coulissant') {
       msg = (
         <>
-          {msg}
-          Ce dernier est <span>coulissant</span>. La largeur du ventail est de{' '}
-          <span>{state.largeur}mm</span>.{' '}
+          {msg} Ce dernier est <span>coulissant</span>.
+          {state.largeur && (
+            <>
+              {' '}
+              La largeur du ventail est de <span>{state.largeur}mm</span>.
+            </>
+          )}
         </>
       );
     }
 
-    msg = (
-      <>
-        {msg} Je souhaite{' '}
-        <span>
-          {state.installation ? '' : 'ne pas '}le faire installer par un
-          professionnel.
-        </span>
-      </>
-    );
+    if (state.installation !== null && state.installation !== undefined) {
+      msg = (
+        <>
+          {msg} Je souhaite{' '}
+          <span>
+            {state.installation ? '' : 'ne pas '}le faire installer par un
+            professionnel.
+          </span>
+        </>
+      );
+    }
 
     setMessage(msg);
   }, [state]);
