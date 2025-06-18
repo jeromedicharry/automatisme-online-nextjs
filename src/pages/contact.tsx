@@ -56,7 +56,7 @@ const contactPage = ({
             <ContactForm />
           </div>
           <div
-            className="my-16 wysiwyg"
+            className="my-16 wysiwyg text-center"
             dangerouslySetInnerHTML={{
               __html: themeSettings?.contactText || '',
             }}

@@ -27,7 +27,7 @@ const BlocIntroLarge = ({
         )}
         {subtitle && (
           <div
-            className={`text-xl text-center leading-general wysiwyg ${isDescriptionFontNormal ? 'font-normal' : 'font-medium'}`}
+            className={`text-xl text-center font-normalleading-general wysiwyg ${isDescriptionFontNormal ? 'font-normal' : 'font-medium'}`}
             dangerouslySetInnerHTML={{ __html: subtitle }}
           />
         )}

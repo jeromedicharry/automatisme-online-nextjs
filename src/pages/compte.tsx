@@ -130,9 +130,16 @@ const Compte = ({
     >
       <div>
         <Container>
+          <div className="md:hidden">
+            {mobileNavClosed ? null : (
+              <h1 className="font-bold text-2xl leading-general mb-4">
+                Mon compte
+              </h1>
+            )}
+          </div>
           <div className="flex gap-10 items-start mb-10 md:mb-16">
             <aside
-              className={`max-md:mx-auto max-md:mb-10 md:mt-10 pb-3 pt-5 px-6 shadow-card rounded-lg bg-white sticky top-20 ${mobileNavClosed ? 'max-md:hidden' : ''}`}
+              className={`max-md:w-full md:mt-10 pb-3 pt-5 md:px-6 md:shadow-card rounded-lg md:bg-white sticky top-20 ${mobileNavClosed ? 'max-md:hidden' : ''}`}
             >
               <nav>
                 <ul className="flex flex-col gap-3 align-start xxl:w-[325px]">

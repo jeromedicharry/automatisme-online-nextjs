@@ -94,7 +94,7 @@ const ContactForm = ({ formId = 23584 }) => {
               <pre>{JSON.stringify(errorMessage, null, 2)}</pre>
             </div>
           )}
-          <div className="space-y-3 contact">
+          <form className="space-y-3 contact">
             <div className="grid md:grid-cols-2 gap-3">
               <input
                 type="text"
@@ -172,7 +172,7 @@ const ContactForm = ({ formId = 23584 }) => {
                 Envoyer
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </div>
