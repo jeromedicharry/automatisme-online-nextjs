@@ -256,12 +256,36 @@ const CartContents = () => {
                         </div>
                         <div className="text-secondary font-bold">{`Quantité x ${item.qty}`}</div>
                       </h2>
-                      <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
-                        {item.installationPrice?.toFixed(2)}€{' '}
-                        <span className="absolute right-0 top-1 text-xs">
-                          {isPro ? 'HT' : 'TTC'}
-                        </span>
-                      </p>
+                      <div className="text-primary">
+                        {(() => {
+                          console.log('CartContents - Item Installation:', {
+                            cartKey: item.cartKey,
+                            installationPrice: item.installationPrice,
+                            addInstallation: item.addInstallation,
+                            qty: item.qty
+                          });
+                          return null;
+                        })()}
+                        {isPro ? (
+                          <p className="text-2xl font-bold pr-7 relative w-fit">
+                            {((item.installationPrice || 0) / 1.2).toFixed(2)}€{' '}
+                            <span className="absolute right-0 top-1 text-xs">HT</span>
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-2xl font-bold pr-7 relative w-fit">
+                              {(item.installationPrice || 0).toFixed(2)}€{' '}
+                              <span className="absolute right-0 top-1 text-xs">TTC</span>
+                            </p>
+                            <p className="text-sm text-dark-grey">
+                              {((item.installationPrice || 0) / 1.2).toFixed(2)}€ HT
+                              <span className="ml-2">
+                                (TVA 20%)
+                              </span>
+                            </p>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
