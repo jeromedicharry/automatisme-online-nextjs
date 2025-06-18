@@ -8,7 +8,14 @@ const SimpleHero = ({
   title: string;
   subtitle: string;
 }) => {
-  return <BlocIntroLarge title={title} subtitle={subtitle} isH1 />;
+  return (
+    <BlocIntroLarge
+      title={title}
+      subtitle={subtitle}
+      isH1
+      isDescriptionFontNormal
+    />
+  );
 };
 
 export default SimpleHero;

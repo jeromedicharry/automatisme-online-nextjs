@@ -5,9 +5,9 @@
 /* Fonts */
 @font-face {
   font-family: 'HelveticaNeue';
-  src: url('./fonts/HelveticaNeue.woff2') format('woff2'),
-      url('./fonts/HelveticaNeue.woff') format('woff'),
-      url('./fonts/HelveticaNeue.ttf') format('ttf');
+  src: url('./fonts/HelveticaNeue-Roman.woff2') format('woff2'),
+      url('./fonts/HelveticaNeue-Roman.woff') format('woff'),
+      url('./fonts/HelveticaNeue-Roman.ttf') format('ttf');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
