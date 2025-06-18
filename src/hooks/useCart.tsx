@@ -23,6 +23,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     notifyOnNetworkStatusChange: true,
     onCompleted: (data) => {
       const updatedCart = getFormattedCart(data);
+
       if (!updatedCart || !updatedCart.products.length) {
         localStorage.removeItem('woocommerce-cart');
         setCart(null);

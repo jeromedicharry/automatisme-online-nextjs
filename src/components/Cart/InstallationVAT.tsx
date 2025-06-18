@@ -2,12 +2,25 @@ import React, { useState, useContext } from 'react';
 import { useMutation } from '@apollo/client';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import { CartContext } from '@/stores/CartProvider';
+import { useCartOperations } from '@/hooks/useCartOperations';
 import { UPDATE_CART_ITEM_INSTALLATION } from '@/utils/gql/GQL_MUTATIONS';
+import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
 const InstallationVAT = () => {
   const { cart } = useContext(CartContext);
+  const { refetchCart } = useCartOperations();
   const [hasReducedTvaRate, setHasReducedTvaRate] = useState(false);
-  const [updateCartItemInstallation] = useMutation(UPDATE_CART_ITEM_INSTALLATION);
+  const [updateCartItemInstallation] = useMutation(UPDATE_CART_ITEM_INSTALLATION, {
+    refetchQueries: [{ query: GET_CART }],
+    awaitRefetchQueries: true,
+    onCompleted: async (data) => {
+      console.log('Installation TVA update completed:', data);
+      await refetchCart();
+    },
+    onError: (error) => {
+      console.error('Error updating installation TVA:', error);
+    }
+  });
 
   const handleTvaRateChange = async (checked: boolean) => {
     setHasReducedTvaRate(checked);

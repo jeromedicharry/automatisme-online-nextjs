@@ -55,21 +55,19 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   }, 0);
 
   // Calcul du coût total HT des installations
-  const totalInstallationHT = totalInstallationCost / 1.2;
+  const totalInstallationHT = cartData?.cart?.contents?.nodes?.[0]?.installationPrice ? 
+    cartData.cart.contents.nodes[0].installationPrice - cartData.cart.contents.nodes[0].installationTvaAmount : 0;
 
   // TVA sur les installations
-  const totalInstallationTVA = totalInstallationCost - totalInstallationHT;
+  const totalInstallationTVA = cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount || 0;
 
   // Calcul du coût total des produits (sans installation)
-  const cartTotal = parseFloat((cartData?.cart?.total || 0).toString());
+  const productTotalHT = parseFloat(cartData?.cart?.subtotal || '0');
+  const productTVA = parseFloat(cartData?.cart?.subtotalTax || '0');
+  const productTotalTTC = productTotalHT + productTVA;
 
-  // Calcul du coût de livraison
-  const shippingCost = selectedShippingMethod
-    ? parseFloat(selectedShippingMethod.cost)
-    : 0;
-
-  // Grand total incluant produits, installations et livraison
-  const grandTotal = cartTotal + totalInstallationCost + shippingCost;
+  // Grand total depuis l'API
+  const grandTotal = parseFloat(cartData?.cart?.total || '0');
 
   return (
     <>
@@ -196,20 +194,13 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           </div>
 
           <div className="flex text-primary justify-between gap-6 items-center mt-1">
-            <p>TVA Produits</p>
-            <p>
-              {parseFloat((cartData?.cart?.totalTax || 0).toString()).toFixed(
-                2,
-              )}
-              €
-            </p>
+            <p>TVA Produits ({((productTVA / productTotalHT) * 100).toFixed(1)}%)</p>
+            <p>{productTVA.toFixed(2)}€</p>
           </div>
 
           <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
             <p>Total Produits TTC</p>
-            <p>
-              {parseFloat((cartData?.cart?.total || 0).toString()).toFixed(2)}€
-            </p>
+            <p>{productTotalTTC.toFixed(2)}€</p>
           </div>
 
           {/* Affichage du grand total incluant les installations */}
@@ -220,32 +211,28 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                 <p>{totalInstallationHT.toFixed(2)}€</p>
               </div>
               <div className="flex text-primary justify-between gap-6 items-center mt-1">
-                <p>TVA Installation (20%)</p>
-                <p>{totalInstallationTVA.toFixed(2)}€</p>
+                <p>TVA Installation ({(cartData?.cart?.contents?.nodes?.[0]?.installationTvaRate || 0.2) * 100}%)</p>
+                <p>{cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount?.toFixed(2) || '0.00'}€</p>
+              </div>
+              <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
+                <p>Total Installation TTC</p>
+                <p>{totalInstallationCost.toFixed(2)}€</p>
+              </div>
+              <div className="my-4">
+                <Separator />
               </div>
               {selectedShippingMethod && (
                 <>
                   <div className="flex text-primary justify-between gap-6 items-center mt-2">
                     <p>Livraison HT ({selectedShippingMethod.label})</p>
                     <p>
-                      {(
-                        parseFloat(selectedShippingMethod.cost) -
-                        parseFloat(
-                          (cartData?.cart?.shippingTax || 0).toString(),
-                        )
-                      ).toFixed(2)}
-                      €
+                      {(parseFloat(selectedShippingMethod.cost) - parseFloat((cartData?.cart?.shippingTax || 0).toString())).toFixed(2)}€
                     </p>
                   </div>
                   {cartData?.cart?.shippingTax > 0 && (
                     <div className="flex text-primary justify-between gap-6 items-center mt-1">
                       <p>TVA Livraison</p>
-                      <p>
-                        {parseFloat(
-                          (cartData?.cart?.shippingTax || 0).toString(),
-                        ).toFixed(2)}
-                        €
-                      </p>
+                      <p>{parseFloat((cartData?.cart?.shippingTax || 0).toString()).toFixed(2)}€</p>
                     </div>
                   )}
                   <div className="flex text-primary justify-between gap-6 items-center mt-1">
@@ -257,7 +244,9 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
               <Separator />
               <div className="flex text-primary justify-between gap-6 items-center mt-2">
                 <p>Total TVA</p>
-                <p>{cartData?.cart?.totalTax || 0}€</p>
+                <p>
+                  {(parseFloat(cartData?.cart?.totalTax || '0') + totalInstallationTVA).toFixed(2)}€
+                </p>
               </div>
               <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
                 <p>Total TTC</p>

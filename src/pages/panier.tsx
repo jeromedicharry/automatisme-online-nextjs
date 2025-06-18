@@ -43,8 +43,6 @@ const Panier = ({
   >([]);
   const [showInstallationVAT, setShowInstallationVAT] = useState(false);
 
-  console.log('cart', cart);
-
   useEffect(() => {
     const fetchCrossSellProducts = async () => {
       if (!cart?.products?.length) return;

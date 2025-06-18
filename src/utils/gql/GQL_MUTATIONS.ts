@@ -91,18 +91,18 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
         contents {
           nodes {
             key
+            quantity
+            total
+            subtotal
+            subtotalTax
             addInstallation
             installationPrice
             installationTvaRate
             installationTvaAmount
-            product {
-              node {
-                name
-              }
-            }
           }
         }
         total
+        totalTax
       }
     }
   }

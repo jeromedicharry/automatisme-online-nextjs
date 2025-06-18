@@ -50,12 +50,14 @@ export interface IProductRootObject {
   __typename: string;
   key: string;
   product: IProduct;
-  // variation?: IVariationNodes;
   quantity: number;
   total: string;
   subtotal: string;
+  subtotalTax: string;
   addInstallation?: boolean;
   installationPrice?: number;
+  installationTvaRate?: number;
+  installationTvaAmount?: number;
 }
 
 type TUpdatedItems = { key: string; quantity: number }[];
@@ -163,13 +165,15 @@ export const getFormattedCart = (
     const givenProduct = givenProductItem.product.node;
     const quantity = givenProductItem.quantity;
 
-    // Get price values directly from GraphQL response
-    const lineTotal = parseFloat(givenProductItem.total); // Total TTC
-    const lineSubtotal = parseFloat(givenProductItem.subtotal); // Total HT
+    // Prix du produit seul (sans installation)
+    const productPriceHT = parseFloat(givenProductItem.subtotal); // Prix HT
+    const productTVA = parseFloat(givenProductItem.subtotalTax); // TVA produit
+    const productPriceTTC = productPriceHT + productTVA; // Prix TTC
 
-    // Calculate unit prices
-    const unitPriceTTC = quantity > 0 ? lineTotal / quantity : 0;
-    const unitPriceHT = quantity > 0 ? lineSubtotal / quantity : 0;
+    // Prix de l'installation
+    const installationPriceHT = givenProductItem.installationPrice ? givenProductItem.installationPrice / (1 + (givenProductItem.installationTvaRate || 0.2)) : 0;
+    const installationTVA = givenProductItem.installationTvaAmount || 0;
+    const installationPriceTTC = installationPriceHT + installationTVA;
 
     const product: Product = {
       productId: givenProduct.databaseId,
@@ -177,8 +181,8 @@ export const getFormattedCart = (
       cartKey: givenProductItem.key,
       name: givenProduct.name,
       qty: quantity,
-      price: isPro ? unitPriceHT : unitPriceTTC, // HT pour pro, TTC pour autres
-      totalPrice: isPro ? lineSubtotal : lineTotal, // HT pour pro, TTC pour autres
+      price: isPro ? productPriceHT : productPriceTTC, // Prix unitaire du produit: HT pour pro, TTC pour autres
+      totalPrice: isPro ? (productPriceHT + (givenProductItem.addInstallation ? installationPriceHT : 0)) : (productPriceTTC + (givenProductItem.addInstallation ? installationPriceTTC : 0)), // Total ligne: HT pour pro, TTC pour autres
       image: givenProduct.image?.sourceUrl
         ? {
             sourceUrl: givenProduct.image.sourceUrl,
@@ -211,13 +215,9 @@ export const getFormattedCart = (
   // Set cart totals
   formattedCart.totalProductsCount = totalProductsCount;
 
-  // Use cart level totals directly from GraphQL
-  const cartTotal = parseFloat(data.cart.total); // Total TTC
-  const cartTotalTax = parseFloat(data.cart.totalTax); // Total TVA
-
   // Utiliser les totaux de WooCommerce
-  formattedCart.totalProductsPrice = cartTotal; // Toujours TTC
-  formattedCart.totalTax = cartTotalTax; // TVA selon les règles WooCommerce
+  formattedCart.totalProductsPrice = parseFloat(data.cart.total); // Total TTC incluant produits et installations
+  formattedCart.totalTax = parseFloat(data.cart.totalTax); // Total TVA incluant produits et installations
 
   return formattedCart;
 };
