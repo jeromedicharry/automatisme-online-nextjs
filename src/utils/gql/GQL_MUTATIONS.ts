@@ -76,9 +76,14 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
   mutation UpdateCartItemInstallation(
     $cartItemKey: String!
     $addInstallation: Boolean!
+    $hasReducedTvaRate: Boolean
   ) {
     updateCartItemInstallation(
-      input: { cartItemKey: $cartItemKey, addInstallation: $addInstallation }
+      input: {
+        cartItemKey: $cartItemKey
+        addInstallation: $addInstallation
+        hasReducedTvaRate: $hasReducedTvaRate
+      }
     ) {
       success
       message
@@ -88,6 +93,8 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
             key
             addInstallation
             installationPrice
+            installationTvaRate
+            installationTvaAmount
             product {
               node {
                 name

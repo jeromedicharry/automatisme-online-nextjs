@@ -22,6 +22,7 @@ import { GET_CROSSSELL_PRODUCT_SIDE_DATA } from '@/utils/gql/WOOCOMMERCE_QUERIES
 import client from '@/utils/apollo/ApolloClient';
 import { CardProductProps } from '@/types/blocTypes';
 import BlocFeaturedProducts from '@/components/sections/blocs/BlocFeaturedProducts';
+import InstallationVAT from '@/components/Cart/InstallationVAT';
 
 const Panier = ({
   themeSettings,
@@ -40,6 +41,9 @@ const Panier = ({
   const [crossSellProducts, setCrossSellProducts] = useState<
     CardProductProps[]
   >([]);
+  const [showInstallationVAT, setShowInstallationVAT] = useState(false);
+
+  console.log('cart', cart);
 
   useEffect(() => {
     const fetchCrossSellProducts = async () => {
@@ -96,6 +100,11 @@ const Panier = ({
     };
 
     fetchCrossSellProducts();
+    const isPoseVAT =
+      cart?.products?.some(
+        (product) => product.installationPrice && product.installationPrice > 0,
+      ) || false;
+    setShowInstallationVAT(isPoseVAT);
   }, [cart?.products]);
 
   return (
@@ -128,6 +137,7 @@ const Panier = ({
                 {/* Conteneur principal */}
                 <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10 xl:gap-16">
                   <CartContents />
+                  {showInstallationVAT ? <InstallationVAT /> : null}
                   <Separator />
                   <DeliveryChoices />
                 </div>

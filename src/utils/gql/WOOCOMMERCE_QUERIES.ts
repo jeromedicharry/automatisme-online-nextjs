@@ -301,6 +301,8 @@ export const GET_CART = gql`
           subtotal(format: RAW)
           subtotalTax(format: RAW)
           installationPrice
+          installationTvaRate
+          installationTvaAmount
           addInstallation
         }
       }
