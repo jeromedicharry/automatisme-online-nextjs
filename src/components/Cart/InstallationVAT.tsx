@@ -1,20 +1,59 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { useMutation } from '@apollo/client';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
+import { CartContext } from '@/stores/CartProvider';
+import { UPDATE_CART_ITEM_INSTALLATION } from '@/utils/gql/GQL_MUTATIONS';
 
 const InstallationVAT = () => {
+  const { cart } = useContext(CartContext);
+  const [hasReducedTvaRate, setHasReducedTvaRate] = useState(false);
+  const [updateCartItemInstallation] = useMutation(UPDATE_CART_ITEM_INSTALLATION);
+
+  const handleTvaRateChange = async (checked: boolean) => {
+    setHasReducedTvaRate(checked);
+    
+    // Mettre à jour tous les produits du panier qui ont une installation
+    if (cart?.products) {
+      for (const product of cart.products) {
+        if (product.addInstallation) {
+          console.log('Updating installation TVA rate for product:', {
+            cartKey: product.cartKey,
+            addInstallation: product.addInstallation,
+            hasReducedTvaRate: checked
+          });
+          
+          await updateCartItemInstallation({
+            variables: {
+              cartItemKey: product.cartKey,
+              addInstallation: true,
+              hasReducedTvaRate: checked
+            }
+          });
+        }
+      }
+    }
+  };
+
   return (
-    <div className="">
+    <div className="bg-white p-6 rounded-lg shadow-card">
       <BlocIntroSmall
         title="TVA réduite à 10% sur les frais d'installation"
         subtitle="Veuillez cocher cette case et nous retourner le formulaire si vous êtes éligible "
       />
-      <form action="">
-        <label htmlFor="">
-          {
-            'Je certifie bénéficier de la TVA réduite de 10%, je télécharge ce formulaire et vous le renvoie complété (cette installation concerne une maison d’habitation construite il y a plus de deux ans)'
-          }
+      <form className="mt-4">
+        <label className="flex items-start gap-4 text-sm text-dark-grey cursor-pointer">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={hasReducedTvaRate}
+            onChange={(e) => handleTvaRateChange(e.target.checked)}
+          />
+          <span>
+            Je certifie bénéficier de la TVA réduite de 10%, je télécharge ce formulaire
+            et vous le renvoie complété (cette installation concerne une maison
+            d&apos;habitation construite il y a plus de deux ans)
+          </span>
         </label>
-        <input type="checkbox" name="" />
       </form>
     </div>
   );

@@ -23,7 +23,9 @@ export interface Product {
   productId: number;
   hasPose?: boolean; // Indique si le produit est éligible à l'installation
   addInstallation?: boolean; // Indique si l'installation est sélectionnée
-  installationPrice?: number; // Prix de l'installation
+  installationPrice?: number; // Prix de l'installation TTC
+  installationTvaRate?: number; // Taux de TVA pour l'installation (0.2 par défaut, 0.1 pour TVA réduite)
+  installationTvaAmount?: number; // Montant de la TVA pour l'installation
   deliveryLabel?: string; // Délai de livraison calculé à l'ajout au panier
 }
 
