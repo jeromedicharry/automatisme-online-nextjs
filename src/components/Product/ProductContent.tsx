@@ -228,6 +228,16 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
               faqItems={product?.acfProduct?.faq}
               productDocs={product.acfProductDocs}
             />
+            <div
+              className="skeepers_product__reviews"
+              data-product-id={product?.productRef}
+              data-locale="fr_FR"
+              data-price={product?.price}
+              data-currency="EUR"
+              data-name={product?.name}
+              data-url={process.env.NEXT_PUBLIC_WEBSITE_URL + product?.uri}
+              data-image-url={product?.featuredImage?.node?.sourceUrl}
+            ></div>
             <div className="flex mt-8 md:mt-6 gap-4 items-center justify-between">
               <span className="max-sm:text-xs leading-general shrink-1">
                 Moyens de paiement sécurisés
