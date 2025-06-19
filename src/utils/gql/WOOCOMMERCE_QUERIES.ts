@@ -459,6 +459,12 @@ export const FETCH_SINGLE_BRAND = gql`
             }
           }
         }
+
+        relatedBrands {
+          nodes {
+            name
+          }
+        }
       }
       posts(first: 2) {
         nodes {
