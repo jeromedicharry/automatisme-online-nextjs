@@ -131,3 +131,71 @@ export const UPDATE_SHIPPING_METHOD = gql`
   }
   ${CART_SHIPPING_FRAGMENT}
 `;
+
+// Mutation pour appliquer un coupon
+export const APPLY_COUPON = gql`
+  mutation ApplyCoupon($code: String!) {
+    applyCoupon(input: { code: $code }) {
+      cart {
+        total
+        subtotal
+        totalTax
+        appliedCoupons {
+          code
+          discountAmount
+          discountType
+          description
+        }
+        contents {
+          nodes {
+            key
+            product {
+              node {
+                id
+                name
+                slug
+              }
+            }
+            quantity
+            total
+            subtotal
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Mutation pour supprimer un coupon
+export const REMOVE_COUPON = gql`
+  mutation RemoveCoupon($code: String!) {
+    removeCoupons(input: { codes: [$code] }) {
+      cart {
+        total
+        subtotal
+        totalTax
+        appliedCoupons {
+          code
+          discountAmount
+          discountType
+          description
+        }
+        contents {
+          nodes {
+            key
+            product {
+              node {
+                id
+                name
+                slug
+              }
+            }
+            quantity
+            total
+            subtotal
+          }
+        }
+      }
+    }
+  }
+`;

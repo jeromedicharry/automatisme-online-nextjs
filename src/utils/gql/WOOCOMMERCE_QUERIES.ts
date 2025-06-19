@@ -289,6 +289,15 @@ export const PRODUCT_CART_ITEM = `product {
 }
 `;
 
+const COUPON_FRAGMENT = `
+  appliedCoupons {
+        code
+        discountAmount
+        discountType
+        description
+      }
+`;
+
 export const GET_CART = gql`
   query GET_CART {
     cart {
@@ -317,6 +326,7 @@ export const GET_CART = gql`
       feeTotal
       discountTax
       discountTotal
+      ${COUPON_FRAGMENT}
     }
   }
 `;

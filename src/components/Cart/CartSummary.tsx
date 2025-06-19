@@ -13,6 +13,7 @@ import {
   GET_CART,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import CartReassuranceBis from './CartReassuranceBis';
+import CouponForm from './CouponForm';
 
 const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   const { cart } = useContext(CartContext);
@@ -20,7 +21,7 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
 
   const { data: shippingMethodsData } = useQuery(GET_CART_SHIPPING_METHODS);
   const { data: shippingInfoData } = useQuery(GET_CART_SHIPPING_INFO);
-  const { data: cartData } = useQuery(GET_CART);
+  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART);
 
   interface ShippingMethod {
     cost: string;
@@ -40,6 +41,15 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
       },
     );
 
+  // Récupération des coupons appliqués depuis l'API
+  const appliedCoupons = cartData?.cart?.appliedCoupons || [];
+  const totalDiscountAmount = appliedCoupons.reduce(
+    (total: number, coupon: any) => {
+      return total + parseFloat(coupon.discountAmount || '0');
+    },
+    0,
+  );
+
   // Todo gérer la TVA pour l'installation
 
   if (!cart || !cart.products) {
@@ -55,11 +65,15 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   }, 0);
 
   // Calcul du coût total HT des installations
-  const totalInstallationHT = cartData?.cart?.contents?.nodes?.[0]?.installationPrice ? 
-    cartData.cart.contents.nodes[0].installationPrice - cartData.cart.contents.nodes[0].installationTvaAmount : 0;
+  const totalInstallationHT = cartData?.cart?.contents?.nodes?.[0]
+    ?.installationPrice
+    ? cartData.cart.contents.nodes[0].installationPrice -
+      cartData.cart.contents.nodes[0].installationTvaAmount
+    : 0;
 
   // TVA sur les installations
-  const totalInstallationTVA = cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount || 0;
+  const totalInstallationTVA =
+    cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount || 0;
 
   // Calcul du coût total des produits (sans installation)
   const productTotalHT = parseFloat(cartData?.cart?.subtotal || '0');
@@ -68,6 +82,11 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
 
   // Grand total depuis l'API
   const grandTotal = parseFloat(cartData?.cart?.total || '0');
+
+  // Handler pour rafraîchir le panier après application/suppression de coupon
+  const handleCouponChange = () => {
+    refetchCart();
+  };
 
   return (
     <>
@@ -87,7 +106,17 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                 Dont installation: {totalInstallationCost.toFixed(2)}€
               </div>
             )}
+            {totalDiscountAmount > 0 && (
+              <div className="text-sm text-green-600">
+                Remise: -{totalDiscountAmount.toFixed(2)}€
+              </div>
+            )}
           </div>
+          {/* Formulaire coupon version mobile */}
+          <CouponForm
+            appliedCoupons={appliedCoupons}
+            onCouponApplied={handleCouponChange}
+          />
           <Cta
             slug="/caisse"
             label="Continuer"
@@ -148,6 +177,13 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
         ))}
 
         <Separator />
+
+        {/* Formulaire coupon version desktop */}
+        <CouponForm
+          appliedCoupons={appliedCoupons}
+          onCouponApplied={handleCouponChange}
+        />
+
         {/* Affichage du coût total des installations */}
         {totalInstallationCost > 0 && (
           <>
@@ -194,7 +230,9 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           </div>
 
           <div className="flex text-primary justify-between gap-6 items-center mt-1">
-            <p>TVA Produits ({((productTVA / productTotalHT) * 100).toFixed(1)}%)</p>
+            <p>
+              TVA Produits ({((productTVA / productTotalHT) * 100).toFixed(1)}%)
+            </p>
             <p>{productTVA.toFixed(2)}€</p>
           </div>
 
@@ -202,6 +240,14 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
             <p>Total Produits TTC</p>
             <p>{productTotalTTC.toFixed(2)}€</p>
           </div>
+
+          {/* Affichage des réductions */}
+          {totalDiscountAmount > 0 && (
+            <div className="flex text-green-600 font-medium justify-between gap-6 items-center mt-2">
+              <p>Remise totale</p>
+              <p>-{totalDiscountAmount.toFixed(2)}€</p>
+            </div>
+          )}
 
           {/* Affichage du grand total incluant les installations */}
           {totalInstallationCost > 0 && (
@@ -211,8 +257,18 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                 <p>{totalInstallationHT.toFixed(2)}€</p>
               </div>
               <div className="flex text-primary justify-between gap-6 items-center mt-1">
-                <p>TVA Installation ({(cartData?.cart?.contents?.nodes?.[0]?.installationTvaRate || 0.2) * 100}%)</p>
-                <p>{cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount?.toFixed(2) || '0.00'}€</p>
+                <p>
+                  TVA Installation (
+                  {(cartData?.cart?.contents?.nodes?.[0]?.installationTvaRate ||
+                    0.2) * 100}
+                  %)
+                </p>
+                <p>
+                  {cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount?.toFixed(
+                    2,
+                  ) || '0.00'}
+                  €
+                </p>
               </div>
               <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
                 <p>Total Installation TTC</p>
@@ -226,13 +282,24 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                   <div className="flex text-primary justify-between gap-6 items-center mt-2">
                     <p>Livraison HT ({selectedShippingMethod.label})</p>
                     <p>
-                      {(parseFloat(selectedShippingMethod.cost) - parseFloat((cartData?.cart?.shippingTax || 0).toString())).toFixed(2)}€
+                      {(
+                        parseFloat(selectedShippingMethod.cost) -
+                        parseFloat(
+                          (cartData?.cart?.shippingTax || 0).toString(),
+                        )
+                      ).toFixed(2)}
+                      €
                     </p>
                   </div>
                   {cartData?.cart?.shippingTax > 0 && (
                     <div className="flex text-primary justify-between gap-6 items-center mt-1">
                       <p>TVA Livraison</p>
-                      <p>{parseFloat((cartData?.cart?.shippingTax || 0).toString()).toFixed(2)}€</p>
+                      <p>
+                        {parseFloat(
+                          (cartData?.cart?.shippingTax || 0).toString(),
+                        ).toFixed(2)}
+                        €
+                      </p>
                     </div>
                   )}
                   <div className="flex text-primary justify-between gap-6 items-center mt-1">
@@ -245,7 +312,11 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
               <div className="flex text-primary justify-between gap-6 items-center mt-2">
                 <p>Total TVA</p>
                 <p>
-                  {(parseFloat(cartData?.cart?.totalTax || '0') + totalInstallationTVA).toFixed(2)}€
+                  {(
+                    parseFloat(cartData?.cart?.totalTax || '0') +
+                    totalInstallationTVA
+                  ).toFixed(2)}
+                  €
                 </p>
               </div>
               <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
