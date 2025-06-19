@@ -44,7 +44,9 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
 
   // Récupération des coupons appliqués depuis l'API
   const appliedCoupons = cartData?.cart?.appliedCoupons || [];
-  const totalDiscountAmount = parseFloat(cartData?.cart?.discountTotal || '0');
+  const discountHT = parseFloat(cartData?.cart?.discountTotalRaw || '0');
+  const discountTVA = parseFloat(cartData?.cart?.discountTaxRaw || '0');
+  const totalDiscountAmount = discountHT + discountTVA;
 
   // Mutation pour supprimer un coupon
   const [removeCoupon, { loading: removeCouponLoading }] = useMutation(
@@ -132,7 +134,12 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
                       <div className="flex items-center gap-2">
                         <span>Code: {coupon.code}</span>
                         <span className="text-green-600">
-                          (-{parseFloat(coupon.discountAmount).toFixed(2)}€)
+                          (-
+                          {(
+                            parseFloat(coupon.discountAmount) +
+                            parseFloat(coupon.discountTax)
+                          ).toFixed(2)}
+                          € TTC)
                         </span>
                       </div>
                       <button
@@ -309,9 +316,9 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           {/* Affichage des réductions */}
           {appliedCoupons.length > 0 && (
             <>
-              <div className="flex text-secondary font-medium justify-between gap-6 items-center my-4">
-                <p>Remise totale</p>
-                <p>-{totalDiscountAmount.toFixed(2)}€</p>
+              <div className="flex text-primary font-bold justify-between gap-6 items-center my-4">
+                <p>Remise totale TTC</p>
+                <p>-{totalDiscountAmount.toFixed(1)}€</p>
               </div>
               <Separator />
             </>

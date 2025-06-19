@@ -316,10 +316,12 @@ export const GET_CART = gql`
       feeTax
       feeTotal
       discountTax
-      discountTotal
+      discountTotalRaw: discountTotal(format: RAW)
+      discountTaxRaw: discountTax(format: RAW)
       appliedCoupons {
         code
         discountAmount(format: RAW)
+        discountTax(format: RAW)
       }
     }
   }

@@ -91,7 +91,7 @@ interface IFormattedCartProps {
     feeTotal?: string;
     discountTotal?: string;
     discountTax?: string;
-    appliedCoupons?: { code: string; discountAmount: string }[];
+    appliedCoupons?: { code: string; discountAmount: string; discountTax: string }[];
   };
 }
 

@@ -5,8 +5,8 @@ import { APPLY_COUPON, REMOVE_COUPON } from '@/utils/gql/GQL_MUTATIONS';
 interface CouponFormProps {
   appliedCoupons?: Array<{
     code: string;
-    discountAmount: number;
-    discountType: string;
+    discountAmount: string;
+    discountTax: string;
   }>;
   onCouponApplied?: () => void;
 }
@@ -102,7 +102,12 @@ const CouponForm = ({
                   {coupon.code}
                 </span>
                 <span className="text-primary text-sm">
-                  -{coupon.discountAmount}€
+                  (-
+                  {(
+                    parseFloat(coupon.discountAmount) +
+                    parseFloat(coupon.discountTax)
+                  ).toFixed(1)}
+                  € TTC)
                 </span>
               </div>
               <button

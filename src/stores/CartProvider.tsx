@@ -41,7 +41,7 @@ export interface RootObject {
   shippingTax: number;
   discountTotal: number; // Montant total des réductions
   discountTax: number; // TVA sur les réductions
-  appliedCoupons: { code: string; discountAmount: string }[]; // Liste des coupons appliqués avec leur montant
+  appliedCoupons: { code: string; discountAmount: string; discountTax: string }[]; // Liste des coupons appliqués avec leur montant
 }
 
 export type TRootObject = RootObject | string | null | undefined;
