@@ -89,6 +89,9 @@ interface IFormattedCartProps {
     subtotal: string;
     totalTax: string;
     feeTotal?: string;
+    discountTotal?: string;
+    discountTax?: string;
+    appliedCoupons?: { code: string; discountAmount: string }[];
   };
 }
 
@@ -142,10 +145,13 @@ export const getFormattedCart = (
     products: [],
     totalProductsCount: 0,
     totalProductsPrice: 0,
-    totalTax: parseFloat(data.cart.totalTax || '0'),
-    subtotal: parseFloat(data.cart.subtotal || '0'),
-    total: parseFloat(data.cart.total || '0'),
-    shippingTax: 0, // Cette valeur sera mise à jour par la query GET_CART
+    totalTax: 0,
+    subtotal: 0,
+    total: 0,
+    shippingTax: 0,
+    discountTotal: 0,
+    discountTax: 0,
+    appliedCoupons: [],
   };
 
   if (!data || !data.cart || !data.cart.contents) {
@@ -183,6 +189,8 @@ export const getFormattedCart = (
       qty: quantity,
       price: isPro ? productPriceHT : productPriceTTC, // Prix unitaire du produit: HT pour pro, TTC pour autres
       totalPrice: isPro ? (productPriceHT + (givenProductItem.addInstallation ? installationPriceHT : 0)) : (productPriceTTC + (givenProductItem.addInstallation ? installationPriceTTC : 0)), // Total ligne: HT pour pro, TTC pour autres
+      total: givenProductItem.total, // Prix total TTC
+      subtotal: givenProductItem.subtotal, // Prix total HT
       image: givenProduct.image?.sourceUrl
         ? {
             sourceUrl: givenProduct.image.sourceUrl,
@@ -195,9 +203,7 @@ export const getFormattedCart = (
             title: givenProduct.name,
           },
       addInstallation: givenProductItem.addInstallation,
-      installationPrice: givenProductItem?.installationPrice
-        ? givenProductItem?.installationPrice * givenProductItem?.quantity
-        : 0,
+      installationPrice: givenProductItem?.installationPrice || 0,
       hasPose: givenProduct.hasPose,
       deliveryLabel: getProductAvailability({
         stock: (givenProduct as any).stockQuantity,
@@ -218,6 +224,9 @@ export const getFormattedCart = (
   // Utiliser les totaux de WooCommerce
   formattedCart.totalProductsPrice = parseFloat(data.cart.total); // Total TTC incluant produits et installations
   formattedCart.totalTax = parseFloat(data.cart.totalTax); // Total TVA incluant produits et installations
+  formattedCart.discountTotal = parseFloat(data.cart.discountTotal || '0'); // Montant total des réductions
+  formattedCart.discountTax = parseFloat(data.cart.discountTax || '0'); // TVA sur les réductions
+  formattedCart.appliedCoupons = data.cart.appliedCoupons || []; // Liste des coupons appliqués
 
   return formattedCart;
 };

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { CartContext } from '@/stores/CartProvider';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import Cta from '../atoms/Cta';
@@ -12,6 +12,7 @@ import {
   GET_CART_SHIPPING_INFO,
   GET_CART,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import { REMOVE_COUPON } from '@/utils/gql/GQL_MUTATIONS';
 import CartReassuranceBis from './CartReassuranceBis';
 import CouponForm from './CouponForm';
 
@@ -43,12 +44,31 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
 
   // Récupération des coupons appliqués depuis l'API
   const appliedCoupons = cartData?.cart?.appliedCoupons || [];
-  const totalDiscountAmount = appliedCoupons.reduce(
-    (total: number, coupon: any) => {
-      return total + parseFloat(coupon.discountAmount || '0');
+  const totalDiscountAmount = parseFloat(cartData?.cart?.discountTotal || '0');
+
+  // Mutation pour supprimer un coupon
+  const [removeCoupon, { loading: removeCouponLoading }] = useMutation(
+    REMOVE_COUPON,
+    {
+      onCompleted: () => {
+        refetchCart();
+      },
     },
-    0,
   );
+
+  // Fonction pour supprimer un coupon
+  const handleRemoveCoupon = async (code: string) => {
+    if (removeCouponLoading) return;
+    try {
+      await removeCoupon({
+        variables: {
+          code,
+        },
+      });
+    } catch (error) {
+      console.error('Erreur lors de la suppression du coupon:', error);
+    }
+  };
 
   // Todo gérer la TVA pour l'installation
 
@@ -56,24 +76,10 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
     return null;
   }
 
-  // Calcul du coût total TTC des installations
-  const totalInstallationCost = cart.products.reduce((total, product) => {
-    if (product.addInstallation && product.installationPrice) {
-      return total + product.installationPrice;
-    }
-    return total;
-  }, 0);
-
-  // Calcul du coût total HT des installations
-  const totalInstallationHT = cartData?.cart?.contents?.nodes?.[0]
-    ?.installationPrice
-    ? cartData.cart.contents.nodes[0].installationPrice -
-      cartData.cart.contents.nodes[0].installationTvaAmount
-    : 0;
-
-  // TVA sur les installations
-  const totalInstallationTVA =
-    cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount || 0;
+  // Montants d'installation depuis l'API
+  const totalInstallationHT = parseFloat(cartData?.cart?.feeTotal || '0');
+  const totalInstallationTVA = parseFloat(cartData?.cart?.feeTax || '0');
+  const totalInstallationTTC = totalInstallationHT + totalInstallationTVA;
 
   // Calcul du coût total des produits (sans installation)
   const productTotalHT = parseFloat(cartData?.cart?.subtotal || '0');
@@ -99,16 +105,46 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
             <strong>Total panier</strong>
             <div className="text-xl">TTC: {grandTotal.toFixed(2)}€</div>
             <div className="text-sm text-dark-grey">
-              Total HT: {(grandTotal - cart.totalTax).toFixed(2)}€
+              Total HT:{' '}
+              {(
+                grandTotal - parseFloat(cartData?.cart?.totalTax || '0')
+              ).toFixed(2)}
+              €
             </div>
-            {totalInstallationCost > 0 && (
+            <div className="text-sm text-dark-grey">
+              Total TVA:{' '}
+              {parseFloat(cartData?.cart?.totalTax || '0').toFixed(2)}€
+            </div>
+            {totalInstallationTTC > 0 && (
               <div className="text-sm text-dark-grey">
-                Dont installation: {totalInstallationCost.toFixed(2)}€
+                Dont installation: {totalInstallationTTC.toFixed(2)}€
               </div>
             )}
-            {totalDiscountAmount > 0 && (
+            {appliedCoupons.length > 0 && (
               <div className="text-sm text-green-600">
-                Remise: -{totalDiscountAmount.toFixed(2)}€
+                <div>Remise: -{totalDiscountAmount.toFixed(2)}€</div>
+                <div className="mt-1">
+                  {appliedCoupons.map((coupon: any) => (
+                    <div
+                      key={coupon.code}
+                      className="flex items-center justify-between gap-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span>Code: {coupon.code}</span>
+                        <span className="text-green-600">
+                          (-{parseFloat(coupon.discountAmount).toFixed(2)}€)
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveCoupon(coupon.code)}
+                        className="text-red-500 hover:text-red-700 text-xs"
+                        disabled={removeCouponLoading}
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -138,16 +174,16 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
             <Link
               title="Voir le produit"
               href={`/nos-produits/${product.slug}`}
-              className="flex gap-1 justify-between items-center mb-2"
+              className="flex gap-2 justify-between items-center mb-2"
             >
-              <div className="font-bold shrink-1 overflow-hidden text-ellipsis break-words whitespace-pre-line line-clamp-2">
-                {product.name}
+              <div className="font-bold shrink-1 overflow-hidden">
+                <div className="line-clamp-2 text-balance">{product.name}</div>
                 <span className="block font-normal text-sm text-dark-grey">
                   Qté: {product.qty}
                 </span>
               </div>
               <div className="font-bold relative pr-7">
-                {(product.price * product.qty).toFixed(2)}€
+                {product.price.toFixed(2)}€
                 <span className="absolute right-0 top-0 text-xs">
                   {isPro ? 'HT' : 'TTC'}
                 </span>
@@ -184,39 +220,6 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           onCouponApplied={handleCouponChange}
         />
 
-        {/* Affichage du coût total des installations */}
-        {totalInstallationCost > 0 && (
-          <>
-            <div className="text-dark-grey flex justify-between gap-6 items-center">
-              <p>Total installation</p>
-              <data className="relative pr-7">
-                {totalInstallationCost.toFixed(2)}€
-                <span className="absolute right-0 top-0 text-xs">
-                  {isPro ? 'HT' : 'TTC'}
-                </span>
-              </data>
-            </div>
-          </>
-        )}
-        <div>
-          <div className="text-dark-grey flex justify-between gap-6 items-center">
-            <p>
-              {'Livraison: '}
-              {selectedShippingMethod
-                ? selectedShippingMethod.label
-                : 'Livraison non sélectionnée'}
-            </p>
-            <data className="relative pr-7">
-              {selectedShippingMethod ? `${selectedShippingMethod.cost}€` : '-'}
-              {selectedShippingMethod && (
-                <span className="absolute right-0 top-0 text-xs">
-                  {isPro ? 'HT' : 'TTC'}
-                </span>
-              )}
-            </data>
-          </div>
-        </div>
-
         <Separator />
         <div>
           <div className="flex text-primary justify-between gap-6 items-center">
@@ -241,16 +244,8 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
             <p>{productTotalTTC.toFixed(2)}€</p>
           </div>
 
-          {/* Affichage des réductions */}
-          {totalDiscountAmount > 0 && (
-            <div className="flex text-green-600 font-medium justify-between gap-6 items-center mt-2">
-              <p>Remise totale</p>
-              <p>-{totalDiscountAmount.toFixed(2)}€</p>
-            </div>
-          )}
-
           {/* Affichage du grand total incluant les installations */}
-          {totalInstallationCost > 0 && (
+          {totalInstallationTTC > 0 && (
             <>
               <div className="flex text-primary justify-between gap-6 items-center mt-3">
                 <p>Installation HT</p>
@@ -272,59 +267,74 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
               </div>
               <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
                 <p>Total Installation TTC</p>
-                <p>{totalInstallationCost.toFixed(2)}€</p>
+                <p>{totalInstallationTTC.toFixed(2)}€</p>
               </div>
               <div className="my-4">
                 <Separator />
               </div>
-              {selectedShippingMethod && (
-                <>
-                  <div className="flex text-primary justify-between gap-6 items-center mt-2">
-                    <p>Livraison HT ({selectedShippingMethod.label})</p>
-                    <p>
-                      {(
-                        parseFloat(selectedShippingMethod.cost) -
-                        parseFloat(
-                          (cartData?.cart?.shippingTax || 0).toString(),
-                        )
-                      ).toFixed(2)}
-                      €
-                    </p>
-                  </div>
-                  {cartData?.cart?.shippingTax > 0 && (
-                    <div className="flex text-primary justify-between gap-6 items-center mt-1">
-                      <p>TVA Livraison</p>
-                      <p>
-                        {parseFloat(
-                          (cartData?.cart?.shippingTax || 0).toString(),
-                        ).toFixed(2)}
-                        €
-                      </p>
-                    </div>
-                  )}
-                  <div className="flex text-primary justify-between gap-6 items-center mt-1">
-                    <p>Livraison TTC</p>
-                    <p>{selectedShippingMethod.cost}€</p>
-                  </div>
-                </>
-              )}
-              <Separator />
+            </>
+          )}
+
+          {/* Frais de livraison */}
+          {selectedShippingMethod && (
+            <>
               <div className="flex text-primary justify-between gap-6 items-center mt-2">
-                <p>Total TVA</p>
+                <p>Livraison HT ({selectedShippingMethod.label})</p>
+                <p>
+                  {parseFloat(cartData?.cart?.shippingTotal || '0').toFixed(2)}€
+                </p>
+              </div>
+              {cartData?.cart?.shippingTax > 0 && (
+                <div className="flex text-primary justify-between gap-6 items-center mt-1">
+                  <p>TVA Livraison</p>
+                  <p>
+                    {parseFloat(cartData?.cart?.shippingTax || '0').toFixed(2)}€
+                  </p>
+                </div>
+              )}
+              <div className="flex text-primary font-bold justify-between gap-6 items-center mt-1 mb-4">
+                <p>Livraison TTC</p>
                 <p>
                   {(
-                    parseFloat(cartData?.cart?.totalTax || '0') +
-                    totalInstallationTVA
+                    parseFloat(cartData?.cart?.shippingTotal || '0') +
+                    parseFloat(cartData?.cart?.shippingTax || '0')
                   ).toFixed(2)}
                   €
                 </p>
               </div>
-              <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
-                <p>Total TTC</p>
-                <p>{grandTotal.toFixed(2)}€</p>
-              </div>
+              <Separator />
             </>
           )}
+
+          {/* Affichage des réductions */}
+          {appliedCoupons.length > 0 && (
+            <>
+              <div className="flex text-secondary font-medium justify-between gap-6 items-center my-4">
+                <p>Remise totale</p>
+                <p>-{totalDiscountAmount.toFixed(2)}€</p>
+              </div>
+              <Separator />
+            </>
+          )}
+
+          {/* Totaux */}
+          <div className="flex text-primary justify-between gap-6 items-center mt-4">
+            <p>Total HT</p>
+            <p>
+              {(
+                grandTotal - parseFloat(cartData?.cart?.totalTax || '0')
+              ).toFixed(2)}
+              €
+            </p>
+          </div>
+          <div className="flex text-primary justify-between gap-6 items-center mt-2">
+            <p>Total TVA</p>
+            <p>{parseFloat(cartData?.cart?.totalTax || '0').toFixed(2)}€</p>
+          </div>
+          <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
+            <p>Total TTC</p>
+            <p>{grandTotal.toFixed(2)}€</p>
+          </div>
         </div>
         {!isCheckout && (
           <>

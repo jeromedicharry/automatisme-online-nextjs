@@ -172,7 +172,7 @@ const CartContents = () => {
                       {item.name}
                     </h2>
                     <p className="text-primary text-2xl font-bold pr-7 relative w-fit">
-                      {item.price.toFixed(2)}€{' '}
+                      {(isPro ? parseFloat(item.subtotal) / item.qty : parseFloat(item.total) / item.qty).toFixed(2)}€{' '}
                       <span className="absolute right-0 top-1 text-xs">
                         {isPro ? 'HT' : 'TTC'}
                       </span>

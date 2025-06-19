@@ -34,8 +34,7 @@ const CheckoutShippingMethod = ({
       { query: GET_CART_SHIPPING_INFO },
     ],
     awaitRefetchQueries: true,
-    onCompleted: (data) => {
-      console.log('Mutation response data:', JSON.stringify(data, null, 2));
+    onCompleted: () => {
       refetchMethods();
     },
   });
@@ -103,7 +102,7 @@ const CheckoutShippingMethod = ({
   }
 
   const shippingMethods: ShippingMethod[] =
-    shippingMethodsData?.cart?.availableShippingMethods[0].rates || [];
+    shippingMethodsData?.cart?.availableShippingMethods[0]?.rates || [];
 
   const getMethodDescription = (methodId: string, instanceId: number) => {
     if (methodId === 'flat_rate' && instanceId === 2) {

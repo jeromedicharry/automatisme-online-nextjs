@@ -123,7 +123,6 @@ const DevisInstaller = ({
           {errorMessage && (
             <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
               {"Une erreur s'est produite lors de l'envoi du formulaire."}
-              <pre>{JSON.stringify(errorMessage, null, 2)}</pre>
             </div>
           )}
           <div className="space-y-3 contact">

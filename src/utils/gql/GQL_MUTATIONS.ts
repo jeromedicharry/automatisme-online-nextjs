@@ -140,11 +140,14 @@ export const APPLY_COUPON = gql`
         total
         subtotal
         totalTax
+        discountTax
+        discountTotal
+        shippingTotal
+        shippingTax
+        feeTotal
+        feeTax
         appliedCoupons {
           code
-          discountAmount
-          discountType
-          description
         }
         contents {
           nodes {
@@ -159,6 +162,11 @@ export const APPLY_COUPON = gql`
             quantity
             total
             subtotal
+            subtotalTax
+            installationPrice
+            installationTvaRate
+            installationTvaAmount
+            addInstallation
           }
         }
       }
@@ -174,11 +182,14 @@ export const REMOVE_COUPON = gql`
         total
         subtotal
         totalTax
+        discountTax
+        discountTotal
+        shippingTotal
+        shippingTax
+        feeTotal
+        feeTax
         appliedCoupons {
           code
-          discountAmount
-          discountType
-          description
         }
         contents {
           nodes {
@@ -193,6 +204,11 @@ export const REMOVE_COUPON = gql`
             quantity
             total
             subtotal
+            subtotalTax
+            installationPrice
+            installationTvaRate
+            installationTvaAmount
+            addInstallation
           }
         }
       }

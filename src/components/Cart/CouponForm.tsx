@@ -21,6 +21,7 @@ const CouponForm = ({
 
   const [applyCoupon] = useMutation(APPLY_COUPON);
   const [removeCoupon] = useMutation(REMOVE_COUPON);
+  console.log('appliedCoupons:', appliedCoupons);
 
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,19 +95,19 @@ const CouponForm = ({
           {appliedCoupons.map((coupon, index) => (
             <div
               key={index}
-              className="flex items-center justify-between bg-green-50 border border-green-200 rounded px-3 py-2"
+              className="flex items-center justify-between bg-primary-light-alt border border-primary-light rounded px-3 py-2"
             >
               <div className="flex items-center gap-2">
-                <span className="text-green-600 font-medium text-sm">
+                <span className="text-primary font-medium text-sm">
                   {coupon.code}
                 </span>
-                <span className="text-green-600 text-sm">
-                  -{coupon.discountAmount.toFixed(2)}€
+                <span className="text-primary text-sm">
+                  -{coupon.discountAmount}€
                 </span>
               </div>
               <button
                 onClick={() => handleRemoveCoupon(coupon.code)}
-                className="text-red-500 hover:text-red-700 text-sm"
+                className="text-primary hover:text-secondary duration-300"
                 title="Supprimer le code promo"
               >
                 ✕

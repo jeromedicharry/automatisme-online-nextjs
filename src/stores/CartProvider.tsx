@@ -19,6 +19,8 @@ export interface Product {
   qty: number;
   price: number;
   totalPrice: number;
+  total: string; // Prix total TTC
+  subtotal: string; // Prix total HT
   image: Image;
   productId: number;
   hasPose?: boolean; // Indique si le produit est éligible à l'installation
@@ -37,6 +39,9 @@ export interface RootObject {
   subtotal: number;
   total: number;
   shippingTax: number;
+  discountTotal: number; // Montant total des réductions
+  discountTax: number; // TVA sur les réductions
+  appliedCoupons: { code: string; discountAmount: string }[]; // Liste des coupons appliqués avec leur montant
 }
 
 export type TRootObject = RootObject | string | null | undefined;

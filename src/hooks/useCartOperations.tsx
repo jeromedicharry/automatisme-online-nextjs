@@ -12,7 +12,7 @@ export const useCartOperations = () => {
   const { refetch } = useQuery(GET_CART, {
     notifyOnNetworkStatusChange: true,
     onCompleted: (data) => {
-      console.log('Data:', JSON.stringify(data, null, 2));
+      console.log('Data NOW:', JSON.stringify(data, null, 2));
 
       const updatedCart = getFormattedCart(data, isPro);
       if (!updatedCart || !updatedCart.products.length) {
