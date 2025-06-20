@@ -1,15 +1,11 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(request) {
-  // Debug: Afficher les variables d'environnement
-  console.log('DEBUG - Environment variables:', {
-    MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
-    MAINTENANCE_PASSWORD: process.env.MAINTENANCE_PASSWORD ? '(set)' : '(not set)',
-    currentPath: request.nextUrl.pathname
-  });
-
   // Si on est déjà sur la page de maintenance ou sur l'API, laisser passer
-  if (request.nextUrl.pathname === '/maintenance' || request.nextUrl.pathname.startsWith('/api/')) {
+  if (
+    request.nextUrl.pathname === '/maintenance' ||
+    request.nextUrl.pathname.startsWith('/api/')
+  ) {
     return NextResponse.next();
   }
 

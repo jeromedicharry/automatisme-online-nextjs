@@ -7,8 +7,6 @@ import {
   UnBattantSvg,
 } from '@/components/SVG/ConfigurateurIcons';
 import Image from 'next/image';
-// import ProductList from '../components/ProductList';
-// import ContactForm from '../components/ContactForm';
 
 type PortailType = '2battants' | '1battant' | 'coulissant';
 type UsageType = 'domestique' | 'collectif' | 'industriel';
@@ -38,6 +36,7 @@ export default function ConfigurateurPortail({ setMessage }: any) {
     portailType: null,
     installation: null,
   });
+  const [configuratorMessage, setConfiguratorMessage] = useState<string>('');
 
   // Chargement des données depuis l'URL
   useEffect(() => {
@@ -148,6 +147,12 @@ export default function ConfigurateurPortail({ setMessage }: any) {
       </>
     );
 
+    let textMessage = `Je souhaite faire motoriser un portail${
+      state.usage
+        ? ` pour un usage ${state.usage === 'domestique' ? 'domestique' : 'collectif/industriel'}`
+        : ''
+    }.`;
+
     if (state.portailType === '2battants') {
       msg = (
         <>
@@ -167,6 +172,15 @@ export default function ConfigurateurPortail({ setMessage }: any) {
             )}
         </>
       );
+      textMessage += ` Ce dernier a 2 battants.`;
+      if (
+        state.largeurGauche &&
+        state.coteAGauche &&
+        state.largeurDroite &&
+        state.coteADroite
+      ) {
+        textMessage += ` Les dimensions du ventail sont : battant gauche ${state.largeurGauche}mm x ${state.coteAGauche}mm, battant droit ${state.largeurDroite}mm x ${state.coteADroite}mm.`;
+      }
     } else if (state.portailType === '1battant') {
       msg = (
         <>
@@ -181,6 +195,10 @@ export default function ConfigurateurPortail({ setMessage }: any) {
           )}
         </>
       );
+      textMessage += ` Ce dernier a 1 battant.`;
+      if (state.largeur && state.coteA) {
+        textMessage += ` Les dimensions du ventail sont : ${state.largeur}mm x ${state.coteA}mm.`;
+      }
     } else if (state.portailType === 'coulissant') {
       msg = (
         <>
@@ -193,6 +211,10 @@ export default function ConfigurateurPortail({ setMessage }: any) {
           )}
         </>
       );
+      textMessage += ` Ce dernier est coulissant.`;
+      if (state.largeur) {
+        textMessage += ` La largeur du ventail est de ${state.largeur}mm.`;
+      }
     }
 
     if (state.installation !== null && state.installation !== undefined) {
@@ -205,96 +227,12 @@ export default function ConfigurateurPortail({ setMessage }: any) {
           </span>
         </>
       );
+      textMessage += ` Je souhaite ${state.installation ? '' : 'ne pas '}le faire installer par un professionnel.`;
     }
 
     setMessage(msg);
+    setConfiguratorMessage(textMessage);
   }, [state]);
-
-  // Effectuer la recherche de produits
-  //   useEffect(() => {
-  //     if (!isFormValid() || !message) return;
-
-  //     fetchProducts();
-  //   }, [message]);
-
-  //   const fetchProducts = async () => {
-  //     try {
-  //       // Simuler une requête API pour récupérer les produits
-  //       // Dans un vrai projet, vous feriez une requête GraphQL ici
-  //       const response = await simulateProductFetch();
-  //       setProducts(response);
-  //       setShowContactForm(response.length === 0);
-  //     } catch (error) {
-  //       console.error('Erreur lors de la récupération des produits:', error);
-  //       setProducts([]);
-  //       setShowContactForm(true);
-  //     }
-  //   };
-
-  // Fonction qui simule une requête API
-  //   const simulateProductFetch = () => {
-  //     return new Promise<any[]>((resolve) => {
-  //       setTimeout(() => {
-  //         // Logique de filtrage des produits basée sur les critères
-  //         const cyclesFilter =
-  //           state.usage === 'domestique' ? 'cycles < 50' : 'cycles >= 50';
-  //         console.log({ cyclesFilter });
-  //         const typeFilter = state.portailType;
-  //         const installationFilter = state.installation;
-
-  //         // Simulation de produits
-  //         const mockProducts = [
-  //           {
-  //             id: 1,
-  //             name: 'Motorisation 2 battants Basic',
-  //             type: '2battants',
-  //             cycles: 30,
-  //             hasPose: true,
-  //           },
-  //           {
-  //             id: 2,
-  //             name: 'Motorisation 2 battants Pro',
-  //             type: '2battants',
-  //             cycles: 60,
-  //             hasPose: true,
-  //           },
-  //           {
-  //             id: 3,
-  //             name: 'Motorisation 1 battant Standard',
-  //             type: '1battant',
-  //             cycles: 40,
-  //             hasPose: false,
-  //           },
-  //           {
-  //             id: 4,
-  //             name: 'Motorisation Coulissante 800',
-  //             type: 'coulissant',
-  //             cycles: 35,
-  //             hasPose: true,
-  //           },
-  //         ];
-
-  //         // Filtrage des produits
-  //         const filteredProducts = mockProducts.filter((product) => {
-  //           const matchesType = product.type === typeFilter;
-  //           const matchesCycles =
-  //             state.usage === 'domestique'
-  //               ? product.cycles < 50
-  //               : product.cycles >= 50;
-  //           const matchesInstallation =
-  //             installationFilter === null ||
-  //             product.hasPose === installationFilter;
-
-  //           // Ajoutez ici votre logique de filtrage pour les dimensions
-  //           // Cette partie dépendra de la structure de vos produits
-
-  //           return matchesType && matchesCycles && matchesInstallation;
-  //         });
-
-  //         resolve(filteredProducts);
-  //       }, 500);
-  //     });
-  //   };
 
   const isFormValid = () => {
     if (!state.usage || !state.portailType || state.installation === null)
@@ -386,6 +324,10 @@ export default function ConfigurateurPortail({ setMessage }: any) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid()) {
+      localStorage.setItem(
+        'configuratorMessage',
+        JSON.stringify(configuratorMessage),
+      );
       buildUrlAndRedirect();
     }
   };

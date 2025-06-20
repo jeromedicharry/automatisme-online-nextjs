@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 const ContactForm = ({ formId = 23584 }) => {
   const [errorMessage, setErrorMessage] = useState(false);
@@ -11,6 +12,26 @@ const ContactForm = ({ formId = 23584 }) => {
     aoSubject: '',
     aoMessage: '',
   });
+
+  const searchParams = useSearchParams();
+  const configurator = searchParams.get('configurator');
+
+  useEffect(() => {
+    if (!configurator) {
+      localStorage.removeItem('configuratorMessage');
+      return;
+    }
+
+    const message = localStorage.getItem('configuratorMessage');
+    if (message) {
+      const formattedMessage = JSON.parse(message);
+      setFormState((prevState) => ({
+        ...prevState,
+        aoMessage: formattedMessage,
+        aoSubject: 'Recherche infructueuse du configurateur',
+      }));
+    }
+  }, [configurator]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

@@ -277,7 +277,7 @@ const CategoryPage = ({
                 <div className="flex mt-6 mb:mt-10 items-center">
                   <Cta
                     label="Contactez-nous pour une demande spécifique"
-                    slug="/contact"
+                    slug="/contact?configurator=true"
                     variant="primary"
                     additionalClass="w-fit mx-auto"
                   >

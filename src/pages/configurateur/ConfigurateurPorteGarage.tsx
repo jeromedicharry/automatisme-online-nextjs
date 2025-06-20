@@ -24,6 +24,8 @@ export default function ConfigurateurPorteGarage({ setMessage }: any) {
     installation: null,
   });
 
+  const [configuratorMessage, setConfiguratorMessage] = useState<string>('');
+
   // Chargement des données depuis l'URL
   useEffect(() => {
     if (!router.isReady) return;
@@ -71,27 +73,43 @@ export default function ConfigurateurPorteGarage({ setMessage }: any) {
 
   // Générer le message
   useEffect(() => {
-    let msg = (
+    const getPorteLabel = (type: string) => {
+      switch (type) {
+        case 'sectionnelle':
+          return 'sectionnelle';
+        case 'ressort':
+          return 'basculante à ressort';
+        case 'contrepoids':
+          return 'à contrepoids';
+        default:
+          return '';
+      }
+    };
+
+    const hasDimensions = state.hauteur && state.surface && state.poids;
+    const hasInstallation =
+      state.installation !== null && state.installation !== undefined;
+
+    const porteLabel = state.porteType ? getPorteLabel(state.porteType) : '';
+
+    // Version HTML/JSX
+    const msg = (
       <>
         Je souhaite faire motoriser une porte de garage
-        {state.porteType && (
+        {porteLabel && (
           <>
             {' '}
-            <span>
-              {state.porteType === 'sectionnelle' && 'sectionnelle'}
-              {state.porteType === 'ressort' && 'basculante à ressort'}
-              {state.porteType === 'contrepoids' && 'à contrepoids'}
-            </span>
+            <span>{porteLabel}</span>
           </>
         )}
-        {state.hauteur && state.surface && state.poids && (
+        {hasDimensions && (
           <>
             . Ses dimensions sont <span>{state.hauteur}m</span> x{' '}
             <span>{state.surface}m</span> et son poids est de{' '}
             <span>{state.poids}kg</span>.
           </>
         )}
-        {state.installation !== null && state.installation !== undefined && (
+        {hasInstallation && (
           <>
             {' '}
             Je souhaite{' '}
@@ -104,7 +122,18 @@ export default function ConfigurateurPorteGarage({ setMessage }: any) {
       </>
     );
 
-    setMessage(msg);
+    // Version brute string
+    let raw = 'Je souhaite faire motoriser une porte de garage';
+    if (porteLabel) raw += ` ${porteLabel}`;
+    if (hasDimensions) {
+      raw += `. Ses dimensions sont ${state.hauteur}m x ${state.surface}m et son poids est de ${state.poids}kg.`;
+    }
+    if (hasInstallation) {
+      raw += ` Je souhaite ${state.installation ? '' : 'ne pas '}la faire installer par un professionnel.`;
+    }
+
+    setMessage(msg); // version HTML
+    setConfiguratorMessage(raw); // version string
   }, [state]);
 
   const isFormValid = () => {
@@ -152,6 +181,10 @@ export default function ConfigurateurPorteGarage({ setMessage }: any) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid()) {
+      localStorage.setItem(
+        'configuratorMessage',
+        JSON.stringify(configuratorMessage),
+      );
       buildUrlAndRedirect();
     }
   };
