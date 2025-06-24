@@ -61,10 +61,10 @@ const ProductPrice = ({
         className={`flex flex-col ${variant === 'productPage' ? 'items-start' : 'items-center'}`}
       >
         <p
-          className={`font-bold ${variant === 'productPage' ? 'text-5xl xl:text-4xl xxl:text-5xl pr-[42px] xl:pr-[35px] xxl:pr-[42px]' : isMeili ? 'max-md:text-xl max-md:pr-6 text-2xl pr-7' : 'text-2xl pr-7'} leading-general relative w-fit mb-1`}
+          className={`font-bold ${variant === 'productPage' ? 'text-5xl xl:text-4xl xxl:text-5xl pr-[50px] lg:pr-[54px] xl:pr-[42px] xxl:pr-[50px]' : isMeili ? 'max-md:text-xl max-md:pr-6 text-2xl pr-7' : 'text-2xl pr-7'} leading-general relative w-fit mb-1`}
         >
           <span
-            className={`absolute text-[0.5em] font-bold right-0 top-[0.25em] xl:top-0 xxl:top-[0.25em]`}
+            className={`absolute text-[0.5em] font-bold right-0 top-[0.25em] xl:-top-[0.25em] xxl:top-[0.25em]`}
           >
             {isPro ? 'HT' : 'TTC'}
           </span>
