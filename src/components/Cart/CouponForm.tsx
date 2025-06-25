@@ -68,7 +68,10 @@ const CouponForm = ({
       <h3 className="font-bold text-sm mb-3">Code promo</h3>
 
       {/* Formulaire d'ajout de coupon */}
-      <form onSubmit={handleApplyCoupon} className="flex gap-2 mb-3">
+      <form
+        onSubmit={handleApplyCoupon}
+        className="flex flex-col sm:flex-row gap-2 mb-3 lg:flex-col xxl:flex-row"
+      >
         <input
           type="text"
           value={couponCode}
