@@ -350,13 +350,15 @@ export const FETCH_ALL_POSTS_WITH_PAGINATION = gql`
 
 // Bibliothèque
 export const GET_LIBRARY_DOCUMENTS = gql`
-  query GetLibraryDocuments($search: String) {
+  query GetLibraryDocuments($search: String, $first: Int!, $after: String) {
     products(
-      first: 20
+      first: $first
+      after: $after
       where: { orderby: { field: DATE, order: DESC }, search: $search }
     ) {
       nodes {
         name
+        slug
         ... on SimpleProduct {
           acfProductDocs {
             productNotice {
@@ -371,6 +373,10 @@ export const GET_LIBRARY_DOCUMENTS = gql`
             }
           }
         }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }
@@ -395,14 +401,21 @@ export const GET_LIBRARY_VIDEOS = gql`
 `;
 
 export const GET_LIBRARY_ARTICLES = gql`
-  query GetLibraryArticles($search: String) {
+  query GetLibraryArticles($search: String, $first: Int!, $after: String) {
     posts(
-      first: 4
+      first: $first
+      after: $after
       where: { orderby: { field: DATE, order: DESC }, search: $search }
     ) {
       nodes {
         title
         slug
+        excerpt
+        productBrands {
+          nodes {
+            name
+          }
+        }
         date
         featuredImage {
           node {
@@ -410,17 +423,29 @@ export const GET_LIBRARY_ARTICLES = gql`
           }
         }
       }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
 `;
 
 export const GET_LIBRARY_BRANDS = gql`
-  query GetLibraryBrands($search: String) {
-    productBrands(first: 20, where: { search: $search }) {
+  query GetLibraryBrands($search: String, $first: Int!, $after: String) {
+    productBrands(
+      first: $first
+      after: $after
+      where: { search: $search }
+    ) {
       nodes {
         name
         slug
         thumbnailUrl
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }

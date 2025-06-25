@@ -4,7 +4,9 @@ import Container from '@/components/container';
 import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
 import EmptyElement from '@/components/EmptyElement';
 import Cta from '@/components/atoms/Cta';
+
 import BlocSav from '@/components/Brand/BlocSav';
+import BrandCard from '@/components/Brand/BrandCard';
 
 // Types
 import type { GetStaticProps } from 'next';
@@ -23,11 +25,19 @@ import {
 
 // Hooks
 import { useRouter } from 'next/router';
-import { type FormEvent } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useState, type FormEvent } from 'react';
+import Fuse from 'fuse.js';
+import { SearchSvg } from '@/components/sections/blocs/BlocFaq';
 import client from '@/utils/apollo/ApolloClient';
 import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
-import { SearchSvg } from '@/components/sections/blocs/BlocFaq';
 import VideoCard from './VideoCard';
+import LoadingSpinner from '@/components/atoms/LoadingSpinner';
+
+const PRODUCTS_PER_PAGE = 10;
+const ARTICLES_PER_PAGE = 2;
+const VIDEOS_PER_PAGE = 6;
+const BRANDS_PER_PAGE = 10;
 
 interface ProductDocsProps {
   name: string;
@@ -55,24 +65,26 @@ export interface VideoCardProps {
   };
 }
 
+type PaginatedData<T> = {
+  nodes: T[];
+  pageInfo: {
+    hasNextPage: boolean;
+    endCursor: string;
+  };
+};
+
 interface PageBibliothequeProps {
   themeSettings: ThemeSettingsProps;
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
-  products: ProductDocsProps[];
-  videos: VideoCardProps[];
-  articles: any[];
-  brands: any[];
-  currentPage: number;
-  totalPages: {
-    documents: number;
-    videos: number;
-    articles: number;
-    marques: number;
+  initialData: {
+    products: PaginatedData<ProductDocsProps>;
+    videos: VideoCardProps[];
+    posts: PaginatedData<any>;
+    productBrands: PaginatedData<any>;
   };
-  itemsPerPage?: number;
 }
 
 const PageBibliotheque = ({
@@ -81,63 +93,222 @@ const PageBibliotheque = ({
   footerMenu1,
   footerMenu2,
   categoriesMenu,
-  products,
-  videos,
-  articles,
-  brands,
-  currentPage,
-  totalPages,
+  initialData,
 }: PageBibliothequeProps) => {
   const router = useRouter();
-  const query = router.query;
-  const validTypes = ['documents', 'videos', 'articles', 'marques'] as const;
-  const type = Array.isArray(query.type)
-    ? query.type[0]
-    : query.type || 'documents';
-  const search = Array.isArray(query.search)
-    ? query.search[0]
-    : query.search || '';
-  const page = Array.isArray(query.page) ? query.page[0] : query.page || '1';
-  const currentType = validTypes.includes(type as any)
-    ? (type as (typeof validTypes)[number])
-    : 'documents';
-  const showPagination = currentPage < (totalPages[currentType] || 1);
+  const validTypes = useMemo(
+    () => ['documents', 'videos', 'articles', 'marques'] as const,
+    [],
+  );
+  type ValidType = (typeof validTypes)[number];
 
-  // Mise à jour de l'URL quand les filtres changent
-  const updateUrl = (
-    newType?: string,
-    newSearch?: string,
-    newPage?: string,
-  ) => {
-    const query: { [key: string]: string } = {};
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedType, setSelectedType] = useState<ValidType | ''>(
+    (router.query.type as ValidType) || '',
+  );
+  const [products, setProducts] = useState<PaginatedData<any>>(
+    initialData.products,
+  );
+  const [videos] = useState(initialData.videos);
+  const [displayedVideos, setDisplayedVideos] = useState(
+    initialData.videos.slice(0, VIDEOS_PER_PAGE),
+  );
+  const [showMoreVideos, setShowMoreVideos] = useState(
+    initialData.videos.length > VIDEOS_PER_PAGE,
+  );
 
-    const validType =
-      newType && validTypes.includes(newType as any) ? newType : type;
-    const validPage = newPage && !isNaN(parseInt(newPage)) ? newPage : page;
-    const validSearch = typeof newSearch === 'string' ? newSearch : search;
+  const fuse = useMemo(() => new Fuse(videos, {
+    keys: ['title'],
+    threshold: 0.4,
+    distance: 100,
+    useExtendedSearch: true,
+  }), [videos]);
 
-    if (validType) query.type = validType;
-    if (validSearch) query.search = validSearch;
-    if (validPage !== '1') query.page = validPage;
+  const loadMoreVideos = () => {
+    const currentLength = displayedVideos.length;
+    const nextVideos = initialData.videos.slice(
+      currentLength,
+      currentLength + VIDEOS_PER_PAGE,
+    );
+    setDisplayedVideos((prev) => [...prev, ...nextVideos]);
+    if (currentLength + VIDEOS_PER_PAGE >= initialData.videos.length) {
+      setShowMoreVideos(false);
+    }
+  };
+  const [articles, setArticles] = useState<PaginatedData<any>>(
+    initialData.posts || {
+      nodes: [],
+      pageInfo: { hasNextPage: false, endCursor: '' },
+    },
+  );
+  const [brands, setBrands] = useState<PaginatedData<any>>(
+    initialData.productBrands || {
+      nodes: [],
+      pageInfo: { hasNextPage: false, endCursor: '' },
+    },
+  );
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const type = router.query.type as ValidType;
+    if (type && validTypes.includes(type)) {
+      setSelectedType(type);
+    } else {
+      setSelectedType('');
+    }
+  }, [router.query.type, validTypes]);
+
+  const handleSearch = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsSearching(true);
+
+    try {
+      // Recherche WordPress pour les produits
+      const { data } = await client.query({
+        query: GET_LIBRARY_DOCUMENTS,
+        variables: {
+          first: PRODUCTS_PER_PAGE,
+          after: null,
+          search: searchTerm,
+        },
+      });
+      setProducts(data.products);
+
+      // Recherche WordPress pour les articles
+      const { data: articlesData } = await client.query({
+        query: GET_LIBRARY_ARTICLES,
+        variables: {
+          first: ARTICLES_PER_PAGE,
+          after: null,
+          search: searchTerm,
+        },
+      });
+      setArticles(articlesData.posts);
+
+      // Recherche WordPress pour les marques
+      const { data: brandsData } = await client.query({
+        query: GET_LIBRARY_BRANDS,
+        variables: {
+          first: BRANDS_PER_PAGE,
+          after: null,
+          search: searchTerm,
+        },
+      });
+      setBrands(brandsData.productBrands);
+
+      // Recherche locale pour les vidéos avec Fuse.js
+      if (!searchTerm.trim()) {
+        setDisplayedVideos(videos.slice(0, VIDEOS_PER_PAGE));
+        setShowMoreVideos(videos.length > VIDEOS_PER_PAGE);
+      } else {
+        const results = fuse.search(searchTerm).map(result => result.item);
+        setDisplayedVideos(results.slice(0, VIDEOS_PER_PAGE));
+        setShowMoreVideos(results.length > VIDEOS_PER_PAGE);
+      }
+    } catch (error) {
+      console.error('Error during search:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleTypeChange = (type: ValidType | '') => {
     router.push(
       {
-        pathname: '/bibliotheque',
-        query,
+        pathname: router.pathname,
+        query: type ? { type } : {},
       },
       undefined,
       { shallow: true },
     );
   };
 
-  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const searchValue = (formData.get('search') as string)?.trim();
-    if (searchValue !== search) {
-      updateUrl(currentType, searchValue, '1');
+  const query = router.query;
+  const search = Array.isArray(query.search)
+    ? query.search[0]
+    : query.search || '';
+
+
+
+
+
+  const loadMoreProducts = async () => {
+    if (!products.pageInfo.hasNextPage) return;
+
+    setLoading(true);
+    try {
+      const { data } = await client.query({
+        query: GET_LIBRARY_DOCUMENTS,
+        variables: {
+          first: 10,
+          after: products.pageInfo.endCursor,
+          search,
+        },
+      });
+
+      setProducts((prev) => ({
+        nodes: [...prev.nodes, ...data.products.nodes],
+        pageInfo: data.products.pageInfo,
+      }));
+    } catch (error) {
+      console.error('Error loading more products:', error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const loadMoreArticles = async () => {
+    if (!articles.pageInfo.hasNextPage) return;
+
+    setLoading(true);
+    try {
+      const { data } = await client.query({
+        query: GET_LIBRARY_ARTICLES,
+        variables: {
+          first: 10,
+          after: articles.pageInfo.endCursor,
+          search,
+        },
+      });
+
+      setArticles((prev) => ({
+        nodes: [...prev.nodes, ...data.posts.nodes],
+        pageInfo: data.posts.pageInfo,
+      }));
+    } catch (error) {
+      console.error('Error loading more articles:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMoreBrands = async () => {
+    if (!brands.pageInfo.hasNextPage) return;
+
+    setLoading(true);
+    try {
+      const { data } = await client.query({
+        query: GET_LIBRARY_BRANDS,
+        variables: {
+          first: 10,
+          after: brands.pageInfo.endCursor,
+          search,
+        },
+      });
+
+      setBrands((prev) => ({
+        nodes: [...prev.nodes, ...data.productBrands.nodes],
+        pageInfo: data.productBrands.pageInfo,
+      }));
+    } catch (error) {
+      console.error('Error loading more brands:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
   return (
     <Layout
@@ -156,8 +327,27 @@ const PageBibliotheque = ({
       totalProducts={totalProducts}
     >
       <Container>
-        <div className="py-8 md:py-12">
-          <div className="md:max-w-[800px] mx-auto">
+        <div className="container mx-auto px-4 py-8 md:py-12">
+          <form onSubmit={handleSearch} className="mb-8">
+            <div className="relative max-w-xl mx-auto">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Rechercher dans la bibliothèque"
+                className="py-2 pl-4 pr-12 h-12 w-full bg-white border border-primary rounded-full text-base placeholder:text-placeholder-grey"
+                disabled={isSearching}
+              />
+              <button
+                type="submit"
+                className="rounded-full bg-secondary w-10 h-10 text-white hover:bg-secondary-dark duration-300 absolute right-1 flex items-center justify-center top-[50%] transform -translate-y-1/2 disabled:opacity-50"
+                disabled={isSearching}
+              >
+                <SearchSvg />
+              </button>
+            </div>
+          </form>
+          <div className="mb-8 md:max-w-[800px] mx-auto">
             <BlocIntroLarge
               title="Bibliothèque de documents"
               subtitle="Consultez et téléchargez nos documentations techniques et commerciales, nos contenus vidéos, nos dernières actualités ou nos marques..."
@@ -165,55 +355,62 @@ const PageBibliotheque = ({
             />
           </div>
           {/* Filtres */}
-          <div className="flex flex-wrap justify-center gap-4 mb-8 md:mb-12">
-            <div className="w-fit">
-              <Cta
-                label="Documents"
-                variant={type === 'documents' ? 'secondary' : 'primary'}
-                handleButtonClick={() =>
-                  updateUrl('documents', search as string, '1')
-                }
-                slug="#"
-              >
-                Documents
-              </Cta>
-            </div>
-            <div className="w-fit">
-              <Cta
-                label="Vidéos"
-                variant={type === 'videos' ? 'secondary' : 'primary'}
-                handleButtonClick={() =>
-                  updateUrl('videos', search as string, '1')
-                }
-                slug="#"
-              >
-                Vidéos
-              </Cta>
-            </div>
-            <div className="w-fit">
-              <Cta
-                label="Articles"
-                variant={type === 'articles' ? 'secondary' : 'primary'}
-                handleButtonClick={() =>
-                  updateUrl('articles', search as string, '1')
-                }
-                slug="#"
-              >
-                Articles
-              </Cta>
-            </div>
-            <div className="w-fit">
-              <Cta
-                label="Marques"
-                variant={type === 'marques' ? 'secondary' : 'primary'}
-                handleButtonClick={() =>
-                  updateUrl('marques', search as string, '1')
-                }
-                slug="#"
-              >
-                Marques
-              </Cta>
-            </div>
+          <div className="flex gap-4 mb-8 mx-auto w-fit">
+            <Cta
+              handleButtonClick={(e) => {
+                e.preventDefault();
+                handleTypeChange('');
+              }}
+              variant={selectedType === '' ? 'secondary' : 'primary'}
+              slug="#"
+              label={'Voir tout le contenu'}
+            >
+              Tout
+            </Cta>
+            <Cta
+              handleButtonClick={(e) => {
+                e.preventDefault();
+                handleTypeChange('documents');
+              }}
+              variant={selectedType === 'documents' ? 'secondary' : 'primary'}
+              slug="#"
+              label={'Filtrer sur les Documents'}
+            >
+              Documents
+            </Cta>
+            <Cta
+              handleButtonClick={(e) => {
+                e.preventDefault();
+                handleTypeChange('videos');
+              }}
+              variant={selectedType === 'videos' ? 'secondary' : 'primary'}
+              slug="#"
+              label={'Filtrer sur les Vidéos'}
+            >
+              Vidéos
+            </Cta>
+            <Cta
+              handleButtonClick={(e) => {
+                e.preventDefault();
+                handleTypeChange('articles');
+              }}
+              variant={selectedType === 'articles' ? 'secondary' : 'primary'}
+              slug="#"
+              label={'Filtrer sur les Articles'}
+            >
+              Articles
+            </Cta>
+            <Cta
+              handleButtonClick={(e) => {
+                e.preventDefault();
+                handleTypeChange('marques');
+              }}
+              variant={selectedType === 'marques' ? 'secondary' : 'primary'}
+              slug="#"
+              label={'Filtrer sur les Marques'}
+            >
+              Marques
+            </Cta>
           </div>
 
           {/* Recherche */}
@@ -243,191 +440,207 @@ const PageBibliotheque = ({
       <div className="bg-white">
         <Container>
           <div className="py-6">
+
+            {isSearching && (
+              <div className="flex justify-center items-center min-h-[200px]">
+                <LoadingSpinner />
+              </div>
+            )}
             {/* Contenu */}
-            {!products.length &&
-            !videos.length &&
-            !articles.length &&
-            !brands.length ? (
+            {(!selectedType && !products?.nodes?.length && !displayedVideos?.length && !articles?.nodes?.length && !brands?.nodes?.length) ||
+            (selectedType === 'documents' && !products?.nodes?.length) ||
+            (selectedType === 'videos' && !displayedVideos?.length) ||
+            (selectedType === 'articles' && !articles?.nodes?.length) ||
+            (selectedType === 'marques' && !brands?.nodes?.length) ? (
+              <div className="w-fit mx-auto text-left">
               <EmptyElement
-                title="Aucun contenu disponible"
-                subtitle="Aucun contenu n'a été trouvé dans la bibliothèque"
+                title="Oups, rien à afficher ici..."
+                subtitle={`<div>Votre recherche “${searchTerm}” ne correspond à aucun résultat sur notre site.</div><br />
+                <span>Assurez-vous que tous les mots sont correctement orthographiés</span><br />
+                <span>Essayez des mots clés plus généraux</span>
+                `}
               />
+              </div>
             ) : (
               <div className="space-y-16">
                 {/* Documents */}
-                {products.length > 0 && (
-                  <section>
-                    <BlocIntroSmall title="Documents techniques et guides de pose" />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {products.map((product: ProductDocsProps) => (
-                        <div
-                          key={product.name}
-                          className="bg-white rounded-lg shadow p-4"
-                        >
-                          <h3 className="font-bold mb-4">{product.name}</h3>
-                          <div className="space-y-2">
-                            {product.acfProductDocs?.productNotice?.node
-                              ?.mediaItemUrl && (
-                              <a
-                                href={
-                                  product.acfProductDocs.productNotice.node
-                                    .mediaItemUrl
-                                }
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block text-primary hover:underline"
-                              >
-                                Notice produit
-                              </a>
-                            )}
-                            {product.acfProductDocs?.noticeTech?.node
-                              ?.mediaItemUrl && (
-                              <a
-                                href={
-                                  product.acfProductDocs.noticeTech.node
-                                    .mediaItemUrl
-                                }
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block text-primary hover:underline"
-                              >
-                                Notice technique
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    {showPagination && (
-                      <div className="mt-8 text-center">
-                        <Cta
-                          label="Voir plus"
-                          variant="primary"
-                          slug={`/bibliotheque?type=${type}&page=${Number(page) + 1}${search ? `&search=${search}` : ''}`}
-                        >
-                          Voir plus
-                        </Cta>
+                {(!selectedType || selectedType === 'documents') &&
+                  products?.nodes && products.nodes.length > 0 && (
+                    <section>
+                      <BlocIntroSmall title="Documents techniques et guides de pose" />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {products.nodes
+                          .filter(
+                            (product: ProductDocsProps) =>
+                              product.acfProductDocs?.productNotice?.node?.mediaItemUrl ||
+                              product.acfProductDocs?.noticeTech?.node?.mediaItemUrl
+                          )
+                          .map((product: ProductDocsProps) => (
+                            <div
+                              key={product.name}
+                              className="bg-white rounded-lg shadow p-4"
+                            >
+                              <h3 className="font-bold mb-4">{product.name}</h3>
+                              <div className="flex flex-col gap-3">
+                                {product.acfProductDocs?.noticeTech?.node?.mediaItemUrl && (
+                                  <Cta
+                                    label="Fiche technique"
+                                    variant="primary"
+                                    slug={product.acfProductDocs.noticeTech.node.mediaItemUrl}
+                                    target="_blank"
+                                    size="small"
+                                  >Voir la fiche technique</Cta>
+                                )}
+                                {product.acfProductDocs?.productNotice?.node?.mediaItemUrl && (
+                                  <Cta
+                                    label="Guide de pose"
+                                    variant="primaryHollow"
+                                    slug={product.acfProductDocs.productNotice.node.mediaItemUrl}
+                                    target="_blank"
+                                    size="small"
+                                  >Voir le guide de pose</Cta>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                       </div>
-                    )}
-                  </section>
-                )}
+                      {products.pageInfo.hasNextPage && (
+                        <div className="mt-8 text-center">
+                          <Cta
+                            label="Voir plus"
+                            variant="primary"
+                            handleButtonClick={(e) => {
+                              e.preventDefault();
+                              loadMoreProducts();
+                            }}
+                            disabled={loading}
+                            slug="#"
+                          >
+                            {loading ? 'Chargement...' : 'Voir plus'}
+                          </Cta>
+                        </div>
+                      )}
+                    </section>
+                  )}
 
                 {/* Vidéos */}
-                {videos.length > 0 && (
-                  <section>
-                    <BlocIntroSmall
-                      title="Vidéos Automatisme Online"
-                      subtitle="Les dernières vidéos de nos produits, conseils et actualités"
-                    />
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {videos.map((video: VideoCardProps, index: number) => (
-                        <VideoCard key={index} bloc={video} />
-                      ))}
-                    </div>
-                    {showPagination && (
-                      <div className="mt-8 text-center">
-                        <Cta
-                          label="Voir plus"
-                          variant="primary"
-                          slug={`/bibliotheque?type=${type}&page=${Number(page) + 1}${search ? `&search=${search}` : ''}`}
-                        >
-                          Voir plus
-                        </Cta>
+                {(!selectedType || selectedType === 'videos') &&
+                  displayedVideos &&
+                  displayedVideos.length > 0 && (
+                    <section>
+                      <BlocIntroSmall
+                        title="Vidéos"
+                        subtitle="Nos dernières vidéos"
+                      />
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {displayedVideos.map(
+                          (video: VideoCardProps, index: number) => (
+                            <VideoCard key={index} bloc={video} />
+                          ),
+                        )}
                       </div>
-                    )}
-                  </section>
-                )}
+                      {showMoreVideos && (
+                        <div className="mt-8 text-center">
+                          <Cta
+                            label="Voir plus"
+                            variant="primary"
+                            handleButtonClick={(e) => {
+                              e.preventDefault();
+                              loadMoreVideos();
+                            }}
+                            slug="#"
+                          >
+                            Voir plus
+                          </Cta>
+                        </div>
+                      )}
+                    </section>
+                  )}
 
                 {/* Articles */}
-                {articles.length > 0 && (
-                  <section>
-                    <BlocIntroSmall
-                      title="Articles"
-                      subtitle="Nos derniers articles et actualités"
-                    />
-                    <div className="grid grid-cols-1 gap-6 h-fit">
-                      {articles.map(
-                        (article: {
-                          title: string;
-                          slug: string;
-                          date: string;
-                          featuredImage?: { node?: { sourceUrl?: string } };
-                        }) => (
-                          <BlocSav
-                            key={article.slug}
-                            bloc={{
-                              title: article.title,
-                              image: {
-                                node: {
-                                  sourceUrl:
-                                    article.featuredImage?.node?.sourceUrl ||
-                                    '/images/placeholder.jpg',
+                {(!selectedType || selectedType === 'articles') &&
+                  articles?.nodes && articles.nodes.length > 0 && (
+                    <section>
+                      <BlocIntroSmall
+                        title="Articles"
+                        subtitle="Nos derniers articles et actualités"
+                      />
+                      <div>
+                        <div className="grid grid-cols-1 gap-6 h-fit">
+                          {articles.nodes.map((article) => (
+                            <BlocSav
+                              key={article.slug}
+                              bloc={{
+                                title: article.title,
+                                image: {
+                                  node: {
+                                    sourceUrl:
+                                      article.featuredImage?.node?.sourceUrl ||
+                                      '/images/placeholder.jpg',
+                                  },
                                 },
-                              },
-                              date: article.date,
-                              text: '',
-                              isImageLeft: false,
-                            }}
-                            slug={`/actualites/${article.slug}`}
-                          />
-                        ),
-                      )}
-                    </div>
-                    {showPagination && (
-                      <div className="mt-8 text-center">
-                        <Cta
-                          label="Voir plus"
-                          variant="primary"
-                          slug={`/bibliotheque?type=${type}&page=${Number(page) + 1}${search ? `&search=${search}` : ''}`}
-                        >
-                          Voir plus
-                        </Cta>
+                                date: article.date,
+                                text: article.excerpt,
+                                isImageLeft: true,
+                                brand: article.productBrands?.nodes[0]?.name,
+                              }}
+                              slug={`${article.slug}`}
+                            />
+                          ))}
+                        </div>
+                        {articles.pageInfo.hasNextPage && (
+                          <div className="mt-8 text-center">
+                            <Cta
+                              label="Voir plus"
+                              variant="primary"
+                              handleButtonClick={(e) => {
+                                e.preventDefault();
+                                loadMoreArticles();
+                              }}
+                              disabled={loading}
+                              slug="#"
+                            >
+                              {loading ? 'Chargement...' : 'Voir plus'}
+                            </Cta>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </section>
-                )}
+                    </section>
+                  )}
 
                 {/* Marques */}
-                {brands.length > 0 && (
-                  <section>
-                    <BlocIntroSmall
-                      title="Marques"
-                      subtitle="Découvrez toutes nos marques partenaires"
-                    />
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                      {brands.map((brand: any) => (
-                        <a
-                          key={brand.slug}
-                          href={`/marque/${brand.slug}`}
-                          className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow"
-                        >
-                          {brand.brandFields?.logo?.node?.sourceUrl ? (
-                            <img
-                              src={brand.brandFields.logo.node.sourceUrl}
-                              alt={brand.name}
-                              className="w-full h-auto object-contain"
-                            />
-                          ) : (
-                            <div className="text-center font-bold">
-                              {brand.name}
-                            </div>
-                          )}
-                        </a>
-                      ))}
-                    </div>
-                    {brands.length > 20 && (
-                      <div className="mt-8 text-center">
-                        <Cta
-                          label="Voir plus"
-                          variant="primary"
-                          slug={`/bibliotheque?type=${type}&page=${Number(page) + 1}${search ? `&search=${search}` : ''}`}
-                        >
-                          Voir plus
-                        </Cta>
+                {(!selectedType || selectedType === 'marques') &&
+                  brands?.nodes && brands.nodes.length > 0 && (
+                    <section>
+                      <BlocIntroSmall
+                        title="Marques"
+                        subtitle="Découvrez toutes nos marques partenaires"
+                      />
+                      <div>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                          {brands.nodes.map((brand) => (
+                            <BrandCard key={brand.slug} brand={brand} />
+                          ))}
+                        </div>
+                        {brands.pageInfo.hasNextPage && (
+                          <div className="mt-8 text-center">
+                            <Cta
+                              label="Voir plus"
+                              variant="primary"
+                              handleButtonClick={(e) => {
+                                e.preventDefault();
+                                loadMoreBrands();
+                              }}
+                              disabled={loading}
+                              slug="#"
+                            >
+                              {loading ? 'Chargement...' : 'Voir plus'}
+                            </Cta>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </section>
-                )}
+                    </section>
+                  )}
               </div>
             )}
           </div>
@@ -442,15 +655,26 @@ export default PageBibliotheque;
 export const getStaticProps: GetStaticProps = async () => {
   const commonData = await fetchCommonData();
 
-  // Paramètres par défaut pour le chargement initial
-  const type = null as string | null;
-  const search = '';
-  const page = '1';
+  const defaultVariables = {
+    first: PRODUCTS_PER_PAGE,
+    after: null,
+    search: ''
+  };
+
+  const articlesVariables = {
+    ...defaultVariables,
+    first: ARTICLES_PER_PAGE,
+  };
+
+  const brandsVariables = {
+    ...defaultVariables,
+    first: BRANDS_PER_PAGE,
+  };
 
   // Fetch latest products with documents
   const { data: productsData } = await client.query({
     query: GET_LIBRARY_DOCUMENTS,
-    variables: { search },
+    variables: defaultVariables,
   });
 
   // Fetch videos
@@ -461,75 +685,26 @@ export const getStaticProps: GetStaticProps = async () => {
   // Fetch latest articles
   const { data: articlesData } = await client.query({
     query: GET_LIBRARY_ARTICLES,
-    variables: { search },
+    variables: articlesVariables,
   });
 
   // Fetch brands
   const { data: brandsData } = await client.query({
     query: GET_LIBRARY_BRANDS,
-    variables: { search },
+    variables: brandsVariables,
   });
 
-  const currentPage = Math.max(1, parseInt(page as string) || 1);
-  const itemsPerPage = 10; // Nombre d'éléments par page
-
-  // Filtrer les données en fonction du type sélectionné
-  const filteredData = {
-    documents: (productsData?.products?.nodes || [])
-      .filter(
-        (product: ProductDocsProps) =>
-          product.acfProductDocs?.productNotice?.node?.mediaItemUrl ||
-          product.acfProductDocs?.noticeTech?.node?.mediaItemUrl,
-      )
-      .slice(0, 10),
+  const initialData = {
+    products: productsData.products,
     videos: videosData?.themeSettings?.optionsFields?.videoContent || [],
-    articles: articlesData?.posts?.nodes || [],
-    marques: brandsData?.productBrands?.nodes || [],
-  };
-
-  // Calcul du nombre total de pages pour chaque type
-  const totalPages = {
-    documents: Math.ceil(filteredData.documents.length / itemsPerPage),
-    videos: Math.ceil(filteredData.videos.length / itemsPerPage),
-    articles: Math.ceil(filteredData.articles.length / itemsPerPage),
-    marques: Math.ceil(filteredData.marques.length / itemsPerPage),
-  };
-
-  // Pagination des données
-  const paginateData = (data: any[], page: number) => {
-    if (!Array.isArray(data)) return [];
-    const validPage = Math.max(1, page);
-    const start = (validPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return data.slice(start, end);
-  };
-
-  // Données filtrées et paginées
-  const paginatedData = {
-    products:
-      !type || type === 'documents'
-        ? paginateData(filteredData.documents, currentPage)
-        : [],
-    videos:
-      !type || type === 'videos'
-        ? paginateData(filteredData.videos, currentPage)
-        : [],
-    articles:
-      !type || type === 'articles'
-        ? paginateData(filteredData.articles, currentPage)
-        : [],
-    brands:
-      !type || type === 'marques'
-        ? paginateData(filteredData.marques, currentPage)
-        : [],
+    posts: articlesData.posts,
+    productBrands: brandsData.productBrands,
   };
 
   return {
     props: {
       ...commonData,
-      ...paginatedData,
-      currentPage,
-      totalPages,
+      initialData,
     },
     revalidate: 3600, // Revalidate every hour
   };

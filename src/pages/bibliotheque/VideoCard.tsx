@@ -25,41 +25,47 @@ const VideoCard = ({ bloc }: { bloc: VideoCardProps }) => {
   }, [isPlaying]);
 
   if (!bloc || !bloc.videoId) return null;
+
   return (
-    <div
-      className={`relative w-full max-lg:aspect-video lg:h-[388px] rounded-lg overflow-hidden`}
-    >
-      {isPlaying ? (
-        <iframe
-          ref={iframeRef}
-          className="w-full h-full"
-          src={`https://www.youtube-nocookie.com/embed/${bloc.videoId}?autoplay=1&enablejsapi=1&fs=1&playsinline=0&rel=0&modestbranding=1`}
-          title="YouTube video"
-          allow="autoplay; encrypted-media; fullscreen"
-          allowFullScreen
-          style={{ border: 0 }}
-        />
-      ) : (
-        <div
-          className="relative w-full h-full cursor-pointer"
-          onClick={handlePlay}
-        >
-          <Image
-            src={
-              bloc.image?.node?.sourceUrl ||
-              `https://img.youtube.com/vi/${bloc.videoId}/maxresdefault.jpg`
-            }
-            alt="Vidéo Automatisme Online"
-            layout="fill"
-            objectFit="cover"
+    <div>
+      <div
+        className={`relative w-full max-lg:aspect-video lg:h-[388px] rounded-lg overflow-hidden`}
+      >
+        {isPlaying ? (
+          <iframe
+            ref={iframeRef}
+            className="w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${bloc.videoId}?autoplay=1&enablejsapi=1&fs=1&playsinline=0&rel=0&modestbranding=1`}
+            title="YouTube video"
+            allow="autoplay; encrypted-media; fullscreen"
+            allowFullScreen
+            style={{ border: 0 }}
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-            <button className="playButton p-4 bg-white text-secondary rounded-full shadow-lg flex justify-center items-center w-16 h-16 hover:bg-secondary hover:text-white duration-300">
-              <BulletSvg />
-            </button>
+        ) : (
+          <div
+            className="relative w-full h-full cursor-pointer"
+            onClick={handlePlay}
+          >
+            <Image
+              src={
+                bloc.image?.node?.sourceUrl ||
+                `https://img.youtube.com/vi/${bloc.videoId}/maxresdefault.jpg`
+              }
+              alt="Vidéo Automatisme Online"
+              layout="fill"
+              objectFit="cover"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <button className="playButton p-4 bg-white text-secondary rounded-full shadow-lg flex justify-center items-center w-16 h-16 hover:bg-secondary hover:text-white duration-300">
+                <BulletSvg />
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+      <h3 className="font-bold text-xl md:text-2xl leading-general mt-2">
+        {bloc.title}
+      </h3>
     </div>
   );
 };

@@ -12,6 +12,7 @@ const Cta = ({
   additionalClass,
   disabled = false,
   isMeili = false,
+  target = '_self',
 }: {
   children?: React.ReactNode;
   handleButtonClick?: (e: React.MouseEvent) => void;
@@ -28,6 +29,7 @@ const Cta = ({
   additionalClass?: string;
   disabled?: boolean;
   isMeili?: boolean;
+  target?: string;
 }) => {
   const buttonClass = `
   ${size !== 'mobile-header' ? 'whitespace-nowrap' : 'whitespace-normal'}
@@ -66,6 +68,7 @@ const Cta = ({
       className={`${buttonClass} ${isMeiliClass} ${sizeClass} ${variantClasses[variant]} ${additionalClass} ${isFull ? 'w-full' : 'w-fit mx-auto'}`}
       onClick={handleButtonClick}
       aria-disabled={disabled}
+      target={target}
     >
       {children}
     </Link>

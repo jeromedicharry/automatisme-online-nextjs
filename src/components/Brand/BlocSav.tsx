@@ -5,7 +5,7 @@ import { Star } from '../atoms/AvisVerifiesReassurance';
 import Cta from '../atoms/Cta';
 import { formatDate } from '@/utils/functions/functions';
 
-interface BlocSAVProps {
+export interface BlocSAVProps {
   image: {
     node: {
       sourceUrl: string;

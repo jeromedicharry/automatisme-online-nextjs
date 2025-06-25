@@ -185,7 +185,7 @@ export const GET_ALL_CATEGORIES_QUERY = gql`
 `;
 
 export const GET_SINGLE_CATEGORY = gql`
-  query GET_PRODUCTS_FROM_CATEGORY($id: ID!) {
+  query GET_SINGLE_CATEGORY($id: ID!) {
     singleCategory: productCategory(id: $id, idType: URI) {
       id
       uri
@@ -197,54 +197,6 @@ export const GET_SINGLE_CATEGORY = gql`
         nodes {
           name
           uri
-        }
-      }
-    }
-  }
-`;
-
-export const GET_PRODUCTS_FROM_CATEGORY = gql`
-  query GET_PRODUCTS_FROM_CATEGORY(
-    $after: String
-    $id: ID!
-    $first: Int = 20
-    $filters: [ProductTaxonomyFilterInput]
-  ) {
-    productCategory(id: $id, idType: URI) {
-      products(
-        first: $first
-        after: $after
-        where: { taxonomyFilter: { filters: $filters } }
-      ) {
-        nodes {
-          databaseId
-          name
-          onSale
-          featured
-          featuredImage {
-            node {
-              sourceUrl(size: MEDIUM)
-            }
-          }
-
-          ... on SimpleProduct {
-            salePrice(format: RAW)
-            regularPrice(format: RAW)
-            onSale
-            price(format: RAW)
-            id
-            taxClass
-            sku
-            uri
-            slug
-            isPro
-            hasPose
-            isKit
-          }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
         }
       }
     }

@@ -27,7 +27,10 @@ const EmptyElement = ({
 
       <h2 className="mt-2 text-2xl font-bold">{title}</h2>
       {subtitle && (
-        <div className="text-sm mt-2 mb-6 md:mb-4 text-balance">{subtitle}</div>
+        <div
+          className="text-sm mt-2 mb-6 md:mb-4 text-balance"
+          dangerouslySetInnerHTML={{ __html: subtitle }}
+        />
       )}
       {ctaLabel && ctaSlug && (
         <Cta
