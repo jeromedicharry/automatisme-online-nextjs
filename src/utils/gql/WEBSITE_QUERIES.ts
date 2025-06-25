@@ -347,3 +347,81 @@ export const FETCH_ALL_POSTS_WITH_PAGINATION = gql`
     }
   }
 `;
+
+// Bibliothèque
+export const GET_LIBRARY_DOCUMENTS = gql`
+  query GetLibraryDocuments($search: String) {
+    products(
+      first: 20
+      where: { orderby: { field: DATE, order: DESC }, search: $search }
+    ) {
+      nodes {
+        name
+        ... on SimpleProduct {
+          acfProductDocs {
+            productNotice {
+              node {
+                mediaItemUrl
+              }
+            }
+            noticeTech {
+              node {
+                mediaItemUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_LIBRARY_VIDEOS = gql`
+  query GetLibraryVideos {
+    themeSettings {
+      optionsFields {
+        videoContent {
+          title
+          videoId
+          image {
+            node {
+              sourceUrl
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_LIBRARY_ARTICLES = gql`
+  query GetLibraryArticles($search: String) {
+    posts(
+      first: 4
+      where: { orderby: { field: DATE, order: DESC }, search: $search }
+    ) {
+      nodes {
+        title
+        slug
+        date
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_LIBRARY_BRANDS = gql`
+  query GetLibraryBrands($search: String) {
+    productBrands(first: 20, where: { search: $search }) {
+      nodes {
+        name
+        slug
+        thumbnailUrl
+      }
+    }
+  }
+`;

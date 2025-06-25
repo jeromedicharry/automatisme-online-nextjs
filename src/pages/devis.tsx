@@ -31,7 +31,6 @@ const Devis = ({
   const router = useRouter();
   const installerId = router.query.installerId;
 
-  console.log(installerId);
   return (
     <Layout
       meta={{ title: 'Contactez un installateur Automatisme Online' }}
