@@ -102,7 +102,12 @@ const PageBibliotheque = ({
   );
   type ValidType = (typeof validTypes)[number];
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(
+    (Array.isArray(router.query.search) ? router.query.search[0] : router.query.search) || ''
+  );
+  const [activeSearchTerm, setActiveSearchTerm] = useState(
+    (Array.isArray(router.query.search) ? router.query.search[0] : router.query.search) || ''
+  );
   const [isSearching, setIsSearching] = useState(false);
   const [selectedType, setSelectedType] = useState<ValidType | ''>(
     (router.query.type as ValidType) || '',
@@ -118,12 +123,16 @@ const PageBibliotheque = ({
     initialData.videos.length > VIDEOS_PER_PAGE,
   );
 
-  const fuse = useMemo(() => new Fuse(videos, {
-    keys: ['title'],
-    threshold: 0.4,
-    distance: 100,
-    useExtendedSearch: true,
-  }), [videos]);
+  const fuse = useMemo(
+    () =>
+      new Fuse(videos, {
+        keys: ['title'],
+        threshold: 0.4,
+        distance: 100,
+        useExtendedSearch: true,
+      }),
+    [videos],
+  );
 
   const loadMoreVideos = () => {
     const currentLength = displayedVideos.length;
@@ -150,18 +159,93 @@ const PageBibliotheque = ({
   );
   const [loading, setLoading] = useState(false);
 
+  // Effet pour gérer l'initialisation et les changements d'URL
   useEffect(() => {
     const type = router.query.type as ValidType;
+    const search = Array.isArray(router.query.search) ? router.query.search[0] : router.query.search;
+
     if (type && validTypes.includes(type)) {
       setSelectedType(type);
     } else {
       setSelectedType('');
     }
-  }, [router.query.type, validTypes]);
+
+    if (search !== undefined) {
+      const newSearchTerm = search || '';
+      setSearchTerm(newSearchTerm);
+      setActiveSearchTerm(newSearchTerm);
+      // Effectuer la recherche initiale si on a un terme de recherche dans l'URL
+      const performSearch = async () => {
+        setIsSearching(true);
+        try {
+          const [productsResponse, articlesResponse, brandsResponse] = await Promise.all([
+            client.query({
+              query: GET_LIBRARY_DOCUMENTS,
+              variables: {
+                first: PRODUCTS_PER_PAGE,
+                after: null,
+                search: search || '',
+              },
+            }),
+            client.query({
+              query: GET_LIBRARY_ARTICLES,
+              variables: {
+                first: ARTICLES_PER_PAGE,
+                after: null,
+                search: search || '',
+              },
+            }),
+            client.query({
+              query: GET_LIBRARY_BRANDS,
+              variables: {
+                first: BRANDS_PER_PAGE,
+                after: null,
+                search: search || '',
+              },
+            }),
+          ]);
+
+          setProducts(productsResponse.data.products);
+          setArticles(articlesResponse.data.posts);
+          setBrands(brandsResponse.data.productBrands);
+
+          // Recherche locale pour les vidéos
+          if (!search) {
+            setDisplayedVideos(videos.slice(0, VIDEOS_PER_PAGE));
+            setShowMoreVideos(videos.length > VIDEOS_PER_PAGE);
+          } else {
+            const results = fuse.search(search).map((result) => result.item);
+            setDisplayedVideos(results.slice(0, VIDEOS_PER_PAGE));
+            setShowMoreVideos(results.length > VIDEOS_PER_PAGE);
+          }
+        } catch (error) {
+          console.error('Error during search:', error);
+        } finally {
+          setIsSearching(false);
+        }
+      };
+
+      performSearch();
+    }
+  }, [router.query.type, router.query.search, validTypes, videos, fuse]);
 
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
     setIsSearching(true);
+    setActiveSearchTerm(searchTerm);
+
+    // Mise à jour de l'URL avec le terme de recherche
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          search: searchTerm || undefined
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
 
     try {
       // Recherche WordPress pour les produits
@@ -202,7 +286,7 @@ const PageBibliotheque = ({
         setDisplayedVideos(videos.slice(0, VIDEOS_PER_PAGE));
         setShowMoreVideos(videos.length > VIDEOS_PER_PAGE);
       } else {
-        const results = fuse.search(searchTerm).map(result => result.item);
+        const results = fuse.search(searchTerm).map((result) => result.item);
         setDisplayedVideos(results.slice(0, VIDEOS_PER_PAGE));
         setShowMoreVideos(results.length > VIDEOS_PER_PAGE);
       }
@@ -217,7 +301,10 @@ const PageBibliotheque = ({
     router.push(
       {
         pathname: router.pathname,
-        query: type ? { type } : {},
+        query: {
+          ...(searchTerm ? { search: searchTerm } : {}),
+          ...(type ? { type } : {})
+        },
       },
       undefined,
       { shallow: true },
@@ -228,10 +315,6 @@ const PageBibliotheque = ({
   const search = Array.isArray(query.search)
     ? query.search[0]
     : query.search || '';
-
-
-
-
 
   const loadMoreProducts = async () => {
     if (!products.pageInfo.hasNextPage) return;
@@ -308,8 +391,6 @@ const PageBibliotheque = ({
     }
   };
 
-
-
   return (
     <Layout
       meta={{
@@ -328,25 +409,6 @@ const PageBibliotheque = ({
     >
       <Container>
         <div className="container mx-auto px-4 py-8 md:py-12">
-          <form onSubmit={handleSearch} className="mb-8">
-            <div className="relative max-w-xl mx-auto">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Rechercher dans la bibliothèque"
-                className="py-2 pl-4 pr-12 h-12 w-full bg-white border border-primary rounded-full text-base placeholder:text-placeholder-grey"
-                disabled={isSearching}
-              />
-              <button
-                type="submit"
-                className="rounded-full bg-secondary w-10 h-10 text-white hover:bg-secondary-dark duration-300 absolute right-1 flex items-center justify-center top-[50%] transform -translate-y-1/2 disabled:opacity-50"
-                disabled={isSearching}
-              >
-                <SearchSvg />
-              </button>
-            </div>
-          </form>
           <div className="mb-8 md:max-w-[800px] mx-auto">
             <BlocIntroLarge
               title="Bibliothèque de documents"
@@ -422,12 +484,14 @@ const PageBibliotheque = ({
               <input
                 type="text"
                 name="search"
-                defaultValue={search}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Rechercher dans la bibliothèque..."
                 className="py-2 pl-4 pr-1 h-8 w-full bg-white border border-primary rounded-full text-sm placeholder:text-placeholder-grey"
               />
               <button
                 type="submit"
+                disabled={isSearching}
                 className="rounded-full bg-secondary w-6 h-6 text-white hover:bg-secondary-dark duration-300 absolute right-1 flex items-center justify-center top-[50%] transform -translate-y-1/2"
               >
                 <SearchSvg />
@@ -440,65 +504,107 @@ const PageBibliotheque = ({
       <div className="bg-white">
         <Container>
           <div className="py-6">
-
+            {searchTerm && (
+              <BlocIntroLarge title={`Résultats pour: ${activeSearchTerm}`} />
+            )}
             {isSearching && (
               <div className="flex justify-center items-center min-h-[200px]">
                 <LoadingSpinner />
               </div>
             )}
+
             {/* Contenu */}
-            {(!selectedType && !products?.nodes?.length && !displayedVideos?.length && !articles?.nodes?.length && !brands?.nodes?.length) ||
-            (selectedType === 'documents' && !products?.nodes?.length) ||
+            {(!selectedType &&
+              (!products?.nodes?.length ||
+                !products.nodes.some(
+                  (p) =>
+                    p?.acfProductDocs?.noticeTech?.node?.mediaItemUrl ||
+                    p?.acfProductDocs?.productNotice?.node?.mediaItemUrl,
+                )) &&
+              !displayedVideos?.length &&
+              !articles?.nodes?.length &&
+              !brands?.nodes?.length) ||
+            (selectedType === 'documents' &&
+              (!products?.nodes?.length ||
+                !products.nodes.some(
+                  (p) =>
+                    p?.acfProductDocs?.noticeTech?.node?.mediaItemUrl ||
+                    p?.acfProductDocs?.productNotice?.node?.mediaItemUrl,
+                ))) ||
             (selectedType === 'videos' && !displayedVideos?.length) ||
             (selectedType === 'articles' && !articles?.nodes?.length) ||
             (selectedType === 'marques' && !brands?.nodes?.length) ? (
               <div className="w-fit mx-auto text-left">
-              <EmptyElement
-                title="Oups, rien à afficher ici..."
-                subtitle={`<div>Votre recherche “${searchTerm}” ne correspond à aucun résultat sur notre site.</div><br />
+                <EmptyElement
+                  title="Oups, rien à afficher ici..."
+                  subtitle={`<div>Votre recherche “${searchTerm}” ne correspond à aucun résultat sur notre site.</div><br />
                 <span>Assurez-vous que tous les mots sont correctement orthographiés</span><br />
                 <span>Essayez des mots clés plus généraux</span>
                 `}
-              />
+                />
               </div>
             ) : (
               <div className="space-y-16">
                 {/* Documents */}
                 {(!selectedType || selectedType === 'documents') &&
-                  products?.nodes && products.nodes.length > 0 && (
+                  products?.nodes &&
+                  products.nodes.length > 0 &&
+                  products.nodes.some(
+                    (p) =>
+                      p?.acfProductDocs?.noticeTech?.node?.mediaItemUrl ||
+                      p?.acfProductDocs?.productNotice?.node?.mediaItemUrl,
+                  ) && (
                     <section>
                       <BlocIntroSmall title="Documents techniques et guides de pose" />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {products.nodes
                           .filter(
                             (product: ProductDocsProps) =>
-                              product.acfProductDocs?.productNotice?.node?.mediaItemUrl ||
-                              product.acfProductDocs?.noticeTech?.node?.mediaItemUrl
+                              product.acfProductDocs?.productNotice?.node
+                                ?.mediaItemUrl ||
+                              product.acfProductDocs?.noticeTech?.node
+                                ?.mediaItemUrl,
                           )
                           .map((product: ProductDocsProps) => (
                             <div
                               key={product.name}
                               className="bg-white rounded-lg shadow p-4"
                             >
-                              <h3 className="font-bold mb-4">{product.name}</h3>
-                              <div className="flex flex-col gap-3">
-                                {product.acfProductDocs?.noticeTech?.node?.mediaItemUrl && (
+                              <h3 className="font-bold mb-6 md:mb-10">
+                                {product.name}
+                              </h3>
+                              <div className="flex flex-col gap-3 md:gap-4 md:grid md:grid-cols-2">
+                                {product.acfProductDocs?.noticeTech?.node
+                                  ?.mediaItemUrl && (
                                   <Cta
                                     label="Fiche technique"
                                     variant="primary"
-                                    slug={product.acfProductDocs.noticeTech.node.mediaItemUrl}
+                                    slug={
+                                      product.acfProductDocs.noticeTech.node
+                                        .mediaItemUrl
+                                    }
                                     target="_blank"
                                     size="small"
-                                  >Voir la fiche technique</Cta>
+                                    isFull
+                                  >
+                                    Voir la fiche technique
+                                  </Cta>
                                 )}
-                                {product.acfProductDocs?.productNotice?.node?.mediaItemUrl && (
+                                {product.acfProductDocs?.productNotice?.node
+                                  ?.mediaItemUrl && (
                                   <Cta
                                     label="Guide de pose"
                                     variant="primaryHollow"
-                                    slug={product.acfProductDocs.productNotice.node.mediaItemUrl}
+                                    slug={
+                                      product.acfProductDocs.productNotice.node
+                                        .mediaItemUrl
+                                    }
                                     target="_blank"
                                     size="small"
-                                  >Voir le guide de pose</Cta>
+                                    isFull
+                                  >
+                                    Voir le guide de pose
+                                  </Cta>
                                 )}
                               </div>
                             </div>
@@ -507,7 +613,7 @@ const PageBibliotheque = ({
                       {products.pageInfo.hasNextPage && (
                         <div className="mt-8 text-center">
                           <Cta
-                            label="Voir plus"
+                            label="Voir plus de produits"
                             variant="primary"
                             handleButtonClick={(e) => {
                               e.preventDefault();
@@ -516,7 +622,9 @@ const PageBibliotheque = ({
                             disabled={loading}
                             slug="#"
                           >
-                            {loading ? 'Chargement...' : 'Voir plus'}
+                            {loading
+                              ? 'Chargement de produits...'
+                              : 'Voir plus de produits'}
                           </Cta>
                         </div>
                       )}
@@ -542,7 +650,7 @@ const PageBibliotheque = ({
                       {showMoreVideos && (
                         <div className="mt-8 text-center">
                           <Cta
-                            label="Voir plus"
+                            label="Voir plus de vidéos"
                             variant="primary"
                             handleButtonClick={(e) => {
                               e.preventDefault();
@@ -550,7 +658,7 @@ const PageBibliotheque = ({
                             }}
                             slug="#"
                           >
-                            Voir plus
+                            Voir plus de vidéos
                           </Cta>
                         </div>
                       )}
@@ -559,7 +667,8 @@ const PageBibliotheque = ({
 
                 {/* Articles */}
                 {(!selectedType || selectedType === 'articles') &&
-                  articles?.nodes && articles.nodes.length > 0 && (
+                  articles?.nodes &&
+                  articles.nodes.length > 0 && (
                     <section>
                       <BlocIntroSmall
                         title="Articles"
@@ -591,7 +700,7 @@ const PageBibliotheque = ({
                         {articles.pageInfo.hasNextPage && (
                           <div className="mt-8 text-center">
                             <Cta
-                              label="Voir plus"
+                              label="Voir plus d'articles"
                               variant="primary"
                               handleButtonClick={(e) => {
                                 e.preventDefault();
@@ -600,7 +709,9 @@ const PageBibliotheque = ({
                               disabled={loading}
                               slug="#"
                             >
-                              {loading ? 'Chargement...' : 'Voir plus'}
+                              {loading
+                                ? 'Chargement...'
+                                : "Voir plus d'articles"}
                             </Cta>
                           </div>
                         )}
@@ -610,7 +721,8 @@ const PageBibliotheque = ({
 
                 {/* Marques */}
                 {(!selectedType || selectedType === 'marques') &&
-                  brands?.nodes && brands.nodes.length > 0 && (
+                  brands?.nodes &&
+                  brands.nodes.length > 0 && (
                     <section>
                       <BlocIntroSmall
                         title="Marques"
@@ -619,13 +731,13 @@ const PageBibliotheque = ({
                       <div>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                           {brands.nodes.map((brand) => (
-                            <BrandCard key={brand.slug} brand={brand} />
+                            <BrandCard key={brand.name} brand={brand} />
                           ))}
                         </div>
                         {brands.pageInfo.hasNextPage && (
                           <div className="mt-8 text-center">
                             <Cta
-                              label="Voir plus"
+                              label="Voir plus de marques"
                               variant="primary"
                               handleButtonClick={(e) => {
                                 e.preventDefault();
@@ -634,7 +746,9 @@ const PageBibliotheque = ({
                               disabled={loading}
                               slug="#"
                             >
-                              {loading ? 'Chargement...' : 'Voir plus'}
+                              {loading
+                                ? 'Chargement...'
+                                : 'Voir plus de marques'}
                             </Cta>
                           </div>
                         )}
@@ -658,7 +772,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const defaultVariables = {
     first: PRODUCTS_PER_PAGE,
     after: null,
-    search: ''
+    search: '',
   };
 
   const articlesVariables = {

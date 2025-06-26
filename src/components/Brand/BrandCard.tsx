@@ -5,19 +5,11 @@ interface BrandCardProps {
     name: string;
     slug: string;
     thumbnailUrl?: string;
-    brandFields?: {
-      logo?: {
-        node?: {
-          sourceUrl?: string;
-        };
-      };
-    };
   };
 }
 
 const BrandCard = ({ brand }: BrandCardProps) => {
-  const imageUrl = brand.thumbnailUrl || brand.brandFields?.logo?.node?.sourceUrl;
-console.log({brand})
+  const imageUrl = brand.thumbnailUrl || '';
   return (
     <Link
       href={`/marque/${brand.slug}`}
