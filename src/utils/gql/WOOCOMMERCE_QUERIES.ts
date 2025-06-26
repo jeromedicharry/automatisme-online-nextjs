@@ -421,8 +421,11 @@ export const FETCH_SINGLE_BRAND = gql`
         relatedBrands {
           nodes {
             name
+            slug
           }
         }
+
+        
       }
       posts(first: 2) {
         nodes {
@@ -451,16 +454,6 @@ export const GET_CART_SHIPPING_METHODS = gql`
     }
   }
   ${CART_SHIPPING_FRAGMENT}
-`;
-
-export const GET_CUSTOM_SHIPPING_METHODS = gql`
-  query GetCustomShippingMethods {
-    customShippingMethods {
-      id
-      label
-      cost
-    }
-  }
 `;
 
 export const GET_CART_SHIPPING_INFO = gql`

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-interface BrandCardProps {
+export interface BrandCardProps {
   brand: {
     name: string;
     slug: string;

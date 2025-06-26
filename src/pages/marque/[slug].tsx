@@ -20,6 +20,8 @@ import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
 import Container from '@/components/container';
 // import Cta from '@/components/atoms/Cta';
 import BlocFeaturedProducts from '@/components/sections/blocs/BlocFeaturedProducts';
+import Cta from '@/components/atoms/Cta';
+import RelatedBrands from './RelatedBrands';
 
 const BrandPage = ({
   brand,
@@ -47,6 +49,8 @@ const BrandPage = ({
       },
     },
   };
+
+  console.log('related brands, ', brand.acfBrand.relatedBrands?.nodes);
   return (
     <Layout
       meta={brand.seo}
@@ -100,20 +104,20 @@ const BrandPage = ({
                 return <BlocSAV key={post.slug} bloc={bloc} slug={post.slug} />;
               })}
             </div>
-            {/* todo mettre le bon lien / logique pour la page de tous les articles de la marque */}
-            {/* <Container>
+            <Container>
               <Cta
                 variant="primary"
                 label={`Tous les articles de ${brand.name}`}
-                slug={`/marque/${brand.slug}`}
+                slug={`/bibliotheque?type=articles&search=${brand.slug}`}
               >
                 Voir tous les articles de {brand.name}
               </Cta>
-            </Container> */}
+            </Container>
           </>
         )}
       </div>
       <BlocFeaturedProducts bloc={FeaturedProductsData} />
+      <RelatedBrands brands={brand.acfBrand.relatedBrands?.nodes} />
     </Layout>
   );
 };
