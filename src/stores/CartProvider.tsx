@@ -42,6 +42,20 @@ export interface RootObject {
   discountTotal: number; // Montant total des réductions
   discountTax: number; // TVA sur les réductions
   appliedCoupons: { code: string; discountAmount: string; discountTax: string }[]; // Liste des coupons appliqués avec leur montant
+  shippingAddress?: {
+    country?: string;
+    postcode?: string;
+    state?: string;
+  };
+  chosenShippingMethod?: string; // Méthode de livraison sélectionnée
+  dynamicShippingMethods?: Array<{
+    id: string;
+    label: string;
+    cost: number;
+    delayMin: number;
+    delayMax: number;
+    description: string;
+  }>; // Liste des méthodes de livraison disponibles
 }
 
 export type TRootObject = RootObject | string | null | undefined;
