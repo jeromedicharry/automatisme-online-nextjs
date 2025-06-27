@@ -376,6 +376,14 @@ export const POST_CARD_FRAGMENT = `
   slug
 `;
 
+//todo remetre
+// relatedBrands {
+//   nodes {
+//     name
+//     slug
+//   }
+// }
+
 export const FETCH_SINGLE_BRAND = gql`
   query FETCH_SINGLE_BRAND($id: ID!, $idType: ProductBrandIdType = SLUG) {
     productBrand(id: $id, idType: $idType) {
@@ -418,12 +426,7 @@ export const FETCH_SINGLE_BRAND = gql`
           }
         }
 
-        relatedBrands {
-          nodes {
-            name
-            slug
-          }
-        }
+        
 
         
       }
