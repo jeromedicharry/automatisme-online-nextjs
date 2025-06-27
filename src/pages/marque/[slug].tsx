@@ -21,7 +21,7 @@ import Container from '@/components/container';
 // import Cta from '@/components/atoms/Cta';
 import BlocFeaturedProducts from '@/components/sections/blocs/BlocFeaturedProducts';
 import Cta from '@/components/atoms/Cta';
-import RelatedBrands from './RelatedBrands';
+// import RelatedBrands from './RelatedBrands';
 
 const BrandPage = ({
   brand,
@@ -117,7 +117,7 @@ const BrandPage = ({
         )}
       </div>
       <BlocFeaturedProducts bloc={FeaturedProductsData} />
-      <RelatedBrands brands={brand.acfBrand.relatedBrands?.nodes} />
+      {/* <RelatedBrands brands={brand.acfBrand.relatedBrands?.nodes} /> */}
     </Layout>
   );
 };
