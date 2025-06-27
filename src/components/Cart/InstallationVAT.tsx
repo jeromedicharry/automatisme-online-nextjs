@@ -5,26 +5,30 @@ import { CartContext } from '@/stores/CartProvider';
 import { useCartOperations } from '@/hooks/useCartOperations';
 import { UPDATE_CART_ITEM_INSTALLATION } from '@/utils/gql/GQL_MUTATIONS';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import ToggleSwitch from '../atoms/ToggleSwitch';
 
 const InstallationVAT = () => {
   const { cart } = useContext(CartContext);
   const { refetchCart } = useCartOperations();
   const [hasReducedTvaRate, setHasReducedTvaRate] = useState(false);
-  const [updateCartItemInstallation] = useMutation(UPDATE_CART_ITEM_INSTALLATION, {
-    refetchQueries: [{ query: GET_CART }],
-    awaitRefetchQueries: true,
-    onCompleted: async (data) => {
-      console.log('Installation TVA update completed:', data);
-      await refetchCart();
+  const [updateCartItemInstallation] = useMutation(
+    UPDATE_CART_ITEM_INSTALLATION,
+    {
+      refetchQueries: [{ query: GET_CART }],
+      awaitRefetchQueries: true,
+      onCompleted: async (data) => {
+        console.log('Installation TVA update completed:', data);
+        await refetchCart();
+      },
+      onError: (error) => {
+        console.error('Error updating installation TVA:', error);
+      },
     },
-    onError: (error) => {
-      console.error('Error updating installation TVA:', error);
-    }
-  });
+  );
 
   const handleTvaRateChange = async (checked: boolean) => {
     setHasReducedTvaRate(checked);
-    
+
     // Mettre à jour tous les produits du panier qui ont une installation
     if (cart?.products) {
       for (const product of cart.products) {
@@ -32,15 +36,15 @@ const InstallationVAT = () => {
           console.log('Updating installation TVA rate for product:', {
             cartKey: product.cartKey,
             addInstallation: product.addInstallation,
-            hasReducedTvaRate: checked
+            hasReducedTvaRate: checked,
           });
-          
+
           await updateCartItemInstallation({
             variables: {
               cartItemKey: product.cartKey,
               addInstallation: true,
-              hasReducedTvaRate: checked
-            }
+              hasReducedTvaRate: checked,
+            },
           });
         }
       }
@@ -55,16 +59,15 @@ const InstallationVAT = () => {
       />
       <form className="mt-4">
         <label className="flex items-start gap-4 text-sm text-dark-grey cursor-pointer">
-          <input
-            type="checkbox"
-            className="mt-1"
+          {/* <ToggleSwitch
+            id="sameAsBilling"
             checked={hasReducedTvaRate}
             onChange={(e) => handleTvaRateChange(e.target.checked)}
-          />
+          /> */}
           <span>
-            Je certifie bénéficier de la TVA réduite de 10%, je télécharge ce formulaire
-            et vous le renvoie complété (cette installation concerne une maison
-            d&apos;habitation construite il y a plus de deux ans)
+            Je certifie bénéficier de la TVA réduite de 10%, je télécharge ce
+            formulaire et vous le renvoie complété (cette installation concerne
+            une maison d&apos;habitation construite il y a plus de deux ans)
           </span>
         </label>
       </form>

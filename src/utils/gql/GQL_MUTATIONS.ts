@@ -109,7 +109,7 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
 `;
 
 export const GET_DYNAMIC_SHIPPING_METHODS = gql`
-  mutation SetCartAndGetDynamicShippingMethods(
+  mutation setCartAndGetDynamicShippingMethods(
     $items: [CartInputItem]!
     $country: String!
     $postcode: String!
@@ -144,7 +144,6 @@ export const GET_DYNAMIC_SHIPPING_METHODS = gql`
           delayMax
           description
         }
-        chosenShippingMethod
       }
     }
   }
@@ -152,9 +151,7 @@ export const GET_DYNAMIC_SHIPPING_METHODS = gql`
 
 export const SET_CART_SHIPPING_METHOD = gql`
   mutation SetCartShippingMethod($shippingMethodId: String!) {
-    setCartShippingMethod(
-      input: { shippingMethodId: $shippingMethodId }
-    ) {
+    setCartShippingMethod(input: { shippingMethodId: $shippingMethodId }) {
       cart {
         chosenShippingMethod
         dynamicShippingMethods {
