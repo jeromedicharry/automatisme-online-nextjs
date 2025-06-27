@@ -108,6 +108,68 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
   }
 `;
 
+export const GET_DYNAMIC_SHIPPING_METHODS = gql`
+  mutation SetCartAndGetDynamicShippingMethods(
+    $items: [CartInputItem]!
+    $country: String!
+    $postcode: String!
+    $state: String!
+  ) {
+    setCartAndGetDynamicShippingMethods(
+      input: {
+        items: $items
+        country: $country
+        postcode: $postcode
+        state: $state
+      }
+    ) {
+      cart {
+        contents {
+          nodes {
+            key
+            product {
+              node {
+                id
+                name
+              }
+            }
+            quantity
+          }
+        }
+        dynamicShippingMethods {
+          id
+          label
+          cost
+          delayMin
+          delayMax
+          description
+        }
+        chosenShippingMethod
+      }
+    }
+  }
+`;
+
+export const SET_CART_SHIPPING_METHOD = gql`
+  mutation SetCartShippingMethod($shippingMethodId: String!) {
+    setCartShippingMethod(
+      input: { shippingMethodId: $shippingMethodId }
+    ) {
+      cart {
+        chosenShippingMethod
+        dynamicShippingMethods {
+          id
+          label
+          cost
+          delayMin
+          delayMax
+          description
+        }
+      }
+    }
+  }
+`;
+
 export const UPDATE_SHIPPING_METHOD = gql`
   mutation UpdateShippingMethod($input: UpdateShippingMethodInput!) {
     updateShippingMethod(input: $input) {
