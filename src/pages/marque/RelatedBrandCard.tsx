@@ -1,5 +1,5 @@
 import { BrandCardProps } from '@/components/Brand/BrandCard';
-import { Wifi } from 'lucide-react';
+import { Wifi } from '@/components/SVG/Icons';
 import React from 'react';
 
 const RelatedBrandCard = ({

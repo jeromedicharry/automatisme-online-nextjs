@@ -5,7 +5,6 @@ import { UPDATE_SHIPPING_METHOD } from '@/utils/gql/GQL_MUTATIONS';
 import {
   GET_CART_SHIPPING_METHODS,
   GET_CART_SHIPPING_INFO,
-  GET_CUSTOM_SHIPPING_METHODS,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
 interface ShippingMethod {
@@ -28,10 +27,6 @@ const CheckoutShippingMethod = ({
     refetch: refetchMethods,
   } = useQuery(GET_CART_SHIPPING_METHODS);
   const { data: cartData } = useQuery(GET_CART_SHIPPING_INFO);
-
-  const customShippingMethods = useQuery(GET_CUSTOM_SHIPPING_METHODS);
-
-  console.log('Custom shipping methods:', customShippingMethods.data);
 
   const [updateShippingMethod] = useMutation(UPDATE_SHIPPING_METHOD, {
     refetchQueries: [

@@ -1,14 +1,12 @@
 import Link from 'next/link';
 
 export interface BrandCardProps {
-  brand: {
-    name: string;
-    slug: string;
-    thumbnailUrl?: string;
-  };
+  name: string;
+  slug: string;
+  thumbnailUrl?: string;
 }
 
-const BrandCard = ({ brand }: BrandCardProps) => {
+const BrandCard = ({ brand }: { brand: BrandCardProps }) => {
   const imageUrl = brand.thumbnailUrl || '';
   return (
     <Link
