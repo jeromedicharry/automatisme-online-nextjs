@@ -5,7 +5,6 @@ import { CartContext } from '@/stores/CartProvider';
 import { useCartOperations } from '@/hooks/useCartOperations';
 import { UPDATE_CART_ITEM_INSTALLATION } from '@/utils/gql/GQL_MUTATIONS';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import ToggleSwitch from '../atoms/ToggleSwitch';
 
 const InstallationVAT = () => {
   const { cart } = useContext(CartContext);
@@ -59,11 +58,12 @@ const InstallationVAT = () => {
       />
       <form className="mt-4">
         <label className="flex items-start gap-4 text-sm text-dark-grey cursor-pointer">
-          {/* <ToggleSwitch
-            id="sameAsBilling"
+          <input
+            type="checkbox"
+            className="mt-1 accent-secondary duration-300"
             checked={hasReducedTvaRate}
             onChange={(e) => handleTvaRateChange(e.target.checked)}
-          /> */}
+          />
           <span>
             Je certifie bénéficier de la TVA réduite de 10%, je télécharge ce
             formulaire et vous le renvoie complété (cette installation concerne
