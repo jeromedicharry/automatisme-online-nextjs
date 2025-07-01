@@ -21,23 +21,23 @@ const RelatedBrandCard = ({
     if (index % 4 === 2) return wifiPosition.topLeft;
     return wifiPosition.topRight;
   };
-  const imageUrl = brand.thumbnailUrl || '';
+  const imageUrl = brand?.thumbnailUrl || '';
   return (
     <div className="flex flex-col items-center justify-center shadow-card rounded-2xl relative p-4">
       {imageUrl ? (
         <>
           <img
             src={imageUrl}
-            alt={brand.name}
+            alt={brand?.name}
             className="w-full h-32 object-contain"
           />
           <div className="absolute bottom-2 right-4 text-sm text-gray-600 font-medium">
-            {brand.name}
+            {brand?.name}
           </div>
         </>
       ) : (
         <div className="h-32 flex items-center justify-center">
-          <span className="text-center font-bold">{brand.name}</span>
+          <span className="text-center font-bold">{brand?.name}</span>
         </div>
       )}
       <div className={`absolute max-w-[105px] ${getPositionClass(index)}`}>
