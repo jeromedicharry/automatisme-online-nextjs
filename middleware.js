@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import redirectMap from './src/redirects/redirectMap.json';
+const { NextResponse } = require('next/server');
+const redirectMap = require('./src/redirects/redirectMap.json');
 
 export const config = {
   matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',

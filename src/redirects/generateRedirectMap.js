@@ -1,11 +1,7 @@
 // Script pour générer une Map optimisée
-import { writeFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { redirects } from './redirects.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const fs = require('fs');
+const path = require('path');
+const { redirects } = require('./redirects');
 
 try {
 
@@ -19,8 +15,8 @@ try {
   });
 
   // Écrire le fichier optimisé
-  const outputPath = join(__dirname, 'redirectMap.json');
-  writeFileSync(outputPath, JSON.stringify(redirectMap, null, 2));
+  const outputPath = path.join(__dirname, 'redirectMap.json');
+  fs.writeFileSync(outputPath, JSON.stringify(redirectMap, null, 2));
 } catch (error) {
   console.error('Error generating redirect map:', error);
   process.exit(1);

@@ -1,4 +1,4 @@
-export const redirects = [
+const redirects = [
   {
     source:
       '/bbt-bat-cbox-duo-kit-batterie-bft-pour-thalia-bt-a-bft-28430.html',
@@ -27780,3 +27780,5 @@ export const redirects = [
     permanent: true,
   },
 ];
+
+module.exports = { redirects };
