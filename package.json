@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --experimental-https",
-    "build": "next build",
+     "build:redirects": "node src/redirects/redirectMap.js",
+    "build": "npm run build:redirects && next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{js,ts,tsx,json}\"",
