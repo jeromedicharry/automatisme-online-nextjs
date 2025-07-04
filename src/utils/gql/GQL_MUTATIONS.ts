@@ -108,65 +108,6 @@ export const UPDATE_CART_ITEM_INSTALLATION = gql`
   }
 `;
 
-export const GET_DYNAMIC_SHIPPING_METHODS = gql`
-  mutation setCartAndGetDynamicShippingMethods(
-    $items: [CartInputItem]!
-    $country: String!
-    $postcode: String!
-    $state: String!
-  ) {
-    setCartAndGetDynamicShippingMethods(
-      input: {
-        items: $items
-        country: $country
-        postcode: $postcode
-        state: $state
-      }
-    ) {
-      cart {
-        contents {
-          nodes {
-            key
-            product {
-              node {
-                id
-                name
-              }
-            }
-            quantity
-          }
-        }
-        dynamicShippingMethods {
-          id
-          label
-          cost
-          delayMin
-          delayMax
-          description
-        }
-      }
-    }
-  }
-`;
-
-export const SET_CART_SHIPPING_METHOD = gql`
-  mutation SetCartShippingMethod($shippingMethodId: String!) {
-    setCartShippingMethod(input: { shippingMethodId: $shippingMethodId }) {
-      cart {
-        chosenShippingMethod
-        dynamicShippingMethods {
-          id
-          label
-          cost
-          delayMin
-          delayMax
-          description
-        }
-      }
-    }
-  }
-`;
-
 export const UPDATE_SHIPPING_METHOD = gql`
   mutation UpdateShippingMethod($input: UpdateShippingMethodInput!) {
     updateShippingMethod(input: $input) {
@@ -269,6 +210,94 @@ export const REMOVE_COUPON = gql`
             installationTvaAmount
             addInstallation
           }
+        }
+      }
+    }
+  }
+`;
+
+// MUtations ALew
+
+export const SET_CART_ALEX_MUTATION = gql`
+  mutation setCart(
+    $items: [CartInputItem]!
+    $country: String!
+    $postcode: String!
+    $state: String!
+  ) {
+    setCart(
+      input: {
+        items: $items
+        country: $country
+        postcode: $postcode
+        state: $state
+      }
+    ) {
+      cart {
+        contents {
+          nodes {
+            key
+            product {
+              node {
+                id
+                name
+              }
+            }
+            quantity
+          }
+        }
+        dynamicShippingMethods {
+          id
+          label
+          cost
+          delayMin
+          delayMax
+          description
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALEX_SHIPPING_METHOD = gql`
+  query getShippingMethods {
+    cart {
+      contents {
+        nodes {
+          key
+          product {
+            node {
+              id
+              name
+            }
+          }
+          quantity
+        }
+      }
+      dynamicShippingMethods {
+        id
+        label
+        cost
+        delayMin
+        delayMax
+        description
+      }
+    }
+  }
+`;
+
+export const SET_CART_SHIPPING_METHOD = gql`
+  mutation setShippingMethod($shippingMethodId: String!) {
+    setShippingMethod(input: { shippingMethodId: $shippingMethodId }) {
+      cart {
+        chosenShippingMethods
+        dynamicShippingMethods {
+          id
+          label
+          cost
+          delayMin
+          delayMax
+          description
         }
       }
     }
