@@ -78,6 +78,7 @@ export const GET_SINGLE_PRODUCT = gql`
         backorders
         restockingLeadTime
         sku
+        replacementUrl
         installationPrice
         productRef
         isPro

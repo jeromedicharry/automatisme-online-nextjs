@@ -54,6 +54,7 @@ export interface ProductContentProps extends CardProductProps {
   installationPrice: number;
   seo: SeoProps;
   slug: string;
+  replacementUrl?: string;
   description: string;
   backorders: 'YES' | 'NO';
   restockingLeadTime: number;
@@ -82,7 +83,6 @@ export interface ProductContentProps extends CardProductProps {
 const ProductContent = ({ product }: { product: ProductContentProps }) => {
   const { loggedIn, isPro } = useAuth();
   const [addInstallation, setAddInstallation] = useState(true);
-
   const NotProConnectedAlternate = () => {
     if (!loggedIn) {
       return (
@@ -180,7 +180,16 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
                       </div>
                     )}
 
-                    {isSellable ? (
+                    {product?.replacementUrl ? (
+                      <Cta
+                        variant="secondary"
+                        slug={product?.replacementUrl}
+                        size="default"
+                        label="Produit de remplacement"
+                      >
+                        Voir le produit de remplacement
+                      </Cta>
+                    ) : isSellable ? (
                       <AddToCart
                         variant="primary"
                         product={product}
