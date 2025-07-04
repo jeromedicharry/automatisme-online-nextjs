@@ -57,8 +57,6 @@ const ContactForm = ({ formId = 23584 }) => {
     formData.append('_wpcf7_unit_tag', `wpcf7-f${formId}-o1`);
 
     try {
-      const apiUrl = `${process.env.CF7_API_URL}${formId}/feedback`;
-      console.log('Submitting to URL:', apiUrl);
       // Envoi de la demande POST à l'API REST de WordPress
       const response = await fetch(
         `${process.env.CF7_API_URL}${formId}/feedback`,
@@ -71,7 +69,6 @@ const ContactForm = ({ formId = 23584 }) => {
         },
       );
       const result = await response.json();
-      console.log({ result });
 
       if (!response.ok) {
         throw new Error(`Failed to submit form: ${result.message}`);

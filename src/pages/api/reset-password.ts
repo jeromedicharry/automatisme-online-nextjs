@@ -35,8 +35,6 @@ export default async function handler(
       },
     };
 
-    console.log('Sending GraphQL request to:', graphqlEndpoint);
-
     const response = await fetch(graphqlEndpoint, {
       method: 'POST',
       headers: {

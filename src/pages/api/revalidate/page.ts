@@ -24,8 +24,6 @@ export default async function handler(
     // Déterminer le chemin à revalider
     let path = slug ? `/${slug}` : '/';
 
-    console.log(`Revalidation de page demandée pour le chemin: ${path}`);
-
     // Revalider le chemin
     await res.revalidate(path);
 

@@ -1,8 +1,4 @@
 export default function handler(req, res) {
-  console.log('[API] Maintenance auth called', {
-    method: req.method,
-    body: req.body
-  });
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }

@@ -29,8 +29,6 @@ export default async function handler(
       paths.push(`/nos-produits/${slug}`);
     }
 
-    console.log(`Revalidation de produit demandée pour: ${paths.join(', ')}`);
-
     // Revalider tous les chemins nécessaires
     for (const path of paths) {
       await res.revalidate(path);

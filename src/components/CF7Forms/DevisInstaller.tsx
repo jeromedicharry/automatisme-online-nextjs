@@ -64,7 +64,6 @@ const DevisInstaller = ({
 
     try {
       const apiUrl = `${process.env.CF7_API_URL}${formId}/feedback`;
-      console.log('Submitting to URL:', apiUrl);
 
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -75,7 +74,6 @@ const DevisInstaller = ({
       });
 
       const result = await response.json();
-      console.log({ result });
 
       if (!response.ok) {
         throw new Error(`Failed to submit form: ${result.message}`);

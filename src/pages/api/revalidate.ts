@@ -24,10 +24,6 @@ export default async function handler(
       return res.status(401).json({ message: 'Clé de sécurité invalide' });
     }
 
-    // Log des informations reçues
-    console.log(`Méthode: ${req.method}`);
-    console.log('Paramètres:', req.method === 'POST' ? req.body : req.query);
-
     // Déterminer le chemin de revalidation en fonction des paramètres
     if (req.method === 'GET') {
       if (req.url?.includes('/api/revalidate/product')) {
@@ -50,8 +46,6 @@ export default async function handler(
         path = req.body.path;
       }
     }
-
-    console.log(`Revalidation demandée pour le chemin: ${path}`);
 
     // Revalider le chemin spécifié
     await res.revalidate(path);

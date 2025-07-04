@@ -21,7 +21,6 @@ const CouponForm = ({
 
   const [applyCoupon] = useMutation(APPLY_COUPON);
   const [removeCoupon] = useMutation(REMOVE_COUPON);
-  console.log('appliedCoupons:', appliedCoupons);
 
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
