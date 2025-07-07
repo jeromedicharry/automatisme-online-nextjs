@@ -6,9 +6,8 @@ import {
   GET_ALEX_SHIPPING_METHOD,
   SET_CART_SHIPPING_METHOD,
 } from '@/utils/gql/GQL_MUTATIONS';
+import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { CartContext } from '@/stores/CartProvider';
-
-
 
 interface DynamicShippingMethod {
   id: string;
@@ -19,8 +18,6 @@ interface DynamicShippingMethod {
   description: string;
 }
 
-
-
 const CheckoutShippingMethod = ({
   setIsShippingMethodComplete,
 }: {
@@ -30,6 +27,7 @@ const CheckoutShippingMethod = ({
   const [loading, setLoading] = React.useState(true);
 
   const { data: shippingMethodsData } = useQuery(GET_ALEX_SHIPPING_METHOD);
+  const { refetch: refetchCart } = useQuery(GET_CART);
   const [setCartAlex] = useMutation(SET_CART_ALEX_MUTATION);
   const [setShippingMethod] = useMutation(SET_CART_SHIPPING_METHOD);
 
@@ -49,11 +47,11 @@ const CheckoutShippingMethod = ({
         variables: {
           items: cart.products.map((product) => ({
             productId: product.productId,
-            quantity: product.qty
+            quantity: product.qty,
           })),
           country: cart.shippingAddress.country,
           postcode: cart.shippingAddress.postcode,
-          state: cart.shippingAddress.state
+          state: cart.shippingAddress.state,
         },
       });
 
@@ -69,39 +67,33 @@ const CheckoutShippingMethod = ({
   }, [cart, setCartAlex]);
 
   const handleShippingMethodChange = async (methodId: string) => {
-    console.log('🚀 Changement de méthode - ID sélectionné:', methodId);
-    console.log('🛒 État actuel du panier:', cart);
-
     try {
+      // 1. Appliquer la méthode de livraison
       const { data } = await setShippingMethod({
         variables: {
           shippingMethodId: methodId,
         },
       });
 
-      console.log('📦 Réponse GraphQL:', data?.setShippingMethod?.cart);
-
       if (data?.setShippingMethod?.cart) {
-        // Le schéma GraphQL utilise chosenShippingMethods mais notre type utilise chosenShippingMethod
-        const { chosenShippingMethods, dynamicShippingMethods } = data.setShippingMethod.cart;
-        console.log('✨ chosenShippingMethods reçu:', chosenShippingMethods);
-
+        // 2. Mettre à jour le contexte du panier avec la méthode sélectionnée
         setCart({
           ...cart!,
-          chosenShippingMethod: chosenShippingMethods, // Conversion du pluriel au singulier
-          dynamicShippingMethods
+          chosenShippingMethod:
+            data.setShippingMethod.cart.chosenShippingMethods,
         });
-        console.log('✅ Nouveau panier après mise à jour:', {
-          chosenShippingMethod: chosenShippingMethods,
-          dynamicShippingMethods
-        });
+
+        // 3. Rafraîchir le panier pour avoir les nouvelles données à jour
+        await refetchCart();
+
+        // 4. Mettre à jour l'état de complétion
         setIsShippingMethodComplete(true);
       }
     } catch (error) {
       console.error('Error setting shipping method:', error);
       setCart({
         ...cart!,
-        chosenShippingMethod: undefined
+        chosenShippingMethod: undefined,
       });
       setIsShippingMethodComplete(false);
     }
@@ -121,15 +113,21 @@ const CheckoutShippingMethod = ({
   }, [shippingMethodsData]);
 
   useEffect(() => {
-    console.log('🔄 useEffect - chosenShippingMethod:', cart?.chosenShippingMethod);
-    setIsShippingMethodComplete(
-      !!cart?.chosenShippingMethod && cart.chosenShippingMethod !== 'none'
+    console.log(
+      '🔄 useEffect - chosenShippingMethod:',
+      cart?.chosenShippingMethod,
     );
+    const hasValidShippingMethod = Array.isArray(cart?.chosenShippingMethod)
+      ? cart.chosenShippingMethod.length > 0 &&
+        !cart.chosenShippingMethod.includes('none')
+      : !!cart?.chosenShippingMethod && cart.chosenShippingMethod !== 'none';
+
+    setIsShippingMethodComplete(hasValidShippingMethod);
   }, [cart?.chosenShippingMethod, setIsShippingMethodComplete]);
 
   if (loading) {
     return (
-      <section className="mt-2 md:mt-8">
+      <section>
         <BlocIntroSmall title="Sélectionnez votre méthode de livraison" />
         <div className="mt-4">
           <div className="text-center py-4">
@@ -141,22 +139,29 @@ const CheckoutShippingMethod = ({
   }
 
   return (
-    <section className="mt-2 md:mt-8">
+    <section>
       <BlocIntroSmall title="Sélectionnez votre méthode de livraison" />
       <div className="mt-4">
         {methods.length > 0 ? (
           <div className="space-y-4">
             {methods.map((method) => {
-              const isSelected = cart?.chosenShippingMethod === method.id;
-              console.log(`🎯 Méthode ${method.id} - Selected:`, isSelected, '- Current:', cart?.chosenShippingMethod);
+              const isSelected = Array.isArray(cart?.chosenShippingMethod)
+                ? cart?.chosenShippingMethod.includes(method.id)
+                : cart?.chosenShippingMethod === method.id;
+              console.log(
+                `🎯 Méthode ${method.id} - Selected:`,
+                isSelected,
+                '- Current:',
+                cart?.chosenShippingMethod,
+              );
 
               return (
                 <label
                   key={method.id}
                   className={`flex items-start p-4 border rounded-lg cursor-pointer transition-colors ${
                     isSelected
-                      ? 'border-primary bg-primary/5'
-                      : 'border-gray-200 hover:border-primary/50'
+                      ? 'border-secondary bg-white'
+                      : 'border-light-grey hover:border-secondary'
                   }`}
                 >
                   <div className="flex h-5 items-center">
@@ -166,7 +171,7 @@ const CheckoutShippingMethod = ({
                       value={method.id}
                       checked={isSelected}
                       onChange={() => handleShippingMethodChange(method.id)}
-                      className="h-4 w-4 border-gray-300 text-primary focus:ring-primary"
+                      className="h-4 w-4 border-gray-300 text-primary focus:ring-secondary accent-secondary"
                     />
                   </div>
                   <div className="ml-3 text-sm flex-1">

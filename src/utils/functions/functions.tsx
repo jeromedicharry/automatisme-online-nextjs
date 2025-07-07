@@ -91,7 +91,11 @@ interface IFormattedCartProps {
     feeTotal?: string;
     discountTotal?: string;
     discountTax?: string;
-    appliedCoupons?: { code: string; discountAmount: string; discountTax: string }[];
+    appliedCoupons?: {
+      code: string;
+      discountAmount: string;
+      discountTax: string;
+    }[];
   };
 }
 
@@ -149,6 +153,7 @@ export const getFormattedCart = (
     subtotal: 0,
     total: 0,
     shippingTax: 0,
+    shippingTotal: 0,
     discountTotal: 0,
     discountTax: 0,
     appliedCoupons: [],
@@ -177,7 +182,10 @@ export const getFormattedCart = (
     const productPriceTTC = productPriceHT + productTVA; // Prix TTC
 
     // Prix de l'installation
-    const installationPriceHT = givenProductItem.installationPrice ? givenProductItem.installationPrice / (1 + (givenProductItem.installationTvaRate || 0.2)) : 0;
+    const installationPriceHT = givenProductItem.installationPrice
+      ? givenProductItem.installationPrice /
+        (1 + (givenProductItem.installationTvaRate || 0.2))
+      : 0;
     const installationTVA = givenProductItem.installationTvaAmount || 0;
     const installationPriceTTC = installationPriceHT + installationTVA;
 
@@ -188,7 +196,11 @@ export const getFormattedCart = (
       name: givenProduct.name,
       qty: quantity,
       price: isPro ? productPriceHT : productPriceTTC, // Prix unitaire du produit: HT pour pro, TTC pour autres
-      totalPrice: isPro ? (productPriceHT + (givenProductItem.addInstallation ? installationPriceHT : 0)) : (productPriceTTC + (givenProductItem.addInstallation ? installationPriceTTC : 0)), // Total ligne: HT pour pro, TTC pour autres
+      totalPrice: isPro
+        ? productPriceHT +
+          (givenProductItem.addInstallation ? installationPriceHT : 0)
+        : productPriceTTC +
+          (givenProductItem.addInstallation ? installationPriceTTC : 0), // Total ligne: HT pour pro, TTC pour autres
       total: givenProductItem.total, // Prix total TTC
       subtotal: givenProductItem.subtotal, // Prix total HT
       image: givenProduct.image?.sourceUrl

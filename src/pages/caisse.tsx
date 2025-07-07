@@ -84,12 +84,12 @@ const Caisse = ({
             <>
               <div className="relative flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10 xl:gap-16 max-lg:max-w-xl mx-auto mt-6 lg:mt-12">
                 {/* Conteneur principal */}
-                <div className="flex-1 shrink-1 gap-8 md:gap-6">
+                <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10">
                   <CheckoutSteps />
                 </div>
 
                 {/* CartSummary en sticky à droite en desktop */}
-                <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] lg:top-20 self-start lg:shrink-1">
+                <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] xxl:max-w-[440px] lg:top-20 self-start lg:shrink-1">
                   <CartSummary isCheckout />
                 </aside>
               </div>

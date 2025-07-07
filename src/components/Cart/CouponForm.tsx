@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { APPLY_COUPON, REMOVE_COUPON } from '@/utils/gql/GQL_MUTATIONS';
+import useAuth from '@/hooks/useAuth';
 
 interface CouponFormProps {
   appliedCoupons?: Array<{
@@ -62,6 +63,8 @@ const CouponForm = ({
     }
   };
 
+  const { isPro } = useAuth();
+
   return (
     <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
       <h3 className="font-bold text-sm mb-3">Code promo</h3>
@@ -105,11 +108,13 @@ const CouponForm = ({
                 </span>
                 <span className="text-primary text-sm">
                   (-
-                  {(
-                    parseFloat(coupon.discountAmount) +
-                    parseFloat(coupon.discountTax)
-                  ).toFixed(1)}
-                  € TTC)
+                  {isPro
+                    ? parseFloat(coupon.discountAmount).toFixed(2)
+                    : (
+                        parseFloat(coupon.discountAmount) +
+                        parseFloat(coupon.discountTax)
+                      ).toFixed(2)}
+                  € {isPro ? 'HT' : 'TTC'})
                 </span>
               </div>
               <button

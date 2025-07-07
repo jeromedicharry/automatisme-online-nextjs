@@ -299,6 +299,24 @@ export const SET_CART_SHIPPING_METHOD = gql`
           delayMax
           description
         }
+        total
+        subtotal
+        totalTax
+        shippingTotal
+        shippingTax
+        contents {
+          nodes {
+            key
+            quantity
+            total
+            subtotal
+            subtotalTax
+            installationPrice
+            installationTvaRate
+            installationTvaAmount
+            addInstallation
+          }
+        }
       }
     }
   }

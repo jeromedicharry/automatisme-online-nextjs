@@ -12,7 +12,10 @@ import {
   GET_CART_SHIPPING_INFO,
   GET_CART,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import { REMOVE_COUPON } from '@/utils/gql/GQL_MUTATIONS';
+import {
+  REMOVE_COUPON,
+  SET_CART_SHIPPING_METHOD,
+} from '@/utils/gql/GQL_MUTATIONS';
 import CartReassuranceBis from './CartReassuranceBis';
 import CouponForm from './CouponForm';
 
@@ -31,16 +34,70 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
     instanceId: number;
   }
 
-  const selectedShippingMethod =
-    shippingMethodsData?.cart?.availableShippingMethods[0]?.rates?.find(
-      (method: ShippingMethod) => {
-        const chosenMethod = shippingInfoData?.cart?.chosenShippingMethods[0];
-        return (
-          chosenMethod &&
-          `${method.methodId}:${method.instanceId}` === chosenMethod
-        );
-      },
-    );
+  // Mutation pour mettre à jour la méthode de livraison
+  const [setShippingMethod] = useMutation(SET_CART_SHIPPING_METHOD, {
+    onCompleted: () => {
+      refetchCart();
+    },
+  });
+
+  console.log('shippingMethodsData:', shippingMethodsData);
+  console.log('shippingInfoData:', shippingInfoData);
+
+  const chosenMethod = shippingMethodsData?.cart?.chosenShippingMethods?.[0];
+  const availableShippingMethods =
+    shippingInfoData?.cart?.availableShippingMethods?.[0]?.rates || [];
+
+  // Recherche de la méthode sélectionnée ou express par défaut
+  let selectedShippingMethod = null;
+
+  if (availableShippingMethods.length > 0) {
+    if (chosenMethod) {
+      selectedShippingMethod = availableShippingMethods.find(
+        (method: ShippingMethod) => {
+          if (chosenMethod === 'carrier_dynamic_relais') {
+            return (
+              method.methodId === 'carrier_dynamic' &&
+              method.label?.toLowerCase().includes('relais')
+            );
+          }
+          if (method.methodId === chosenMethod) {
+            return true;
+          }
+          // Pour les méthodes carrier_dynamic, on vérifie aussi le label
+          if (
+            method.methodId === 'carrier_dynamic' &&
+            chosenMethod === 'carrier_dynamic'
+          ) {
+            if (method.label?.toLowerCase().includes('express')) {
+              return true;
+            }
+          }
+          return false;
+        },
+      );
+    }
+
+    // Si aucune méthode n'est sélectionnée, on prend Express par défaut
+    if (!selectedShippingMethod) {
+      selectedShippingMethod = availableShippingMethods.find(
+        (method: ShippingMethod) =>
+          method.methodId === 'carrier_dynamic' &&
+          method.label?.toLowerCase().includes('express'),
+      );
+    }
+
+    // Si on a trouvé la méthode express et qu'aucune méthode n'est sélectionnée, on l'applique
+    if (selectedShippingMethod && !chosenMethod) {
+      setShippingMethod({
+        variables: {
+          shippingMethodId: selectedShippingMethod.methodId,
+        },
+      });
+    }
+  }
+
+  console.log('selectedShippingMethod:', selectedShippingMethod);
 
   // Récupération des coupons appliqués depuis l'API
   const appliedCoupons = cartData?.cart?.appliedCoupons || [];
@@ -316,8 +373,12 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           {/* Affichage des réductions */}
           {appliedCoupons.length > 0 && (
             <>
-              <div className="flex text-primary font-bold justify-between gap-6 items-center my-4">
-                <p>Remise totale TTC</p>
+              <div className="flex text-primary justify-between gap-6 items-center mt-4 mb-2">
+                <p>Remise Coupons HT</p>
+                <p>-{discountHT.toFixed(2)}€</p>
+              </div>
+              <div className="flex text-primary font-bold justify-between gap-6 items-center mb-4">
+                <p>Remise Coupons TTC</p>
                 <p>-{totalDiscountAmount.toFixed(1)}€</p>
               </div>
               <Separator />
