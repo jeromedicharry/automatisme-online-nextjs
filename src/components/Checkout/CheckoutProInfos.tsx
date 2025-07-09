@@ -51,12 +51,11 @@ const CheckoutProInfos = ({
   const hasProInfo = data?.customer?.billing?.company && data?.customer?.siret;
 
   useEffect(() => {
-    if (!hasProInfo) {
-      setIsProInfosComplete(false);
-    } else {
-      setIsProInfosComplete(true);
-    }
-  }, [hasProInfo, setIsProInfosComplete]);
+    // Les infos pro sont complètes si :
+    // - L'utilisateur n'est pas pro (pas besoin d'infos)
+    // - OU si l'utilisateur est pro ET a rempli ses infos
+    setIsProInfosComplete(!isPro || hasProInfo);
+  }, [isPro, hasProInfo, setIsProInfosComplete]);
 
   if (!isPro) return null;
 

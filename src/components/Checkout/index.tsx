@@ -41,6 +41,11 @@ const CheckoutSteps = () => {
     );
   }
   if (currentStep === 'Addresses') {
+    console.log(
+      isAddressComplete,
+      isProInfosComplete,
+      isShippingMethodComplete,
+    );
     return (
       <>
         <CheckoutAdresses setCanProceed={setIsAddressComplete} />
