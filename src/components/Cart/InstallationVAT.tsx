@@ -6,7 +6,11 @@ import { useCartOperations } from '@/hooks/useCartOperations';
 import { UPDATE_CART_ITEM_INSTALLATION } from '@/utils/gql/GQL_MUTATIONS';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 
-const InstallationVAT = () => {
+const InstallationVAT = ({
+  poseReducedTvForm,
+}: {
+  poseReducedTvForm: string;
+}) => {
   const { cart } = useContext(CartContext);
   const { refetchCart } = useCartOperations();
   const [hasReducedTvaRate, setHasReducedTvaRate] = useState(false);
@@ -65,9 +69,19 @@ const InstallationVAT = () => {
             onChange={(e) => handleTvaRateChange(e.target.checked)}
           />
           <span>
-            Je certifie bénéficier de la TVA réduite de 10%, je télécharge ce
-            formulaire et vous le renvoie complété (cette installation concerne
-            une maison d&apos;habitation construite il y a plus de deux ans)
+            Je certifie bénéficier de la TVA réduite de 10%,{' '}
+            <a
+              href={poseReducedTvForm}
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              className="underline text-secondary duration-300 hover:text-primary"
+            >
+              je télécharge
+            </a>{' '}
+            ce formulaire et vous le renvoie complété (cette installation
+            concerne une maison d&apos;habitation construite il y a plus de deux
+            ans)
           </span>
         </label>
       </form>

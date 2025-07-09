@@ -433,11 +433,7 @@ export const GET_LIBRARY_ARTICLES = gql`
 
 export const GET_LIBRARY_BRANDS = gql`
   query GetLibraryBrands($search: String, $first: Int!, $after: String) {
-    productBrands(
-      first: $first
-      after: $after
-      where: { search: $search }
-    ) {
+    productBrands(first: $first, after: $after, where: { search: $search }) {
       nodes {
         name
         slug
@@ -446,6 +442,20 @@ export const GET_LIBRARY_BRANDS = gql`
       pageInfo {
         hasNextPage
         endCursor
+      }
+    }
+  }
+`;
+
+export const GET_REDUCED_TVA_FORM = gql`
+  query GET_REDUCED_TVA_FORM {
+    themeSettings {
+      optionsFields {
+        poseReducedTvaForm {
+          node {
+            mediaItemUrl
+          }
+        }
       }
     }
   }

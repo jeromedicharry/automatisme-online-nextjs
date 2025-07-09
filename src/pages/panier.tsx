@@ -22,6 +22,7 @@ import client from '@/utils/apollo/ApolloClient';
 import { CardProductProps } from '@/types/blocTypes';
 import BlocFeaturedProducts from '@/components/sections/blocs/BlocFeaturedProducts';
 import InstallationVAT from '@/components/Cart/InstallationVAT';
+import { GET_REDUCED_TVA_FORM } from '@/utils/gql/WEBSITE_QUERIES';
 
 const Panier = ({
   themeSettings,
@@ -29,12 +30,14 @@ const Panier = ({
   footerMenu1,
   footerMenu2,
   categoriesMenu,
+  poseReducedTvForm,
 }: {
   themeSettings: ThemeSettingsProps;
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
+  poseReducedTvForm: string;
 }) => {
   const { cart } = useCartOperations();
   const [crossSellProducts, setCrossSellProducts] = useState<
@@ -134,7 +137,9 @@ const Panier = ({
                 {/* Conteneur principal */}
                 <div className="flex-1 shrink-1 flex flex-col gap-6 lg:gap-10">
                   <CartContents />
-                  {showInstallationVAT ? <InstallationVAT /> : null}
+                  {showInstallationVAT ? (
+                    <InstallationVAT poseReducedTvForm={poseReducedTvForm} />
+                  ) : null}
                   <DeliveryChoices />
                 </div>
 
@@ -174,10 +179,17 @@ export default Panier;
 
 export const getStaticProps: GetStaticProps = async () => {
   const commonData = await fetchCommonData();
+  const reducedTvaFormRes = await client.query({
+    query: GET_REDUCED_TVA_FORM,
+  });
 
+  const poseReducedTvForm =
+    reducedTvaFormRes?.data?.themeSettings?.optionsFields?.poseReducedTvaForm
+      ?.node?.mediaItemUrl || '';
   return {
     props: {
       ...commonData,
+      poseReducedTvForm,
     },
     revalidate: 36000,
   };
