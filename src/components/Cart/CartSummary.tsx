@@ -317,16 +317,10 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
               </div>
               <div className="flex text-primary justify-between gap-6 items-center mt-1">
                 <p>
-                  TVA Installation (
-                  {(cartData?.cart?.contents?.nodes?.[0]?.installationTvaRate ||
-                    0.2) * 100}
-                  %)
+                  TVA Installation ({((totalInstallationTVA / totalInstallationHT) * 100).toFixed(1)}%)
                 </p>
                 <p>
-                  {cartData?.cart?.contents?.nodes?.[0]?.installationTvaAmount?.toFixed(
-                    2,
-                  ) || '0.00'}
-                  €
+                  {totalInstallationTVA.toFixed(2)}€
                 </p>
               </div>
               <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
