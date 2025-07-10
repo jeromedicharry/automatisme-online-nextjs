@@ -26,6 +26,7 @@ export interface CardProductMeilisearchProps {
     _backorders: 'YES' | 'NO';
     _restocking_lead_time: number;
     _product_ref: string;
+    _replacement_id?: number;
   };
   thumbnail_url: string;
 }
@@ -70,6 +71,11 @@ const CardProductMeilisearch = ({
     backorders: product.meta._backorders,
     restockingLeadTime: product.meta._restocking_lead_time,
   });
+
+  const isReplaced = product.meta._replacement_id !== undefined;
+
+  console.log({ isReplaced });
+  console.log(product.meta._replacement_id);
 
   return (
     <article className="card-product-meilisearch flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
@@ -141,7 +147,18 @@ const CardProductMeilisearch = ({
                 isMeili
               />
             </div>
-            {isSellable ? (
+            {isReplaced ? (
+              <div className="mt-4 md:mt-6">
+                <Cta
+                  label="Voir le produit"
+                  slug={`/nos-produits/${product?.slug}`}
+                  isFull
+                  variant="primaryHollow"
+                >
+                  Voir le produit
+                </Cta>
+              </div>
+            ) : isSellable ? (
               <div className="mt-4 md:mt-6">
                 <AddToCart
                   product={convertMeiliToWooProduct(product)}

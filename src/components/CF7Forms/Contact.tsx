@@ -14,7 +14,7 @@ const ContactForm = ({ formId = 23584 }) => {
   });
 
   const searchParams = useSearchParams();
-  const configurator = searchParams.get('configurator');
+  const configurator = searchParams?.get('configurator');
 
   useEffect(() => {
     if (!configurator) {
