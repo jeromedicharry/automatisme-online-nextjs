@@ -31,8 +31,6 @@ export default function useWoocommerceAPI() {
     setError(null);
 
     try {
-      console.log('Début création commande avec:', { cart, user });
-
       if (!cart || !user) {
         console.error('Panier ou utilisateur manquant:', { cart, user });
         throw new Error('Panier ou utilisateur non disponible');
@@ -43,8 +41,6 @@ export default function useWoocommerceAPI() {
         query: GET_CUSTOMER_ADDRESSES,
         variables: { id: user.id },
       });
-
-      console.log('Adresses client:', addressData);
 
       if (!addressData?.customer?.billing || !addressData?.customer?.shipping) {
         throw new Error('Adresses de facturation ou livraison manquantes');
@@ -61,21 +57,10 @@ export default function useWoocommerceAPI() {
         },
       });
 
-      console.log('Données envoyées au checkout:', {
-        paymentMethod: 'bacs',
-        isPaid: false,
-        billing: addressData.customer.billing,
-        shipping: addressData.customer.shipping,
-      });
-
-      console.log('Réponse mutation:', data);
-
       if (!data?.checkout?.order) {
         console.error('Pas de commande dans la réponse:', data);
         throw new Error('Erreur lors de la création de la commande');
       }
-
-      console.log('Réponse mutation checkout:', data);
 
       if (data?.checkout?.result !== 'success') {
         throw new Error('Erreur lors de la création de la commande');
@@ -95,7 +80,6 @@ export default function useWoocommerceAPI() {
         },
       };
 
-      console.log('Données commande formatées:', orderData);
       return orderData;
     } catch (err: any) {
       setError(err.message || 'Erreur lors de la création de la commande');

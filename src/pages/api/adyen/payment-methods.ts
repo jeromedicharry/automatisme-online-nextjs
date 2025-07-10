@@ -45,8 +45,6 @@ export default async function handler(
       });
     }
 
-    console.log(`Montant reçu: ${amount} centimes (${amount / 100}€)`);
-
     // Récupération du nonce WordPress
     const wpNonce = await getWpNonce();
 

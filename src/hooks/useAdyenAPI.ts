@@ -38,15 +38,14 @@ export const useAdyenAPI = (): UseAdyenAPIReturn => {
       setError(null);
 
       try {
-        console.log('💰 Appel payment-methods:', { amount, currency, countryCode });
-
         const response = await fetch('/api/adyen/payment-methods', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ amount, currency, countryCode }),
         });
 
-        const result: ApiResponse<PaymentMethodsResponse> = await response.json();
+        const result: ApiResponse<PaymentMethodsResponse> =
+          await response.json();
 
         if (!response.ok || result.error) {
           throw new Error(result.error || `Erreur HTTP: ${response.status}`);
@@ -56,10 +55,10 @@ export const useAdyenAPI = (): UseAdyenAPIReturn => {
           throw new Error('Données manquantes dans la réponse');
         }
 
-        console.log('✅ Réponse payment-methods:', result.data);
         return result.data;
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erreur inconnue';
         setError(errorMessage);
         throw new Error(errorMessage);
       } finally {
@@ -80,8 +79,6 @@ export const useAdyenAPI = (): UseAdyenAPIReturn => {
       setError(null);
 
       try {
-        console.log('🔄 Création session Adyen...', data);
-
         const response = await fetch('/api/adyen/sessions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -105,10 +102,10 @@ export const useAdyenAPI = (): UseAdyenAPIReturn => {
           throw new Error('Données manquantes dans la réponse');
         }
 
-        console.log('✅ Session Adyen créée:', result.data);
         return result.data;
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erreur inconnue';
         setError(errorMessage);
         throw new Error(errorMessage);
       } finally {

@@ -19,8 +19,7 @@ const InstallationVAT = ({
     {
       refetchQueries: [{ query: GET_CART }],
       awaitRefetchQueries: true,
-      onCompleted: async (data) => {
-        console.log('Installation TVA update completed:', data);
+      onCompleted: async () => {
         await refetchCart();
       },
       onError: (error) => {
@@ -36,12 +35,6 @@ const InstallationVAT = ({
     if (cart?.products) {
       for (const product of cart.products) {
         if (product.addInstallation) {
-          console.log('Updating installation TVA rate for product:', {
-            cartKey: product.cartKey,
-            addInstallation: product.addInstallation,
-            hasReducedTvaRate: checked,
-          });
-
           await updateCartItemInstallation({
             variables: {
               cartItemKey: product.cartKey,

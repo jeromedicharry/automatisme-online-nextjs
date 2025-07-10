@@ -113,10 +113,6 @@ const CheckoutShippingMethod = ({
   }, [shippingMethodsData]);
 
   useEffect(() => {
-    console.log(
-      '🔄 useEffect - chosenShippingMethod:',
-      cart?.chosenShippingMethod,
-    );
     const hasValidShippingMethod = Array.isArray(cart?.chosenShippingMethod)
       ? cart.chosenShippingMethod.length > 0 &&
         !cart.chosenShippingMethod.includes('none')
@@ -148,12 +144,6 @@ const CheckoutShippingMethod = ({
               const isSelected = Array.isArray(cart?.chosenShippingMethod)
                 ? cart?.chosenShippingMethod.includes(method.id)
                 : cart?.chosenShippingMethod === method.id;
-              console.log(
-                `🎯 Méthode ${method.id} - Selected:`,
-                isSelected,
-                '- Current:',
-                cart?.chosenShippingMethod,
-              );
 
               return (
                 <label

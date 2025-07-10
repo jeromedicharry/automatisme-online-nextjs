@@ -50,7 +50,6 @@ const BrandPage = ({
     },
   };
 
-  // console.log('related brands, ', brand.acfBrand.relatedBrands?.nodes);
   return (
     <Layout
       meta={brand.seo}

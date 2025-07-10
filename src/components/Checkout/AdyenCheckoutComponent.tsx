@@ -36,17 +36,10 @@ const AdyenCheckoutComponent: React.FC<AdyenCheckoutComponentProps> = ({
 
     const initAdyen = async () => {
       if (hasInitialized.current) {
-        console.log('[AdyenCheckout] Déjà initialisé, ignoré');
         return;
       }
       hasInitialized.current = true;
       try {
-        console.log('[AdyenCheckout] Initialisation...');
-        console.log('Session:', {
-          id: sessionData.id,
-          sessionData: sessionData.sessionData,
-        });
-
         if (!dropinContainerRef.current) {
           throw new Error('Container Adyen non disponible');
         }
@@ -57,9 +50,8 @@ const AdyenCheckoutComponent: React.FC<AdyenCheckoutComponentProps> = ({
           session: sessionData.sessionData,
           locale: 'fr-FR',
           countryCode: 'FR',
-          onPaymentCompleted: (result: any) => {
+          onPaymentCompleted: () => {
             if (!mounted) return;
-            console.log('[Adyen] Paiement terminé:', result);
             // On met la commande en processing car on attend la confirmation webhook
             window.location.href = `${window.location.origin}/checkout/confirmation?order_id=${order.order_id}&payment_status=success`;
           },
@@ -69,7 +61,10 @@ const AdyenCheckoutComponent: React.FC<AdyenCheckoutComponentProps> = ({
             // On met la commande en failed et on affiche un message d'erreur
             // Resynchroniser le panier depuis le localStorage
             resyncFromLocalStorage().then(() => {
-              onPaymentError?.(result.message || 'Le paiement a été refusé. Veuillez réessayer.');
+              onPaymentError?.(
+                result.message ||
+                  'Le paiement a été refusé. Veuillez réessayer.',
+              );
             });
           },
           onError: (error: any) => {
@@ -80,7 +75,6 @@ const AdyenCheckoutComponent: React.FC<AdyenCheckoutComponentProps> = ({
         };
 
         const checkout = await AdyenCheckout(globalConfiguration);
-        console.log('[AdyenCheckout] Instance créée');
         checkoutRef.current = checkout;
 
         if (mounted) {
@@ -89,13 +83,15 @@ const AdyenCheckoutComponent: React.FC<AdyenCheckoutComponentProps> = ({
               console.log('[AdyenCheckout] Drop-in prêt');
             },
             onSelect: (component: any) => {
-              console.log('[AdyenCheckout] Méthode sélectionnée:', component.props.name);
+              console.log(
+                '[AdyenCheckout] Méthode sélectionnée:',
+                component.props.name,
+              );
             },
           };
 
           const dropin = new Dropin(checkout, dropinConfiguration);
           await dropin.mount(dropinContainerRef.current);
-          console.log('[AdyenCheckout] Drop-in monté');
           checkoutRef.current = dropin;
         }
       } catch (err: any) {
@@ -118,7 +114,13 @@ const AdyenCheckoutComponent: React.FC<AdyenCheckoutComponentProps> = ({
         }
       }
     };
-  }, [order, sessionData, onPaymentSuccess, onPaymentError, resyncFromLocalStorage]);
+  }, [
+    order,
+    sessionData,
+    onPaymentSuccess,
+    onPaymentError,
+    resyncFromLocalStorage,
+  ]);
 
   return <div ref={dropinContainerRef} />;
 };
