@@ -74,9 +74,6 @@ const CardProductMeilisearch = ({
 
   const isReplaced = product.meta._replacement_id !== undefined;
 
-  console.log({ isReplaced });
-  console.log(product.meta._replacement_id);
-
   return (
     <article className="card-product-meilisearch flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
       <div className="relative min-h-[80px] md:min-h-[239px]">
