@@ -41,6 +41,13 @@ const getUpdatedItemsFromFormatted = (
 
 const CartContents = () => {
   const { cart } = useContext(CartContext);
+
+  // Vérifie si un produit du panier a la TVA réduite
+  const hasReducedTva = cart?.products?.some(product => 
+    product.addInstallation && 
+    product.installationTvaRate && 
+    Math.abs(product.installationTvaRate - 0.1) < 0.01
+  ) ?? false;
   const { refetchCart, isPro } = useCartOperations();
   const { refetch: refetchShippingMethods } = useQuery(GET_ALEX_SHIPPING_METHOD);
 
@@ -272,21 +279,20 @@ const CartContents = () => {
                         ) : (
                           <>
                             <p className="text-2xl font-bold pr-7 relative w-fit">
-                              {(item.installationPrice || 0).toFixed(2)}€{' '}
+                              {((item.installationPrice || 0) + (item.installationTvaAmount || 0)).toFixed(2)}€{' '}
                               <span className="absolute right-0 top-1 text-xs">
                                 TTC
                               </span>
                             </p>
                             <p className="text-sm text-dark-grey">
-                              {(item.installationPrice ? item.installationPrice - (item.installationTvaAmount || 0) : 0).toFixed(2)}
+                              {(item.installationPrice || 0).toFixed(2)}
                               € HT
-                              <span className="ml-2">(TVA {((item.installationTvaRate || 0.2) * 100)}%)</span>
+                              <span className="ml-2">(TVA {(hasReducedTva ? 10 : 20)}%)</span>
                             </p>
                           </>
                         )}
                       </div>
-                    </div>
-                  </div>
+                    </div>                  </div>
                 </div>
                 {item.hasPose && item.addInstallation && (
                   <div className="absolute max-xl:static max-xl:mt-4 right-4 bottom-4">

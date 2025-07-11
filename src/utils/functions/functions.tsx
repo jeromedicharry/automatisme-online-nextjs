@@ -216,6 +216,8 @@ export const getFormattedCart = (
           },
       addInstallation: givenProductItem.addInstallation,
       installationPrice: givenProductItem?.installationPrice || 0,
+      installationTvaRate: givenProductItem?.installationTvaRate || 0.2,
+      installationTvaAmount: givenProductItem?.installationTvaAmount || 0,
       hasPose: givenProduct.hasPose,
       deliveryLabel: getProductAvailability({
         stock: (givenProduct as any).stockQuantity,

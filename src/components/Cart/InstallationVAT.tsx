@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import { CartContext } from '@/stores/CartProvider';
@@ -14,6 +14,18 @@ const InstallationVAT = ({
   const { cart } = useContext(CartContext);
   const { refetchCart } = useCartOperations();
   const [hasReducedTvaRate, setHasReducedTvaRate] = useState(false);
+
+  useEffect(() => {
+    if (cart?.products) {
+      // Vérifie si un produit avec installation a un taux de TVA réduit
+      const hasReduced = cart.products.some(product => 
+        product.addInstallation && 
+        product.installationTvaRate && 
+        Math.abs(product.installationTvaRate - 0.1) < 0.01
+      );
+      setHasReducedTvaRate(hasReduced);
+    }
+  }, [cart?.products]);
   const [updateCartItemInstallation] = useMutation(
     UPDATE_CART_ITEM_INSTALLATION,
     {
