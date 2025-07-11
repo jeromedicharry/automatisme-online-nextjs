@@ -64,8 +64,32 @@ export const allowedFilters: AllowedFilter[] = [
     searchType: 'attribute',
   },
   {
-    label: "Angle 'ouverture max",
-    key: 'custom_attr_angle',
+    label: 'Taille max / vantail (m)',
+    key: 'taille-max-vantail-m',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Taille max / vantail avec serrure (m)',
+    key: 'taille-max-vantail-avec-serrure',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Option déverrouillage externe',
+    key: 'deverrouillage-externe',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Ouverture rapide ',
+    key: 'ouverture-rapide',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: "Angle d'ouverture max",
+    key: 'angle',
     type: 'maxValueCheckbox',
     searchType: 'attribute',
   },
@@ -144,19 +168,19 @@ export const allowedFilters: AllowedFilter[] = [
 
   {
     label: 'Cote A (minimum)',
-    key: 'custom_attr_cote-a',
+    key: 'cote-a',
     type: 'minValueCheckbox',
     searchType: 'attribute',
   },
   {
     label: 'Cote B (maximum)',
-    key: 'custom_attr_cote-b',
+    key: 'cote-b',
     type: 'maxValueCheckbox',
     searchType: 'attribute',
   },
   {
     label: 'Cote C (minimum)',
-    key: 'custom_attr_cote-c',
+    key: 'cote-c',
     type: 'minValueCheckbox',
     searchType: 'attribute',
   },

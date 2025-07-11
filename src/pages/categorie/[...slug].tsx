@@ -368,6 +368,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           limit: perPage,
         });
 
+      console.log('Meilisearch facets:', facets);
+      console.log('Category slug:', categorySlug);
+
       return {
         props: {
           category: categoryData.data.singleCategory,

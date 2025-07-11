@@ -43,6 +43,13 @@ export const fetchMeiliProductsByCategory = async ({
     const baseKey = key.replace(/_min$|_max$/, '');
     if (alreadyHandled.has(baseKey)) continue;
 
+    // Déterminer si c'est un filtre numérique
+    const isNumericFilter =
+      filterConfig.type === 'maxValueCheckbox' ||
+      filterConfig.type === 'minValueCheckbox' ||
+      filterConfig.type === 'range';
+
+    // Construire le préfixe du champ selon le type
     let fieldPrefix = '';
     switch (filterConfig.searchType) {
       case 'taxonomy':
@@ -53,8 +60,19 @@ export const fetchMeiliProductsByCategory = async ({
         break;
       case 'attribute':
       default:
-        fieldPrefix = `attributes.${baseKey}.slug`;
+        // Pour les attributs numériques, on utilise .value au lieu de .slug
+        fieldPrefix = isNumericFilter
+          ? `attributes.${baseKey}.value`
+          : `attributes.${baseKey}.slug`;
+        break;
     }
+
+    console.log('=== DEBUG FILTER CONSTRUCTION ===');
+    console.log('filterConfig:', filterConfig);
+    console.log('baseKey:', baseKey);
+    console.log('fieldPrefix:', fieldPrefix);
+    console.log('isNumericFilter:', isNumericFilter);
+    console.log('value:', value);
 
     if (filterConfig.type === 'range' && filterConfig.searchType === 'meta') {
       const min = filters[`${baseKey}_min`];
@@ -68,6 +86,22 @@ export const fetchMeiliProductsByCategory = async ({
         meiliFilters.push(`${fieldPrefix} >= ${min}`);
       } else if (max) {
         meiliFilters.push(`${fieldPrefix} <= ${max}`);
+      }
+    } else if (filterConfig.type === 'maxValueCheckbox') {
+      // Pour les maxValueCheckbox, on cherche les valeurs inférieures ou égales
+      // Convertir en nombre pour la comparaison
+      const numericValue = parseFloat(value);
+      console.log('numericValue:', numericValue);
+      if (!isNaN(numericValue)) {
+        meiliFilters.push(`${fieldPrefix} <= ${numericValue}`);
+        console.log('meiliFilters:', meiliFilters);
+      }
+    } else if (filterConfig.type === 'minValueCheckbox') {
+      // Pour les minValueCheckbox, on cherche les valeurs supérieures ou égales
+      // Convertir en nombre pour la comparaison
+      const numericValue = parseFloat(value);
+      if (!isNaN(numericValue)) {
+        meiliFilters.push(`${fieldPrefix} >= ${numericValue}`);
       }
     } else if (value.includes(',')) {
       const values = value
@@ -95,6 +129,10 @@ export const fetchMeiliProductsByCategory = async ({
     requestOptions.sort = [sort];
   }
 
+  console.log('=== MEILISEARCH REQUEST ===');
+  console.log('Filter string:', filterString);
+  console.log('Request options:', JSON.stringify(requestOptions, null, 2));
+
   const response = await fetch(meilisearchUrl, {
     method: 'POST',
     headers: {
@@ -105,10 +143,28 @@ export const fetchMeiliProductsByCategory = async ({
   });
 
   if (!response.ok) {
-    throw new Error('Erreur lors de la récupération depuis Meilisearch');
+    const errorText = await response.text();
+    console.error('=== MEILISEARCH ERROR ===');
+    console.error('Status:', response.status);
+    console.error('StatusText:', response.statusText);
+    console.error('Body:', errorText);
+    throw new Error(
+      `Erreur Meilisearch: ${response.status} ${response.statusText}`,
+    );
   }
 
   const result = await response.json();
+  console.log('=== MEILISEARCH RESPONSE ===');
+  console.log(
+    'Facettes disponibles:',
+    Object.keys(result.facetDistribution || {}),
+  );
+  console.log(
+    'Distribution des facettes:',
+    JSON.stringify(result.facetDistribution, null, 2),
+  );
+  console.log('Premier produit:', JSON.stringify(result.hits[0], null, 2));
+
   const hasPose = !!Object.keys(
     result.facetDistribution['meta._has_pose'] || {},
   ).length;

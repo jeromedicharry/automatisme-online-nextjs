@@ -20,7 +20,9 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
     resetFilters,
   } = useFilters();
 
+  console.log('Raw facet distribution:', facetDistribution);
   const formattedFacets = formatFacets(facetDistribution);
+  console.log('Formatted facets:', formattedFacets);
   const isMobile = useIsMobile();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -106,7 +108,7 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
                   />
                 )}
 
-                {facet.type === 'maxValueCheckbox' && searchType === 'meta' && (
+                {facet.type === 'maxValueCheckbox' && (
                   <MaxValueFacet
                     values={facet.values}
                     selectedValues={selectedValues}
