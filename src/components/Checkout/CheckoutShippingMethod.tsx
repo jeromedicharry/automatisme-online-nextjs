@@ -1,15 +1,10 @@
-import React, { useEffect, useCallback, useContext } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
-import BlocIntroSmall from '../atoms/BlocIntroSmall';
-import {
-  SET_CART_ALEX_MUTATION,
-  GET_ALEX_SHIPPING_METHOD,
-  SET_CART_SHIPPING_METHOD,
-} from '@/utils/gql/GQL_MUTATIONS';
+import React, { useEffect, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_ALEX_SHIPPING_METHOD, SET_CART_SHIPPING_METHOD } from '@/utils/gql/GQL_MUTATIONS';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import { CartContext } from '@/stores/CartProvider';
+import BlocIntroSmall from '../atoms/BlocIntroSmall';
 
-interface DynamicShippingMethod {
+interface ShippingMethod {
   id: string;
   label: string;
   cost: string;
@@ -23,15 +18,40 @@ const CheckoutShippingMethod = ({
 }: {
   setIsShippingMethodComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { cart, setCart } = useContext(CartContext);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const { data: shippingMethodsData } = useQuery(GET_ALEX_SHIPPING_METHOD);
+  // Récupérer les méthodes de livraison du backend
+  const { data: shippingMethodsData, refetch: refetchShippingMethods } = useQuery(GET_ALEX_SHIPPING_METHOD);
   const { refetch: refetchCart } = useQuery(GET_CART);
-  const [setCartAlex] = useMutation(SET_CART_ALEX_MUTATION);
   const [setShippingMethod] = useMutation(SET_CART_SHIPPING_METHOD);
 
-  const [methods, setMethods] = React.useState<DynamicShippingMethod[]>([]);
+  // Gérer le changement manuel de méthode de livraison
+  const handleShippingMethodChange = async (methodId: string) => {
+    try {
+      const response = await setShippingMethod({
+        variables: {
+          shippingMethodId: methodId,
+        },
+      });
+      console.log('=== SET_CART_SHIPPING_METHOD RESPONSE ===');
+      console.log('Response:', response);
+      console.log('Cart data:', response.data?.setShippingMethod?.cart);
+      console.log('Shipping total:', response.data?.setShippingMethod?.cart?.shippingTotal);
+      console.log('Shipping tax:', response.data?.setShippingMethod?.cart?.shippingTax);
+      
+      // Après la mutation, rafraîchir les données pour mettre à jour l'UI
+      await Promise.all([
+        refetchShippingMethods(),
+        refetchCart()
+      ]);
+      setIsShippingMethodComplete(true);
+    } catch (error) {
+      console.error('Error setting shipping method:', error);
+      setIsShippingMethodComplete(false);
+    }
+  };
+
+  // Formater le temps de livraison
   const formatDeliveryTime = (delayMin: number, delayMax: number) => {
     if (delayMin === delayMax) {
       return `${delayMin} jours ouvrés`;
@@ -39,87 +59,24 @@ const CheckoutShippingMethod = ({
     return `${delayMin} à ${delayMax} jours ouvrés`;
   };
 
-  const loadMethods = useCallback(async () => {
-    if (!cart?.shippingAddress) return;
-
-    try {
-      const { data } = await setCartAlex({
-        variables: {
-          items: cart.products.map((product) => ({
-            productId: product.productId,
-            quantity: product.qty,
-          })),
-          country: cart.shippingAddress.country,
-          postcode: cart.shippingAddress.postcode,
-          state: cart.shippingAddress.state,
-        },
-      });
-
-      if (data?.setCart?.cart?.dynamicShippingMethods) {
-        setMethods(data.setCart.cart.dynamicShippingMethods);
-      }
-
-      setLoading(false);
-    } catch (error) {
-      console.error('Error loading shipping methods:', error);
-      setLoading(false);
-    }
-  }, [cart, setCartAlex]);
-
-  const handleShippingMethodChange = async (methodId: string) => {
-    try {
-      // 1. Appliquer la méthode de livraison
-      const { data } = await setShippingMethod({
-        variables: {
-          shippingMethodId: methodId,
-        },
-      });
-
-      if (data?.setShippingMethod?.cart) {
-        // 2. Mettre à jour le contexte du panier avec la méthode sélectionnée
-        setCart({
-          ...cart!,
-          chosenShippingMethod:
-            data.setShippingMethod.cart.chosenShippingMethods,
-        });
-
-        // 3. Rafraîchir le panier pour avoir les nouvelles données à jour
-        await refetchCart();
-
-        // 4. Mettre à jour l'état de complétion
-        setIsShippingMethodComplete(true);
-      }
-    } catch (error) {
-      console.error('Error setting shipping method:', error);
-      setCart({
-        ...cart!,
-        chosenShippingMethod: undefined,
-      });
-      setIsShippingMethodComplete(false);
-    }
-  };
-
+  // Vérifier si une méthode est sélectionnée
   useEffect(() => {
-    if (cart?.shippingAddress) {
-      loadMethods();
-    }
-  }, [cart?.shippingAddress, loadMethods]);
-
-  useEffect(() => {
+    console.log('=== GET_ALEX_SHIPPING_METHOD RESPONSE ===');
+    console.log('Full response:', JSON.stringify(shippingMethodsData, null, 2));
+    console.log('\n=== PARSED DATA ===');
+    console.log('Cart:', shippingMethodsData?.cart);
+    console.log('Dynamic methods:', shippingMethodsData?.cart?.dynamicShippingMethods);
     if (shippingMethodsData?.cart?.dynamicShippingMethods) {
-      setMethods(shippingMethodsData.cart.dynamicShippingMethods);
-      setLoading(false);
+      console.log('First dynamic method:', shippingMethodsData.cart.dynamicShippingMethods[0]);
     }
-  }, [shippingMethodsData]);
-
-  useEffect(() => {
-    const hasValidShippingMethod = Array.isArray(cart?.chosenShippingMethod)
-      ? cart.chosenShippingMethod.length > 0 &&
-        !cart.chosenShippingMethod.includes('none')
-      : !!cart?.chosenShippingMethod && cart.chosenShippingMethod !== 'none';
-
-    setIsShippingMethodComplete(hasValidShippingMethod);
-  }, [cart?.chosenShippingMethod, setIsShippingMethodComplete]);
+    console.log('\n=== CHOSEN METHOD ===');
+    console.log('Chosen methods array:', shippingMethodsData?.cart?.chosenShippingMethods);
+    if (shippingMethodsData?.cart?.chosenShippingMethods?.length > 0) {
+      console.log('Current chosen method:', shippingMethodsData.cart.chosenShippingMethods[0]);
+      setIsShippingMethodComplete(true);
+    }
+    setLoading(false);
+  }, [shippingMethodsData, setIsShippingMethodComplete]);
 
   if (loading) {
     return (
@@ -134,22 +91,29 @@ const CheckoutShippingMethod = ({
     );
   }
 
+  const chosenMethodId = shippingMethodsData?.cart?.chosenShippingMethods?.[0];
+  const methods = shippingMethodsData?.cart?.dynamicShippingMethods || [];
+
   return (
     <section>
       <BlocIntroSmall title="Sélectionnez votre méthode de livraison" />
       <div className="mt-4">
         {methods.length > 0 ? (
           <div className="space-y-4">
-            {methods.map((method) => {
-              const isSelected = Array.isArray(cart?.chosenShippingMethod)
-                ? cart?.chosenShippingMethod.includes(method.id)
-                : cart?.chosenShippingMethod === method.id;
+            {methods.map((method: ShippingMethod) => {
+              // Vérifier si la méthode est sélectionnée en comparant avec l'ID choisi
+              const isSelected = chosenMethodId === method.id;
+              
+              // Pour les méthodes carrier_dynamic, vérifier aussi le type (relais/express)
+              const isRelaisSelected = chosenMethodId === 'carrier_dynamic_relais' && 
+                                     method.id === 'carrier_dynamic' && 
+                                     method.label.toLowerCase().includes('relais');
 
               return (
                 <label
                   key={method.id}
                   className={`flex items-start p-4 border rounded-lg cursor-pointer transition-colors ${
-                    isSelected
+                    isSelected || isRelaisSelected
                       ? 'border-secondary bg-white'
                       : 'border-light-grey hover:border-secondary'
                   }`}
@@ -159,8 +123,11 @@ const CheckoutShippingMethod = ({
                       type="radio"
                       name="shipping-method"
                       value={method.id}
-                      checked={isSelected}
-                      onChange={() => handleShippingMethodChange(method.id)}
+                      checked={isSelected || isRelaisSelected}
+                      onChange={() => handleShippingMethodChange(
+                        // Si c'est une méthode relais, utiliser carrier_dynamic_relais
+                        method.label.toLowerCase().includes('relais') ? 'carrier_dynamic_relais' : method.id
+                      )}
                       className="h-4 w-4 border-gray-300 text-primary focus:ring-secondary accent-secondary"
                     />
                   </div>
@@ -174,8 +141,7 @@ const CheckoutShippingMethod = ({
                       </span>
                     </div>
                     <p className="text-dark-grey mt-1">
-                      {method.description} - Livraison sous{' '}
-                      {formatDeliveryTime(method.delayMin, method.delayMax)}
+                      {method.description} - Livraison sous {formatDeliveryTime(method.delayMin, method.delayMax)}
                     </p>
                   </div>
                 </label>

@@ -216,49 +216,6 @@ export const REMOVE_COUPON = gql`
   }
 `;
 
-// MUtations ALew
-
-export const SET_CART_ALEX_MUTATION = gql`
-  mutation setCart(
-    $items: [CartInputItem]!
-    $country: String!
-    $postcode: String!
-    $state: String!
-  ) {
-    setCart(
-      input: {
-        items: $items
-        country: $country
-        postcode: $postcode
-        state: $state
-      }
-    ) {
-      cart {
-        contents {
-          nodes {
-            key
-            product {
-              node {
-                id
-                name
-              }
-            }
-            quantity
-          }
-        }
-        dynamicShippingMethods {
-          id
-          label
-          cost
-          delayMin
-          delayMax
-          description
-        }
-      }
-    }
-  }
-`;
-
 export const GET_ALEX_SHIPPING_METHOD = gql`
   query getShippingMethods {
     cart {
@@ -274,6 +231,7 @@ export const GET_ALEX_SHIPPING_METHOD = gql`
           quantity
         }
       }
+
       dynamicShippingMethods {
         id
         label
@@ -282,6 +240,11 @@ export const GET_ALEX_SHIPPING_METHOD = gql`
         delayMax
         description
       }
+
+      chosenShippingMethods
+      shippingTotal
+      shippingTax
+      total
     }
   }
 `;
@@ -299,6 +262,8 @@ export const SET_CART_SHIPPING_METHOD = gql`
           delayMax
           description
         }
+        shippingTotal
+        shippingTax
         total
         subtotal
         totalTax

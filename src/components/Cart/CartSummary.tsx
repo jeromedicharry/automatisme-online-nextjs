@@ -7,15 +7,8 @@ import Cta from '../atoms/Cta';
 import Separator from '../atoms/Separator';
 import CartReassurance from './CartReassurance';
 import { useCartOperations } from '@/hooks/useCartOperations';
-import {
-  GET_CART_SHIPPING_METHODS,
-  GET_CART_SHIPPING_INFO,
-  GET_CART,
-} from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import {
-  REMOVE_COUPON,
-  SET_CART_SHIPPING_METHOD,
-} from '@/utils/gql/GQL_MUTATIONS';
+import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
+import { GET_ALEX_SHIPPING_METHOD, REMOVE_COUPON } from '@/utils/gql/GQL_MUTATIONS';
 import CartReassuranceBis from './CartReassuranceBis';
 import CouponForm from './CouponForm';
 
@@ -23,78 +16,58 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   const { cart } = useContext(CartContext);
   const { isPro } = useCartOperations();
 
-  const { data: shippingMethodsData } = useQuery(GET_CART_SHIPPING_METHODS);
-  const { data: shippingInfoData } = useQuery(GET_CART_SHIPPING_INFO);
+  const { data: shippingMethodsData } = useQuery(GET_ALEX_SHIPPING_METHOD);
   const { data: cartData, refetch: refetchCart } = useQuery(GET_CART);
 
   interface ShippingMethod {
-    cost: string;
-    methodId: string;
+    id: string;
     label: string;
-    instanceId: number;
+    cost: string;
+    delayMin: number;
+    delayMax: number;
+    description: string;
   }
 
-  // Mutation pour mettre à jour la méthode de livraison
-  const [setShippingMethod] = useMutation(SET_CART_SHIPPING_METHOD, {
-    onCompleted: () => {
-      refetchCart();
-    },
-  });
-
-  console.log('shippingMethodsData:', shippingMethodsData);
-  console.log('shippingInfoData:', shippingInfoData);
-
   const chosenMethod = shippingMethodsData?.cart?.chosenShippingMethods?.[0];
-  const availableShippingMethods =
-    shippingInfoData?.cart?.availableShippingMethods?.[0]?.rates || [];
+  const availableShippingMethods = shippingMethodsData?.cart?.dynamicShippingMethods || [];
 
-  // Recherche de la méthode sélectionnée ou express par défaut
+  // Recherche de la méthode sélectionnée
   let selectedShippingMethod = null;
 
-  if (availableShippingMethods.length > 0) {
-    if (chosenMethod) {
+  console.log('=== CART SUMMARY DATA ===');
+  console.log('shippingMethodsData:', shippingMethodsData);
+  console.log('cartData:', cartData);
+  console.log('chosenMethod:', chosenMethod);
+  console.log('availableShippingMethods:', availableShippingMethods);
+
+  console.log('Trying to find shipping method...');
+  if (availableShippingMethods.length > 0 && chosenMethod) {
+    console.log('We have both available methods and chosen method');
+    // Si c'est une méthode relais, chercher la méthode carrier_dynamic correspondante
+    if (chosenMethod === 'carrier_dynamic_relais') {
+      console.log('Looking for relais method...');
       selectedShippingMethod = availableShippingMethods.find(
         (method: ShippingMethod) => {
-          if (chosenMethod === 'carrier_dynamic_relais') {
-            return (
-              method.methodId === 'carrier_dynamic' &&
-              method.label?.toLowerCase().includes('relais')
-            );
-          }
-          if (method.methodId === chosenMethod) {
-            return true;
-          }
-          // Pour les méthodes carrier_dynamic, on vérifie aussi le label
-          if (
-            method.methodId === 'carrier_dynamic' &&
-            chosenMethod === 'carrier_dynamic'
-          ) {
-            if (method.label?.toLowerCase().includes('express')) {
-              return true;
-            }
-          }
-          return false;
-        },
+          const isMatch = method.id === 'carrier_dynamic' && method.label.toLowerCase().includes('relais');
+          console.log('Checking method:', method.id, method.label, 'isMatch:', isMatch);
+          return isMatch;
+        }
       );
-    }
-
-    // Si aucune méthode n'est sélectionnée, on prend Express par défaut
-    if (!selectedShippingMethod) {
+    } else {
+      console.log('Looking for exact match with ID:', chosenMethod);
       selectedShippingMethod = availableShippingMethods.find(
-        (method: ShippingMethod) =>
-          method.methodId === 'carrier_dynamic' &&
-          method.label?.toLowerCase().includes('express'),
+        (method: ShippingMethod) => {
+          const isMatch = method.id === chosenMethod;
+          console.log('Comparing method.id:', method.id, 'with chosenMethod:', chosenMethod, 'isMatch:', isMatch);
+          return isMatch;
+        }
       );
     }
-
-    // Si on a trouvé la méthode express et qu'aucune méthode n'est sélectionnée, on l'applique
-    if (selectedShippingMethod && !chosenMethod) {
-      setShippingMethod({
-        variables: {
-          shippingMethodId: selectedShippingMethod.methodId,
-        },
-      });
-    }
+    console.log('Selected shipping method:', selectedShippingMethod);
+    console.log('Cart shipping data:', {
+      shippingTotal: cartData?.cart?.shippingTotal,
+      shippingTax: cartData?.cart?.shippingTax
+    });
   }
 
   console.log('selectedShippingMethod:', selectedShippingMethod);
@@ -334,15 +307,15 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           )}
 
           {/* Frais de livraison */}
-          {selectedShippingMethod && (
+          {(parseFloat(cartData?.cart?.shippingTotal || '0') > 0 || parseFloat(cartData?.cart?.shippingTax || '0') > 0) && (
             <>
               <div className="flex text-primary justify-between gap-6 items-center mt-2">
-                <p>Livraison HT ({selectedShippingMethod.label})</p>
+                <p>Livraison HT</p>
                 <p>
                   {parseFloat(cartData?.cart?.shippingTotal || '0').toFixed(2)}€
                 </p>
               </div>
-              {cartData?.cart?.shippingTax > 0 && (
+              {parseFloat(cartData?.cart?.shippingTax || '0') > 0 && (
                 <div className="flex text-primary justify-between gap-6 items-center mt-1">
                   <p>TVA Livraison</p>
                   <p>

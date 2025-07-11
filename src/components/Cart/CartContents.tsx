@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,6 +12,7 @@ import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import {
   UPDATE_CART,
   UPDATE_CART_ITEM_INSTALLATION,
+  GET_ALEX_SHIPPING_METHOD,
 } from '@/utils/gql/GQL_MUTATIONS';
 import { useCartOperations } from '@/hooks/useCartOperations';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '@/utils/constants/PLACHOLDERS';
@@ -41,12 +42,16 @@ const getUpdatedItemsFromFormatted = (
 const CartContents = () => {
   const { cart } = useContext(CartContext);
   const { refetchCart, isPro } = useCartOperations();
+  const { refetch: refetchShippingMethods } = useQuery(GET_ALEX_SHIPPING_METHOD);
 
   const [updateCart, { loading: updateCartProcessing }] = useMutation(
     UPDATE_CART,
     {
       onCompleted: async () => {
-        await refetchCart();
+        await Promise.all([
+          refetchCart(),
+          refetchShippingMethods()
+        ]);
       },
     },
   );
