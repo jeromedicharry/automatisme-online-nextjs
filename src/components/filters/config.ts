@@ -1,4 +1,8 @@
-export type FilterType = 'checkbox' | 'range' | 'maxValueCheckbox';
+export type FilterType =
+  | 'checkbox'
+  | 'range'
+  | 'maxValueCheckbox'
+  | 'minValueCheckbox';
 export type SearchType = 'attribute' | 'taxonomy' | 'meta';
 
 export type AllowedFilter = {
@@ -27,6 +31,56 @@ export const allowedFilters: AllowedFilter[] = [
   // },
 
   // Attributs de type checkbox
+
+  {
+    label: 'Tension alimentation (V)',
+    key: 'tension-v',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Tension moteur (V)',
+    key: 'tension-moteur-v',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+
+  {
+    label: 'Hauteur porte basculante (m)',
+    key: 'hauteur-porte-basculante-m',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Poids max / porte (kg)',
+    key: 'poids-max-porte-de-garage-kg',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Poids max / vantail (kg)',
+    key: 'poids-max-vantail-kg',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: "Angle 'ouverture max",
+    key: 'custom_attr_angle',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Hauteur max',
+    key: 'hauteur-porte-basculante-m',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Hauteur max',
+    key: 'hauteur-porte-sectionnelle-m',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
   {
     label: 'Codage télécommande',
     key: 'codage-telecommande',
@@ -36,6 +90,12 @@ export const allowedFilters: AllowedFilter[] = [
   {
     label: 'Couleur',
     key: 'couleur',
+    type: 'checkbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Couleur télécommande',
+    key: 'couleur-de-la-telecommande',
     type: 'checkbox',
     searchType: 'attribute',
   },
@@ -64,28 +124,9 @@ export const allowedFilters: AllowedFilter[] = [
     searchType: 'attribute',
   },
   {
-    label: 'Tension (V)',
-    key: 'tension-telecommande-v',
-    type: 'checkbox',
-    searchType: 'attribute',
-  },
-
-  {
-    label: 'Hauteur porte basculante (m)',
-    key: 'hauteur-porte-basculante-m',
-    type: 'checkbox',
-    searchType: 'attribute',
-  },
-  {
-    label: 'Poids max porte (kg)',
-    key: 'poids-max-porte-de-garage-kg',
-    type: 'checkbox',
-    searchType: 'attribute',
-  },
-  {
     label: 'Surface porte (m²)',
     key: 'surface-porte-de-garage-m²',
-    type: 'checkbox',
+    type: 'maxValueCheckbox',
     searchType: 'attribute',
   },
   {
@@ -98,6 +139,25 @@ export const allowedFilters: AllowedFilter[] = [
     label: 'Usage',
     key: 'usage',
     type: 'checkbox',
+    searchType: 'attribute',
+  },
+
+  {
+    label: 'Cote A (minimum)',
+    key: 'custom_attr_cote-a',
+    type: 'minValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Cote B (maximum)',
+    key: 'custom_attr_cote-b',
+    type: 'maxValueCheckbox',
+    searchType: 'attribute',
+  },
+  {
+    label: 'Cote C (minimum)',
+    key: 'custom_attr_cote-c',
+    type: 'minValueCheckbox',
     searchType: 'attribute',
   },
   // Attributs numériques (type range)

@@ -49,7 +49,7 @@ const FilterSidebar = ({ facetDistribution }: { facetDistribution: any }) => {
   };
 
   const FiltersContent = () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 md:max-h-[80svh] overflow-y-auto scrollbar-custom pr-4">
       <div className="flex justify-center">
         <button
           onClick={resetFilters}
