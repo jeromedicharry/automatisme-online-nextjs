@@ -29,8 +29,8 @@ const BrandsList = ({ brands }: { brands?: BrandLink[] }) => {
                 <Chevron />
               </div>
               <Link
-                href={`/marques/${brand.slug}`}
-                className="block text-xs leading-general text-dark-grey hover:text-secondary duration-300"
+                href={`/marque/${brand.slug}`}
+                className="block text-sm leading-general text-dark-grey hover:text-secondary duration-300"
               >
                 {brand.name}
               </Link>

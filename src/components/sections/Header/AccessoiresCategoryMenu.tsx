@@ -56,7 +56,7 @@ const AccessoiresCategoryMenu = ({
                   <li key={subItem.name}>
                     <Link
                       href={subItem.uri}
-                      className="text-xs leading-general font-bold text-primary hover:text-secondary h-full duration-300"
+                      className="text-sm leading-general font-bold text-primary hover:text-secondary h-full duration-300"
                     >
                       {subItem.name}
                     </Link>
@@ -82,7 +82,7 @@ const AccessoiresCategoryMenu = ({
                   <li key={subItem.name}>
                     <Link
                       href={subItem.uri}
-                      className="text-xs leading-general font-bold text-primary hover:text-secondary h-full duration-300"
+                      className="text-sm leading-general font-bold text-primary hover:text-secondary h-full duration-300"
                     >
                       {subItem.name}
                     </Link>
@@ -111,7 +111,7 @@ const AccessoiresCategoryMenu = ({
               <li key={brand.slug}>
                 <Link
                   href={`/brand/${brand.slug}`}
-                  className="block text-xs leading-general text-dark-grey hover:text-secondary duration-300"
+                  className="block text-sm leading-general text-dark-grey hover:text-secondary duration-300"
                 >
                   {brand.name}
                 </Link>

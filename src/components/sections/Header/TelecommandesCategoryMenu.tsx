@@ -28,7 +28,7 @@ const TelecommandesCategoryMenu = ({
           <li key={subItem.name}>
             <Link
               href={subItem.uri}
-              className="text-xs leading-general font-bold text-primary hover:text-secondary h-full duration-200"
+              className="text-sm leading-general font-bold text-primary hover:text-secondary h-full duration-200"
             >
               {subItem.name}
             </Link>

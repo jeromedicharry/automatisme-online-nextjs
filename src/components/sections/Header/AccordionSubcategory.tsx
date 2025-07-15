@@ -36,7 +36,7 @@ const AccordionSubcategory = ({
 
         <Link
           href={subSubItem.uri}
-          className="block text-[10px] leading-general text-dark-grey hover:text-secondary duration-300"
+          className="block text-sm leading-general text-dark-grey hover:text-secondary duration-300"
         >
           {subSubItem.name}
         </Link>
@@ -52,7 +52,7 @@ const AccordionSubcategory = ({
             <li key={subSubSubItem.name} className="list-disc text-dark-grey">
               <Link
                 href={subSubSubItem.uri}
-                className="block text-[10px] leading-general text-dark-grey hover:text-secondary duration-300"
+                className="block text-sm leading-general text-dark-grey hover:text-secondary duration-300"
               >
                 {subSubSubItem.name}
               </Link>

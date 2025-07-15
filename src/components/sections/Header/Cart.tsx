@@ -41,7 +41,7 @@ const Cart = () => {
         </svg>
         {productCount && productCount > 0 ? (
           <span
-            className={`rounded-full text-xs w-4 h-4 flex items-center pt-[1px] justify-center absolute top-[-5px] right-[-5px] bg-secondary text-white`}
+            className={`rounded-full text-xs w-5 h-5 flex items-center justify-center absolute top-[-5px] right-[-5px] bg-secondary text-white`}
           >
             {productCount}
           </span>
