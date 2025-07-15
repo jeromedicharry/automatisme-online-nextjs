@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
+import { GET_ALEX_SHIPPING_METHOD } from '@/utils/gql/GQL_MUTATIONS';
 import {
   GET_CUSTOMER_ADDRESSES,
   UPDATE_ADDRESS,
@@ -23,6 +24,8 @@ const CheckoutAdresses = ({
     null | 'billing' | 'shipping'
   >(null);
   const [isBillingSameAsShipping, setIsBillingSameAsShipping] = useState(false);
+
+  const { refetch: refetchShippingMethods } = useQuery(GET_ALEX_SHIPPING_METHOD);
 
   const { data, loading, error, refetch } = useQuery(GET_CUSTOMER_ADDRESSES, {
     variables: { id: user?.id },
@@ -72,7 +75,10 @@ const CheckoutAdresses = ({
         variables,
       });
 
-      await refetch();
+      await Promise.all([
+        refetch(),
+        refetchShippingMethods()
+      ]);
       setIsEditing(false);
       setSelectedAddress(null);
     } catch (error) {
@@ -136,11 +142,11 @@ const CheckoutAdresses = ({
       {loggedIn && !isEditing && (
         <div className="space-y-10 md:space-y-6">
           {hasShippingAddress ? (
-            <AddressCard
-              address={shipping}
-              type="shipping"
-              onEdit={() => handleEdit('shipping')}
-            />
+              <AddressCard
+                address={shipping}
+                type="shipping"
+                onEdit={() => handleEdit('shipping')}
+              />
           ) : (
             <EmptyAddressWithCTA
               type="shipping"
