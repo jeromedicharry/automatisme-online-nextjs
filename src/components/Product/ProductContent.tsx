@@ -80,7 +80,13 @@ export interface ProductContentProps extends CardProductProps {
   };
 }
 
-const ProductContent = ({ product }: { product: ProductContentProps }) => {
+const ProductContent = ({
+  product,
+  proDiscountRate = 5,
+}: {
+  product: ProductContentProps;
+  proDiscountRate?: number;
+}) => {
   const { loggedIn, isPro } = useAuth();
   const [addInstallation, setAddInstallation] = useState(true);
   const NotProConnectedAlternate = () => {
@@ -134,7 +140,11 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
     <article className="mb-12 mt-2 md:mt-16 md:mb-16">
       <div className="flex flex-col lg:flex-row xl:grid xl:grid-cols-2 items-center lg:items-start lg:justify-between gap-5 max-lg:max-w-xxl mx-auto">
         <div className="flex flex-col gap-5 w-full lg:max-w-[500px] xl:max-w-full">
-          <ProductGalerie galleryImages={product.galleryImages} />
+          <ProductGalerie
+            galleryImages={product.galleryImages}
+            hasProDiscount={product?.hasProDiscount}
+            discountRate={proDiscountRate}
+          />
           <div className="description hidden md:block">
             <ProductDescription description={product?.description} />
           </div>
@@ -150,6 +160,7 @@ const ProductContent = ({ product }: { product: ProductContentProps }) => {
               title={product?.name}
               brand={product?.productBrands?.nodes[0]}
               productRef={product?.productRef}
+
             />
           </div>
           <section className="prix order-3 md:order-2">

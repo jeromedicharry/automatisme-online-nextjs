@@ -15,9 +15,11 @@ import BlocIntroLarge from '@/components/atoms/BlocIntroLarge';
 const BlocFeaturedProducts = ({
   bloc,
   isProductPage = false,
+  proDiscountRate,
 }: {
   bloc: BlocFeaturedProductsProps;
   isProductPage?: boolean;
+  proDiscountRate?: number;
 }) => {
   if (
     !bloc ||
@@ -74,7 +76,10 @@ const BlocFeaturedProducts = ({
               >
                 {bloc.products.nodes.map((product, key) => (
                   <SwiperSlide key={key}>
-                    <Cardproduct product={product} />
+                    <Cardproduct
+                      product={product}
+                      discountRate={proDiscountRate}
+                    />
                   </SwiperSlide>
                 ))}
               </Swiper>

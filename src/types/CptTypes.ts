@@ -41,7 +41,7 @@ export interface ThemeSettingsProps {
   featuredFaq: FeaturedFaqProps;
   contactTitle: string;
   contactText: string;
-  // installationCard: INst
+  prosDiscountRate: number;
 }
 
 export interface PageProps {

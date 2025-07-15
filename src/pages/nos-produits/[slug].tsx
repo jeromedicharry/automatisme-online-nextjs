@@ -48,7 +48,10 @@ const Product = ({
         <div className="max-md:hidden">
           <BreadCrumbs breadCrumbs={product.seo?.breadcrumbs} />
         </div>
-        <ProductContent product={product} />
+        <ProductContent
+          product={product}
+          proDiscountRate={themeSettings?.prosDiscountRate}
+        />
       </Container>
       <ProductUpsells upsellProducts={product?.upsell?.nodes} />
       <Container>

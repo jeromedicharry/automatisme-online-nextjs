@@ -1,23 +1,29 @@
 import Image from 'next/image';
 import React from 'react';
 import { BrandStickerProps } from './ProductContent';
+import ProDiscountBadge from '../atoms/ProDiscountBadge';
 
 const ProductHeader = ({
   title,
   brand,
   productRef,
+  hasProDiscount,
 }: {
   title: string;
   brand?: BrandStickerProps;
   productRef?: string;
+  hasProDiscount?: boolean;
 }) => {
   return (
     <header>
       <div className="flex text-xl leading-general text-primary justify-between lg:items-center gap-5">
         <div>
-          <h1 className="text-2xl leading-general font-bold lg:max-w-[500px]">
-            {title}
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-2xl leading-general font-bold lg:max-w-[500px]">
+              {title}
+            </h1>
+            {hasProDiscount && <ProDiscountBadge />}
+          </div>
           <div className="">
             <div
               className="skeepers_product__stars"

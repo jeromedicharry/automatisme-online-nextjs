@@ -10,6 +10,7 @@ import Cta from '../atoms/Cta';
 import AddToCart from '../Product/AddToCart';
 import { CardProductProps } from '@/types/blocTypes';
 import { getProductAvailability } from '@/utils/functions/deliveryTime';
+import ProDiscountBadge from '../atoms/ProDiscountBadge';
 
 export interface CardProductMeilisearchProps {
   title: string;
@@ -28,13 +29,20 @@ export interface CardProductMeilisearchProps {
     _product_ref: string;
     _replacement_id?: number;
   };
+  attributes?: {
+    'reduction-pro': Array<{
+      slug: string;
+    }>;
+  };
   thumbnail_url: string;
 }
 
 const CardProductMeilisearch = ({
   product,
+  discountRate,
 }: {
   product: CardProductMeilisearchProps;
+  discountRate?: number;
 }) => {
   const { loggedIn, isPro } = useAuth();
 
@@ -59,7 +67,7 @@ const CardProductMeilisearch = ({
     isPro: meiliProduct.meta?._is_pro || false,
     acfFeatured: { isFeatured: meiliProduct.meta?._is_featured || false },
     onSale: false, // À adapter selon besoin
-    hasProDiscount: false, // À adapter
+    hasProDiscount: meiliProduct.attributes?.['reduction-pro']?.[0]?.slug === 'oui' || false,
     stockQuantity: meiliProduct.meta?._stock || 0,
     backorders: meiliProduct.meta?._backorders || 'NO',
     restockingLeadTime: meiliProduct.meta?._restocking_lead_time || 0,
@@ -73,6 +81,7 @@ const CardProductMeilisearch = ({
   });
 
   const isReplaced = product.meta._replacement_id !== undefined;
+  const hasProDiscount = product.attributes?.['reduction-pro']?.[0]?.slug === 'oui';
 
   return (
     <article className="card-product-meilisearch flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
@@ -88,14 +97,19 @@ const CardProductMeilisearch = ({
             height={257}
             className="block h-full object-contain w-full hover:opacity-85 duration-300"
           />
+          {hasProDiscount && isPro && (
+            <div className="absolute bottom-2 left-2 z-10">
+              <ProDiscountBadge discountRate={discountRate} />
+            </div>
+          )}
         </Link>
         <div className="bg-white flex justify-between items-center relative">
-          {product?.meta?._is_featured ? (
-            <span className="px-[6px] rounded-[2px] h-[21px] flex items-center justify-center bg-primary-light text-xs leading-general font-bold">
-              Choix AO
-            </span>
-          ) : (
-            <span></span>
+          {product?.meta?._is_featured && (
+            <div className="flex gap-2 mb-2">
+              <span className="w-fit px-[10px] rounded-[6px] h-[28px] flex items-center justify-center bg-primary-light text-base leading-general font-bold">
+                Choix AO
+              </span>
+            </div>
           )}
           {loggedIn && product?.id !== undefined && (
             <span>

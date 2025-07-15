@@ -32,6 +32,7 @@ interface FlexibleContentProps {
   featuredFaq: FeaturedFaqProps;
   faqItems: FaqItemProps[];
   categories?: CategoryMenuProps[];
+  proDiscountRate?: number;
 }
 
 const FlexibleContent: React.FC<FlexibleContentProps> = ({
@@ -42,6 +43,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
   featuredFaq,
   faqItems,
   categories,
+  proDiscountRate,
 }) => {
   if (blocs === null || blocs?.length === 0 || blocs === undefined) return null;
 
@@ -62,7 +64,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({
       case 'AcfPageBlocsBlocFeaturedCategoriesLayout':
         return <BlocFeaturedCategories key={key} bloc={bloc} />;
       case 'AcfPageBlocsBlocFeaturedProductsLayout':
-        return <BlocFeaturedProducts key={key} bloc={bloc} />;
+        return <BlocFeaturedProducts key={key} bloc={bloc} proDiscountRate={proDiscountRate} />;
       case 'AcfPageBlocsBlocConseilsFaqLayout':
         return (
           <BlocConseilFAQ

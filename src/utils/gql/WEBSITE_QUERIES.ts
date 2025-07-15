@@ -34,6 +34,7 @@ export const GET_OPTIONS = gql`
   query GET_OPTIONS {
     themeSettings {
       optionsFields {
+        prosDiscountRate
         contactPhone
         quantityInstallers
         hours
@@ -72,6 +73,15 @@ export const GET_OPTIONS = gql`
         ${FEATURED_FAQ}
         contactTitle
         contactText
+      }
+    }
+  }
+`;
+export const GET_PRO_DISCOUNT = gql`
+  query GET_OPTIONS {
+    themeSettings {
+      optionsFields {
+        prosDiscountRate
       }
     }
   }

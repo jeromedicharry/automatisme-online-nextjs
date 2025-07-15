@@ -45,6 +45,8 @@ export const PRODUCT_CARD_FRAGMENT = `
   acfFeatured {
     isFeatured
   }
+  hasProDiscount
+
 `;
 
 export const GET_SINGLE_PRODUCT = gql`
@@ -78,6 +80,7 @@ export const GET_SINGLE_PRODUCT = gql`
         restockingLeadTime
         sku
         replacementUrl
+        hasProDiscount
         installationPrice
         productRef
         isPro

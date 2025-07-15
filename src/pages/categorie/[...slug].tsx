@@ -256,7 +256,11 @@ const CategoryPage = ({
                 {productSelection?.map(
                   (product: CardProductMeilisearchProps, index) => (
                     <React.Fragment key={product?.id}>
-                      <CardProductMeilisearch product={product} />
+                      <CardProductMeilisearch
+                        key={product.id}
+                        product={product}
+                        discountRate={themeSettings?.prosDiscountRate}
+                      />
                       {hasPose && index === 1 && (
                         <CardInstallation installation={installationData} />
                       )}

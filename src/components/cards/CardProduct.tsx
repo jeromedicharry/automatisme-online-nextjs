@@ -9,8 +9,15 @@ import FavoriteButton from '../atoms/FavoriteButton';
 import useAuth from '@/hooks/useAuth';
 import Cta from '../atoms/Cta';
 import { getProductAvailability } from '@/utils/functions/deliveryTime';
+import ProDiscountBadge from '../atoms/ProDiscountBadge';
 
-const Cardproduct = ({ product }: { product: CardProductProps }) => {
+const CardProduct = ({
+  product,
+  discountRate,
+}: {
+  product: CardProductProps;
+  discountRate?: number;
+}) => {
   const { loggedIn, isPro } = useAuth();
   const { isSellable } = getProductAvailability({
     stock: product.stockQuantity,
@@ -34,12 +41,19 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
             height={257}
             className="block h-full object-contain w-full hover:opacity-85 duration-300"
           />
+          {product?.hasProDiscount && isPro && (
+            <div className="absolute bottom-2 left-2 z-10">
+              <ProDiscountBadge discountRate={discountRate} />
+            </div>
+          )}
         </Link>
         <div className="bg-white flex justify-between items-center relative">
           {product?.acfFeatured?.isFeatured && (
-            <span className="px-[6px] rounded-[2px] h-[21px] flex items-center justify-center bg-primary-light text-xs leading-general font-bold">
-              Choix AO
-            </span>
+            <div className="flex gap-2 mb-2">
+              <span className="w-fit px-[10px] rounded-[6px] h-[28px] flex items-center justify-center bg-primary-light text-base leading-general font-bold">
+                Choix AO
+              </span>
+            </div>
           )}
           {loggedIn && product?.databaseId !== undefined && (
             <span>
@@ -101,4 +115,4 @@ const Cardproduct = ({ product }: { product: CardProductProps }) => {
   );
 };
 
-export default Cardproduct;
+export default CardProduct;

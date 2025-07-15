@@ -27,7 +27,7 @@ const AccordionItem = ({
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-4">
-          {picto && <div className="w-6 h-6 md:w-10 md:h-10">{picto}</div>}
+          {picto && <div className="w-6 h-6 md:w-10 md:h-10 flex items-center justify-center">{picto}</div>}
           {pictoFromWP && (
             <Image
               src={pictoFromWP}

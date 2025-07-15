@@ -72,6 +72,7 @@ const HomePage = ({
         featuredFaq={featuredFaq}
         faqItems={faqItems}
         categories={categoriesMenu}
+        proDiscountRate={themeSettings?.prosDiscountRate}
       />
     </Layout>
   );

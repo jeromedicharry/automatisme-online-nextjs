@@ -7,17 +7,27 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/thumbs';
 import Image from 'next/image';
+import ProDiscountBadge from '../atoms/ProDiscountBadge';
 
 const ProductGalerie = ({
   galleryImages,
+  hasProDiscount,
+  discountRate,
 }: {
   galleryImages: { nodes: { sourceUrl: string }[] };
+  hasProDiscount?: boolean;
+  discountRate?: number;
 }) => {
   const images = [...galleryImages.nodes];
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 
   return (
-    <section className="w-full">
+    <section className="w-full relative">
+      {hasProDiscount && (
+        <div className="absolute top-4 right-4 z-10 md:top-6 md:right-6">
+          <ProDiscountBadge discountRate={discountRate} />
+        </div>
+      )}
       {/* Slider principal */}
       <Swiper
         modules={[Pagination, Thumbs]}
