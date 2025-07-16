@@ -37,12 +37,19 @@ export const formatFacets = (
 
       if (!data) return;
 
-      const values = Object.entries(data)
-        .filter(([, count]) => count > 0)
-        .map(([name, count]) => ({ name, count }));
+      let values = Object.entries(data).map(([name, count]) => ({ name, count }));
+
+      // Pour les facettes qui ne sont pas de type range, on filtre les valeurs avec count > 0
+      if (type !== 'range') {
+        values = values.filter((v) => v.count > 0);
+      }
 
       // Ne garder que les facettes avec des valeurs
-      if (values.length > 0 && values.some((v) => v.count > 0)) {
+      if (values.length > 0) {
+        // Pour les ranges, on trie les valeurs par ordre numérique
+        if (type === 'range') {
+          values.sort((a, b) => parseFloat(a.name) - parseFloat(b.name));
+        }
         result[label] = { type, values };
       }
     });

@@ -67,13 +67,6 @@ export const fetchMeiliProductsByCategory = async ({
         break;
     }
 
-    console.log('=== DEBUG FILTER CONSTRUCTION ===');
-    console.log('filterConfig:', filterConfig);
-    console.log('baseKey:', baseKey);
-    console.log('fieldPrefix:', fieldPrefix);
-    console.log('isNumericFilter:', isNumericFilter);
-    console.log('value:', value);
-
     if (filterConfig.type === 'range' && filterConfig.searchType === 'meta') {
       const min = filters[`${baseKey}_min`];
       const max = filters[`${baseKey}_max`];
@@ -91,10 +84,8 @@ export const fetchMeiliProductsByCategory = async ({
       // Pour les maxValueCheckbox, on cherche les valeurs inférieures ou égales
       // Convertir en nombre pour la comparaison
       const numericValue = parseFloat(value);
-      console.log('numericValue:', numericValue);
       if (!isNaN(numericValue)) {
         meiliFilters.push(`${fieldPrefix} <= ${numericValue}`);
-        console.log('meiliFilters:', meiliFilters);
       }
     } else if (filterConfig.type === 'minValueCheckbox') {
       // Pour les minValueCheckbox, on cherche les valeurs supérieures ou égales
@@ -129,10 +120,6 @@ export const fetchMeiliProductsByCategory = async ({
     requestOptions.sort = [sort];
   }
 
-  console.log('=== MEILISEARCH REQUEST ===');
-  console.log('Filter string:', filterString);
-  console.log('Request options:', JSON.stringify(requestOptions, null, 2));
-
   const response = await fetch(meilisearchUrl, {
     method: 'POST',
     headers: {
@@ -154,16 +141,6 @@ export const fetchMeiliProductsByCategory = async ({
   }
 
   const result = await response.json();
-  console.log('=== MEILISEARCH RESPONSE ===');
-  console.log(
-    'Facettes disponibles:',
-    Object.keys(result.facetDistribution || {}),
-  );
-  console.log(
-    'Distribution des facettes:',
-    JSON.stringify(result.facetDistribution, null, 2),
-  );
-  console.log('Premier produit:', JSON.stringify(result.hits[0], null, 2));
 
   const hasPose = !!Object.keys(
     result.facetDistribution['meta._has_pose'] || {},

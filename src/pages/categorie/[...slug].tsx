@@ -229,7 +229,11 @@ const CategoryPage = ({
           isDescriptionFontNormal
         />
         <div className="flex flex-col items-start md:flex-row gap-4 mb-10 md:mb-16">
-          <FilterSidebar facetDistribution={facets} />
+          <FilterSidebar
+            facetDistribution={facets}
+            categorySlug={category.slug}
+            isLoading={isLoading}
+          />
           <section className="max-md:w-full lg:flex-grow overflow-hidden">
             <div className="flex justify-between mb-6 md:mb-4">
               <p className="text-sm md:text-base leading-general text-dark-grey">
