@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 
 import client from '@/utils/apollo/ApolloClient';
 
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import Container from '@/components/container';
 import BreadCrumbs from '@/components/atoms/BreadCrumbs';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
@@ -25,6 +25,7 @@ const SinglePost = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
 }: {
   post: PostContentProps;
@@ -32,6 +33,7 @@ const SinglePost = ({
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   const relatedPosts = post?.productBrands?.nodes?.[0]?.posts?.nodes || [];
@@ -41,6 +43,7 @@ const SinglePost = ({
       categoriesMenu={categoriesMenu}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       totalProducts={totalProducts}
     >

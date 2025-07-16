@@ -1,5 +1,5 @@
 // pages/checkout.tsx
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import type { GetStaticProps } from 'next';
 import { useEffect } from 'react';
 import AuthModal from '@/components/Auth/AuthModal';
@@ -21,12 +21,14 @@ const Caisse = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
 }: {
   themeSettings: ThemeSettingsProps;
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   const {
@@ -57,6 +59,7 @@ const Caisse = ({
       uri="/panier"
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       totalProducts={totalProducts}

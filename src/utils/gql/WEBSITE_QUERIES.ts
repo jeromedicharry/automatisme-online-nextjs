@@ -121,12 +121,10 @@ export const GET_FOOTER_MENU_2 = gql`
 export const GET_FOOTER_MENU_3 = gql`
   query GET_FOOTER_MENU_3 {
     menu(id: "menu-footer-3", idType: SLUG) {
-      menuItems(where: { parentId: null }) {
+      menuItems(where: { parentDatabaseId: 0 }) {
         nodes {
           label
-          uri
-          parentId
-          childItems {
+          childItems(first: 50) {
             nodes {
               label
               uri

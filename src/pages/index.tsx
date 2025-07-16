@@ -1,5 +1,5 @@
 // Components
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 
 // Utilities
 import client from '@/utils/apollo/ApolloClient';
@@ -29,6 +29,7 @@ const HomePage = ({
   featuredFaq,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   faqItems,
   categoriesMenu,
 }: {
@@ -38,6 +39,7 @@ const HomePage = ({
   featuredFaq: FeaturedFaqProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   faqItems: FaqItemProps[];
   categoriesMenu?: CategoryMenuProps[];
 }) => {
@@ -50,6 +52,7 @@ const HomePage = ({
       meta={page?.seo}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       isHome

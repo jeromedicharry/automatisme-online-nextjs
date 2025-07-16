@@ -1,5 +1,5 @@
 // Components
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 
 // Types
 import type { GetStaticProps } from 'next';
@@ -17,12 +17,14 @@ const NotFound = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
 }: {
   themeSettings: ThemeSettingsProps;
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   return (
@@ -30,6 +32,7 @@ const NotFound = ({
       meta={{ title: 'NotFound - Automatisme Online' }}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       isBg

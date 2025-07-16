@@ -7,7 +7,7 @@ import client from '@/utils/apollo/ApolloClient';
 import ProductContent, {
   ProductContentProps,
 } from '@/components/Product/ProductContent';
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import Container from '@/components/container';
 import BreadCrumbs from '@/components/atoms/BreadCrumbs';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
@@ -26,6 +26,7 @@ const Product = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
 }: {
   product: ProductContentProps;
@@ -33,6 +34,7 @@ const Product = ({
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   return (
@@ -41,6 +43,7 @@ const Product = ({
       categoriesMenu={categoriesMenu}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       totalProducts={totalProducts}
     >

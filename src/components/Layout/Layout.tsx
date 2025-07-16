@@ -13,6 +13,21 @@ import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooter
 import { CategoryMenuProps } from '@/types/Categories';
 import ToTop from '../atoms/ToTop';
 
+export interface DoubleLevelFooterMenuProps {
+  menuItems: {
+    nodes: {
+      label: string;
+      uri: string | null;
+      childItems?: {
+        nodes: {
+          label: string;
+          uri: string;
+        }[];
+      };
+    }[];
+  };
+}
+
 interface LayoutProps {
   children?: ReactNode;
   meta: IMeta;
@@ -20,6 +35,7 @@ interface LayoutProps {
   title?: string;
   footerMenu1?: SimpleFooterMenuProps | undefined;
   footerMenu2?: SimpleFooterMenuProps | undefined;
+  footerMenu3?: DoubleLevelFooterMenuProps | undefined;
   themeSettings?: any;
   isHome?: boolean;
   isBrand?: boolean;
@@ -42,6 +58,7 @@ const Layout = ({
   uri,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   themeSettings,
   isHome = false,
   isBrand = false,
@@ -75,6 +92,7 @@ const Layout = ({
         <Footer
           menu1={footerMenu1}
           menu2={footerMenu2}
+          menu3={footerMenu3}
           themeSettings={themeSettings}
         />
         <CartModal />

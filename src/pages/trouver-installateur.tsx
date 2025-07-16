@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import type { GetStaticProps } from 'next';
 import { fetchCommonData } from '@/utils/functions/fetchCommonData';
 import { SimpleFooterMenuProps } from '@/components/sections/Footer/SimpleFooterMenu';
@@ -27,6 +27,7 @@ const InstallerPage = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
   installateurs, // On passe la liste complète des installateurs
 }: {
@@ -34,6 +35,7 @@ const InstallerPage = ({
   totalProducts: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
   installateurs: (Installer & { distance?: number })[];
 }) => {
@@ -58,6 +60,7 @@ const InstallerPage = ({
       uri="/trouver-installateur"
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       totalProducts={totalProducts}

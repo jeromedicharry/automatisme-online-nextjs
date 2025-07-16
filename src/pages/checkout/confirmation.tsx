@@ -1,5 +1,5 @@
 // Components
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import Container from '@/components/container';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -22,12 +22,14 @@ const ConfirmationPage = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
 }: {
   themeSettings: ThemeSettingsProps;
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
 }) => {
   const router = useRouter();
@@ -38,7 +40,6 @@ const ConfirmationPage = ({
   });
 
   const renderContent = () => {
-
     if (loading) {
       return <AccountLoader text="Chargement de votre commande..." />;
     }
@@ -106,6 +107,7 @@ const ConfirmationPage = ({
       meta={{ title: 'Confirmation de commande - Automatisme Online' }}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       isBg
@@ -136,5 +138,3 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   };
 };
-
-

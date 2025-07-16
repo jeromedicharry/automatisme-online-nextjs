@@ -1,5 +1,5 @@
 // Components
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import Container from '@/components/container';
 import BlocIntroSmall from '@/components/atoms/BlocIntroSmall';
 import EmptyElement from '@/components/EmptyElement';
@@ -78,6 +78,7 @@ interface PageBibliothequeProps {
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
   initialData: {
     products: PaginatedData<ProductDocsProps>;
@@ -92,6 +93,7 @@ const PageBibliotheque = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
   initialData,
 }: PageBibliothequeProps) => {
@@ -103,10 +105,14 @@ const PageBibliotheque = ({
   type ValidType = (typeof validTypes)[number];
 
   const [searchTerm, setSearchTerm] = useState(
-    (Array.isArray(router.query.search) ? router.query.search[0] : router.query.search) || ''
+    (Array.isArray(router.query.search)
+      ? router.query.search[0]
+      : router.query.search) || '',
   );
   const [activeSearchTerm, setActiveSearchTerm] = useState(
-    (Array.isArray(router.query.search) ? router.query.search[0] : router.query.search) || ''
+    (Array.isArray(router.query.search)
+      ? router.query.search[0]
+      : router.query.search) || '',
   );
   const [isSearching, setIsSearching] = useState(false);
   const [selectedType, setSelectedType] = useState<ValidType | ''>(
@@ -162,7 +168,9 @@ const PageBibliotheque = ({
   // Effet pour gérer l'initialisation et les changements d'URL
   useEffect(() => {
     const type = router.query.type as ValidType;
-    const search = Array.isArray(router.query.search) ? router.query.search[0] : router.query.search;
+    const search = Array.isArray(router.query.search)
+      ? router.query.search[0]
+      : router.query.search;
 
     if (type && validTypes.includes(type)) {
       setSelectedType(type);
@@ -178,32 +186,33 @@ const PageBibliotheque = ({
       const performSearch = async () => {
         setIsSearching(true);
         try {
-          const [productsResponse, articlesResponse, brandsResponse] = await Promise.all([
-            client.query({
-              query: GET_LIBRARY_DOCUMENTS,
-              variables: {
-                first: PRODUCTS_PER_PAGE,
-                after: null,
-                search: search || '',
-              },
-            }),
-            client.query({
-              query: GET_LIBRARY_ARTICLES,
-              variables: {
-                first: ARTICLES_PER_PAGE,
-                after: null,
-                search: search || '',
-              },
-            }),
-            client.query({
-              query: GET_LIBRARY_BRANDS,
-              variables: {
-                first: BRANDS_PER_PAGE,
-                after: null,
-                search: search || '',
-              },
-            }),
-          ]);
+          const [productsResponse, articlesResponse, brandsResponse] =
+            await Promise.all([
+              client.query({
+                query: GET_LIBRARY_DOCUMENTS,
+                variables: {
+                  first: PRODUCTS_PER_PAGE,
+                  after: null,
+                  search: search || '',
+                },
+              }),
+              client.query({
+                query: GET_LIBRARY_ARTICLES,
+                variables: {
+                  first: ARTICLES_PER_PAGE,
+                  after: null,
+                  search: search || '',
+                },
+              }),
+              client.query({
+                query: GET_LIBRARY_BRANDS,
+                variables: {
+                  first: BRANDS_PER_PAGE,
+                  after: null,
+                  search: search || '',
+                },
+              }),
+            ]);
 
           setProducts(productsResponse.data.products);
           setArticles(articlesResponse.data.posts);
@@ -240,11 +249,11 @@ const PageBibliotheque = ({
         pathname: router.pathname,
         query: {
           ...router.query,
-          search: searchTerm || undefined
+          search: searchTerm || undefined,
         },
       },
       undefined,
-      { shallow: true }
+      { shallow: true },
     );
 
     try {
@@ -303,7 +312,7 @@ const PageBibliotheque = ({
         pathname: router.pathname,
         query: {
           ...(searchTerm ? { search: searchTerm } : {}),
-          ...(type ? { type } : {})
+          ...(type ? { type } : {}),
         },
       },
       undefined,
@@ -401,6 +410,7 @@ const PageBibliotheque = ({
       uri={'/bibliotheque'}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       isBg

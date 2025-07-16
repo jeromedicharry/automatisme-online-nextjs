@@ -3,7 +3,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import {
   GET_ALL_FAQ_ITEMS,
   GET_ALL_PAGE_SLUGS,
@@ -25,6 +25,7 @@ const Page = ({
   featuredFaq,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   faqItems,
   categoriesMenu,
 }: {
@@ -34,6 +35,7 @@ const Page = ({
   featuredFaq: FeaturedFaqProps;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   faqItems: FaqItemProps[];
   categoriesMenu?: CategoryMenuProps[];
 }) => {
@@ -50,6 +52,7 @@ const Page = ({
       meta={page?.seo}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       totalProducts={totalProducts}

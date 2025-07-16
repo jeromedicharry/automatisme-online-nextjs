@@ -6,7 +6,7 @@ import {
   GET_SINGLE_CATEGORY,
 } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import client from '@/utils/apollo/ApolloClient';
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 
 import Container from '@/components/container';
 import React, { useEffect, useState } from 'react';
@@ -47,6 +47,7 @@ const CategoryPage = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
   initialFacets,
   initialHasPose,
@@ -59,6 +60,7 @@ const CategoryPage = ({
   totalProducts: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
   initialFacets: any;
   initialHasPose: boolean;
@@ -211,6 +213,7 @@ const CategoryPage = ({
       categoriesMenu={categoriesMenu}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       totalProducts={totalProducts}
       isBg

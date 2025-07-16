@@ -5,6 +5,8 @@ import ContactMenu from './ContactMenu';
 import PaymentMethods from './PaymentMethods';
 import Newsletter from './Newsletter';
 import BlocReassurance from '../blocs/BlocReassurance';
+import FooterAccordion from './FooterAccordion';
+import { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 
 /**
  * Renders Footer of the application.
@@ -14,10 +16,12 @@ import BlocReassurance from '../blocs/BlocReassurance';
 const Footer = ({
   menu1,
   menu2,
+  menu3,
   themeSettings,
 }: {
   menu1: SimpleFooterMenuProps | undefined;
   menu2: SimpleFooterMenuProps | undefined;
+  menu3: DoubleLevelFooterMenuProps | undefined;
   themeSettings: any;
 }) => (
   <>
@@ -32,7 +36,7 @@ const Footer = ({
         isFooter={true}
       />
     </div>
-    <footer className="bg-primary py-10">
+    <footer className="bg-primary pt-10 pb-14">
       <Container>
         <div className="flex md:flex-wrap flex-col md:flex-row items-center md:items-start md:justify-between gap-10 md:gap-6 max-md:max-w-md mx-auto">
           <div className="flex flex-col gap-14 md:gap-6 max-sm:items-stretch max-sm:w-full">
@@ -46,6 +50,13 @@ const Footer = ({
           <SimpleFooterMenu menu={menu2} />
           <PaymentMethods themeSettings={themeSettings} />
         </div>
+      </Container>
+      <Container>
+        {menu3 && (
+          <div className="mt-10">
+            <FooterAccordion menuItems={menu3.menuItems.nodes} />
+          </div>
+        )}
       </Container>
     </footer>
   </>

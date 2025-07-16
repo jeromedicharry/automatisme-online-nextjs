@@ -1,5 +1,5 @@
 // Components
-import Layout from '@/components/Layout/Layout';
+import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import CartContents from '@/components/Cart/CartContents';
 import CartSummary from '@/components/Cart/CartSummary';
 import DeliveryChoices from '@/components/Cart/DeliveryChoices';
@@ -29,6 +29,7 @@ const Panier = ({
   totalProducts,
   footerMenu1,
   footerMenu2,
+  footerMenu3,
   categoriesMenu,
   poseReducedTvForm,
 }: {
@@ -36,6 +37,7 @@ const Panier = ({
   totalProducts?: number;
   footerMenu1: SimpleFooterMenuProps;
   footerMenu2: SimpleFooterMenuProps;
+  footerMenu3?: DoubleLevelFooterMenuProps;
   categoriesMenu?: CategoryMenuProps[];
   poseReducedTvForm: string;
 }) => {
@@ -115,6 +117,7 @@ const Panier = ({
       }}
       footerMenu1={footerMenu1}
       footerMenu2={footerMenu2}
+      footerMenu3={footerMenu3}
       themeSettings={themeSettings}
       categoriesMenu={categoriesMenu}
       totalProducts={totalProducts}
