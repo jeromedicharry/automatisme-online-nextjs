@@ -40,12 +40,12 @@ const Cta = ({
 
   const sizeClass =
     size === 'large'
-      ? 'text-base leading-general px-12 py-3 gap-4 whitespace-nowrap'
+      ? 'text-base leading-none px-12 py-3 gap-4 whitespace-nowrap'
       : size === 'small'
-        ? 'text-xs leading-general px-2 py-1 gap-[2px] min-h-[24px] min-w-fit'
+        ? 'text-xs leading-none px-2 py-1 gap-[2px] min-h-[24px] min-w-fit'
         : size === 'mobile-header'
-          ? 'text-clamp leading-general px-[0.75em] py-3 gap-[2px] min-h-[24px] w-full truncate '
-          : 'text-base leading-general px-4 py-2 gap-2 min-h-[43px]';
+          ? 'text-clamp leading-none px-[0.75em] py-3 gap-[2px] min-h-[24px] w-full truncate '
+          : 'text-base leading-none px-4 py-2 gap-2 min-h-[43px]';
 
   const variantClasses = {
     primary:

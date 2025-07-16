@@ -40,13 +40,13 @@ const EditableField: React.FC<EditableFieldProps> = ({
     <div className="mb-4 border-b border-breadcrumb-grey pb-3">
       <div className="flex justify-between items-start">
         <div>
-          <p className="font-bold text-sm leading-general mb-2">{label}</p>
-          <p className="text-dark-grey text-sm leading-general">{value}</p>
+          <p className="font-bold text-base leading-general mb-2">{label}</p>
+          <p className="text-dark-grey text-base leading-general">{value}</p>
         </div>
         <div className="w-fit">
           <button
             onClick={handleEditToggle}
-            className="font-bold text-sm leading-general flex gap-1 items-center"
+            className="font-bold text-base leading-general flex gap-1 items-baseline"
           >
             {'Modifier'}
             <div

@@ -91,7 +91,7 @@ const SendPasswordResetEmailForm: React.FC<SendPasswordResetEmailFormProps> = ({
         {/* Bouton de fermeture */}
         <button
           onClick={handleClose}
-          className="absolute top-0 left-0 text-primary hover:text-black text-xl"
+          className="absolute top-0 left-0 text-primary hover:text-black text-xl close-icon"
           type="button"
         >
           <CloseSvg />

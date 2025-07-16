@@ -19,7 +19,7 @@ const AddressCard: React.FC<AddressCardProps> = ({ address, type, onEdit }) => {
         <Cta
           handleButtonClick={onEdit}
           variant="primaryHollow"
-          size="small"
+          size="default"
           label="Modifier"
           slug="#"
         >

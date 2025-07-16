@@ -77,7 +77,7 @@ export default function Header({
       <div className="hidden lg:flex w-full">
         <Link
           href="/compte"
-          className="w-1/2 bg-primary py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
+          className="w-1/2 bg-primary py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-baseline gap-2 duration-300 text-sm leading-general"
         >
           Mon espace client
           <div className="max-w-1">
@@ -86,7 +86,7 @@ export default function Header({
         </Link>
         <Link
           href="/bibliotheque"
-          className="w-1/2 bg-primary-ter py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-center gap-2 duration-300 text-sm leading-general"
+          className="w-1/2 bg-primary-ter py-[6px] text-center justify-center text-white hover:bg-primary-dark flex items-baseline gap-2 duration-300 text-sm leading-general"
         >
           Bibliothèque de contenu
           <div className="max-w-1">

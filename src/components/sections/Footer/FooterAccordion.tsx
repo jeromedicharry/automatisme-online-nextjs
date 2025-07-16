@@ -56,12 +56,14 @@ const FooterAccordion = ({ menuItems }: FooterAccordionProps) => {
                 contentRefs.current[index] = el;
               }}
               style={{
-                height: openItems.includes(index) ? `${contentHeights[index]}px` : '0',
+                height: openItems.includes(index)
+                  ? `${contentHeights[index]}px`
+                  : '0',
                 opacity: openItems.includes(index) ? 1 : 0,
               }}
               className="overflow-hidden transition-all duration-300 ease-in-out"
             >
-              <div className="pb-2 space-y-3">
+              <div className="pb-2 grid grid-cols-1 gap-3 lg:grid-cols-2 xxl:grid-cols-3">
                 {item.childItems.nodes.map((child, childIndex) => (
                   <a
                     key={childIndex}

@@ -262,6 +262,7 @@ form input {
   color: #042B60;
   padding: 8px 16px;
   border-radius: 4px;
+  line-height: 1;
 }
 form textarea {
   color: #042B60;
@@ -311,6 +312,11 @@ form ::placeholder {
 
 .contact textarea {
   min-height: 130px;
+}
+
+.close-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Override scroll bar */

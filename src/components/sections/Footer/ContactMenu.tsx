@@ -13,7 +13,7 @@ const ContactMenu = ({ themeSettings }: { themeSettings: any }) => {
         {themeSettings?.contactPhone && (
           <a
             href={`tel:${themeSettings?.contactPhone}`}
-            className="rounded-[5px] font-bold text-base py-1 px-2 text-white leading-general bg-secondary hover:text-white duration-300 hover:bg-secondary-dark"
+            className="rounded-[5px] font-bold text-base py-1 px-2 text-white leading-general bg-secondary hover:text-white duration-300 hover:bg-secondary-dark w-fit"
           >
             {themeSettings.contactPhone}
           </a>

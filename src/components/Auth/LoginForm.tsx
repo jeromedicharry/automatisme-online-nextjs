@@ -133,7 +133,7 @@ export default function LogInForm({
       <div className="relative flex flex-col justify-center h-full w-full">
         <button
           onClick={handleClose}
-          className="absolute top-0 left-0 text-primary hover:text-black text-xl"
+          className="absolute top-0 left-0 text-primary hover:text-black text-xl w-5 h-6 close-icon"
           type="button"
         >
           <CloseSvg />

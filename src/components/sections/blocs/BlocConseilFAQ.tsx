@@ -43,6 +43,7 @@ const BlocConseilFAQ = ({
             navigation={{ nextEl: '.nextService', prevEl: '.prevService' }}
             pagination={{ clickable: true }}
             wrapperClass="flex align-stretch"
+            loop={true}
           >
             {advices.map((item, key) => (
               <SwiperSlide key={key} className="">
@@ -77,6 +78,7 @@ const BlocConseilFAQ = ({
             autoHeight={false}
             navigation={{ nextEl: '.nextFaq', prevEl: '.prevFaq' }}
             wrapperClass="flex align-stretch"
+            loop={true}
           >
             {featuredFaq?.items?.map((item, key) => (
               <SwiperSlide key={key} className="">

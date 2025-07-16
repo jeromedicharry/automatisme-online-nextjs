@@ -594,7 +594,7 @@ const PageBibliotheque = ({
                                         .mediaItemUrl
                                     }
                                     target="_blank"
-                                    size="small"
+                                    size="default"
                                     isFull
                                   >
                                     Voir la fiche technique
@@ -610,7 +610,7 @@ const PageBibliotheque = ({
                                         .mediaItemUrl
                                     }
                                     target="_blank"
-                                    size="small"
+                                    size="default"
                                     isFull
                                   >
                                     Voir le guide de pose

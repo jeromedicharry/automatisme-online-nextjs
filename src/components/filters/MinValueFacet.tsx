@@ -66,9 +66,14 @@ const MinValueFacet = ({
 
   // Déterminer le style de positionnement de la valeur courante
   const getValueStyle = () => {
-    if (valuePosition >= 90) {
+    if (valuePosition <= 10) {
+      // Si le curseur est très à gauche, aligner la valeur à gauche
+      return { left: '0%', transform: 'translateX(0)' };
+    } else if (valuePosition >= 90) {
+      // Si le curseur est très à droite, aligner la valeur à droite
       return { right: '0%', transform: 'translateX(0)' };
     }
+    // Position normale au centre du curseur
     return { left: `${valuePosition}%`, transform: 'translateX(-50%)' };
   };
 

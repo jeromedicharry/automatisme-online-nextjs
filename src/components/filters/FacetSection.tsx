@@ -24,7 +24,7 @@ const FacetSection = ({
           {label}
         </p>
         <div
-          className={`text-secondary w-3 h-3 flex justify-center items-center duration-300 ${
+          className={`text-secondary w-3 h-3 flex justify-center items-baseline duration-300 ${
             isOpen ? 'rotate-90' : '-rotate-90'
           }`}
         >

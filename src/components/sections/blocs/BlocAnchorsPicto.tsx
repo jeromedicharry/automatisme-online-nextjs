@@ -29,7 +29,7 @@ const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
                   height={72}
                   className="max-w-[56px] object-cover"
                 />
-                <span className="absolute bottom-[-8px] left-[-8px] w-4 h-4 rounded-full bg-secondary text-white flex items-center justify-center">
+                <span className="absolute -bottom-2 -left-2 w-5 h-5 text-sm leading-none rounded-full bg-secondary text-white flex items-center justify-center">
                   {index + 1}
                 </span>
               </div>
@@ -124,7 +124,7 @@ const BlocAnchorsPicto = ({ bloc }: { bloc: BlocAnchorsPictosProps }) => {
               <div className="mt-12 flex flex-col gap-4">
                 {item.targetSection?.advantages?.map((advantage, index) => (
                   <div key={index}>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-baseline gap-2 mb-2">
                       <div className="text-secondary">
                         <BulletSvg />
                       </div>

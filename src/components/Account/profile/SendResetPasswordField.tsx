@@ -71,15 +71,17 @@ const SendResetPasswordField = ({ email }: { email: string }) => {
     <div className="">
       <div className="flex justify-between items-start">
         <div>
-          <p className="font-bold text-sm leading-general mb-2">Mot de passe</p>
-          <p className="text-dark-grey text-sm leading-general">
+          <p className="font-bold text-base leading-general mb-2">
+            Mot de passe
+          </p>
+          <p className="text-dark-grey text-base leading-general">
             {'**********'}
           </p>
         </div>
         <div className="w-fit">
           <button
             onClick={handleEditToggle}
-            className="font-bold text-sm leading-general flex gap-1 items-center"
+            className="font-bold text-base leading-general flex gap-1 items-baseline"
           >
             {'Modifier'}
             <div

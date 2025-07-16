@@ -62,6 +62,7 @@ const BlocFeaturedProducts = ({
               <Swiper
                 spaceBetween={20}
                 modules={[Navigation]}
+                loop={true}
                 breakpoints={{
                   0: {
                     slidesPerView: 'auto',
