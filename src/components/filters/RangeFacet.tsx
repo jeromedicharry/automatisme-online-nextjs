@@ -3,6 +3,7 @@ import ReactSlider from 'react-slider';
 import { SimpleFacetValue } from './utils';
 import { calculerPrix } from '@/utils/functions/prices';
 import useAuth from '@/hooks/useAuth';
+import { Loader2 } from 'lucide-react';
 
 type RangeFacetProps = {
   values: SimpleFacetValue[]; // Valeurs courantes des facettes
@@ -10,6 +11,7 @@ type RangeFacetProps = {
   minValue: string | undefined;
   maxValue: string | undefined;
   onChange: (minMax: string) => void;
+  isLoading: boolean;
 };
 
 const RangeFacet = ({
@@ -18,11 +20,12 @@ const RangeFacet = ({
   minValue,
   maxValue,
   onChange,
+  isLoading,
 }: RangeFacetProps) => {
   // Définir la plage totale disponible à partir des valeurs globales
   const availableRangeRef = useRef({
     min: 0,
-    max: 100
+    max: 100,
   });
 
   // Mettre à jour la plage totale disponible
@@ -32,7 +35,7 @@ const RangeFacet = ({
     if (valuesArray?.length) {
       // Extraire et trier tous les prix numériquement
       const prices = valuesArray
-        .map(v => parseFloat(v.name))
+        .map((v) => parseFloat(v.name))
         .sort((a, b) => a - b);
 
       // Utiliser le premier et dernier prix comme min/max
@@ -40,10 +43,13 @@ const RangeFacet = ({
       const newMax = prices[prices.length - 1];
 
       // Mettre à jour la plage uniquement si elle a changé
-      if (newMin !== availableRangeRef.current.min || newMax !== availableRangeRef.current.max) {
+      if (
+        newMin !== availableRangeRef.current.min ||
+        newMax !== availableRangeRef.current.max
+      ) {
         availableRangeRef.current = {
           min: newMin,
-          max: newMax
+          max: newMax,
         };
 
         // Si aucune valeur n'est sélectionnée, utiliser la plage complète
@@ -83,7 +89,10 @@ const RangeFacet = ({
       isNaN(newMax)
     ) {
       // Si pas de valeurs spécifiées ou valeurs invalides, utiliser la plage complète
-      setSliderValues([availableRangeRef.current.min, availableRangeRef.current.max]);
+      setSliderValues([
+        availableRangeRef.current.min,
+        availableRangeRef.current.max,
+      ]);
     } else {
       // Utiliser les valeurs spécifiées directement
       setSliderValues([newMin, newMax]);
@@ -95,7 +104,7 @@ const RangeFacet = ({
     try {
       const [minPrix, maxPrix] = await Promise.all([
         calculerPrix(sliderValues[0], isPro, countryCode || 'FR'),
-        calculerPrix(sliderValues[1], isPro, countryCode || 'FR')
+        calculerPrix(sliderValues[1], isPro, countryCode || 'FR'),
       ]);
 
       setFormattedPrices([
@@ -148,8 +157,6 @@ const RangeFacet = ({
   }, [isPro, countryCode, globalValues]);
 
   const handleSliderChange = (value: [number, number]) => {
-
-
     // Contraindre les valeurs à la plage disponible
     const newMin = Math.max(availableRangeRef.current.min, value[0]);
     const newMax = Math.min(availableRangeRef.current.max, value[1]);
@@ -181,6 +188,14 @@ const RangeFacet = ({
     return { left: `${maxPosition}%`, transform: 'translateX(-50%)' };
   };
 
+  if (isLoading)
+    return (
+      <p className="text-center h-[84px] flex justify-center items-center gap-2">
+        <Loader2 className="animate-spin" />
+        Chargement des prix...
+      </p>
+    );
+
   return (
     <div className="space-y-4 min-w-[150px]">
       {/* Valeurs courantes affichées au-dessus des curseurs */}
@@ -201,6 +216,7 @@ const RangeFacet = ({
       </div>
 
       {/* Slider */}
+
       <ReactSlider
         className="h-3 flex items-center"
         thumbClassName="w-4 h-4 bg-secondary rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-light-alt"
@@ -214,7 +230,7 @@ const RangeFacet = ({
       />
 
       {/* Plage totale disponible */}
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs text-dark-grey">
         <span>Min: {formattedMinMaxPrices[0]}</span>
         <span>Max: {formattedMinMaxPrices[1]}</span>
       </div>

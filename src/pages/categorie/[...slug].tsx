@@ -232,6 +232,7 @@ const CategoryPage = ({
           <FilterSidebar
             facetDistribution={facets}
             categorySlug={category.slug}
+            isLoading={isLoading}
           />
           <section className="max-md:w-full lg:flex-grow overflow-hidden">
             <div className="flex justify-between mb-6 md:mb-4">

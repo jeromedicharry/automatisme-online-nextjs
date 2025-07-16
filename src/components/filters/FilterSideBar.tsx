@@ -15,9 +15,11 @@ import Cta from '../atoms/Cta';
 const FilterSidebar = ({
   facetDistribution,
   categorySlug,
+  isLoading,
 }: {
   facetDistribution: any;
   categorySlug: string;
+  isLoading: boolean;
 }) => {
   const {
     query,
@@ -113,18 +115,8 @@ const FilterSidebar = ({
                     globalValues={formattedGlobalFacets[label]?.values}
                     minValue={query[`${key}_min`] as string | undefined}
                     maxValue={query[`${key}_max`] as string | undefined}
-                    onChange={(value) => {
-                      handleValueChange(value);
-                    }}
-                  />
-                )}
-
-                {facet.type === 'range' && searchType !== 'meta' && (
-                  <RangeFacet
-                    values={facet.values}
-                    minValue={query[`${key}_min`] as string | undefined}
-                    maxValue={query[`${key}_max`] as string | undefined}
                     onChange={handleValueChange}
+                    isLoading={isLoading}
                   />
                 )}
 
