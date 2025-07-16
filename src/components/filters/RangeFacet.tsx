@@ -36,11 +36,12 @@ const RangeFacet = ({
       // Extraire et trier tous les prix numériquement
       const prices = valuesArray
         .map((v) => parseFloat(v.name))
+        .filter((price) => !isNaN(price)) // Filtrer les valeurs non numériques
         .sort((a, b) => a - b);
 
       // Utiliser le premier et dernier prix comme min/max
-      const newMin = prices[0];
-      const newMax = prices[prices.length - 1];
+      const newMin = Math.min(...prices);
+      const newMax = Math.max(...prices);
 
       // Mettre à jour la plage uniquement si elle a changé
       if (

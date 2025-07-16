@@ -110,7 +110,7 @@ export const fetchMeiliProductsByCategory = async ({
 
   const requestOptions: MeiliRequestOptions = {
     q: '',
-    limit,
+    limit: limit || 3000, // Utiliser la limite maximale pour les facettes
     offset,
     filter: filterString,
     facets: ['*'],
@@ -152,6 +152,32 @@ export const fetchMeiliProductsByCategory = async ({
     total: result.estimatedTotalHits,
     hasPose,
   };
+};
+
+export const getMeiliStats = async (categorySlug: string) => {
+  // Construire l'URL avec les paramètres
+  const url = new URL(meilisearchStatsUrl);
+  const filter = `taxonomies.product_cat.slug = '${categorySlug}' AND meta._visibility = 'visible'`;
+  url.searchParams.append('filter', filter);
+
+  console.log('URL des stats:', url.toString());
+  console.log('Filtre utilisé:', filter);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.MEILISEARCH_API_KEY}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Erreur lors de la récupération depuis Meilisearch');
+  }
+
+  const result = await response.json();
+  console.log('Résultat des stats:', result);
+  return result;
 };
 
 export const getTotalProductsMeili = async () => {
