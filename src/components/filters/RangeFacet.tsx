@@ -5,7 +5,8 @@ import { calculerPrix } from '@/utils/functions/prices';
 import useAuth from '@/hooks/useAuth';
 
 type RangeFacetProps = {
-  values: SimpleFacetValue[];
+  values: SimpleFacetValue[]; // Valeurs courantes des facettes
+  globalValues?: SimpleFacetValue[]; // Valeurs globales pour le min/max total
   minValue: string | undefined;
   maxValue: string | undefined;
   onChange: (minMax: string) => void;
@@ -13,20 +14,45 @@ type RangeFacetProps = {
 
 const RangeFacet = ({
   values,
+  globalValues,
   minValue,
   maxValue,
   onChange,
 }: RangeFacetProps) => {
+  // Définir la plage totale disponible à partir des valeurs globales
   const availableRangeRef = useRef({
-    min:
-      values.length > 0
-        ? Math.min(...values.map((v) => parseFloat(v.name)))
-        : 0,
-    max:
-      values.length > 0
-        ? Math.max(...values.map((v) => parseFloat(v.name)))
-        : 100,
+    min: 0,
+    max: 100
   });
+
+  // Mettre à jour la plage totale disponible
+  useEffect(() => {
+    // Utiliser les valeurs globales si disponibles, sinon les valeurs courantes
+    const valuesArray = globalValues || values;
+    if (valuesArray?.length) {
+      // Extraire et trier tous les prix numériquement
+      const prices = valuesArray
+        .map(v => parseFloat(v.name))
+        .sort((a, b) => a - b);
+
+      // Utiliser le premier et dernier prix comme min/max
+      const newMin = prices[0];
+      const newMax = prices[prices.length - 1];
+
+      // Mettre à jour la plage uniquement si elle a changé
+      if (newMin !== availableRangeRef.current.min || newMax !== availableRangeRef.current.max) {
+        availableRangeRef.current = {
+          min: newMin,
+          max: newMax
+        };
+
+        // Si aucune valeur n'est sélectionnée, utiliser la plage complète
+        if (!minValue && !maxValue) {
+          setSliderValues([newMin, newMax]);
+        }
+      }
+    }
+  }, [globalValues, values, minValue, maxValue]);
 
   const { min: availableMin, max: availableMax } = availableRangeRef.current;
   const { isPro, countryCode } = useAuth();
@@ -45,6 +71,7 @@ const RangeFacet = ({
     [string, string]
   >([`${Math.round(availableMin)}€`, `${Math.round(availableMax)}€`]);
 
+  // Mettre à jour les valeurs du slider quand les valeurs min/max changent
   useEffect(() => {
     const newMin = minValue ? parseFloat(minValue) : undefined;
     const newMax = maxValue ? parseFloat(maxValue) : undefined;
@@ -55,52 +82,51 @@ const RangeFacet = ({
       newMax === undefined ||
       isNaN(newMax)
     ) {
-      setSliderValues([availableMin, availableMax]);
+      // Si pas de valeurs spécifiées ou valeurs invalides, utiliser la plage complète
+      setSliderValues([availableRangeRef.current.min, availableRangeRef.current.max]);
     } else {
+      // Utiliser les valeurs spécifiées directement
       setSliderValues([newMin, newMax]);
     }
-  }, [minValue, maxValue, availableMin, availableMax]);
+  }, [minValue, maxValue]);
 
-  useEffect(() => {
-    async function updateFormattedPrices() {
-      try {
-        const minPrix = await calculerPrix(
-          sliderValues[0],
-          isPro,
-          countryCode || 'FR',
-        );
-        const maxPrix = await calculerPrix(
-          sliderValues[1],
-          isPro,
-          countryCode || 'FR',
-        );
+  // Mémoiser la fonction de calcul des prix pour éviter les recalculs inutiles
+  const updateFormattedPrices = React.useCallback(async () => {
+    try {
+      const [minPrix, maxPrix] = await Promise.all([
+        calculerPrix(sliderValues[0], isPro, countryCode || 'FR'),
+        calculerPrix(sliderValues[1], isPro, countryCode || 'FR')
+      ]);
 
-        setFormattedPrices([
-          `${Math.round(minPrix)}€`,
-          `${Math.round(maxPrix)}€`,
-        ]);
-      } catch (error) {
-        console.error('Erreur lors du calcul des prix:', error);
-        setFormattedPrices([
-          `${Math.round(sliderValues[0])}€`,
-          `${Math.round(sliderValues[1])}€`,
-        ]);
-      }
+      setFormattedPrices([
+        `${Math.round(minPrix)}€`,
+        `${Math.round(maxPrix)}€`,
+      ]);
+    } catch (error) {
+      console.error('Erreur lors du calcul des prix:', error);
+      setFormattedPrices([
+        `${Math.round(sliderValues[0])}€`,
+        `${Math.round(sliderValues[1])}€`,
+      ]);
     }
-
-    updateFormattedPrices();
   }, [sliderValues, isPro, countryCode]);
 
   useEffect(() => {
+    updateFormattedPrices();
+  }, [updateFormattedPrices]);
+
+  useEffect(() => {
+    if (!availableRangeRef.current) return;
+
     async function updateMinMaxPrices() {
       try {
         const formattedMin = await calculerPrix(
-          availableMin,
+          availableRangeRef.current.min,
           isPro,
           countryCode || 'FR',
         );
         const formattedMax = await calculerPrix(
-          availableMax,
+          availableRangeRef.current.max,
           isPro,
           countryCode || 'FR',
         );
@@ -112,19 +138,24 @@ const RangeFacet = ({
       } catch (error) {
         console.error('Erreur lors du calcul des prix min/max:', error);
         setFormattedMinMaxPrices([
-          `${Math.round(availableMin)}€`,
-          `${Math.round(availableMax)}€`,
+          `${Math.round(availableRangeRef.current.min)}€`,
+          `${Math.round(availableRangeRef.current.max)}€`,
         ]);
       }
     }
 
     updateMinMaxPrices();
-  }, [isPro, countryCode]);
+  }, [isPro, countryCode, globalValues]);
 
   const handleSliderChange = (value: [number, number]) => {
-    setSliderValues(value);
-    // Envoyer directement les valeurs formatées sans créer de paramètre combiné
-    onChange(`${value[0].toFixed(2)}-${value[1].toFixed(2)}`);
+
+
+    // Contraindre les valeurs à la plage disponible
+    const newMin = Math.max(availableRangeRef.current.min, value[0]);
+    const newMax = Math.min(availableRangeRef.current.max, value[1]);
+
+    setSliderValues([newMin, newMax]);
+    onChange(`${newMin.toFixed(2)}-${newMax.toFixed(2)}`);
   };
 
   // Calculer les positions des valeurs courantes en pourcentage
