@@ -8,6 +8,7 @@ import FacetSection from './FacetSection';
 import CheckboxFacet from './CheckboxFacet';
 import RangeFacet from './RangeFacet';
 import MaxValueFacet from './MaxValueFacet';
+import MinValueFacet from './MinValueFacet';
 import Modal from '../Modals/Modal';
 import { useState } from 'react';
 import Cta from '../atoms/Cta';
@@ -122,6 +123,14 @@ const FilterSidebar = ({
 
                 {facet.type === 'maxValueCheckbox' && (
                   <MaxValueFacet
+                    values={facet.values}
+                    selectedValues={selectedValues}
+                    onChange={handleValueChange}
+                  />
+                )}
+
+                {facet.type === 'minValueCheckbox' && (
+                  <MinValueFacet
                     values={facet.values}
                     selectedValues={selectedValues}
                     onChange={handleValueChange}

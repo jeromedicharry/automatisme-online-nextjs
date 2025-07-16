@@ -2,17 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactSlider from 'react-slider';
 import { SimpleFacetValue } from './utils';
 
-type MaxValueFacetProps = {
+type MinValueFacetProps = {
   values: SimpleFacetValue[];
   selectedValues: string[];
   onChange: (value: string) => void;
 };
 
-const MaxValueFacet = ({
+const MinValueFacet = ({
   values,
   selectedValues,
   onChange,
-}: MaxValueFacetProps) => {
+}: MinValueFacetProps) => {
   // Calculer et mémoriser les valeurs min et max disponibles
   const availableRangeRef = useRef({
     min: values.length > 0
@@ -23,32 +23,32 @@ const MaxValueFacet = ({
       : 100,
   });
 
-  console.log('[MaxValueFacet] Facet values:', values);
-  console.log('[MaxValueFacet] Min/Max range:', availableRangeRef.current);
+  console.log('[MinValueFacet] Facet values:', values);
+  console.log('[MinValueFacet] Min/Max range:', availableRangeRef.current);
 
   const { min: availableMin, max: availableMax } = availableRangeRef.current;
 
-  // Initialiser la valeur du slider avec la valeur sélectionnée ou la valeur max disponible
+  // Initialiser la valeur du slider avec la valeur sélectionnée ou la valeur min disponible
   const [sliderValue, setSliderValue] = useState<number>(
     selectedValues.length > 0
       ? parseFloat(selectedValues[0])
-      : availableMax
+      : availableMin
   );
 
   // Mettre à jour le slider quand les valeurs sélectionnées changent
   useEffect(() => {
-    console.log('[MaxValueFacet] Selected values changed:', selectedValues);
+    console.log('[MinValueFacet] Selected values changed:', selectedValues);
     if (selectedValues.length > 0) {
       const newValue = parseFloat(selectedValues[0]);
-      console.log('[MaxValueFacet] New value from selection:', newValue);
+      console.log('[MinValueFacet] New value from selection:', newValue);
       if (!isNaN(newValue)) {
         setSliderValue(newValue);
       }
     } else {
-      console.log('[MaxValueFacet] No selection, using max:', availableMax);
-      setSliderValue(availableMax);
+      console.log('[MinValueFacet] No selection, using min:', availableMin);
+      setSliderValue(availableMin);
     }
-  }, [selectedValues, availableMax]);
+  }, [selectedValues, availableMin]);
 
   // Gérer le changement de valeur du slider
   const handleSliderChange = (value: number) => {
@@ -57,7 +57,7 @@ const MaxValueFacet = ({
 
   // Gérer la fin du changement (quand l'utilisateur relâche le curseur)
   const handleAfterChange = (value: number) => {
-    console.log('[MaxValueFacet] Slider value changed to:', value);
+    console.log('[MinValueFacet] Slider value changed to:', value);
     onChange(value.toFixed(2));
   };
 
@@ -78,7 +78,7 @@ const MaxValueFacet = ({
       <div className="relative h-6 overflow-visible">
         <div className="absolute top-0" style={getValueStyle()}>
           <div className="bg-white text-xs px-2 py-1 rounded shadow-sm border whitespace-nowrap">
-            ≤ {sliderValue.toFixed(1)}
+            ≥ {sliderValue.toFixed(1)}
           </div>
         </div>
       </div>
@@ -105,4 +105,4 @@ const MaxValueFacet = ({
   );
 };
 
-export default MaxValueFacet;
+export default MinValueFacet;
