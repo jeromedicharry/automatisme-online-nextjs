@@ -126,16 +126,17 @@ export default function Header({
 
           {/* Mobile search */}
           <div className="px-4 pb-4">
-            <div className="relative">
+            <form className="relative" id="fsearch">
               <input
                 type="text"
                 placeholder="Rechercher..."
+                id="motclefold"
                 className="w-full h-8 border border-primary rounded-full pl-4 pr-10 placeholder:text-placeholder-grey"
               />
               <div className="absolute right-1 top-1 text-white w-6 h-6 flex items-center justify-center bg-secondary hover:bg-secondary-dark rounded-full">
                 <SearchSvg />
               </div>
-            </div>
+            </form>
           </div>
         </div>
 
@@ -148,16 +149,17 @@ export default function Header({
               </div>
 
               <div className="shrink-1 lg:w-[670px]">
-                <div className="relative">
+                <form className="relative" id="fsearch">
                   <input
                     type="text"
+                    id="motclefold"
                     placeholder="Rechercher un produit"
                     className="w-full h-8 border border-primary rounded-full pl-4 pr-10 placeholder:text-placeholder-grey"
                   />
                   <div className="absolute right-1 top-1 text-white w-6 h-6 flex items-center justify-center bg-secondary hover:bg-secondary-dark rounded-full">
                     <SearchSvg />
                   </div>
-                </div>
+                </form>
               </div>
 
               <div className="flex items-center space-x-8 shrink-0">

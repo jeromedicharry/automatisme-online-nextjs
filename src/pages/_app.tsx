@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/client';
 
 // State import
 import { CartProvider } from '@/stores/CartProvider';
+import DoofinderProvider from '@/stores/DoofinderProvider.jsx';
 import client from '@/utils/apollo/ApolloClient';
 
 // Types
@@ -26,13 +27,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <AuthProvider>
-        <FavoritesProvider>
-          <CartProvider>
-            <InterMediateCartProvider>
-              <Component {...pageProps} />
-            </InterMediateCartProvider>
-          </CartProvider>
-        </FavoritesProvider>
+        <DoofinderProvider clientType="particulier">
+          <FavoritesProvider>
+            <CartProvider>
+              <InterMediateCartProvider>
+                <Component {...pageProps} />
+              </InterMediateCartProvider>
+            </CartProvider>
+          </FavoritesProvider>
+        </DoofinderProvider>
       </AuthProvider>
     </ApolloProvider>
   );
