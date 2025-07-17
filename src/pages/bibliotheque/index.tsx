@@ -151,17 +151,13 @@ const PageBibliotheque = ({
       setShowMoreVideos(false);
     }
   };
-  const [articles, setArticles] = useState<PaginatedData<any>>(
-    initialData.posts || {
-      nodes: [],
-      pageInfo: { hasNextPage: false, endCursor: '' },
-    },
+  const [articles, setArticles] = useState<PaginatedData<any>>(initialData.posts);
+  const [allBrands, setAllBrands] = useState(initialData.productBrands.nodes);
+  const [displayedBrands, setDisplayedBrands] = useState(
+    initialData.productBrands.nodes.slice(0, BRANDS_PER_PAGE)
   );
-  const [brands, setBrands] = useState<PaginatedData<any>>(
-    initialData.productBrands || {
-      nodes: [],
-      pageInfo: { hasNextPage: false, endCursor: '' },
-    },
+  const [hasMoreBrands, setHasMoreBrands] = useState(
+    initialData.productBrands.nodes.length > BRANDS_PER_PAGE
   );
   const [loading, setLoading] = useState(false);
 
@@ -216,7 +212,9 @@ const PageBibliotheque = ({
 
           setProducts(productsResponse.data.products);
           setArticles(articlesResponse.data.posts);
-          setBrands(brandsResponse.data.productBrands);
+          setAllBrands(brandsResponse.data.productBrands.nodes);
+          setDisplayedBrands(brandsResponse.data.productBrands.nodes.slice(0, BRANDS_PER_PAGE));
+          setHasMoreBrands(brandsResponse.data.productBrands.nodes.length > BRANDS_PER_PAGE);
 
           // Recherche locale pour les vidéos
           if (!search) {
@@ -288,7 +286,9 @@ const PageBibliotheque = ({
           search: searchTerm,
         },
       });
-      setBrands(brandsData.productBrands);
+      setAllBrands(brandsData.productBrands.nodes);
+      setDisplayedBrands(brandsData.productBrands.nodes.slice(0, BRANDS_PER_PAGE));
+      setHasMoreBrands(brandsData.productBrands.nodes.length > BRANDS_PER_PAGE);
 
       // Recherche locale pour les vidéos avec Fuse.js
       if (!searchTerm.trim()) {
@@ -375,29 +375,14 @@ const PageBibliotheque = ({
     }
   };
 
-  const loadMoreBrands = async () => {
-    if (!brands.pageInfo.hasNextPage) return;
-
-    setLoading(true);
-    try {
-      const { data } = await client.query({
-        query: GET_LIBRARY_BRANDS,
-        variables: {
-          first: 10,
-          after: brands.pageInfo.endCursor,
-          search,
-        },
-      });
-
-      setBrands((prev) => ({
-        nodes: [...prev.nodes, ...data.productBrands.nodes],
-        pageInfo: data.productBrands.pageInfo,
-      }));
-    } catch (error) {
-      console.error('Error loading more brands:', error);
-    } finally {
-      setLoading(false);
-    }
+  const loadMoreBrands = () => {
+    const currentLength = displayedBrands.length;
+    const nextBrands = allBrands.slice(
+      currentLength,
+      currentLength + BRANDS_PER_PAGE
+    );
+    setDisplayedBrands((prev) => [...prev, ...nextBrands]);
+    setHasMoreBrands(currentLength + BRANDS_PER_PAGE < allBrands.length);
   };
 
   return (
@@ -513,7 +498,7 @@ const PageBibliotheque = ({
 
       <div className="bg-white">
         <Container>
-          <div className="py-6">
+          <div className="pt-6 pb-10 md:pb-16">
             {searchTerm && (
               <BlocIntroLarge title={`Résultats pour: ${activeSearchTerm}`} />
             )}
@@ -533,7 +518,7 @@ const PageBibliotheque = ({
                 )) &&
               !displayedVideos?.length &&
               !articles?.nodes?.length &&
-              !brands?.nodes?.length) ||
+              !displayedBrands.length) ||
             (selectedType === 'documents' &&
               (!products?.nodes?.length ||
                 !products.nodes.some(
@@ -543,11 +528,11 @@ const PageBibliotheque = ({
                 ))) ||
             (selectedType === 'videos' && !displayedVideos?.length) ||
             (selectedType === 'articles' && !articles?.nodes?.length) ||
-            (selectedType === 'marques' && !brands?.nodes?.length) ? (
+            (selectedType === 'marques' && !displayedBrands.length) ? (
               <div className="w-fit mx-auto text-left">
                 <EmptyElement
                   title="Oups, rien à afficher ici..."
-                  subtitle={`<div>Votre recherche “${searchTerm}” ne correspond à aucun résultat sur notre site.</div><br />
+                  subtitle={`<div>Votre recherche "${searchTerm}" ne correspond à aucun résultat sur notre site.</div><br />
                 <span>Assurez-vous que tous les mots sont correctement orthographiés</span><br />
                 <span>Essayez des mots clés plus généraux</span>
                 `}
@@ -686,16 +671,14 @@ const PageBibliotheque = ({
                       />
                       <div>
                         <div className="grid grid-cols-1 gap-6 h-fit">
-                          {articles.nodes.map((article) => (
+                          {articles?.nodes?.map((article) => (
                             <BlocSav
                               key={article.slug}
                               bloc={{
                                 title: article.title,
                                 image: {
                                   node: {
-                                    sourceUrl:
-                                      article.featuredImage?.node?.sourceUrl ||
-                                      '/images/placeholder.jpg',
+                                    sourceUrl: article.featuredImage?.node?.sourceUrl || '/images/placeholder.jpg',
                                   },
                                 },
                                 date: article.date,
@@ -731,8 +714,7 @@ const PageBibliotheque = ({
 
                 {/* Marques */}
                 {(!selectedType || selectedType === 'marques') &&
-                  brands?.nodes &&
-                  brands.nodes.length > 0 && (
+                  displayedBrands.length > 0 && (
                     <section>
                       <BlocIntroSmall
                         title="Marques"
@@ -740,11 +722,11 @@ const PageBibliotheque = ({
                       />
                       <div>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                          {brands.nodes.map((brand) => (
+                          {displayedBrands.map((brand) => (
                             <BrandCard key={brand.name} brand={brand} />
                           ))}
                         </div>
-                        {brands.pageInfo.hasNextPage && (
+                        {hasMoreBrands && (
                           <div className="mt-8 text-center">
                             <Cta
                               label="Voir plus de marques"
@@ -790,10 +772,6 @@ export const getStaticProps: GetStaticProps = async () => {
     first: ARTICLES_PER_PAGE,
   };
 
-  const brandsVariables = {
-    ...defaultVariables,
-    first: BRANDS_PER_PAGE,
-  };
 
   // Fetch latest products with documents
   const { data: productsData } = await client.query({
@@ -815,7 +793,7 @@ export const getStaticProps: GetStaticProps = async () => {
   // Fetch brands
   const { data: brandsData } = await client.query({
     query: GET_LIBRARY_BRANDS,
-    variables: brandsVariables,
+    variables: { search: '' },
   });
 
   const initialData = {

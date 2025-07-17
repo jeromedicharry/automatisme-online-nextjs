@@ -440,8 +440,8 @@ export const GET_LIBRARY_ARTICLES = gql`
 `;
 
 export const GET_LIBRARY_BRANDS = gql`
-  query GetLibraryBrands($search: String, $first: Int!, $after: String) {
-    productBrands(first: $first, after: $after, where: { search: $search }) {
+  query GetLibraryBrands($search: String) {
+    productBrands(first: 100, where: { search: $search }) {
       nodes {
         name
         slug

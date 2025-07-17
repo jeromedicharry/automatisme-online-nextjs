@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export interface BrandCardProps {
@@ -15,9 +16,11 @@ const BrandCard = ({ brand }: { brand: BrandCardProps }) => {
     >
       {imageUrl ? (
         <>
-          <img
+          <Image
             src={imageUrl}
             alt={brand.name}
+            width={180}
+            height={180}
             className="w-full h-32 object-contain"
           />
           <div className="absolute bottom-2 right-4 text-sm text-gray-600 font-medium">
@@ -26,7 +29,7 @@ const BrandCard = ({ brand }: { brand: BrandCardProps }) => {
         </>
       ) : (
         <div className="h-32 flex items-center justify-center">
-          <span className="text-center font-bold">{brand.name}</span>
+          <span className="text-center text-2xl font-bold">{brand.name}</span>
         </div>
       )}
     </Link>
