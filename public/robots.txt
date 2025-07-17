@@ -1,9 +1,6 @@
-# *
+# Règles pour tous les robots
 User-agent: *
-Disallow: /
-
-# Host
-Host: http://localhost:3000
-
-# Sitemaps
-Sitemap: http://localhost:3000/sitemap.xml
+Allow: /
+Disallow: /_next/
+Disallow: /api/
+Sitemap: https://automatisme-online-nextjs.vercel.app/sitemap.xml
