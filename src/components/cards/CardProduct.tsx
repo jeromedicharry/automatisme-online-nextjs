@@ -98,6 +98,8 @@ const CardProduct = ({
               price={parseFloat(product?.price || '0')}
               regularPrice={parseFloat(product?.regularPrice || '0')}
               variant="card"
+              hasProDiscount={product?.hasProDiscount}
+              discountRate={discountRate}
             />
             {isSellable ? (
               <div className="mt-4 md:mt-6">

@@ -13,6 +13,8 @@ interface ProductPriceProps {
   isProSession?: boolean;
   isProProduct?: boolean;
   isMeili?: boolean;
+  hasProDiscount?: boolean;
+  discountRate?: number;
 }
 
 // attention aux types string number sur les prices Todo
@@ -22,27 +24,32 @@ const ProductPrice = ({
   regularPrice,
   variant = 'card',
   isMeili = false,
-  // isProProduct = false,
+  hasProDiscount = false,
+  discountRate = 0,
 }: ProductPriceProps) => {
   const [priceWithVAT, setPriceWithVAT] = useState<number>(price);
   const [regularPriceWithVAT, setRegularPriceWithVAT] =
     useState<number>(regularPrice);
 
-  const { user, countryCode } = useAuth();
-  const isPro = isProRole(user?.roles?.nodes);
+  const { user, countryCode, loading } = useAuth();
+
+  
 
   useEffect(() => {
     async function displayFormattedPrices(
       price: number,
       regularPrice: number,
       countryCode: string,
+      isProSession: boolean | undefined,
     ) {
       try {
-        const calculatedPrice = await calculerPrix(price, isPro, countryCode);
+        const calculatedPrice = await calculerPrix(price, isProSession, countryCode, hasProDiscount, discountRate);
         const calculatedRegularPrice = await calculerPrix(
           regularPrice,
-          isPro,
+          isProSession,
           countryCode,
+          hasProDiscount,
+          discountRate
         );
         setPriceWithVAT(calculatedPrice);
         setRegularPriceWithVAT(calculatedRegularPrice);
@@ -50,8 +57,14 @@ const ProductPrice = ({
         console.error('Error calculating VAT:', error);
       }
     }
-    displayFormattedPrices(price, regularPrice, countryCode || 'FR');
-  }, [isPro, price, regularPrice, countryCode]);
+
+    // Si le chargement est terminé, on peut calculer les prix
+    if (!loading) {
+      const isProSession = isProRole(user?.roles?.nodes);
+
+      displayFormattedPrices(price, regularPrice, countryCode || 'FR', isProSession);
+    }
+  }, [loading, user, price, regularPrice, countryCode, hasProDiscount, discountRate]);
 
   return (
     <div
@@ -66,7 +79,7 @@ const ProductPrice = ({
           <span
             className={`absolute text-[0.5em] font-bold right-0 top-[0.25em] xl:-top-[0.25em] xxl:top-[0.25em]`}
           >
-            {isPro ? 'HT' : 'TTC'}
+            {!loading && isProRole(user?.roles?.nodes) ? 'HT' : 'TTC'}
           </span>
           <data className={`pr-1 text-[0.85em]`}>
             {priceWithVAT.toFixed(2)}
@@ -80,7 +93,7 @@ const ProductPrice = ({
             <data>{regularPriceWithVAT.toFixed(2)}</data>
             <span>€</span>
             <span className="text-sm align-top leading-relaxed">
-              {isPro ? ' HT' : ' TTC'}
+              {!loading && isProRole(user?.roles?.nodes) ? ' HT' : ' TTC'}
             </span>
           </p>
         ) : null}

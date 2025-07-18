@@ -156,6 +156,8 @@ const CardProductMeilisearch = ({
                 regularPrice={parseFloat(product?.meta?._regular_price || '0')}
                 variant="card"
                 isMeili
+                hasProDiscount={hasProDiscount}
+                discountRate={discountRate}
               />
             </div>
             {isReplaced ? (

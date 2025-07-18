@@ -174,6 +174,8 @@ const ProductContent = ({
                     variant="productPage"
                     price={parseFloat(product?.price || '0')}
                     regularPrice={parseFloat(product?.regularPrice || '0')}
+                    hasProDiscount={product?.hasProDiscount}
+                    discountRate={proDiscountRate}
                   />
                   <div className="md:hidden max-md: mb-4">
                     <AddInstallation
