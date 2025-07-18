@@ -15,7 +15,7 @@ import BlocIntroSmall from '../atoms/BlocIntroSmall';
 interface ShippingMethod {
   id: string;
   label: string;
-  cost: string;
+  cost: number;
   delayMin: number;
   delayMax: number;
   description: string;
@@ -144,14 +144,6 @@ const CheckoutShippingMethod = ({
     }
   };
 
-  // Formater le temps de livraison
-  const formatDeliveryTime = (delayMin: number, delayMax: number) => {
-    if (delayMin === delayMax) {
-      return `${delayMin} jours ouvrés`;
-    }
-    return `${delayMin} à ${delayMax} jours ouvrés`;
-  };
-
   // Vérifier si une méthode est sélectionnée
   useEffect(() => {
     if (shippingMethodsData?.cart?.chosenShippingMethods?.length > 0) {
@@ -260,7 +252,6 @@ const CheckoutShippingMethod = ({
 
   const chosenMethodId = shippingMethodsData?.cart?.chosenShippingMethods?.[0];
   const methods = shippingMethodsData?.cart?.dynamicShippingMethods || [];
-
   return (
     <section>
       <BlocIntroSmall title="Sélectionnez votre méthode de livraison" />
@@ -308,14 +299,13 @@ const CheckoutShippingMethod = ({
                     <div className="font-medium text-primary flex justify-between items-center">
                       <span>{method.label}</span>
                       <span className="text-secondary font-bold">
-                        {method.cost === '0' || method.cost === '0.00'
+                        {method.cost === 0
                           ? 'Gratuit'
-                          : `${parseFloat(method.cost).toFixed(2)}€`}
+                          : `${method.cost.toFixed(2)}€`}
                       </span>
                     </div>
                     <p className="text-sm leading-general text-dark-grey mt-1">
-                      {method.description} - Livraison sous{' '}
-                      {formatDeliveryTime(method.delayMin, method.delayMax)}
+                      {method.description}
                     </p>
                   </div>
                 </label>
