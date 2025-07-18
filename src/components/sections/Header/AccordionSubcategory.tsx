@@ -23,13 +23,13 @@ const AccordionSubcategory = ({
       <div className="flex items-center gap-2">
         {hasChildren ? (
           <div
-            className={`text-secondary w-2 h-2 flex justify-center items-center cursor-pointer transition-transform duration-300 ${isOpen ? 'rotate-90' : 'rotate-180'}`}
+            className={`text-secondary w-2 h-2 shrink-0 flex justify-center items-center cursor-pointer transition-transform duration-300 ${isOpen ? 'rotate-90' : 'rotate-180'}`}
             onClick={toggleAccordion}
           >
             <Chevron />
           </div>
         ) : (
-          <div className="text-secondary w-2 h-2 flex justify-center items-center rotate-180">
+          <div className="text-secondary w-2 shrink-0 h-2 flex justify-center items-center rotate-180">
             <Chevron />
           </div>
         )}

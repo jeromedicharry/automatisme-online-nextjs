@@ -7,14 +7,14 @@ import React from 'react';
 
 const OrdersList = ({ orders }: { orders: OrderProps[] }) => {
   return (
-    <div className="flex flex-col gap-6 text-sm">
+    <div className="flex flex-col gap-6">
       {orders.map((order) => (
         <div
           key={order.orderNumber}
           className="py-2 px-4 md:px-5 md:py-3 bg-white rounded-lg shadow-card flex gap-6 flex-col lg:flex-row lg:justify-between"
         >
-          <div className="w-full lg:max-w-[70%]">
-            <h3 className="text-primary mb-2 font-bold">
+          <div className="w-full">
+            <h3 className="text-primary text-lg mb-2 font-bold">
               N° de commande :{' '}
               <span className="text-secondary">{order.orderNumber}</span>
             </h3>

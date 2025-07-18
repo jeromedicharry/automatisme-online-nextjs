@@ -61,7 +61,7 @@ const FilterSidebar = ({
   };
 
   const FiltersContent = () => (
-    <div className="flex flex-col gap-4 md:max-h-[80svh] overflow-y-auto scrollbar-custom pr-4">
+    <div className="flex flex-col gap-4 scrollbar-custom pr-4">
       <div className="flex justify-center">
         <button
           onClick={resetFilters}
@@ -226,7 +226,7 @@ const FilterSidebar = ({
           </Modal>
         </>
       ) : (
-        <aside className="w-full md:w-[250px] xl:w-[325px] text-primary md:sticky md:top-20 overflow-visible shrink-0">
+        <aside className="w-full md:w-[250px] xl:w-[325px] text-primary overflow-visible shrink-0">
           <FiltersContent />
         </aside>
       )}
