@@ -12,7 +12,7 @@ export const GET_RELAY_POINTS = gql`
       city: $city
       userAddress: $userAddress
       sortByDistance: true
-      maxDistance: 5
+      maxDistance: 20
       limit: $limit
     ) {
       success
