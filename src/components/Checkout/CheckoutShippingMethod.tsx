@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_ALEX_SHIPPING_METHOD } from '@/utils/gql/GQL_MUTATIONS';
+import { GET_CUSTOMER_ADDRESSES } from '@/utils/gql/CUSTOMER_QUERIES';
 import {
-  GET_ALEX_SHIPPING_METHOD,
   SET_CART_SHIPPING_METHOD,
+  SET_RELAY_POINT,
 } from '@/utils/gql/GQL_MUTATIONS';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
 import { GET_RELAY_POINTS } from '@/utils/gql/RELAY_POINTS_QUERY';
-import BlocIntroSmall from '../atoms/BlocIntroSmall';
 import useAuth from '@/hooks/useAuth';
-import { GET_CUSTOMER_ADDRESSES } from '@/utils/gql/CUSTOMER_QUERIES';
+import { useCartOperations } from '@/hooks/useCartOperations';
+import BlocIntroSmall from '../atoms/BlocIntroSmall';
 
 interface ShippingMethod {
   id: string;
@@ -47,34 +49,28 @@ const CheckoutShippingMethod = ({
   setIsShippingMethodComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [loading, setLoading] = useState(true);
-
   const [selectedRelayPoint, setSelectedRelayPoint] =
     useState<RelayPoint | null>(null);
   const [showRelayPoints, setShowRelayPoints] = useState(false);
+  const [setShippingMethod] = useMutation(SET_CART_SHIPPING_METHOD);
+  const [setRelayPoint] = useMutation(SET_RELAY_POINT);
+
+  const { user, loggedIn } = useAuth();
+  const { cart } = useCartOperations();
 
   // Récupérer les méthodes de livraison du backend
   const { data: shippingMethodsData, refetch: refetchShippingMethods } =
     useQuery(GET_ALEX_SHIPPING_METHOD);
   const { refetch: refetchCart } = useQuery(GET_CART);
 
-  // Vérifier si la méthode point relais est sélectionnée par défaut
-  useEffect(() => {
-    if (shippingMethodsData?.cart?.chosenShippingMethods?.[0] === 'carrier_dynamic_relais') {
-      setShowRelayPoints(true);
-    }
-  }, [shippingMethodsData]);
-  const [setShippingMethod] = useMutation(SET_CART_SHIPPING_METHOD);
-
-  const { user, loggedIn } = useAuth();
-
-  console.log({ user });
-  const { data } = useQuery(GET_CUSTOMER_ADDRESSES, {
+  // Récupérer les adresses du client
+  const { data: customerData } = useQuery(GET_CUSTOMER_ADDRESSES, {
     variables: { id: user?.id },
     skip: !loggedIn,
   });
-  const shippingAddress = data?.customer?.shipping;
+  const shippingAddress = customerData?.customer?.shipping;
 
-  // Query pour les points relais (lazy query qui ne s'exécute que lorsqu'on appelle la fonction)
+  // Query pour les points relais
   const { data: relayPointsData, loading: relayPointsLoading } = useQuery(
     GET_RELAY_POINTS,
     {
@@ -88,11 +84,37 @@ const CheckoutShippingMethod = ({
         !loggedIn ||
         !showRelayPoints ||
         !shippingAddress?.postcode ||
-        !shippingAddress?.city, // Ne pas exécuter la query s'il n'y a pas d'adresse
+        !shippingAddress?.city,
     },
   );
 
-  console.log('relayPointsData:', relayPointsData);
+  // Vérifier si la méthode point relais est sélectionnée par défaut
+  useEffect(() => {
+    if (
+      shippingMethodsData?.cart?.chosenShippingMethods?.[0] ===
+      'carrier_dynamic_relais'
+    ) {
+      setShowRelayPoints(true);
+
+      // Si un point relais est déjà sélectionné dans le panier
+      if (cart?.relayPoint && relayPointsData?.relayPoints?.relay_points) {
+        // Trouver le point relais correspondant dans la liste
+        const selectedPoint = relayPointsData.relayPoints.relay_points.find(
+          (point: { id: string }) => point.id === cart.relayPoint,
+        );
+        if (selectedPoint) {
+          setSelectedRelayPoint(selectedPoint);
+          setIsShippingMethodComplete(true);
+        }
+      }
+    }
+  }, [
+    shippingMethodsData,
+    cart?.relayPoint,
+    relayPointsData?.relayPoints,
+    setIsShippingMethodComplete,
+    setShowRelayPoints,
+  ]);
 
   // Gérer le changement manuel de méthode de livraison
   const handleShippingMethodChange = async (
@@ -100,22 +122,11 @@ const CheckoutShippingMethod = ({
     isRelayPoint: boolean = false,
   ) => {
     try {
-      const response = await setShippingMethod({
+      await setShippingMethod({
         variables: {
           shippingMethodId: methodId,
         },
       });
-      console.log('=== SET_CART_SHIPPING_METHOD RESPONSE ===');
-      console.log('Response:', response);
-      console.log('Cart data:', response.data?.setShippingMethod?.cart);
-      console.log(
-        'Shipping total:',
-        response.data?.setShippingMethod?.cart?.shippingTotal,
-      );
-      console.log(
-        'Shipping tax:',
-        response.data?.setShippingMethod?.cart?.shippingTax,
-      );
 
       // Après la mutation, rafraîchir les données pour mettre à jour l'UI
       await Promise.all([refetchShippingMethods(), refetchCart()]);
@@ -143,30 +154,7 @@ const CheckoutShippingMethod = ({
 
   // Vérifier si une méthode est sélectionnée
   useEffect(() => {
-    console.log('=== GET_ALEX_SHIPPING_METHOD RESPONSE ===');
-    console.log('Full response:', JSON.stringify(shippingMethodsData, null, 2));
-    console.log('\n=== PARSED DATA ===');
-    console.log('Cart:', shippingMethodsData?.cart);
-    console.log(
-      'Dynamic methods:',
-      shippingMethodsData?.cart?.dynamicShippingMethods,
-    );
-    if (shippingMethodsData?.cart?.dynamicShippingMethods) {
-      console.log(
-        'First dynamic method:',
-        shippingMethodsData.cart.dynamicShippingMethods[0],
-      );
-    }
-    console.log('\n=== CHOSEN METHOD ===');
-    console.log(
-      'Chosen methods array:',
-      shippingMethodsData?.cart?.chosenShippingMethods,
-    );
     if (shippingMethodsData?.cart?.chosenShippingMethods?.length > 0) {
-      console.log(
-        'Current chosen method:',
-        shippingMethodsData.cart.chosenShippingMethods[0],
-      );
       setIsShippingMethodComplete(true);
     }
     setLoading(false);
@@ -198,7 +186,7 @@ const CheckoutShippingMethod = ({
           </p>
         )}
         <div className="space-y-4">
-          {relayPoints?.map((point: RelayPoint, key: number) => (
+          {relayPoints.map((point: RelayPoint, key: number) => (
             <div
               key={key}
               className={`p-4 border rounded-lg cursor-pointer transition-colors ${
@@ -206,7 +194,36 @@ const CheckoutShippingMethod = ({
                   ? 'border-secondary bg-white'
                   : 'border-light-grey hover:border-secondary'
               }`}
-              onClick={() => setSelectedRelayPoint(point)}
+              onClick={async () => {
+                try {
+                  const response = await setRelayPoint({
+                    variables: {
+                      relayId: point.id,
+                      relayName: point.name,
+                      relayAddress: point.address,
+                      relayZip: point.zipCode,
+                      relayCity: point.city,
+                      relayCountry: 'FR',
+                      relayInfo: JSON.stringify({
+                        lat: point.latitude,
+                        lon: point.longitude,
+                      }),
+                    },
+                  });
+
+                  if (response.data?.setRelayPoint?.success) {
+                    setSelectedRelayPoint(point);
+                    setIsShippingMethodComplete(true);
+                    // Rafraîchir les données du panier et des méthodes de livraison
+                    await Promise.all([
+                      refetchShippingMethods(),
+                      refetchCart(),
+                    ]);
+                  }
+                } catch (error) {
+                  console.error('Error setting relay point:', error);
+                }
+              }}
             >
               <div className="flex justify-between items-start">
                 <div>
@@ -216,7 +233,7 @@ const CheckoutShippingMethod = ({
                     {point.zipCode} {point.city}
                   </p>
                 </div>
-                <div className="text-secondary text-sm">
+                <div className="text-secondary font-bold">
                   {point.distance_calculation.raw_distance_km.toFixed(2)} km
                 </div>
               </div>
@@ -287,7 +304,7 @@ const CheckoutShippingMethod = ({
                       className="h-4 w-4 border-gray-300 text-primary focus:ring-secondary accent-secondary"
                     />
                   </div>
-                  <div className="ml-3 text-sm flex-1">
+                  <div className="ml-3 flex-1">
                     <div className="font-medium text-primary flex justify-between items-center">
                       <span>{method.label}</span>
                       <span className="text-secondary font-bold">
@@ -296,7 +313,7 @@ const CheckoutShippingMethod = ({
                           : `${parseFloat(method.cost).toFixed(2)}€`}
                       </span>
                     </div>
-                    <p className="text-dark-grey mt-1">
+                    <p className="text-sm leading-general text-dark-grey mt-1">
                       {method.description} - Livraison sous{' '}
                       {formatDeliveryTime(method.delayMin, method.delayMax)}
                     </p>

@@ -96,6 +96,7 @@ interface IFormattedCartProps {
       discountAmount: string;
       discountTax: string;
     }[];
+    relayPoint?: string;
   };
 }
 
@@ -157,6 +158,7 @@ export const getFormattedCart = (
     discountTotal: 0,
     discountTax: 0,
     appliedCoupons: [],
+    relayPoint: data?.cart?.relayPoint || '',
   };
 
   if (!data || !data.cart || !data.cart.contents) {

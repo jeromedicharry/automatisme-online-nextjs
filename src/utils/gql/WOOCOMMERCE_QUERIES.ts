@@ -278,6 +278,7 @@ export const GET_CART = gql`
         discountAmount(format: RAW)
         discountTax(format: RAW)
       }
+      relayPoint
     }
   }
 `;

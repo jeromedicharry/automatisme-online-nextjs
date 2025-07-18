@@ -8,7 +8,10 @@ import Separator from '../atoms/Separator';
 import CartReassurance from './CartReassurance';
 import { useCartOperations } from '@/hooks/useCartOperations';
 import { GET_CART } from '@/utils/gql/WOOCOMMERCE_QUERIES';
-import { GET_ALEX_SHIPPING_METHOD, REMOVE_COUPON } from '@/utils/gql/GQL_MUTATIONS';
+import {
+  GET_ALEX_SHIPPING_METHOD,
+  REMOVE_COUPON,
+} from '@/utils/gql/GQL_MUTATIONS';
 import CartReassuranceBis from './CartReassuranceBis';
 import CouponForm from './CouponForm';
 
@@ -29,48 +32,32 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
   }
 
   const chosenMethod = shippingMethodsData?.cart?.chosenShippingMethods?.[0];
-  const availableShippingMethods = shippingMethodsData?.cart?.dynamicShippingMethods || [];
+  const availableShippingMethods =
+    shippingMethodsData?.cart?.dynamicShippingMethods || [];
 
   // Recherche de la méthode sélectionnée
   let selectedShippingMethod = null;
 
-  console.log('=== CART SUMMARY DATA ===');
-  console.log('shippingMethodsData:', shippingMethodsData);
-  console.log('cartData:', cartData);
-  console.log('chosenMethod:', chosenMethod);
-  console.log('availableShippingMethods:', availableShippingMethods);
-
-  console.log('Trying to find shipping method...');
   if (availableShippingMethods.length > 0 && chosenMethod) {
-    console.log('We have both available methods and chosen method');
     // Si c'est une méthode relais, chercher la méthode carrier_dynamic correspondante
     if (chosenMethod === 'carrier_dynamic_relais') {
-      console.log('Looking for relais method...');
       selectedShippingMethod = availableShippingMethods.find(
         (method: ShippingMethod) => {
-          const isMatch = method.id === 'carrier_dynamic' && method.label.toLowerCase().includes('relais');
-          console.log('Checking method:', method.id, method.label, 'isMatch:', isMatch);
+          const isMatch =
+            method.id === 'carrier_dynamic' &&
+            method.label.toLowerCase().includes('relais');
           return isMatch;
-        }
+        },
       );
     } else {
-      console.log('Looking for exact match with ID:', chosenMethod);
       selectedShippingMethod = availableShippingMethods.find(
         (method: ShippingMethod) => {
           const isMatch = method.id === chosenMethod;
-          console.log('Comparing method.id:', method.id, 'with chosenMethod:', chosenMethod, 'isMatch:', isMatch);
           return isMatch;
-        }
+        },
       );
     }
-    console.log('Selected shipping method:', selectedShippingMethod);
-    console.log('Cart shipping data:', {
-      shippingTotal: cartData?.cart?.shippingTotal,
-      shippingTax: cartData?.cart?.shippingTax
-    });
   }
-
-  console.log('selectedShippingMethod:', selectedShippingMethod);
 
   // Récupération des coupons appliqués depuis l'API
   const appliedCoupons = cartData?.cart?.appliedCoupons || [];
@@ -290,11 +277,13 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
               </div>
               <div className="flex text-primary justify-between gap-6 items-center mt-1">
                 <p>
-                  TVA Installation ({((totalInstallationTVA / totalInstallationHT) * 100).toFixed(1)}%)
+                  TVA Installation (
+                  {((totalInstallationTVA / totalInstallationHT) * 100).toFixed(
+                    1,
+                  )}
+                  %)
                 </p>
-                <p>
-                  {totalInstallationTVA.toFixed(2)}€
-                </p>
+                <p>{totalInstallationTVA.toFixed(2)}€</p>
               </div>
               <div className="flex text-primary font-bold justify-between gap-6 items-center mt-2">
                 <p>Total Installation TTC</p>
@@ -307,7 +296,8 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
           )}
 
           {/* Frais de livraison */}
-          {(parseFloat(cartData?.cart?.shippingTotal || '0') > 0 || parseFloat(cartData?.cart?.shippingTax || '0') > 0) && (
+          {(parseFloat(cartData?.cart?.shippingTotal || '0') > 0 ||
+            parseFloat(cartData?.cart?.shippingTax || '0') > 0) && (
             <>
               <div className="flex text-primary justify-between gap-6 items-center mt-2">
                 <p>Livraison HT</p>

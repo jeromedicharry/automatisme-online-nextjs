@@ -57,6 +57,7 @@ export interface RootObject {
     delayMax: number;
     description: string;
   }>; // Liste des méthodes de livraison disponibles
+  relayPoint?: string; // ID du point relais sélectionné
 }
 
 export type TRootObject = RootObject | string | null | undefined;

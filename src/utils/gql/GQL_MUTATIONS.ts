@@ -245,6 +245,7 @@ export const GET_ALEX_SHIPPING_METHOD = gql`
       shippingTotal
       shippingTax
       total
+      relayPoint
     }
   }
 `;
@@ -283,6 +284,32 @@ export const SET_CART_SHIPPING_METHOD = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const SET_RELAY_POINT = gql`
+  mutation setRelayPoint(
+    $relayId: String!
+    $relayName: String!
+    $relayAddress: String!
+    $relayZip: String!
+    $relayCity: String!
+    $relayCountry: String!
+    $relayInfo: String!
+  ) {
+    setRelayPoint(
+      input: {
+        relayId: $relayId
+        relayName: $relayName
+        relayAddress: $relayAddress
+        relayZip: $relayZip
+        relayCity: $relayCity
+        relayCountry: $relayCountry
+        relayInfo: $relayInfo
+      }
+    ) {
+      success
     }
   }
 `;
