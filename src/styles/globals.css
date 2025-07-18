@@ -6,28 +6,31 @@
 @font-face {
   font-family: 'HelveticaNeue';
   src: url('./fonts/HelveticaNeue-Roman.woff2') format('woff2'),
-      url('./fonts/HelveticaNeue-Roman.woff') format('woff'),
-      url('./fonts/HelveticaNeue-Roman.ttf') format('ttf');
+       url('./fonts/HelveticaNeue-Roman.woff') format('woff'),
+       url('./fonts/HelveticaNeue-Roman.ttf') format('truetype'), 
+       url('./fonts/HelveticaNeue-Roman.svg') format('svg');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'HelveticaNeue';
   src: url('./fonts/HelveticaNeue-Medium.woff2') format('woff2'),
-      url('./fonts/HelveticaNeue-Medium.woff') format('woff'),
-      url('./fonts/HelveticaNeue-Medium.ttf') format('ttf');
+       url('./fonts/HelveticaNeue-Medium.woff') format('woff'),
+       url('./fonts/HelveticaNeue-Medium.ttf') format('truetype'), 
+       url('./fonts/HelveticaNeue-Medium.svg') format('svg');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
-
 @font-face {
   font-family: 'HelveticaNeue';
   src: url('./fonts/HelveticaNeue-Bold.woff2') format('woff2'),
-      url('./fonts/HelveticaNeue-Bold.woff') format('woff'),
-      url('./fonts/HelveticaNeue-Bold.ttf') format('ttf');
+       url('./fonts/HelveticaNeue-Bold.woff') format('woff'),
+       url('./fonts/HelveticaNeue-Bold.ttf') format('truetype'), 
+       url('./fonts/HelveticaNeue-Bold.svg') format('svg');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
