@@ -23,6 +23,7 @@ const AddToCart = ({
   isSingleProduct = false,
   addInstallation = false,
   isMeili = false,
+  onAddToCart,
 }: {
   product: CardProductProps;
   variant?:
@@ -34,6 +35,7 @@ const AddToCart = ({
   addInstallation?: boolean;
   isSingleProduct?: boolean;
   isMeili?: boolean;
+  onAddToCart?: (quantity?: number) => void;
 }) => {
   const { openCartModal } = useIntermediateCart();
   const { refetchCart } = useCartOperations();
@@ -81,6 +83,8 @@ const AddToCart = ({
       }
 
       await refetchCart();
+      // Déclencher le tracking add_to_cart
+      onAddToCart?.(1);
       openCartModal(product);
     },
   });

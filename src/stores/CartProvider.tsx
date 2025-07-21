@@ -29,6 +29,12 @@ export interface Product {
   installationTvaRate?: number; // Taux de TVA pour l'installation (0.2 par défaut, 0.1 pour TVA réduite)
   installationTvaAmount?: number; // Montant de la TVA pour l'installation
   deliveryLabel?: string; // Délai de livraison calculé à l'ajout au panier
+  productBrands?: { nodes: { name: string }[] };
+  onSale?: boolean;
+  regularPrice?: string;
+  seo?: { breadcrumbs?: { text: string; url: string }[] };
+  oldProductId?: string;
+  globalUniqueId?: string;
 }
 
 export interface RootObject {
@@ -42,7 +48,11 @@ export interface RootObject {
   shippingTotal: number;
   discountTotal: number; // Montant total des réductions
   discountTax: number; // TVA sur les réductions
-  appliedCoupons: { code: string; discountAmount: string; discountTax: string }[]; // Liste des coupons appliqués avec leur montant
+  appliedCoupons: {
+    code: string;
+    discountAmount: string;
+    discountTax: string;
+  }[]; // Liste des coupons appliqués avec leur montant
   shippingAddress?: {
     country?: string;
     postcode?: string;
@@ -72,7 +82,7 @@ interface ICartContext {
 const CartState = {
   cart: null,
   setCart: () => {},
-  resyncFromLocalStorage: async () => {}
+  resyncFromLocalStorage: async () => {},
 };
 
 export const CartContext = createContext<ICartContext>(CartState);
@@ -107,9 +117,9 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
             variables: {
               input: {
                 productId: item.productId,
-                quantity: item.qty
-              }
-            }
+                quantity: item.qty,
+              },
+            },
           });
           // Ajouter l'installation si nécessaire
           if (item.addInstallation) {

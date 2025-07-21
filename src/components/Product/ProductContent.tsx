@@ -19,6 +19,7 @@ import ProductReassurance from './ProductReassurance';
 import { getProductAvailability } from '@/utils/functions/deliveryTime';
 import { useState } from 'react';
 import AddInstallation from '@/AddInstallation';
+import { useProductDataLayer } from '@/hooks/useProductDataLayer';
 
 export interface BrandStickerProps {
   name: string;
@@ -46,6 +47,8 @@ export interface ProductDocsProps {
 export interface ProductContentProps extends CardProductProps {
   onSale: boolean;
   productRef: string;
+  globalUniqueId?: string;
+  oldProductId?: string;
   ecoTaxValue?: number;
   isPro: boolean;
   hasPose: boolean;
@@ -89,6 +92,7 @@ const ProductContent = ({
 }) => {
   const { loggedIn, isPro } = useAuth();
   const [addInstallation, setAddInstallation] = useState(true);
+  const { trackAddToCart } = useProductDataLayer(product);
   const NotProConnectedAlternate = () => {
     if (!loggedIn) {
       return (
@@ -210,6 +214,7 @@ const ProductContent = ({
                           product?.hasPose ? addInstallation : false
                         }
                         isSingleProduct
+                        onAddToCart={trackAddToCart}
                       ></AddToCart>
                     ) : (
                       <p className="text-secondary border border-secondary rounded-md px-3 py-2 flex items-center">

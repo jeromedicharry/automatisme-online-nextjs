@@ -56,6 +56,7 @@ export const GET_SINGLE_PRODUCT = gql`
       uri
       ${seoFields}
       databaseId
+      globalUniqueId
       averageRating
       slug
       description
@@ -75,6 +76,7 @@ export const GET_SINGLE_PRODUCT = gql`
         regularPrice(format: RAW)
         price(format: RAW)
         id
+        oldProductId
         stockQuantity
         backorders
         restockingLeadTime
@@ -223,26 +225,41 @@ export interface IProductNode {
   backorders?: 'YES' | 'NO';
   restockingLeadTime?: number;
 }
-
 export const PRODUCT_CART_ITEM = `product {
   node {
     id
     databaseId
     name
     slug
+    globalUniqueId
+    oldProductId
+    seo {
+      breadcrumbs {
+        text
+        url
+      }
+    }
+    productBrands {
+      nodes {
+        name
+      }
+    }
     image {
       sourceUrl
     }
     ... on SimpleProduct {
       price(format: RAW)
+      regularPrice(format: RAW)
+      salePrice(format: RAW)
       hasPose
       stockQuantity
       backorders
       restockingLeadTime
+      onSale
+      sku
     }
   }
-}
-`;
+}`;
 
 export const GET_CART = gql`
   query GET_CART {

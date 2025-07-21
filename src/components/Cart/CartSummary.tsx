@@ -15,7 +15,13 @@ import {
 import CartReassuranceBis from './CartReassuranceBis';
 import CouponForm from './CouponForm';
 
-const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
+interface CartSummaryProps {
+  isCheckout?: boolean;
+  onBeginCheckout?: () => void;
+  showInstallationVAT?: boolean;
+}
+
+const CartSummary = ({ isCheckout = false, onBeginCheckout }: CartSummaryProps) => {
   const { cart } = useContext(CartContext);
   const { isPro } = useCartOperations();
 
@@ -370,6 +376,7 @@ const CartSummary = ({ isCheckout = false }: { isCheckout?: boolean }) => {
               size="default"
               variant="primary"
               isFull
+              handleButtonClick={onBeginCheckout}
             >
               Continuer
             </Cta>

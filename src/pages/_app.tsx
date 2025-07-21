@@ -2,6 +2,7 @@
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import { ApolloProvider } from '@apollo/client';
+import GTMProvider from '@/components/GTMProvider';
 
 // State import
 import { CartProvider } from '@/stores/CartProvider';
@@ -31,6 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <FavoritesProvider>
             <CartProvider>
               <InterMediateCartProvider>
+                <GTMProvider />
                 <Component {...pageProps} />
               </InterMediateCartProvider>
             </CartProvider>

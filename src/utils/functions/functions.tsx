@@ -39,6 +39,12 @@ interface IProductNode {
   price: string;
   upsell: { nodes: IProduct[] };
   hasPose?: boolean;
+  productBrands?: { nodes: { name: string }[] };
+  onSale?: boolean;
+  regularPrice?: string;
+  seo?: { breadcrumbs?: { text: string; url: string }[] };
+  oldProductId?: string;
+  globalUniqueId?: string;
 }
 
 interface IProduct {
@@ -87,6 +93,7 @@ interface IFormattedCartProps {
     contents: { nodes: IProductRootObject[] };
     total: string;
     subtotal: string;
+    subtotalTax: string;
     totalTax: string;
     feeTotal?: string;
     discountTotal?: string;
@@ -198,6 +205,12 @@ export const getFormattedCart = (
       name: givenProduct.name,
       qty: quantity,
       price: isPro ? productPriceHT : productPriceTTC, // Prix unitaire du produit: HT pour pro, TTC pour autres
+      productBrands: givenProduct.productBrands,
+      onSale: givenProduct.onSale,
+      regularPrice: givenProduct.regularPrice,
+      seo: givenProduct.seo,
+      oldProductId: givenProduct.oldProductId,
+      globalUniqueId: givenProduct.globalUniqueId,
       totalPrice: isPro
         ? productPriceHT +
           (givenProductItem.addInstallation ? installationPriceHT : 0)
@@ -237,8 +250,13 @@ export const getFormattedCart = (
   // Set cart totals
   formattedCart.totalProductsCount = totalProductsCount;
 
-  // Utiliser les totaux de WooCommerce
-  formattedCart.totalProductsPrice = parseFloat(data.cart.total); // Total TTC incluant produits et installations
+  // Calculer le total TTC des produits uniquement (subtotal + subtotalTax)
+  formattedCart.totalProductsPrice = parseFloat(data.cart.subtotal) + parseFloat(data.cart.subtotalTax); // Total TTC des produits uniquement
+
+  console.log(
+    'formattedCart.totalProductsPrice',
+    formattedCart.totalProductsPrice,
+  );
   formattedCart.totalTax = parseFloat(data.cart.totalTax); // Total TVA incluant produits et installations
   formattedCart.discountTotal = parseFloat(data.cart.discountTotal || '0'); // Montant total des réductions
   formattedCart.discountTax = parseFloat(data.cart.discountTax || '0'); // TVA sur les réductions

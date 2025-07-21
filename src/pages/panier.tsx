@@ -10,6 +10,7 @@ import { LargeCartSvg } from '@/components/SVG/Icons';
 // Hooks
 import { useCartOperations } from '@/hooks/useCartOperations';
 import { useEffect, useState } from 'react';
+import { useCartDataLayer } from '@/hooks/useCartDataLayer';
 
 // Types
 import type { GetStaticProps } from 'next';
@@ -42,10 +43,19 @@ const Panier = ({
   poseReducedTvForm: string;
 }) => {
   const { cart } = useCartOperations();
+  const { trackBeginCheckout, trackViewCart } = useCartDataLayer(cart);
   const [crossSellProducts, setCrossSellProducts] = useState<
     CardProductProps[]
   >([]);
   const [showInstallationVAT, setShowInstallationVAT] = useState(false);
+
+  // Déclencher view_cart et begin_checkout quand le panier est chargé
+  useEffect(() => {
+    if (cart?.products?.length) {
+      trackViewCart(cart);
+      trackBeginCheckout(cart);
+    }
+  }, [cart, trackViewCart, trackBeginCheckout]);
 
   useEffect(() => {
     const fetchCrossSellProducts = async () => {
@@ -148,7 +158,10 @@ const Panier = ({
 
                 {/* CartSummary en sticky à droite en desktop */}
                 <aside className="w-full lg:min-w-1/4 lg:sticky lg:max-w-[300px] xxl:max-w-[440px] lg:top-20 self-start lg:shrink-1">
-                  <CartSummary />
+                  <CartSummary
+                    onBeginCheckout={() => cart && trackBeginCheckout(cart)}
+                    showInstallationVAT={showInstallationVAT}
+                  />
                 </aside>
               </div>
             </>
