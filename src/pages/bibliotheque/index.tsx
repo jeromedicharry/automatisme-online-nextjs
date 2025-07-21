@@ -151,13 +151,15 @@ const PageBibliotheque = ({
       setShowMoreVideos(false);
     }
   };
-  const [articles, setArticles] = useState<PaginatedData<any>>(initialData.posts);
+  const [articles, setArticles] = useState<PaginatedData<any>>(
+    initialData.posts,
+  );
   const [allBrands, setAllBrands] = useState(initialData.productBrands.nodes);
   const [displayedBrands, setDisplayedBrands] = useState(
-    initialData.productBrands.nodes.slice(0, BRANDS_PER_PAGE)
+    initialData.productBrands.nodes.slice(0, BRANDS_PER_PAGE),
   );
   const [hasMoreBrands, setHasMoreBrands] = useState(
-    initialData.productBrands.nodes.length > BRANDS_PER_PAGE
+    initialData.productBrands.nodes.length > BRANDS_PER_PAGE,
   );
   const [loading, setLoading] = useState(false);
 
@@ -213,8 +215,12 @@ const PageBibliotheque = ({
           setProducts(productsResponse.data.products);
           setArticles(articlesResponse.data.posts);
           setAllBrands(brandsResponse.data.productBrands.nodes);
-          setDisplayedBrands(brandsResponse.data.productBrands.nodes.slice(0, BRANDS_PER_PAGE));
-          setHasMoreBrands(brandsResponse.data.productBrands.nodes.length > BRANDS_PER_PAGE);
+          setDisplayedBrands(
+            brandsResponse.data.productBrands.nodes.slice(0, BRANDS_PER_PAGE),
+          );
+          setHasMoreBrands(
+            brandsResponse.data.productBrands.nodes.length > BRANDS_PER_PAGE,
+          );
 
           // Recherche locale pour les vidéos
           if (!search) {
@@ -287,7 +293,9 @@ const PageBibliotheque = ({
         },
       });
       setAllBrands(brandsData.productBrands.nodes);
-      setDisplayedBrands(brandsData.productBrands.nodes.slice(0, BRANDS_PER_PAGE));
+      setDisplayedBrands(
+        brandsData.productBrands.nodes.slice(0, BRANDS_PER_PAGE),
+      );
       setHasMoreBrands(brandsData.productBrands.nodes.length > BRANDS_PER_PAGE);
 
       // Recherche locale pour les vidéos avec Fuse.js
@@ -379,7 +387,7 @@ const PageBibliotheque = ({
     const currentLength = displayedBrands.length;
     const nextBrands = allBrands.slice(
       currentLength,
-      currentLength + BRANDS_PER_PAGE
+      currentLength + BRANDS_PER_PAGE,
     );
     setDisplayedBrands((prev) => [...prev, ...nextBrands]);
     setHasMoreBrands(currentLength + BRANDS_PER_PAGE < allBrands.length);
@@ -412,7 +420,7 @@ const PageBibliotheque = ({
             />
           </div>
           {/* Filtres */}
-          <div className="flex gap-4 mb-8 mx-auto w-fit">
+          <div className="flex gap-4 mb-4 md:mb-8 mx-auto w-full md:w-fit max-md:overflow-x-auto max-md:pb-4 scrollbar-custom">
             <Cta
               handleButtonClick={(e) => {
                 e.preventDefault();
@@ -678,7 +686,9 @@ const PageBibliotheque = ({
                                 title: article.title,
                                 image: {
                                   node: {
-                                    sourceUrl: article.featuredImage?.node?.sourceUrl || '/images/placeholder.jpg',
+                                    sourceUrl:
+                                      article.featuredImage?.node?.sourceUrl ||
+                                      '/images/placeholder.jpg',
                                   },
                                 },
                                 date: article.date,
@@ -771,7 +781,6 @@ export const getStaticProps: GetStaticProps = async () => {
     ...defaultVariables,
     first: ARTICLES_PER_PAGE,
   };
-
 
   // Fetch latest products with documents
   const { data: productsData } = await client.query({

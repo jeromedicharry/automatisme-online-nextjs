@@ -426,10 +426,10 @@ export default function Header({
                 </Link>
 
                 <Link
-                  href="/espace-pro"
+                  href="/mon-compte"
                   className="block text-center py-5 text-sm leading-general bg-primary text-white w-screen relative left-1/2 -translate-x-1/2"
                 >
-                  Mon espace professionel
+                  Mon espace client
                 </Link>
               </div>
             </div>

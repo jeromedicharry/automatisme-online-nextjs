@@ -33,8 +33,6 @@ const ProductPrice = ({
 
   const { user, countryCode, loading } = useAuth();
 
-  
-
   useEffect(() => {
     async function displayFormattedPrices(
       price: number,
@@ -43,13 +41,19 @@ const ProductPrice = ({
       isProSession: boolean | undefined,
     ) {
       try {
-        const calculatedPrice = await calculerPrix(price, isProSession, countryCode, hasProDiscount, discountRate);
+        const calculatedPrice = await calculerPrix(
+          price,
+          isProSession,
+          countryCode,
+          hasProDiscount,
+          discountRate,
+        );
         const calculatedRegularPrice = await calculerPrix(
           regularPrice,
           isProSession,
           countryCode,
           hasProDiscount,
-          discountRate
+          discountRate,
         );
         setPriceWithVAT(calculatedPrice);
         setRegularPriceWithVAT(calculatedRegularPrice);
@@ -62,9 +66,22 @@ const ProductPrice = ({
     if (!loading) {
       const isProSession = isProRole(user?.roles?.nodes);
 
-      displayFormattedPrices(price, regularPrice, countryCode || 'FR', isProSession);
+      displayFormattedPrices(
+        price,
+        regularPrice,
+        countryCode || 'FR',
+        isProSession,
+      );
     }
-  }, [loading, user, price, regularPrice, countryCode, hasProDiscount, discountRate]);
+  }, [
+    loading,
+    user,
+    price,
+    regularPrice,
+    countryCode,
+    hasProDiscount,
+    discountRate,
+  ]);
 
   return (
     <div
@@ -100,7 +117,7 @@ const ProductPrice = ({
       </div>
       {regularPrice !== price ? (
         <span
-          className={`bg-secondary text-white rounded-[3px] shrink-0 font-bold text-xs px-2 py-1 mb-6 ${variant === 'productPage' ? 'max-md:text-base max-md:px-4 max-md:py-2 max-md:mb-[26px]' : ''} leading-general`}
+          className={`bg-secondary text-white rounded-[3px] shrink-0 font-bold text-xs px-2 py-1 mb-6 ${isMeili ? 'max-sm:text-xs max-sm:px-1' : ''} ${variant === 'productPage' ? 'max-md:text-base max-md:px-4 max-md:py-2 max-md:mb-[26px]' : ''} leading-general`}
         >
           - {Math.round(((regularPrice - price) / regularPrice) * 100)}%
         </span>

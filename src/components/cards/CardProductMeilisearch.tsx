@@ -67,7 +67,8 @@ const CardProductMeilisearch = ({
     isPro: meiliProduct.meta?._is_pro || false,
     acfFeatured: { isFeatured: meiliProduct.meta?._is_featured || false },
     onSale: false, // À adapter selon besoin
-    hasProDiscount: meiliProduct.attributes?.['reduction-pro']?.[0]?.slug === 'oui' || false,
+    hasProDiscount:
+      meiliProduct.attributes?.['reduction-pro']?.[0]?.slug === 'oui' || false,
     stockQuantity: meiliProduct.meta?._stock || 0,
     backorders: meiliProduct.meta?._backorders || 'NO',
     restockingLeadTime: meiliProduct.meta?._restocking_lead_time || 0,
@@ -81,7 +82,8 @@ const CardProductMeilisearch = ({
   });
 
   const isReplaced = product.meta._replacement_id !== undefined;
-  const hasProDiscount = product.attributes?.['reduction-pro']?.[0]?.slug === 'oui';
+  const hasProDiscount =
+    product.attributes?.['reduction-pro']?.[0]?.slug === 'oui';
 
   return (
     <article className="card-product-meilisearch flex flex-col xxl:max-w-full h-full shadow-card px-3 py-5 rounded-[7px] md:rounded-lg duration-300 overflow-hidden group bg-white hover:shadow-cardhover text-primary maw">
@@ -145,7 +147,8 @@ const CardProductMeilisearch = ({
               isFull
               label="Créer un compte pro"
             >
-              Créer un compte pro
+              <span className="hidden md:inline">Créer un compte pro</span>
+              <span className="md:hidden">Compte pro</span>
             </Cta>
           </div>
         ) : (
