@@ -49,15 +49,26 @@ export function useCartDataLayer(cart: RootObject | null | undefined) {
     // Utiliser uniquement le total des produits (sans livraison ni pose)
     const totalProductsValue = cart.totalProductsPrice;
 
-    // Envoyer l'événement view_cart
-    console.log('Sending view_cart event');
-    console.log(items);
+    // Clear previous ecommerce object
+    window.dataLayer.push({ ecommerce: null });
+
     window.dataLayer.push({
       event: "view_cart",
       ecommerce: {
         currency: "EUR",
         value: totalProductsValue,
         items: items
+      }
+    });
+
+    // Envoyer l'événement de remarketing
+    window.dataLayer.push({
+      event: "fireRemarketingTag",
+      google_tag_params: {
+        ecomm_pagetype: "cart",
+        ecomm_prodid: items.map(item => item.item_id).join(","),
+        ecomm_totalvalue: totalProductsValue,
+        ecomm_category: items.map(item => item.item_category).join(",")
       }
     });
   }, [mapCartItemsToDataLayer]);
@@ -71,7 +82,9 @@ export function useCartDataLayer(cart: RootObject | null | undefined) {
     // Utiliser uniquement le total des produits (sans livraison ni pose)
     const totalProductsValue = cart.totalProductsPrice;
 
-    // Envoyer l'événement begin_checkout
+    // Clear previous ecommerce object
+    window.dataLayer.push({ ecommerce: null });
+
     window.dataLayer.push({
       event: "begin_checkout",
       ecommerce: {

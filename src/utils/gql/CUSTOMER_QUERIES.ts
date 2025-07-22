@@ -157,14 +157,62 @@ export const GET_ORDER_BY_ID = gql`
       date
       status
       total(format: RAW)
+      subtotal(format: RAW)
+      totalTax
+      shippingTotal(format: RAW)
+      taxLines {
+        nodes {
+          taxTotal
+        }
+      }
+
+      customer {
+        email
+        billing {
+          phone
+          address1
+          city
+          postcode
+          country
+        }
+        firstName
+        lastName
+      }
+
       lineItems {
         nodes {
+          quantity
+          total
+          subtotal
+          subtotalTax
+          taxStatus
+          taxClass
           product {
             node {
               id
               name
               sku
               slug
+              globalUniqueId
+              oldProductId
+              productBrands {
+                nodes {
+                  name
+                }
+              }
+              seo {
+                breadcrumbs {
+                  text
+                  url
+                }
+              }
+              ... on SimpleProduct {
+                price
+                regularPrice
+                salePrice
+                onSale
+              }
+
               featuredImage {
                 node {
                   sourceUrl

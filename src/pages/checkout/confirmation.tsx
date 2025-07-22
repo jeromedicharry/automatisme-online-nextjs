@@ -3,6 +3,8 @@ import Layout, { DoubleLevelFooterMenuProps } from '@/components/Layout/Layout';
 import Container from '@/components/container';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useEffect } from 'react';
+import { useOrderDataLayer } from '@/hooks/useOrderDataLayer';
 import AccountLoader from '@/components/Account/AccountLoader';
 import { useQuery } from '@apollo/client';
 import { GET_ORDER_BY_ID } from '@/utils/gql/CUSTOMER_QUERIES';
@@ -38,6 +40,54 @@ const ConfirmationPage = ({
     variables: { id: order_id },
     skip: !order_id,
   });
+
+  const { trackPurchase } = useOrderDataLayer();
+
+  useEffect(() => {
+    if (data?.order) {
+      // Calculer le total TTC des produits (sans frais de livraison)
+      const orderTotalHT = parseFloat(data.order.subtotal);
+      const orderTVA = data.order.taxLines?.nodes?.[0]?.taxTotal
+        ? parseFloat(data.order.taxLines.nodes[0].taxTotal)
+        : 0;
+      const orderTotalTTC = orderTotalHT + orderTVA;
+
+      const orderData = {
+        id: data.order.orderNumber,
+        items: data.order.lineItems.nodes.map((item: any) => {
+          // Prix unitaire TTC = Prix total HT / quantité * (1 + taux TVA)
+          const itemSubtotalHT = parseFloat(item.subtotal);
+          const priceUnitHT = itemSubtotalHT / item.quantity;
+          const priceUnitTTC = priceUnitHT * (1 + orderTVA / orderTotalHT);
+
+          return {
+            id: item.product?.node?.globalUniqueId || '',
+            name: item.product?.node?.name || '',
+            quantity: item.quantity,
+            price: priceUnitTTC,
+            brand: item.product?.node?.productBrands?.nodes?.[0]?.name || '',
+            category: item.product?.node?.seo?.breadcrumbs?.[1]?.text || '',
+            variant: item.product?.node?.oldProductId || '',
+            // Champs additionnels
+            item_id: item.product?.node?.globalUniqueId || '',
+            item_name: item.product?.node?.name || '',
+            item_brand:
+              item.product?.node?.productBrands?.nodes?.[0]?.name || '',
+            item_category:
+              item.product?.node?.seo?.breadcrumbs?.[1]?.text || '',
+            item_variant: item.product?.node?.oldProductId || '',
+            affiliation:
+              item.product?.node?.productBrands?.nodes?.[0]?.name || '',
+          };
+        }),
+        total: orderTotalTTC, // Total TTC des produits uniquement
+        tax: parseFloat(data.order.totalTax),
+        shipping: parseFloat(data.order.shippingTotal),
+        currency: 'EUR',
+      };
+      trackPurchase(orderData);
+    }
+  }, [data, trackPurchase]);
 
   const renderContent = () => {
     if (loading) {
@@ -85,6 +135,17 @@ const ConfirmationPage = ({
         <div className="w-fit mx-auto">
           <OrdersList orders={[data.order]} />
         </div>
+
+        <ul className="hidden">
+          <li id="ao-gtm-email">{data.order?.customer?.email}</li>
+          <li id="ao-gtm-phone">{data.order?.customer?.billing?.phone}</li>
+          <li id="ao-gtm-lastname">{data.order?.customer?.lastName}</li>
+          <li id="ao-gtm-firstname">{data.order?.customer?.firstName}</li>
+          <li id="ao-gtm-street">{data.order?.customer?.billing?.address1}</li>
+          <li id="ao-gtm-city">{data.order?.customer?.billing?.city}</li>
+          <li id="ao-gtm-zip">{data.order?.customer?.billing?.postcode}</li>
+          <li id="ao-gtm-country">{data.order?.customer?.billing?.country}</li>
+        </ul>
 
         <div className="mt-4 md:mt-8 flex justify-center gap-4 max-md:flex-col w-fit mx-auto">
           <Cta label="Voir mes commandes" slug="/" variant="primary">
