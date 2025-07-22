@@ -23,6 +23,8 @@ export interface BlocWysiWygProps {
   title: string;
   subtitle: string;
   text: string;
+  isAccordion: boolean;
+  textColor?: 'grey' | 'primary' | undefined;
 }
 
 export interface SpacerProps {

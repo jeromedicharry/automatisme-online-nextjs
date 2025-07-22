@@ -6,10 +6,13 @@ type variant = 'primary' | 'grey';
 const ExpandableText = ({
   text,
   variant = 'primary',
+  isAccordion = true,
 }: {
   text: string;
   variant?: variant;
+  isAccordion?: boolean;
 }) => {
+  console.log('[ExpandableText] Text:', variant);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTruncated, setIsTruncated] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -21,18 +24,24 @@ const ExpandableText = ({
 
     const fullHeight = el.scrollHeight;
 
-    // Calcul précis de la hauteur de 6 lignes
-    const computedStyle = window.getComputedStyle(el);
-    const lineHeight = parseFloat(computedStyle.lineHeight || '24'); // fallback 24px
-    const sixLineHeight = lineHeight * 6;
+    if (isAccordion) {
+      // Calcul précis de la hauteur de 6 lignes
+      const computedStyle = window.getComputedStyle(el);
+      const lineHeight = parseFloat(computedStyle.lineHeight || '24'); // fallback 24px
+      const sixLineHeight = lineHeight * 6;
 
-    if (!isExpanded) {
-      setMaxHeight(sixLineHeight);
-      setIsTruncated(fullHeight > sixLineHeight + 1); // +1 pour marge d'erreur
+      if (!isExpanded) {
+        setMaxHeight(sixLineHeight);
+        setIsTruncated(fullHeight > sixLineHeight + 1); // +1 pour marge d'erreur
+      } else {
+        setMaxHeight(fullHeight);
+      }
     } else {
-      setMaxHeight(fullHeight);
+      // Si pas d'accordion, afficher le contenu complet
+      setMaxHeight(undefined);
+      setIsTruncated(false);
     }
-  }, [text, isExpanded]);
+  }, [text, isExpanded, isAccordion]);
 
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
@@ -49,7 +58,7 @@ const ExpandableText = ({
         dangerouslySetInnerHTML={{ __html: text }}
       />
 
-      {isTruncated && (
+      {isAccordion && isTruncated && (
         <button
           className="text-primary hover:text-primary-dark transition-colors duration-300 flex gap-2 items-center font-bold group mt-4"
           onClick={toggleExpand}

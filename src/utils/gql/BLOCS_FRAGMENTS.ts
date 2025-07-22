@@ -26,6 +26,8 @@ export const blocsFields = `
         title
         subtitle
         text
+        isAccordion
+        textColor
     }
     ... on AcfPageBlocsBlocSpacerLayout {
         __typename

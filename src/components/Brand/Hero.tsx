@@ -36,7 +36,7 @@ const Hero = ({
                     width={200}
                     height={200}
                     alt={title}
-                    className="max-h-[90px] max-w-[250px] object-cover"
+                    className="max-h-[150px] max-w-[250px] object-contain object-left"
                   />
                 ) : (
                   <div className="font-bold text-xl md:text-3xl leading-general">
